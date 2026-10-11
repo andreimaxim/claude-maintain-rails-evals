@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Reuse orb-test-setup's fast database restart on orb activation/resume.
-sudo systemctl start postgresql redis-server
-pg_isready
-redis-cli ping
+sudo service postgresql start
+sudo service redis-server start
 
-echo "Orb resume complete."
+echo "Cloud sandbox resume complete."

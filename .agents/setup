@@ -1,64 +1,35 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Adapted from andreimaxim/orb-test-setup at 5989acd562a44aba17f6a2cde2a1ce25245c5e02.
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
 cd "$repo_root"
 
-echo "[$SECONDS s] Checking database packages..."
-missing_packages=()
-for package in postgresql postgresql-contrib redis-server libpq-dev; do
-  if [[ "$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null || true)" != "install ok installed" ]]; then
-    missing_packages+=("$package")
-  fi
-done
-if ((${#missing_packages[@]})); then
-  sudo apt-get update
-  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${missing_packages[@]}"
-fi
+echo "Installing database services..."
+sudo apt-get update || true
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  postgresql \
+  postgresql-contrib \
+  redis-server
 
-echo "[$SECONDS s] Starting database services..."
-sudo systemctl enable --now postgresql redis-server
-if [[ "$(sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname = '$(id -un)'")" != "1" ]]; then
-  sudo -u postgres createuser --superuser "$(id -un)"
-fi
+echo "Starting database services..."
+sudo service postgresql start
+sudo service redis-server start
 
-echo "[$SECONDS s] Installing mise and Ruby..."
-mise="$HOME/.local/bin/mise"
-if [[ ! -x "$mise" ]]; then
-  curl --fail --location --silent --show-error https://mise.run | sh
-fi
-# Login shells run Amp and supervised services; interactive shells use .bashrc.
-activation='if [[ ":$PATH:" != *":$HOME/.local/share/mise/shims:"* ]]; then eval "$("$HOME/.local/bin/mise" activate bash --shims)"; fi'
-for profile in "$HOME/.bash_profile" "$HOME/.bashrc"; do
-  if ! grep -Fqx "$activation" "$profile" 2>/dev/null; then
-    printf '\n%s\n' "$activation" >> "$profile"
-  fi
-done
-eval "$("$mise" activate bash --shims)"
-"$mise" trust "$repo_root/mise.toml"
-"$mise" install
+sudo -u postgres createuser --superuser "$(id -un)" 2>/dev/null || true
 
-# Keep the benchmark's common runtime rather than the source project's Ruby 4.
-ruby_version="$(cat "$repo_root/.ruby-version")"
-if ! gem list --installed --exact bundler --version 2.5.22 >/dev/null; then
-  gem install bundler --version 2.5.22 --no-document
-fi
+echo "Installing mise and Ruby..."
+curl --fail --location --silent --show-error https://mise.run | sh
+printf '\n%s\n' 'eval "$("$HOME/.local/bin/mise" activate bash --shims)"' >> "$HOME/.bashrc"
+eval "$("$HOME/.local/bin/mise" activate bash --shims)"
 
-for app_root in "$repo_root" "$repo_root/../repos/claude-maintain-rails-sample"; do
-  if [[ ! -f "$app_root/Gemfile" ]]; then
-    echo "[$SECONDS s] No Gemfile in $app_root; deferring application setup."
-    continue
-  fi
-  (
-    cd "$app_root"
-    echo "[$SECONDS s] Installing gems in $app_root..."
-    "$mise" exec "ruby@$ruby_version" -- bundle _2.5.22_ install --jobs "$(nproc)"
-    if [[ -f bin/rails ]]; then
-      echo "[$SECONDS s] Preparing Rails databases..."
-      "$mise" exec "ruby@$ruby_version" -- bundle _2.5.22_ exec rails db:prepare
-    fi
-  )
-done
+mise trust
+mise install
 
-echo "[$SECONDS s] Orb setup complete."
+echo "Installing gems..."
+bundle install --jobs "$(nproc)"
+
+echo "Preparing Rails databases..."
+bin/rails db:prepare
+
+echo "Cloud sandbox setup complete."
