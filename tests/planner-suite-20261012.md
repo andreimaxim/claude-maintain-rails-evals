@@ -14,8 +14,9 @@ The delivery-correction batch hit Claude Code's session quota. All ten attempts
 are incomplete, with no scored plan or successful wall time. The provider reports
 a reset at 17:50 UTC on October 12. After the user reported quota restored,
 ten fresh replacement attempts launched at approximately 17:54 UTC, using the
-same candidate and protocol. Completing the revised matrix now requires 93
-sessions, including the ten quota-interrupted attempts. The interrupted runs
+same candidate and protocol. At that point the revised matrix required 93
+sessions, including the ten quota-interrupted attempts. Ten later source-drift
+attempts bring the planned total to at least 103. The interrupted runs
 remain separate from successful results. All ten replacements completed by
 18:37:34 UTC. Their original turns and timing are captured and assessed. The user
 then requested freezing without another tuning cycle.
@@ -212,26 +213,137 @@ medium and Haiku medium. No additional tuning or Opus-high held-out runs follow.
 
 Ten fresh sample-project orbs launched at approximately 19:01 UTC, with requested
 model `claude-opus-5-5` and low effort. Initial prompts remain exactly the natural
-Rails and Sidekiq requests, with no answer-key context. Preserve the original
-turn before metadata or evidence follow-ups. Assess every completed plan.
+Rails and Sidekiq requests, with no answer-key context. All ten original turns
+completed and were captured before any collection-only follow-up. All twenty
+raw/final reports are assessed. The coordinator reconciled counts, capture hashes
+and 842 exact-quote memberships for the low-effort assessments; none mismatched.
 
-| Case | Repetition | Thread | Assessment |
-| --- | --- | --- | --- |
-| Rails | 1 | [Run](https://ampcode.com/threads/T-01a1317d-421e-774f-9075-12cba5e1aa24) | Running |
-| Rails | 2 | [Run](https://ampcode.com/threads/T-01a1317d-4e6c-7202-a9d0-f0a79401c306) | Running |
-| Rails | 3 | [Run](https://ampcode.com/threads/T-01a1317d-5f32-71ab-8850-773b885f5fda) | Running |
-| Rails | 4 | [Run](https://ampcode.com/threads/T-01a1317d-6cc0-73d9-9172-4ac8661e124d) | Running |
-| Rails | 5 | [Run](https://ampcode.com/threads/T-01a1317d-7952-766d-b731-75b4bab7176a) | Running |
-| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a1317d-863c-7031-9b23-8b1185f8ff56) | Running |
-| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a1317d-8fec-71af-99b0-f3567cd7e3bf) | Running |
-| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a1317d-97ac-70ec-8689-8ab4d387a7bf) | Running |
-| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a1317d-9f41-746e-895c-b06303ba492b) | Running |
-| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a1317d-a879-7479-8a40-77d5c2bed4e3) | Running |
+| Case | Repetition | Thread | Actionable raw/final | Wall time | Reported planner tokens |
+| --- | --- | --- | --- | --- | ---: |
+| Rails | 1 | [Run](https://ampcode.com/threads/T-01a1317d-421e-774f-9075-12cba5e1aa24) | 18/23 → 18/23 | 11m 59s | 45877 |
+| Rails | 2 | [Run](https://ampcode.com/threads/T-01a1317d-4e6c-7202-a9d0-f0a79401c306) | 19/23 → 19/23 | 12m 08s | 48659 |
+| Rails | 3 | [Run](https://ampcode.com/threads/T-01a1317d-5f32-71ab-8850-773b885f5fda) | 13/23 → 13/23 | 12m 06s | 45817 |
+| Rails | 4 | [Run](https://ampcode.com/threads/T-01a1317d-6cc0-73d9-9172-4ac8661e124d) | 16/23 → 16/23 | 11m 18s | 46918 |
+| Rails | 5 | [Run](https://ampcode.com/threads/T-01a1317d-7952-766d-b731-75b4bab7176a) | 17/23 → 17/23 | 10m 04s | 45852 |
+| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a1317d-863c-7031-9b23-8b1185f8ff56) | 2/2 → 2/2 | 6m 52s | 42441 |
+| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a1317d-8fec-71af-99b0-f3567cd7e3bf) | 2/2 → 2/2 | 8m 54s | 41713 |
+| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a1317d-97ac-70ec-8689-8ab4d387a7bf) | 2/2 → 2/2 | 7m 30s | 42758 |
+| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a1317d-9f41-746e-895c-b06303ba492b) | 2/2 → 2/2 | 2m 03s | 44705 |
+| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a1317d-a879-7479-8a40-77d5c2bed4e3) | 2/2 → 2/2 | 6m 01s | 44183 |
+
+Rails median: 11m 59s, range 10m 04s–12m 08s. Sidekiq median: 6m 52s,
+range 2m 03s–8m 54s. Both layers retain selected-family actionability in every
+run. These are selected-finding recall counts, not overall accuracy or readiness.
+The ten raw/final plans have zero fully specified validation families under the
+same strict rubric as the high reference; useful partial checks still count as
+partial evidence, not zero testing.
+
+Rails coverage is lower and more variable than the high reference. R25 is never
+actionable. Runs 1, 2, 4 and 5 propose an unsafe skip-cache alternative for R09;
+run 3 omits R09 and the conditional R20/R21/R23 families. Missing application
+impacts recur for removed APIs. Run 5's `rows.all?(&:save)` repair is invalid:
+`Import::Row` contains a `note`, so persistence must use `row.note.save`. Run 3
+reports accidentally committing in the working application and attempting a
+reset; the collected parent check returned an error without output, so exact
+restoration is not independently established.
+
+Sidekiq retains 2/2 selected recall, but only run 2 identifies the actual
+`connection_pool` 3 scheduler failure and required cap. Run 4 incorrectly excludes
+Active Job from strict-argument risk and misses the digest BigDecimal prerequisite.
+Run 3 recommends unsafe method-wide cleanup and lockfile-only rollback. Other
+plans retain unsafe alternatives despite selecting a safe primary repair. All
+five omit old-epoch scheduling and timeout changes. These omissions remain
+outside the two selected-family denominator.
+
+The grading records are retained as `opus-low-rails-assessment.json` and
+`opus-low-sidekiq-assessment.json` under
+`.amp/in/artifacts/planner-suite-20261012/`. Original scored captures remain
+private and unchanged. Ten metadata-only follow-ups report 28 planner instances:
+nine orbs have a depth-1 → depth-2 → depth-3 self-delegation chain; Sidekiq run 4
+has one planner. All recorded assistant models are `claude-opus-5-5`, all recorded
+efforts are low, and all CLI versions are 2.1.296. Requested-model fields are
+unknown in some audits; lack of an explicit Agent override is not a recorded
+request. Follow-up shells report override environment variables unset, not their
+original-process state. The JSON audits are retained under `opus-low-models/` in
+the same artifact directory. They contain metadata and source hashes, not full
+native transcript bodies. Collection does not change scored input or timing.
+
+## Reported token usage and observed run variation
+
+The native `Agent` return footer supplies `subagent_tokens` for each of the
+twenty completed reference/low runs. This is reported planner usage, not total
+workflow input/output, billed tokens or a sum of nested-agent usage. The usage
+definition is not independently audited. Keep it separate from request-to-final
+wall time and from model/effort metadata.
+
+| Configuration | Case | Run 1 | Run 2 | Run 3 | Run 4 | Run 5 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| Opus high | Rails | 56198 | 52516 | 57906 | 58436 | 55729 |
+| Opus high | Sidekiq | 52277 | 55802 | 53069 | 49504 | 46165 |
+| Opus low | Rails | 45877 | 48659 | 45817 | 46918 | 45852 |
+| Opus low | Sidekiq | 42441 | 41713 | 42758 | 44705 | 44183 |
+
+| Configuration | Case | Final recall median; range | Wall-time sample SD | Token median; range |
+| --- | --- | --- | --- | --- |
+| Opus high | Rails | 21/23; 19–21/23 | 5.73 min | 56198; 52516–58436 |
+| Opus high | Sidekiq | 2/2; 2/2 | 1.99 min | 52277; 46165–55802 |
+| Opus low | Rails | 17/23; 13–19/23 | 0.88 min | 45877; 45817–48659 |
+| Opus low | Sidekiq | 2/2; 2/2 | 2.58 min | 42758; 41713–44705 |
+
+Sample standard deviation uses five request-to-final times per group. Ranges
+describe observed variation, not confidence intervals or reliability guarantees.
+The apparent speed difference includes startup, nested delegations, experiments
+and parent checks; this comparison does not isolate inference speed.
 
 ## Held-out key opened only after freeze
 
 The exact targets are Pagy 8.6.3 → 9.3.5 and Faraday 1.10.4 → 2.12.2, five fresh
 repetitions each. The coordinator recovered the held-out fixture key after the
 freeze was recorded and pushed, alongside the Opus-low launch. No held-out run
-has launched yet. The key remains in the coordinator's evaluation repository,
-never in worker prompts or files. No plugin changes follow this exposure.
+had launched before the requested pause. The key remains in the coordinator's
+evaluation repository, never in worker prompts or files. No plugin changes
+follow this exposure.
+
+## Resumed held-out attempts are excluded for source drift
+
+The one-time 3h40m pause expired at 23:02:07.389 UTC. Ten fresh Opus-low orbs
+launched at approximately 23:04 UTC with only the natural Pagy/Faraday requests.
+The plugin remote had changed during the pause: its `main` now points to
+[30cd881](https://github.com/andreimaxim/claude-plugins/commit/30cd881a8d4a0da8d51a2e52d22039c88afd8459),
+where `plugins/maintain-rails` is absent. The coordinator's local frozen checkout
+remains unchanged. Both frozen prompt downloads from the first new orb failed
+because the files are absent. Its natural request therefore did not reach the
+frozen planner. Some workers began direct application edits instead.
+
+All ten attempts are excluded, not graded as poor or fast successful planner
+runs. Every worker acknowledged the stop and is idle. They report local,
+uncommitted application edits; no worker reports a commit or push. Those files
+remain in the excluded orbs, not integrated into the coordinator. This is not a
+full independent file/service audit. Private exports taken before stop requests
+and after acknowledgments are preserved separately from scored traces. There is
+no valid Opus-low held-out result, and no Sonnet or Haiku benchmark has launched.
+The ten excluded sessions increase the planned total from 93 to at least 103 if
+all remaining slots complete without more failures.
+
+| Case | Repetition | Excluded attempt |
+| --- | --- | --- |
+| Pagy | 1 | [Run](https://ampcode.com/threads/T-01a1325b-3321-771e-80a2-aae5b63385d4) |
+| Pagy | 2 | [Run](https://ampcode.com/threads/T-01a1325b-3bf5-70e6-b94a-5bb82cd0ba54) |
+| Pagy | 3 | [Run](https://ampcode.com/threads/T-01a1325b-44cb-7314-a5d0-8e762cc2a3b3) |
+| Pagy | 4 | [Run](https://ampcode.com/threads/T-01a1325b-4e6a-745d-bf23-f0a7fb216959) |
+| Pagy | 5 | [Run](https://ampcode.com/threads/T-01a1325b-5e44-775c-8c7d-f48d9b59579f) |
+| Faraday | 1 | [Run](https://ampcode.com/threads/T-01a1325b-6776-779f-bd72-517d71858d32) |
+| Faraday | 2 | [Run](https://ampcode.com/threads/T-01a1325b-7015-71a3-a538-447b0eb67bc6) |
+| Faraday | 3 | [Run](https://ampcode.com/threads/T-01a1325b-77d7-731a-94db-6de77d0b8064) |
+| Faraday | 4 | [Run](https://ampcode.com/threads/T-01a1325b-80f7-75cb-925d-284d1f7958f4) |
+| Faraday | 5 | [Run](https://ampcode.com/threads/T-01a1325b-8b1f-718c-b532-8c730f57e868) |
+
+Recovery requires pinning the worker's plugin checkout before setup and Claude
+Code startup, rather than coaching an already-started run. The proposed
+[project pre-setup script](frozen-planner-pre-setup.sh) checks out the frozen
+application/plugin commits and verifies the prompt hashes, refusing to overwrite
+tracked changes. It restored the deleted plugin in disposable local clones,
+passed twice, and refused a staged-change negative control without deleting the
+file. Applying that shared sample-project setting awaits approval;
+the existing empty pre-setup setting has not been changed. Plugin/application
+history and billing/provider settings remain untouched.

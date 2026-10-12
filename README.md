@@ -77,7 +77,12 @@ The [evaluation-cycle record](tests/planner-suite-20261012.md) tracks the frozen
 correctness/time comparison: Opus 5.5 low, Sonnet 5.5 medium, then Haiku 5.5 medium.
 The completed Opus-high batch remains a development-only reference. Each new
 configuration runs five repetitions of all four cases and assesses every plan;
-no Opus-high held-out batch is added before switching models.
+no Opus-high held-out batch is added before switching models. Opus-low Rails and
+Sidekiq are assessed, with per-run timing, reported planner tokens and observed
+variation recorded. The resumed Pagy/Faraday attempts are excluded because the
+plugin remote no longer contains `maintain-rails`; all ten workers acknowledged
+the stop. A tested frozen-source pre-setup pin awaits approval before further
+benchmark launches.
 
 To retain a completed run's visible tool trace and planner response without
 thinking blocks or account/environment metadata, keep the full export in a
