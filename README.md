@@ -67,10 +67,12 @@ records two unchanged Rails runs and one Sidekiq run. The
 [first development batch](tests/planner-development-batch1-20261012.md) is assessed:
 three Rails final responses lose substantial details from their raw plans. A
 delivery-only correction is published, and ten fresh development repetitions
-are running. The [evaluation-cycle record](tests/planner-suite-20261012.md)
+were interrupted by Claude Code's session limit. None delivered a completed
+plan; no delivery improvement is measured. The
+[evaluation-cycle record](tests/planner-suite-20261012.md)
 tracks those runs and the planned correctness/time comparison: Opus 5.5 high,
 Opus 5.5 low, Sonnet 5.5 high, then Sonnet 5.5 medium. Held-out results remain
-unopened, and no delivery improvement is claimed before the fresh assessment.
+unopened. The remaining benchmark is blocked on Claude quota.
 
 To retain a completed run's visible tool trace and planner response without
 thinking blocks or account/environment metadata, keep the full export in a
@@ -85,8 +87,9 @@ rm -r "$private_dir"
 
 Review tool output for secrets before sharing the trace. The collector requires
 an idle thread, a completed planner invocation, and final assistant text. It
-does not grade the plan or collect nested experiment logs. Keep the full export
-private and remove it after collection.
+rejects recovered partial reports and parent API-error responses even when a
+harness status says `done` or `success`. It does not grade the plan or collect
+nested experiment logs. Keep the full export private and remove it after collection.
 
 An async launch acknowledgment is not a completed planner report. If the planner
 runs in the background, collect its completed native JSONL transcript privately

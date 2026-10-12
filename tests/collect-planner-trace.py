@@ -51,6 +51,11 @@ def collect(thread, background_transcript=None):
         (tool["result"] or {}).get("status") != "done" for tool in planners
     ):
         raise ValueError("No completed gem-upgrade-planner invocation")
+    if any(
+        tool["result"].get("result", "").lstrip().startswith("Agent terminated early")
+        for tool in planners
+    ):
+        raise ValueError("Planner terminated early; recovered output is incomplete")
     asynchronous = [tool for tool in planners if
         tool["result"].get("result", "").startswith("Async agent launched successfully.")
     ]
@@ -85,6 +90,8 @@ def collect(thread, background_transcript=None):
         block["type"] == "text" for block in last_message["content"]
     ):
         raise ValueError("No final assistant text")
+    if responses[-1].lstrip().startswith("Claude Code reported an error"):
+        raise ValueError("Parent error response is not a delivered plan")
     if background_report and (
         datetime.fromisoformat(last_message["createdAt"].replace("Z", "+00:00"))
         < datetime.fromisoformat(background_report["completed_at"].replace("Z", "+00:00"))

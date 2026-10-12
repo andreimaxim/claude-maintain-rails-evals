@@ -72,6 +72,17 @@ Material additional findings:
   adapter interprets old positive epochs below 1,000,000,000 as relative delays.
   The application accepts such values. Absence from the selected key does not
   make this finding false. The exact trial results remain model-reported.
+- **Run 5's repair search is unreliable:** “more than about 10 years out” can
+  include valid future reminders and miss misinterpreted epochs less than ten
+  years ahead. Reconcile the payload/job ID with the persisted `reminder_epoch`;
+  duration alone is not a safe repair predicate. The report labels the remedy
+  untested. Its claim that only this mistake has lasting damage also overlooks
+  orphaned export rows and digests already delivered.
+- **Runs 3 and 4 infer “halves throughput” from default concurrency 10 → 5.**
+  The concurrency change is real; throughput depends on workload and connection
+  pools. No load evidence supports the 50% throughput claim. Production CLI or
+  environment overrides also matter; absent YAML is not proof of the deployed
+  concurrency setting.
 
 Source references for the disputed claims:
 [redis-rb defaults](https://github.com/redis/redis-rb/blob/v4.8.1/lib/redis/client.rb#L10-L19),

@@ -79,10 +79,21 @@ class CollectPlannerTraceTest(unittest.TestCase):
         background_launch["messages"][2]["content"][0]["run"]["result"] = (
             "Async agent launched successfully. The agent is working in the background."
         )
+        terminated = copy.deepcopy(self.thread)
+        terminated["messages"][2]["content"][0]["run"]["result"] = (
+            "  Agent terminated early due to an API error: session limit (HTTP 429)\n"
+            "Everything below is PARTIAL output. The agent did NOT finish its task.\n"
+            "Preparing isolated databases."
+        )
+        parent_error = copy.deepcopy(self.thread)
+        parent_error["messages"][-1]["content"][0]["text"] = (
+            "Claude Code reported an error (success): You've hit your session limit"
+        )
         for name, thread in [
             ("working", working), ("failed planner", failed),
             ("missing planner result", missing_result), ("progress only", no_final_response),
             ("background launch only", background_launch),
+            ("terminated planner marked done", terminated), ("parent API error", parent_error),
         ]:
             with self.subTest(name=name):
                 result, trace = self.collect(thread)

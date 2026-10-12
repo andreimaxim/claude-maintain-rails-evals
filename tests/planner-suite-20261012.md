@@ -5,9 +5,14 @@ revision on held-out Pagy and Faraday. Concurrent-ruby smoke controls are outsid
 this batch. Four model/effort configurations contribute twenty benchmark
 repetitions each. The first ten development repetitions exposed plan-summary
 loss and are superseded by ten fresh repetitions of a delivery correction.
-The current total is 80 benchmark repetitions, ten superseded development runs,
+The planned total was 80 benchmark repetitions, ten superseded development runs,
 and three initial diagnostics: 93 sessions. Extra tuning or failed-run retries
 must remain visible rather than being counted as fast successful benchmarks.
+
+The delivery-correction batch hit Claude Code's session quota. All ten attempts
+are incomplete, with no scored plan or successful wall time. The provider reports
+a reset at 17:50 UTC on October 12. Replacement attempts are not yet launched;
+any replacements add to the original planned session count.
 
 ## Compare correctness and time on the same frozen revision
 
@@ -22,6 +27,11 @@ Each configuration runs five fresh repetitions of each of the four exact cases.
 Use the same frozen plugin and application for all configurations. Once held-out
 feedback is opened, do not tune the plugin between configurations. Complete each
 configuration before starting the next.
+
+Keep the concurrency schedule the same: ten Rails/Sidekiq workers, then ten
+Pagy/Faraday workers per configuration. The Opus-high development and held-out
+batches use that schedule; launching twenty workers together for a later
+configuration would introduce a timing-comparison difference.
 
 Report correctness by case: actionable findings, omissions, incorrect or unsafe
 recommendations, validation quality, and whether the delivered final response
@@ -52,7 +62,8 @@ verbatim and separate any additional commentary. The planner bytes are unchanged
 This addresses lost impacts, conditions, and repairs in three of the five Rails
 final responses. It does not claim to repair remaining raw-plan omissions or
 incorrect recommendations. Marketplace/plugin validation passed with the same
-existing missing-version warnings. Its behavioral evaluation is still running.
+existing missing-version warnings. Its behavioral evaluation is unverified:
+all ten fresh attempts were interrupted by the session limit.
 
 The current development repetitions use fresh `andrei/claude-maintain-rails-sample` orbs, application
 [9938031](https://github.com/andreimaxim/claude-maintain-rails-sample/commit/9938031e54e1d7d074f1200a0da17e49390c86fa),
@@ -102,18 +113,35 @@ These runs use candidate 11b074b, with the same model, effort, application,
 natural prompts, and isolated-worker protocol. Do not combine their correctness
 or timing with the superseded batch.
 
-| Case | Repetition | Thread | Assessment |
-| --- | --- | --- | --- |
-| Rails | 1 | [Run](https://ampcode.com/threads/T-01a130f5-6041-750d-9ced-cc2a618c0733) | Pending |
-| Rails | 2 | [Run](https://ampcode.com/threads/T-01a130f5-6838-7475-9d63-3d309e755348) | Pending |
-| Rails | 3 | [Run](https://ampcode.com/threads/T-01a130f5-70e7-745a-be63-fc60eb6b3f3d) | Pending |
-| Rails | 4 | [Run](https://ampcode.com/threads/T-01a130f5-7c87-757c-824f-c16f35cd5b4c) | Pending |
-| Rails | 5 | [Run](https://ampcode.com/threads/T-01a130f5-842f-706e-a063-afa7d7818041) | Pending |
-| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a130f5-8f2a-71fe-b389-31477fa8f168) | Pending |
-| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a130f5-9cff-75de-b5c8-5e4bc03ed9b4) | Pending |
-| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a130f5-a56e-739d-bc1c-f296279d2b3c) | Pending |
-| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a130f5-ad20-7013-a640-06f3c2e211a9) | Pending |
-| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a130f5-b8de-70ab-ae3c-202cc0276102) | Pending |
+| Case | Repetition | Thread | Assessment | Elapsed until interruption ms |
+| --- | --- | --- | --- | ---: |
+| Rails | 1 | [Run](https://ampcode.com/threads/T-01a130f5-6041-750d-9ced-cc2a618c0733) | Incomplete: session limit | 577840 |
+| Rails | 2 | [Run](https://ampcode.com/threads/T-01a130f5-6838-7475-9d63-3d309e755348) | Incomplete: session limit | 397921 |
+| Rails | 3 | [Run](https://ampcode.com/threads/T-01a130f5-70e7-745a-be63-fc60eb6b3f3d) | Incomplete: session limit | 432994 |
+| Rails | 4 | [Run](https://ampcode.com/threads/T-01a130f5-7c87-757c-824f-c16f35cd5b4c) | Incomplete: session limit | 408110 |
+| Rails | 5 | [Run](https://ampcode.com/threads/T-01a130f5-842f-706e-a063-afa7d7818041) | Incomplete: session limit | 394288 |
+| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a130f5-8f2a-71fe-b389-31477fa8f168) | Incomplete: session limit | 383152 |
+| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a130f5-9cff-75de-b5c8-5e4bc03ed9b4) | Incomplete: session limit | 384397 |
+| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a130f5-a56e-739d-bc1c-f296279d2b3c) | Incomplete: session limit | 378993 |
+| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a130f5-ad20-7013-a640-06f3c2e211a9) | Incomplete: session limit | 409761 |
+| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a130f5-b8de-70ab-ae3c-202cc0276102) | Incomplete: session limit | 374840 |
+
+All ten initial application revisions and downloaded plugin bytes match the
+intended sources. No final working-file or service-state preservation audit was
+performed after interruption. No experiment from these attempts is credited as
+a completed check.
+
+Failure metadata, original-turn timestamps, export hashes, and explicit null
+correctness/successful-time fields are in
+`.amp/in/artifacts/planner-suite-20261012/delivery-attempts.json`. Sidekiq run 5
+was initially captured because its tool status was `done`, despite a termination
+envelope and partial report. That unscored capture is retained under
+`delivery/incomplete/`; it is not a completed benchmark trace. The collector now
+rejects recovered partial reports and parent API-error responses. Both new
+regression cases failed before the fix; all three test methods pass afterward.
+Rechecking the real exports rejects all ten interrupted attempts while accepting
+all ten previously completed development reports with unchanged final text and
+elapsed time.
 
 ## Held-out results remain unopened
 
