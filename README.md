@@ -68,12 +68,13 @@ records two unchanged Rails runs and one Sidekiq run. The
 three Rails final responses lose substantial details from their raw plans. A
 delivery-only correction is published, and ten fresh development repetitions
 were interrupted by Claude Code's session limit. None delivered a completed
-plan. After the quota reset, ten fresh replacements started; their source audit
-matches the intended candidate, but no delivery improvement is measured yet. The
+plan. After the quota reset, all ten fresh replacements completed; their source
+audit matches the intended candidate. Grading is pending, so no delivery
+improvement is established yet. The
 [evaluation-cycle record](tests/planner-suite-20261012.md)
 tracks those runs and the planned correctness/time comparison: Opus 5.5 high,
 Opus 5.5 low, Sonnet 5.5 high, then Sonnet 5.5 medium. Held-out results remain
-unopened while the replacement development batch runs.
+unopened until the development assessment and freeze.
 
 To retain a completed run's visible tool trace and planner response without
 thinking blocks or account/environment metadata, keep the full export in a

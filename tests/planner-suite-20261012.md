@@ -15,7 +15,9 @@ a reset at 17:50 UTC on October 12. After the user reported quota restored,
 ten fresh replacement attempts launched at approximately 17:54 UTC, using the
 same candidate and protocol. Completing the planned matrix now requires 103
 sessions, including the ten quota-interrupted attempts. The interrupted runs
-remain separate from successful results.
+remain separate from successful results. All ten replacements completed by
+18:37:34 UTC. Their original turns and timing are captured; correctness and
+delivery-preservation grading remain pending.
 
 ## Compare correctness and time on the same frozen revision
 
@@ -66,7 +68,8 @@ This addresses lost impacts, conditions, and repairs in three of the five Rails
 final responses. It does not claim to repair remaining raw-plan omissions or
 incorrect recommendations. Marketplace/plugin validation passed with the same
 existing missing-version warnings. Its behavioral evaluation is unverified:
-the first ten fresh attempts were interrupted; replacement attempts are running.
+the first ten fresh attempts were interrupted; all replacements completed but
+have not yet been graded.
 
 The current development repetitions use fresh `andrei/claude-maintain-rails-sample` orbs, application
 [9938031](https://github.com/andreimaxim/claude-maintain-rails-sample/commit/9938031e54e1d7d074f1200a0da17e49390c86fa),
@@ -153,18 +156,35 @@ They use candidate 11b074b, application 9938031, Opus 5.5/high, and the same exa
 natural prompts. Preserve the original scored turn before any collection-only
 follow-ups. Assess all ten before freezing and opening held-out feedback.
 
-| Case | Repetition | Thread | Assessment |
-| --- | --- | --- | --- |
-| Rails | 1 | [Run](https://ampcode.com/threads/T-01a13140-02ab-760b-aa0f-025b3f7fd927) | Running |
-| Rails | 2 | [Run](https://ampcode.com/threads/T-01a13140-0bbf-705c-993c-0b3c658428f8) | Running |
-| Rails | 3 | [Run](https://ampcode.com/threads/T-01a13140-14ec-766a-ac70-8c3deed0847f) | Running |
-| Rails | 4 | [Run](https://ampcode.com/threads/T-01a13140-1cd9-7270-ac6a-e959dee2abb8) | Running |
-| Rails | 5 | [Run](https://ampcode.com/threads/T-01a13140-244e-76ba-992b-a6e9d04729c9) | Running |
-| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a13140-2d86-7568-b150-4bcca5794937) | Running |
-| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a13140-35a6-72ef-8bd4-dcffeab67c1d) | Running |
-| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a13140-3cf1-7227-b3f9-4e67e5e0792a) | Running |
-| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a13140-4614-70ed-9df8-459c959022e4) | Running |
-| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a13140-4e91-720c-b8d2-755cb8acd580) | Running |
+| Case | Repetition | Thread | Assessment | Wall time |
+| --- | --- | --- | --- | --- |
+| Rails | 1 | [Run](https://ampcode.com/threads/T-01a13140-02ab-760b-aa0f-025b3f7fd927) | Completed; grading pending | 31m 58s |
+| Rails | 2 | [Run](https://ampcode.com/threads/T-01a13140-0bbf-705c-993c-0b3c658428f8) | Completed; grading pending | 28m 21s |
+| Rails | 3 | [Run](https://ampcode.com/threads/T-01a13140-14ec-766a-ac70-8c3deed0847f) | Completed; grading pending | 31m 27s |
+| Rails | 4 | [Run](https://ampcode.com/threads/T-01a13140-1cd9-7270-ac6a-e959dee2abb8) | Completed; grading pending | 43m 25s |
+| Rails | 5 | [Run](https://ampcode.com/threads/T-01a13140-244e-76ba-992b-a6e9d04729c9) | Completed; grading pending | 33m 57s |
+| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a13140-2d86-7568-b150-4bcca5794937) | Completed; grading pending | 21m 31s |
+| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a13140-35a6-72ef-8bd4-dcffeab67c1d) | Completed; grading pending | 23m 18s |
+| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a13140-3cf1-7227-b3f9-4e67e5e0792a) | Completed; grading pending | 21m 55s |
+| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a13140-4614-70ed-9df8-459c959022e4) | Completed; grading pending | 19m 01s |
+| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a13140-4e91-720c-b8d2-755cb8acd580) | Completed; grading pending | 18m 39s |
+
+Rails median: 31m 58s, range 28m 21s–43m 25s. Sidekiq median: 21m 31s,
+range 18m 39s–23m 18s. Times are rounded from request-to-recorded-idle
+milliseconds, not summed across concurrent workers. The full concurrent batch
+took 43m 31s from the earliest request to the latest completion.
+
+The collector accepted all ten original turns, with no incomplete attempts.
+Each capture preserves the original final response, tool hand-back, timestamps,
+and evaluated message boundary before any follow-up. Raw exports and unreviewed
+captures remain private. The initial source audit matches the candidate in all
+ten orbs; no final full-tree or service-state audit is claimed.
+
+The next step is to grade raw reports and delivered responses against the
+development rubric, including omissions, incorrect or unsafe recommendations,
+and delivery loss. Use that assessment for any further general planner correction
+and fresh development reruns before freezing. Then open Pagy/Faraday and finish
+the remaining model configurations against the same frozen revision.
 
 ## Held-out results remain unopened
 
