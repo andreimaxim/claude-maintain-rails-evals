@@ -2,40 +2,42 @@
 
 This cycle develops the planner on Rails and Sidekiq, then measures the frozen
 revision on held-out Pagy and Faraday. Concurrent-ruby smoke controls are outside
-this batch. Four model/effort configurations contribute twenty benchmark
-repetitions each. The first ten development repetitions exposed plan-summary
-loss and are superseded by ten fresh repetitions of a delivery correction.
-The planned total was 80 benchmark repetitions, ten superseded development runs,
-and three initial diagnostics: 93 sessions. Extra tuning or failed-run retries
-must remain visible rather than being counted as fast successful benchmarks.
+this batch. The revised comparison retains ten Opus-high development results
+and runs twenty repetitions each on Opus low, Sonnet medium, and Haiku medium.
+The first ten development repetitions exposed plan-summary loss and are
+superseded by ten fresh repetitions of a delivery correction. The original
+80-slot comparison is replaced by 70 slots; no Opus-high held-out batch is added
+before switching to Opus low. Extra tuning or failed-run retries remain visible
+rather than being counted as fast successful benchmarks.
 
 The delivery-correction batch hit Claude Code's session quota. All ten attempts
 are incomplete, with no scored plan or successful wall time. The provider reports
 a reset at 17:50 UTC on October 12. After the user reported quota restored,
 ten fresh replacement attempts launched at approximately 17:54 UTC, using the
-same candidate and protocol. Completing the planned matrix now requires 103
+same candidate and protocol. Completing the revised matrix now requires 93
 sessions, including the ten quota-interrupted attempts. The interrupted runs
 remain separate from successful results. All ten replacements completed by
-18:37:34 UTC. Their original turns and timing are captured; correctness and
-delivery-preservation grading remain pending.
+18:37:34 UTC. Their original turns and timing are captured and assessed. The user
+then requested freezing without another tuning cycle.
 
 ## Compare correctness and time on the same frozen revision
 
-The user requested this order:
+The user's latest requested order is:
 
-1. Opus 5.5, high effort (current cycle).
+1. Assess the completed Opus 5.5/high development batch and freeze its revision.
 2. Opus 5.5, low effort.
-3. Sonnet 5.5, high effort.
-4. Sonnet 5.5, medium effort.
+3. Sonnet 5.5, medium effort.
+4. Haiku 5.5, medium effort.
 
-Each configuration runs five fresh repetitions of each of the four exact cases.
-Use the same frozen plugin and application for all configurations. Once held-out
-feedback is opened, do not tune the plugin between configurations. Complete each
-configuration before starting the next.
+Each new configuration runs five fresh repetitions of each of the four exact
+cases. Use the same frozen plugin and application for all configurations. Do not
+tune the plugin after this freeze, including in response to development feedback.
+Complete each configuration before starting the next. Opus high has no held-out
+results and is not a four-case matched comparison with the new configurations.
 
 Keep the concurrency schedule the same: ten Rails/Sidekiq workers, then ten
-Pagy/Faraday workers per configuration. The Opus-high development and held-out
-batches use that schedule; launching twenty workers together for a later
+Pagy/Faraday workers per new configuration. The Opus-high reference used ten
+concurrent development workers. Launching twenty workers together for a later
 configuration would introduce a timing-comparison difference.
 
 Report correctness by case: actionable findings, omissions, incorrect or unsafe
@@ -67,9 +69,9 @@ verbatim and separate any additional commentary. The planner bytes are unchanged
 This addresses lost impacts, conditions, and repairs in three of the five Rails
 final responses. It does not claim to repair remaining raw-plan omissions or
 incorrect recommendations. Marketplace/plugin validation passed with the same
-existing missing-version warnings. Its behavioral evaluation is unverified:
-the first ten fresh attempts were interrupted; all replacements completed but
-have not yet been graded.
+existing missing-version warnings. The first ten fresh attempts were interrupted;
+all replacements completed and are assessed in the
+[second-batch assessment](planner-development-batch2-20261012.md).
 
 The current development repetitions use fresh `andrei/claude-maintain-rails-sample` orbs, application
 [9938031](https://github.com/andreimaxim/claude-maintain-rails-sample/commit/9938031e54e1d7d074f1200a0da17e49390c86fa),
@@ -87,6 +89,26 @@ proposed checks do not count as executed checks.
 Do not modify the plugin during a five-run batch. Assess all ten development
 repetitions before freezing the revision and launching held-out runs. Once
 held-out feedback is opened, retain that frozen revision for all held-out runs.
+
+## Frozen after assessment, without another tuning cycle
+
+The user requested assessment followed by an unconditional freeze of the current
+candidate. Plugin revision
+[11b074b](https://github.com/andreimaxim/claude-plugins/commit/11b074b79a35be55d5768ba3799b1dff768dfb94)
+and application revision
+[9938031](https://github.com/andreimaxim/claude-maintain-rails-sample/commit/9938031e54e1d7d074f1200a0da17e49390c86fa)
+remain unchanged. Both coordinator checkouts are clean. The frozen planner
+SHA-256 is `6fb8e6b1df27e475bdd97b3a55c93118c6b763339664812a7d18cce10908b71e`;
+the frozen skill SHA-256 is
+`bf6aa50a5216265adc52fdd53428af037df779856d7c0d125dfdc288af4bd652`.
+The freeze precedes opening any held-out answer key or results.
+
+Native metadata audits report `claude-opus-5-5`, high effort, and Claude Code
+2.1.296 for all 27 planner instances in the ten development orbs, including
+nested planner delegations. These collection-only follow-ups occurred after the
+original turns were saved and are excluded from scored inputs and wall time.
+The separate Amp Task graders do not expose their exact model; their conclusions
+were checked against quoted evidence, original traces, and application source.
 
 ## First development batch is assessed and superseded
 
@@ -156,18 +178,18 @@ They use candidate 11b074b, application 9938031, Opus 5.5/high, and the same exa
 natural prompts. Preserve the original scored turn before any collection-only
 follow-ups. Assess all ten before freezing and opening held-out feedback.
 
-| Case | Repetition | Thread | Assessment | Wall time |
+| Case | Repetition | Thread | Actionable raw/final | Wall time |
 | --- | --- | --- | --- | --- |
-| Rails | 1 | [Run](https://ampcode.com/threads/T-01a13140-02ab-760b-aa0f-025b3f7fd927) | Completed; grading pending | 31m 58s |
-| Rails | 2 | [Run](https://ampcode.com/threads/T-01a13140-0bbf-705c-993c-0b3c658428f8) | Completed; grading pending | 28m 21s |
-| Rails | 3 | [Run](https://ampcode.com/threads/T-01a13140-14ec-766a-ac70-8c3deed0847f) | Completed; grading pending | 31m 27s |
-| Rails | 4 | [Run](https://ampcode.com/threads/T-01a13140-1cd9-7270-ac6a-e959dee2abb8) | Completed; grading pending | 43m 25s |
-| Rails | 5 | [Run](https://ampcode.com/threads/T-01a13140-244e-76ba-992b-a6e9d04729c9) | Completed; grading pending | 33m 57s |
-| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a13140-2d86-7568-b150-4bcca5794937) | Completed; grading pending | 21m 31s |
-| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a13140-35a6-72ef-8bd4-dcffeab67c1d) | Completed; grading pending | 23m 18s |
-| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a13140-3cf1-7227-b3f9-4e67e5e0792a) | Completed; grading pending | 21m 55s |
-| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a13140-4614-70ed-9df8-459c959022e4) | Completed; grading pending | 19m 01s |
-| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a13140-4e91-720c-b8d2-755cb8acd580) | Completed; grading pending | 18m 39s |
+| Rails | 1 | [Run](https://ampcode.com/threads/T-01a13140-02ab-760b-aa0f-025b3f7fd927) | 21/23 → 21/23 | 31m 58s |
+| Rails | 2 | [Run](https://ampcode.com/threads/T-01a13140-0bbf-705c-993c-0b3c658428f8) | 20/23 → 20/23 | 28m 21s |
+| Rails | 3 | [Run](https://ampcode.com/threads/T-01a13140-14ec-766a-ac70-8c3deed0847f) | 19/23 → 19/23 | 31m 27s |
+| Rails | 4 | [Run](https://ampcode.com/threads/T-01a13140-1cd9-7270-ac6a-e959dee2abb8) | 21/23 → 21/23 | 43m 25s |
+| Rails | 5 | [Run](https://ampcode.com/threads/T-01a13140-244e-76ba-992b-a6e9d04729c9) | 21/23 → 21/23 | 33m 57s |
+| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a13140-2d86-7568-b150-4bcca5794937) | 2/2 → 2/2 | 21m 31s |
+| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a13140-35a6-72ef-8bd4-dcffeab67c1d) | 2/2 → 2/2 | 23m 18s |
+| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a13140-3cf1-7227-b3f9-4e67e5e0792a) | 2/2 → 2/2 | 21m 55s |
+| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a13140-4614-70ed-9df8-459c959022e4) | 2/2 → 2/2 | 19m 01s |
+| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a13140-4e91-720c-b8d2-755cb8acd580) | 2/2 → 2/2 | 18m 39s |
 
 Rails median: 31m 58s, range 28m 21s–43m 25s. Sidekiq median: 21m 31s,
 range 18m 39s–23m 18s. Times are rounded from request-to-recorded-idle
@@ -180,14 +202,14 @@ and evaluated message boundary before any follow-up. Raw exports and unreviewed
 captures remain private. The initial source audit matches the candidate in all
 ten orbs; no final full-tree or service-state audit is claimed.
 
-The next step is to grade raw reports and delivered responses against the
-development rubric, including omissions, incorrect or unsafe recommendations,
-and delivery loss. Use that assessment for any further general planner correction
-and fresh development reruns before freezing. Then open Pagy/Faraday and finish
-the remaining model configurations against the same frozen revision.
+The assessment covers raw and final application impact, applicability, repairs,
+validation, errors and delivery. All ten preserve selected-family actionability;
+remaining omissions and unsafe claims are recorded, not tuned away. The user
+requested freezing this revision and moving directly to Opus low, then Sonnet
+medium and Haiku medium. No additional tuning or Opus-high held-out runs follow.
 
 ## Held-out results remain unopened
 
 The exact targets are Pagy 8.6.3 → 9.3.5 and Faraday 1.10.4 → 2.12.2, five fresh
-repetitions each. No held-out run has launched. The revision is not yet frozen
-for held-out evaluation, and benchmark results remain incomplete.
+repetitions each. No held-out run has launched. The revision is now frozen;
+held-out assessment and the three new configurations remain incomplete.
