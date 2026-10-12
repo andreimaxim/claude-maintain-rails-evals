@@ -208,8 +208,30 @@ remaining omissions and unsafe claims are recorded, not tuned away. The user
 requested freezing this revision and moving directly to Opus low, then Sonnet
 medium and Haiku medium. No additional tuning or Opus-high held-out runs follow.
 
-## Held-out results remain unopened
+## Opus low: first frozen benchmark batch
+
+Ten fresh sample-project orbs launched at approximately 19:01 UTC, with requested
+model `claude-opus-5-5` and low effort. Initial prompts remain exactly the natural
+Rails and Sidekiq requests, with no answer-key context. Preserve the original
+turn before metadata or evidence follow-ups. Assess every completed plan.
+
+| Case | Repetition | Thread | Assessment |
+| --- | --- | --- | --- |
+| Rails | 1 | [Run](https://ampcode.com/threads/T-01a1317d-421e-774f-9075-12cba5e1aa24) | Running |
+| Rails | 2 | [Run](https://ampcode.com/threads/T-01a1317d-4e6c-7202-a9d0-f0a79401c306) | Running |
+| Rails | 3 | [Run](https://ampcode.com/threads/T-01a1317d-5f32-71ab-8850-773b885f5fda) | Running |
+| Rails | 4 | [Run](https://ampcode.com/threads/T-01a1317d-6cc0-73d9-9172-4ac8661e124d) | Running |
+| Rails | 5 | [Run](https://ampcode.com/threads/T-01a1317d-7952-766d-b731-75b4bab7176a) | Running |
+| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a1317d-863c-7031-9b23-8b1185f8ff56) | Running |
+| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a1317d-8fec-71af-99b0-f3567cd7e3bf) | Running |
+| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a1317d-97ac-70ec-8689-8ab4d387a7bf) | Running |
+| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a1317d-9f41-746e-895c-b06303ba492b) | Running |
+| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a1317d-a879-7479-8a40-77d5c2bed4e3) | Running |
+
+## Held-out key opened only after freeze
 
 The exact targets are Pagy 8.6.3 → 9.3.5 and Faraday 1.10.4 → 2.12.2, five fresh
-repetitions each. No held-out run has launched. The revision is now frozen;
-held-out assessment and the three new configurations remain incomplete.
+repetitions each. The coordinator recovered the held-out fixture key after the
+freeze was recorded and pushed, alongside the Opus-low launch. No held-out run
+has launched yet. The key remains in the coordinator's evaluation repository,
+never in worker prompts or files. No plugin changes follow this exposure.
