@@ -11,8 +11,11 @@ must remain visible rather than being counted as fast successful benchmarks.
 
 The delivery-correction batch hit Claude Code's session quota. All ten attempts
 are incomplete, with no scored plan or successful wall time. The provider reports
-a reset at 17:50 UTC on October 12. Replacement attempts are not yet launched;
-any replacements add to the original planned session count.
+a reset at 17:50 UTC on October 12. After the user reported quota restored,
+ten fresh replacement attempts launched at approximately 17:54 UTC, using the
+same candidate and protocol. Completing the planned matrix now requires 103
+sessions, including the ten quota-interrupted attempts. The interrupted runs
+remain separate from successful results.
 
 ## Compare correctness and time on the same frozen revision
 
@@ -63,7 +66,7 @@ This addresses lost impacts, conditions, and repairs in three of the five Rails
 final responses. It does not claim to repair remaining raw-plan omissions or
 incorrect recommendations. Marketplace/plugin validation passed with the same
 existing missing-version warnings. Its behavioral evaluation is unverified:
-all ten fresh attempts were interrupted by the session limit.
+the first ten fresh attempts were interrupted; replacement attempts are running.
 
 The current development repetitions use fresh `andrei/claude-maintain-rails-sample` orbs, application
 [9938031](https://github.com/andreimaxim/claude-maintain-rails-sample/commit/9938031e54e1d7d074f1200a0da17e49390c86fa),
@@ -142,6 +145,26 @@ regression cases failed before the fix; all three test methods pass afterward.
 Rechecking the real exports rejects all ten interrupted attempts while accepting
 all ten previously completed development reports with unchanged final text and
 elapsed time.
+
+## Fresh retry after the quota reset
+
+These are new sample-project orbs, not continuations of interrupted planners.
+They use candidate 11b074b, application 9938031, Opus 5.5/high, and the same exact
+natural prompts. Preserve the original scored turn before any collection-only
+follow-ups. Assess all ten before freezing and opening held-out feedback.
+
+| Case | Repetition | Thread | Assessment |
+| --- | --- | --- | --- |
+| Rails | 1 | [Run](https://ampcode.com/threads/T-01a13140-02ab-760b-aa0f-025b3f7fd927) | Running |
+| Rails | 2 | [Run](https://ampcode.com/threads/T-01a13140-0bbf-705c-993c-0b3c658428f8) | Running |
+| Rails | 3 | [Run](https://ampcode.com/threads/T-01a13140-14ec-766a-ac70-8c3deed0847f) | Running |
+| Rails | 4 | [Run](https://ampcode.com/threads/T-01a13140-1cd9-7270-ac6a-e959dee2abb8) | Running |
+| Rails | 5 | [Run](https://ampcode.com/threads/T-01a13140-244e-76ba-992b-a6e9d04729c9) | Running |
+| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a13140-2d86-7568-b150-4bcca5794937) | Running |
+| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a13140-35a6-72ef-8bd4-dcffeab67c1d) | Running |
+| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a13140-3cf1-7227-b3f9-4e67e5e0792a) | Running |
+| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a13140-4614-70ed-9df8-459c959022e4) | Running |
+| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a13140-4e91-720c-b8d2-755cb8acd580) | Running |
 
 ## Held-out results remain unopened
 
