@@ -54,11 +54,53 @@ repair recipes, and scoring criteria out of the worker prompt, plugin prompts,
 and application guidance. Give each worker only its case's natural-language
 upgrade request.
 
-This repository currently has this record and manual smoke-test cases. It does
-not have an automated evaluation runner or scorer. The broader fixture research
-and verification evidence remain in the
-[fixture-building thread](https://ampcode.com/threads/T-01a12a2a-b175-7704-8f32-3fdc646d0213);
-they have not been consolidated into an answer key here.
+The [development answer key](tests/planner-development.md) consolidates the
+23 Rails and two Sidekiq findings, applicability conditions, verified repairs,
+and manual assessment criteria. The [smoke cases](tests/planner-smoke.md) cover
+the plan-delivery workflow. There is no automated evaluation runner or scorer.
+The original fixture research and verification evidence remain in the
+[fixture-building thread](https://ampcode.com/threads/T-01a12a2a-b175-7704-8f32-3fdc646d0213).
+Held-out feedback stays unopened until the development revision is frozen.
+
+The [October 12 diagnostic assessment](tests/planner-development-diagnostic-20261012.md)
+records two unchanged Rails runs and one Sidekiq run. The
+[first development batch](tests/planner-development-batch1-20261012.md) is assessed:
+three Rails final responses lose substantial details from their raw plans. A
+delivery-only correction is published, and ten fresh development repetitions
+are running. The [evaluation-cycle record](tests/planner-suite-20261012.md)
+tracks those runs and the planned correctness/time comparison: Opus 5.5 high,
+Opus 5.5 low, Sonnet 5.5 high, then Sonnet 5.5 medium. Held-out results remain
+unopened, and no delivery improvement is claimed before the fresh assessment.
+
+To retain a completed run's visible tool trace and planner response without
+thinking blocks or account/environment metadata, keep the full export in a
+private temporary directory:
+
+```sh
+private_dir=$(mktemp -d)
+amp threads export <thread-id> > "$private_dir/thread.json"
+python3 tests/collect-planner-trace.py "$private_dir/thread.json" /tmp/planner-trace.json
+rm -r "$private_dir"
+```
+
+Review tool output for secrets before sharing the trace. The collector requires
+an idle thread, a completed planner invocation, and final assistant text. It
+does not grade the plan or collect nested experiment logs. Keep the full export
+private and remove it after collection.
+
+An async launch acknowledgment is not a completed planner report. If the planner
+runs in the background, collect its completed native JSONL transcript privately
+and pass `--background-transcript <path>` to the collector. It requires matching
+agent identity, a completed final report, and a later parent response. The trace
+retains the report and source hash, not the transcript's thinking blocks.
+
+Export and collect the scored turn before sending evidence-recovery follow-ups.
+Keep that trace unchanged: later collection messages are not benchmark input or
+part of its elapsed time. `wall_time_ms` uses the initial request and recorded
+idle-state timestamp, not the start timestamp of a streamed final message.
+
+Check the collector with
+`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_*.py' -v`.
 
 ## Fixture construction established runtime ground truth
 
