@@ -229,6 +229,18 @@ the main agent's handoff is 130 to 160 characters. The
 [v1 record](tests/results/20261013-headless/v1-no-self-delegation-rails/summary.json)
 keeps each run's plan, receipt and grade.
 
+**Tracing intermediate releases recovered recall, and the cost came back too.**
+[Variant v2](tests/planner-variants/v2-intermediate-releases) adds one instruction
+to v1's planner: work through every release between the two versions and, for
+each new configuration default, say whether the application keeps the old value
+and what adopting it would change. Five runs scored 20, 17, 14, 17 and 17, a mean
+of 17.0 against the baseline's 16.6 and v1's 15.4, which is within grader noise of
+the baseline. R14 rose to 4/5 actionable, R09 to 3/5 and R23 to 4/5; R20 recovered
+only to 2/5. The median run took 16.5 minutes and $3.10, slower and costlier than
+the baseline's 13.0 minutes and $2.90. No plan fully specified any validation. The
+[v2 record](tests/results/20261013-headless/v2-intermediate-releases-rails/summary.json)
+keeps each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

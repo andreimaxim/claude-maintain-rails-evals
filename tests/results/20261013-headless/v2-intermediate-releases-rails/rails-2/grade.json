@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum status:, _prefix:` must become `enum :status, {...}, prefix: true` (keyword form removed in 8.0). 7.0-safe; models won't load without it.",
+      "reasons": "Validation: the plan relies only on the general suite result. It does not persist draft and ready notes or exercise the filters and helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, JSON` must become `serialize :tags, coder: JSON` (positional form removed in 7.2). **This is not 7.0-safe.** On 7.0 the `coder:` keyword is silently ignored and the column is treated as YAML.",
+      "reasons": "Validation: the plan only shows the 7.0 YAML-write check and suite results. It does not reload existing unequal JSON tags or edit comma-separated input on 8.1.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`alias_attribute :highlight_color, :color` must become `alias_method` for both the reader and the `=` writer. `color` is a store accessor, not a real attribute, so 7.2+ raises.",
+      "reasons": "Validation: the only evidence is the general suite pass. The plan does not edit and reload the color, check form/error rendering, or confirm existing settings are kept.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`where(notebooks: @notebook)` is now read as a column named `notes.notebooks`. Change it to `where(notebook: @notebook)`.",
+      "reasons": "Validation: the plan says only 'Suite catches it'. It does not use unequal notebook populations, another owner, or a foreign-notebook denial check.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`citation[:id]` no longer returns the DOI primary key. It now raises a missing-attribute error, so the CSV receipt returns a 500. Use `citation&.doi`.",
+      "reasons": "Impact: the plan predicts a raised error and a 500, but the key says the receipt silently loses its DOI values. Validation: the plan says only 'Suite catches it', with no comparison of receipt fields against distinct persisted DOIs.",
+      "actionable": false
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`return false` inside `transaction` used to roll back; from 8.0 it commits... Measured counts went from `[0,3,0,1]` to `[1,4,1,2]`. Use `raise ActiveRecord::Rollback` and return the transaction's value.",
+      "reasons": "Validation: the plan has measured counts for a failing batch but no successful-batch control, and it does not describe a fresh real apply request with a valid row followed by an invalid row.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`fragments.sum` on strings is gone (removed in 7.1). Use `fragments.join`.",
+      "reasons": "Impact: the plan only says the API is gone; it does not say the export worker raises TypeError and fails. Validation: the plan says only 'Suite catches it', with no check of the real worker's exact Markdown bytes.",
+      "actionable": false
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`annotations.stringify_keys` now really turns the integer line numbers into strings, so annotations silently disappear from the preview. Remove `.stringify_keys`.",
+      "reasons": "Validation: the plan says only 'Suite catches it'. It does not test unequal annotations on lines 2 and 4 with a multiline CSV row.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "now shows 08:00 -05:00 instead of 09:00 -04:00. What doesn't change: the stored epoch. The difference is display only",
+      "reasons": "Validation: the plan shows one DST example and a suite catch, but it does not compare epoch, wall-clock time and offset or include a non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "from 7.1, a time-with-zone job argument keeps the reader's zone. The digest then covers the reader's local day instead of the UTC day the app documents. Fix: `requested_at = requested_at.utc` in the mailer.",
+      "reasons": "Validation: the plan only says the suite catches the subject line. It has no real queue/worker test that crosses each midnight or inspects reservation keys and delivered notes.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "passing an integer to `set(wait_until:)` now fails with `undefined method utc for Integer`. Use `Time.at(reminder_epoch)`.",
+      "reasons": "Validation: the plan says only 'Suite catches it'. It does not inspect the real scheduled payload/score and persisted time, or check replacement and ownership.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`wait: :exponentially_longer` raises \"Couldn't determine a delay\" when a retry happens. Use `:polynomially_longer`... Not available on 7.0, so it goes in the bump deploy.",
+      "reasons": "Validation: the plan says only 'Suite catches it'. It does not test a persistent 503 for six requests over three attempts, nor the 503->200 and 401 controls.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`form_with(model: nil, ...)` now raises; drop `model: nil`. 7.0-safe. Suite catches it.",
+      "reasons": "Validation: the plan says only 'Suite catches it'. It does not confirm form field names, method and resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`get \"/notes\", \"/journal\", to:` (several paths in one call) no longer works. Split it into two `get` lines; `notes_path` and `journal_path` stay the same.",
+      "reasons": "Impact: 'no longer works' does not say that route drawing fails. Validation: the plan says only 'Suite catches it', with no check that both URLs return the same authorized list for an owner.",
+      "actionable": false
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`show_exceptions = false` is now treated as \"show exceptions\", which hides the real errors behind 500 pages. Use `:none`. Not available on 7.0",
+      "reasons": "Validation: the plan only reports the suite and eager-load passes. It does not exercise a raised request exception or the missing-record policy.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "from 7.1, `allowed_tags` starts as nil, so `+=` crashes at boot. Replace it with the portable form from `/tmp/upg/app81/config/initializers/action_text.rb`.",
+      "reasons": "Recommendation: the plan points to an external file without stating that the replacement must be a complete safe allowlist. Validation: the only check is a details/summary test; it does not test attachments or the exclusion of scripts, handlers and javascript URLs.",
+      "actionable": false
+    },
+    "R19": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Rails.application.secrets` was removed in 7.2. Move the settings to `config/citation_provider.yml`, load them with `config.x.citation_provider = config_for(:citation_provider)`",
+      "reasons": "Impact: the plan names the removed API but does not say that provider requests fail. Validation: the plan says only 'Suite catches it', with no fresh-process check using special-character credentials and the actual Basic header.",
+      "actionable": false
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "With the 7.0 defaults, 8.1 drops the expiry and logs an `ArgumentError` on each write... With the 7.1 `raise_on_invalid_cache_expiration_time` default, the exports page returns a 500... Fix: pass an expiry only while `export.downloadable?`, and add that to the cache key.",
+      "reasons": "Validation: the plan only says caching tests catch the issue. It does not test before and after the deadline, cached and fresh reads, or download expiry and ownership.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`default_column_serializer=nil`: `serialize :preferences` fails at boot. Add `coder: YAML`; the stored data format doesn't change.",
+      "reasons": "Validation: the plan cites only aggregate default-run errors. It does not create, edit and reload unequal preferences with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`raise_on_assign_to_attr_readonly`: `NotebooksController#update` raises `ReadonlyAttributeError`, because the settings form resubmits `slug` and `notebook_params` permits it. Fix: stop permitting `:slug` on update",
+      "reasons": "Validation: the plan says only 'Suite catches it'. It does not test creation, editable field changes, an attempted slug change, and the persisted slug.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`postgresql_adapter_decode_dates`: `Notebook#daily_note_counts` passes a Date to `Date.iso8601` and raises TypeError. Fix: accept either a Date or a string (7.0-safe).",
+      "reasons": "Validation: the plan says only 'Suite catches it'. It does not test with decoding off and on, asymmetric date counts, empty reports, or ownership.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`strict_freshness`: on `ExportDownloadsController`, an ETag match alone is enough when both headers are sent. The blob checksum is still MD5 and immutable, so harmless.",
+      "reasons": "Impact: the plan describes the precedence rule but not the concrete change from 200-with-bytes to 304. Recommendation: it dismisses the change as harmless instead of making an explicit keep/adopt decision. Validation: the plan proposes no conditional-request tests.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0 worker failed with `DeserializationError: Serializer ActiveJob::Serializers::BigDecimalSerializer is not known`... Fix: in `User#request_digest`, pass `reading_completion.to_s`... The reverse direction (7.0 payload read by an 8.1 worker) worked.",
+      "reasons": "Validation: the plan tests both cross-version directions but has no same-version controls and does not check the exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 17,
+  "cost_usd": 0.296336,
+  "duration_ms": 62842
+}

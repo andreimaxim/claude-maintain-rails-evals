@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`app/models/note.rb` `enum status:, _prefix:` | Keyword form removed (deprecated 7.2, removed 8.0) | `enum :status, {...}, prefix: true` | Yes | `Note.statuses`, `status_ready` scope",
+      "reasons": "Impact only says the keyword form is removed and does not say the model fails to load. Validation checks statuses and a scope but does not persist different draft/ready notes or check helpers after reload.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, coder: JSON` | **No.** On 7.0 the keyword is silently ignored and `tags` reads back as a String. Ship it in the same commit as the gem bump",
+      "reasons": "Impact names the removed positional coder without stating the consequence for the Note model. Validation is a byte-format probe plus re-checking tag rendering, with no unequal tags or comma-separated edit.",
+      "actionable": false
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`alias_method :highlight_color, :color` and `alias_method :highlight_color=, :color=`",
+      "reasons": "Validation is only 'Highlight edit test'. It does not reload JSON settings, check form/error rendering, or confirm existing settings survive.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`where(notebooks: @notebook)` | Singular-association plural key: SQL error ... | `where(notebook: @notebook)`",
+      "reasons": "Validation is only 'Notebook filter test', with no unequal notebook populations, no other owner, and no foreign-notebook denial.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "**Silent.** Returns nil on 7.2+, so the receipt CSV has empty DOIs ... `note.citation_doi`",
+      "reasons": "Validation is a single-value probe plus a receipt assertion. It does not compare distinct DOIs in the downloaded receipt against persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "From 7.2 the non-local return commits ... Observed: an invalid import saved 1 import and 1 note | `raise ActiveRecord::Rollback` and return a `saved` flag",
+      "reasons": "Validation names one test only. It lacks the valid-then-invalid real request with fresh PostgreSQL counts and a successful-batch control.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Array#sum` on Strings raises TypeError on 7.1 and later, so every export fails ... `fragments.join`",
+      "reasons": "Validation is 'Export tests'. It does not check that the real worker returns exact ordered Markdown bytes or include the failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "From 8.0, `HashWithIndifferentAccess#stringify_keys` converts the Integer keys, so annotations disappear from the preview | Use `row.annotation`",
+      "reasons": "Validation is one `#line_2 dd` assertion. It lacks unequal annotations at lines 2 and 4, a multiline CSV row, and a check that nothing is saved.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Across DST the preview shows 08:00 -05:00 instead of 09:00 -04:00. The epoch (`to_i`) is unchanged ... Product decision",
+      "reasons": "Validation is one DST-boundary datetime assertion, with no explicit epoch/offset comparison and no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TimeWithZone` job arguments keep the reader's zone, so the digest covers the reader's local day instead of the UTC day ... `requested_at = requested_at.utc` in the mailer",
+      "reasons": "Validation is one subject-line test. It lacks a real JSON queue/worker crossing each midnight and inspection of reservation keys and note membership.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`set(wait_until: <Integer>)` | NoMethodError `utc` for Integer ... `wait_until: Time.at(reminder_epoch)` ... Sidekiq schedule score `2030-01-01T12:00Z` (probe)",
+      "reasons": "Validation checks the enqueued `:at` value and the schedule score, but not the persisted schedule time or the replacement/ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Raises at enqueue in `retry_on` ... `:polynomially_longer` works only on 7.1+. A lambda `->(executions) { executions**4 + 2 }` works on both",
+      "reasons": "Impact says the job raises at enqueue rather than that bounded ActiveJob retry falls into Sidekiq retries. Validation is just 'Retry test', with no persistent-503 count or 503->200/401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`form_with(model: nil, ...)` | Raises (8.0, no warning) | Drop `model: nil`",
+      "reasons": "Validation is 'Search form markup', with no submission or check of the resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Multiple paths removed (deprecated 8.0, removed 8.1) | Two routes: `as: :notes` and `as: :journal`",
+      "reasons": "Impact names the removal without saying that routes fail to draw. Validation lists routes but does not request both URLs as an owner.",
+      "actionable": false
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 8.1, `false` falls through to \"show all\", so RecordNotFound becomes a 404 ... `:none` | **No.** On 7.0 `:none` is truthy ... ship with the bump",
+      "reasons": "Validation is access-control tests only, with no raised-exception case and no check of CI eager-loading modes.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`allowed_tags` is nil by default, so boot fails with NoMethodError ... keeps `<details>/<summary>` and still strips `<script>`, `onerror` and `javascript:`",
+      "reasons": "Validation does not render attachment markup.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Rails.application.secrets` removed ... set `config.x.citation_provider = config_for(:citation_provider)` ... Citation tests, including \"credentials reach the server unchanged\"",
+      "reasons": "Impact names the removed API without saying provider requests fail. Validation lacks a fresh-process request with a Basic-header check and bounded-failure behavior.",
+      "actionable": false
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "breaks the expired-export fragment in `app/views/exports/_export.html.erb:26` (`expires_in` is negative). Fix: floor the expiry at a small positive value, or skip the cache when the export is not downloadable.",
+      "reasons": "The plan offers skipping the cache on equal footing with the clamp, and that cache-skip alternative is known to break the stale-link contract. No validation is given for the fix.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Required only if `default_column_serializer = nil` is adopted (7.1 default) | `serialize :preferences, coder: YAML`",
+      "reasons": "Impact does not state the consequence (a missing-coder error). Validation is a YAML dump probe with no create/edit/reload of preferences with the gate both off and on.",
+      "actionable": false
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`raise_on_assign_to_attr_readonly`: the update test breaks (ReadonlyAttributeError on `slug`, because the form resubmits it). Fix: drop `:slug` from `notebook_params`",
+      "reasons": "Dropping slug from the shared params does not address keeping slug on creation. No validation of creation or persisted-slug behavior is given.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`postgresql_adapter_decode_dates`: breaks the activity report (`Date.iso8601(Date)` raises TypeError in `Notebook#daily_note_counts`). Fix: `day.to_date`, which works on both versions.",
+      "reasons": "No validation with decoding off/on, asymmetric counts, empty reports, or ownership is given.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "missing",
+      "validation": "partial",
+      "quote": "`strict_freshness`: export downloads honor `If-None-Match` only. The ETag is the blob checksum, so the effect is minimal, and the tests pass.",
+      "reasons": "Impact calls the effect minimal instead of stating the 200-to-304 change for a matching ETag list. There is no explicit keep/adopt recommendation, and validation is only a passing suite.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "7.2+ always uses `BigDecimalSerializer`. A 7.0 worker fails on it with \"BigDecimalSerializer is not known\" (executed) | Pass `reading_completion.to_s`; the mailer already calls `BigDecimal(...)`",
+      "reasons": "Validation is 'Re-run the payload probe' with no real producer/consumer matrix, same-version controls, or exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 14,
+  "cost_usd": 0.317012,
+  "duration_ms": 66510
+}
