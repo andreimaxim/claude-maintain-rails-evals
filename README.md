@@ -84,9 +84,13 @@ plugin remote no longer contains `maintain-rails`; all ten workers acknowledged
 the stop. The user approved a temporary frozen-source pre-setup pin, and all ten
 pinned Opus-low replacements are assessed. Pagy retains 5/10 actionable family
 memberships and Faraday 4/10 per raw/final layer; workflow and safety failures
-remain separate from recall. Sonnet-medium Rails/Sidekiq is now running. The
-temporary project setting will be restored to its previous empty value after
-the suite; no planner tuning follows held-out exposure.
+remain separate from recall. All twenty Sonnet-medium runs are assessed: final
+Rails recall ranges from 14–18/23, Sidekiq retains 1/2 in every run, Pagy retains
+6/10 family memberships and Faraday 3/10. These are selected-finding counts,
+not overall correctness pass rates. Haiku-medium development runs are collecting;
+early waiting messages do not count as successful plan delivery. The temporary
+project setting will be restored to its previous empty value after the suite;
+no planner tuning follows held-out exposure.
 
 To retain a completed run's visible tool trace and planner response without
 thinking blocks or account/environment metadata, keep the full export in a

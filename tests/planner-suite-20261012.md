@@ -422,24 +422,105 @@ Reviewed assessments, model audits and the 30-row CSV are under
 `.amp/in/artifacts/planner-suite-20261012/`; full exports remain private. Opus low
 is assessed on all four cases, with no tuning after held-out exposure.
 
-## Sonnet medium: frozen development batch launched
+## Sonnet medium: all four cases assessed
 
 Ten fresh sample-project orbs launched at approximately 05:31 UTC on October 13,
 requesting `claude-sonnet-5-5` and medium effort. The prompts and concurrency
-grouping are unchanged. Complete and assess Rails/Sidekiq before launching the
-ten Pagy/Faraday workers. Assess the complete configuration before Haiku medium.
-The temporary project pin remains active; restore its previous empty value after
-the suite. Actual served model/effort will be audited, not inferred from requests.
+grouping are unchanged. All ten completed and were assessed before the held-out
+launch. Downloaded plugin HEAD/prompt hashes and initial application revisions
+match the freeze in every orb. Native audits cover 30 planner instances, all
+served Sonnet 5.5/medium on CLI 2.1.296; each orb has a depth-1→2→3 planner chain.
 
-| Case | Repetition | Thread |
-| --- | --- | --- |
-| Rails | 1 | [Run](https://ampcode.com/threads/T-01a133bd-b6bb-76de-945c-5391d23035e3) |
-| Rails | 2 | [Run](https://ampcode.com/threads/T-01a133bd-bfc9-761d-a1f1-18033ab9e5fc) |
-| Rails | 3 | [Run](https://ampcode.com/threads/T-01a133bd-c927-76f5-b340-ccefb4b035b0) |
-| Rails | 4 | [Run](https://ampcode.com/threads/T-01a133bd-d62c-704f-9a49-3e2091a0282f) |
-| Rails | 5 | [Run](https://ampcode.com/threads/T-01a133bd-deab-712c-9d70-c752d06e553b) |
-| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a133bd-eb33-72f8-a569-f45fc5e4ced4) |
-| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a133bd-f47c-72ef-ba93-f6efd8743a41) |
-| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a133bd-fcd6-76b8-a2af-a38b2f7e92e8) |
-| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a133be-054f-720e-87d6-848f85f740a8) |
-| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a133be-0e63-74ea-b918-2cbbb717c51d) |
+| Case | Repetition | Thread | Actionable raw/final | Wall time | Reported planner tokens |
+| --- | --- | --- | --- | --- | ---: |
+| Rails | 1 | [Run](https://ampcode.com/threads/T-01a133bd-b6bb-76de-945c-5391d23035e3) | 17/23 → 17/23 | 18m 18s | 51402 |
+| Rails | 2 | [Run](https://ampcode.com/threads/T-01a133bd-bfc9-761d-a1f1-18033ab9e5fc) | 18/23 → 18/23 | 22m 52s | 54851 |
+| Rails | 3 | [Run](https://ampcode.com/threads/T-01a133bd-c927-76f5-b340-ccefb4b035b0) | 14/23 → 14/23 | 13m 32s | 49146 |
+| Rails | 4 | [Run](https://ampcode.com/threads/T-01a133bd-d62c-704f-9a49-3e2091a0282f) | 17/23 → 17/23 | 17m 35s | 50390 |
+| Rails | 5 | [Run](https://ampcode.com/threads/T-01a133bd-deab-712c-9d70-c752d06e553b) | 17/23 → 15/23 | 14m 49s | 49336 |
+| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a133bd-eb33-72f8-a569-f45fc5e4ced4) | 1/2 → 1/2 | 8m 02s | 47766 |
+| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a133bd-f47c-72ef-ba93-f6efd8743a41) | 1/2 → 1/2 | 6m 50s | 48417 |
+| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a133bd-fcd6-76b8-a2af-a38b2f7e92e8) | 1/2 → 1/2 | 4m 41s | 46694 |
+| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a133be-054f-720e-87d6-848f85f740a8) | 1/2 → 1/2 | 12m 32s | 45922 |
+| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a133be-0e63-74ea-b918-2cbbb717c51d) | 1/2 → 1/2 | 6m 08s | 46523 |
+
+Rails median: 17m 35s, range 13m 32s–22m 52s, sample SD 3.62 min. Final recall
+median 17/23, range 14–18/23. Run 5 compresses away the concrete notebook-query
+and retry-time failure explanations, losing R04 and R14 actionability during
+delivery. R25 remains unactionable throughout; conditional and direct omissions
+vary. A genuine extra mixed-version Asuncion time-zone validation risk in run 2
+is recorded without increasing selected-family recall. Remaining source, cookie,
+job/drain and unsupported-verification claims are retained in the assessment.
+
+Sidekiq median: 6m 50s, range 4m 41s–12m 32s, sample SD 2.99 min. Every raw/final
+retains SK2. All SK1 repairs are valid, but their concrete Symbol rejection is not
+connected to the queued-row/no-job consequence; outage-orphan discussion does
+not establish that separate impact. All five advise unsafe method-wide cleanup;
+acknowledging its hazard without requiring an enqueue-only boundary is not a safe
+repair. Run 3 incorrectly dismisses the BigDecimal masking prerequisite, uses
+target-only test constants before the bump, and omits scheduler-failure impact.
+Other runs correctly identify the prerequisite and connection-pool protection.
+Unmeasured throughput and universal reverse-payload assurances remain unsupported.
+
+No report fully specifies a validation family under the unchanged strict rubric;
+useful partial checks and nested claimed experiments remain separately recorded.
+The coordinator reconciled 1054 quote memberships, all counts, capture/export
+hashes and wall times, with no mismatches. Reviewed assessments and native audits
+are in `.amp/in/artifacts/planner-suite-20261012/`; its CSV now has 40 rows.
+
+Ten Sonnet-medium Pagy/Faraday orbs launched at approximately 06:12 UTC. Their
+downloaded plugin HEAD/prompt hashes and initial application revisions all match
+the freeze. All ten completed and were assessed before Haiku medium launched.
+Native audits cover another 30 planner instances, all served Sonnet 5.5/medium
+on CLI 2.1.296, with depth-1→2→3 delegation in every orb.
+
+| Case | Repetition | Thread | Actionable raw/final | Wall time | Reported planner tokens |
+| --- | --- | --- | --- | --- | ---: |
+| Pagy | 1 | [Run](https://ampcode.com/threads/T-01a133e3-9bbe-760d-98e4-823e861c4a78) | 1/2 → 1/2 | 3m 55s | 44022 |
+| Pagy | 2 | [Run](https://ampcode.com/threads/T-01a133e3-a6a7-74fb-aea1-ec027bbd3025) | 1/2 → 1/2 | 3m 30s | 44034 |
+| Pagy | 3 | [Run](https://ampcode.com/threads/T-01a133e3-af46-76d8-8c5e-861033293ffb) | 1/2 → 1/2 | 4m 14s | 45534 |
+| Pagy | 4 | [Run](https://ampcode.com/threads/T-01a133e3-bb84-749e-bf39-96085b6ac168) | 2/2 → 2/2 | 3m 50s | 44084 |
+| Pagy | 5 | [Run](https://ampcode.com/threads/T-01a133e3-c7eb-74ce-8011-b9dd251920db) | 1/2 → 1/2 | 4m 10s | 46982 |
+| Faraday | 1 | [Run](https://ampcode.com/threads/T-01a133e3-d3e2-741a-95e7-223471030e7b) | 1/2 → 1/2 | 5m 07s | 45470 |
+| Faraday | 2 | [Run](https://ampcode.com/threads/T-01a133e3-de4d-733a-af28-9fa753850acf) | 0/2 → 0/2 | 4m 44s | 42933 |
+| Faraday | 3 | [Run](https://ampcode.com/threads/T-01a133e3-e850-718a-9838-354bf6e42d56) | 2/2 → 2/2 | 7m 01s | 46354 |
+| Faraday | 4 | [Run](https://ampcode.com/threads/T-01a133e3-f1cc-7633-b6db-fc3f8c6e8977) | 0/2 → 0/2 | 3m 31s | 44082 |
+| Faraday | 5 | [Run](https://ampcode.com/threads/T-01a133e3-fc79-7674-ab88-84c10d632af6) | 0/2 → 0/2 | 2m 55s | 44350 |
+
+Pagy median: 3m 55s, range 3m 30s–4m 14s, sample SD 0.29 min. Faraday median:
+4m 44s, range 2m 55s–7m 01s, sample SD 1.59 min. Reported planner token medians
+are 44084 (44022–46982) and 44350 (42933–46354), respectively; these are first
+Agent-return footers, not total workflow or billed usage.
+
+Pagy retains 6/10 actionable family memberships in each layer: all five PG2
+normalizations, but only run 4 fully explains PG1. Other runs omit a rendering,
+query, default or cap consequence despite valid repairs. Runs 1, 4 and 5
+misidentify require-only as silent rendered-list drift and disclose shared Redis
+use. Invalid-page contract-abandonment alternatives in runs 2 and 5 do not
+preserve baseline behavior. Final responses preserve counts, not exact reports.
+
+Faraday retains 3/10 memberships in each layer. Only run 3 connects both failures
+to pending citations and fallback retries; run 1 explains FD2 completely.
+Raw run 4 recommends retry 2.x as preparation on Faraday 1, which is incompatible.
+Its final removes that constraint but still omits complete application impacts.
+Standalone probes in runs 4 and 5 do not establish a bootable application bundle.
+Reports of flushing numbered Redis databases in runs 1 and 3 lack independent
+evidence of exclusive ownership; no shared-state breach is inferred from that
+uncertainty alone.
+
+Every validation family remains partial under the same strict scenario/control
+rubric. No nested probe logs were independently collected. The coordinator
+reconciled 541 quote memberships, counts, capture/export hashes and wall times
+with no mismatches. Reviewed assessments, native audits and the 50-row CSV are
+under `.amp/in/artifacts/planner-suite-20261012/`.
+
+## Haiku medium: development batch collecting
+
+Ten fresh Rails/Sidekiq orbs launched at approximately 06:29 UTC on October 13,
+requesting `claude-haiku-5-5` and medium effort. All ten source audits match the
+frozen application, plugin HEAD and prompt hashes. Several early idle responses
+are status messages while nested background agents continue. Preserve these
+early exports, but do not count them as fast successful plans. Assess completed
+reports and workflow failures before launching held-out cases. No coordinator
+coaching or planner tuning follows these results. The temporary project pin
+remains active; restore its previous empty value after the suite.
