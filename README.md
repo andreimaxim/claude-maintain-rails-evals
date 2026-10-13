@@ -81,8 +81,12 @@ no Opus-high held-out batch is added before switching models. Opus-low Rails and
 Sidekiq are assessed, with per-run timing, reported planner tokens and observed
 variation recorded. The resumed Pagy/Faraday attempts are excluded because the
 plugin remote no longer contains `maintain-rails`; all ten workers acknowledged
-the stop. A tested frozen-source pre-setup pin awaits approval before further
-benchmark launches.
+the stop. The user approved a temporary frozen-source pre-setup pin, and all ten
+pinned Opus-low replacements are assessed. Pagy retains 5/10 actionable family
+memberships and Faraday 4/10 per raw/final layer; workflow and safety failures
+remain separate from recall. Sonnet-medium Rails/Sidekiq is now running. The
+temporary project setting will be restored to its previous empty value after
+the suite; no planner tuning follows held-out exposure.
 
 To retain a completed run's visible tool trace and planner response without
 thinking blocks or account/environment metadata, keep the full export in a

@@ -320,8 +320,8 @@ runs. Every worker acknowledged the stop and is idle. They report local,
 uncommitted application edits; no worker reports a commit or push. Those files
 remain in the excluded orbs, not integrated into the coordinator. This is not a
 full independent file/service audit. Private exports taken before stop requests
-and after acknowledgments are preserved separately from scored traces. There is
-no valid Opus-low held-out result, and no Sonnet or Haiku benchmark has launched.
+and after acknowledgments are preserved separately from scored traces. At this
+point there was no valid Opus-low held-out result; pinned replacements follow.
 The ten excluded sessions increase the planned total from 93 to at least 103 if
 all remaining slots complete without more failures.
 
@@ -344,6 +344,102 @@ Code startup, rather than coaching an already-started run. The proposed
 application/plugin commits and verifies the prompt hashes, refusing to overwrite
 tracked changes. It restored the deleted plugin in disposable local clones,
 passed twice, and refused a staged-change negative control without deleting the
-file. Applying that shared sample-project setting awaits approval;
-the existing empty pre-setup setting has not been changed. Plugin/application
-history and billing/provider settings remain untouched.
+file. The user approved applying this temporary shared setting and restoring the
+previous empty value after the suite. It was applied on October 13, before the
+fresh replacements below, and the project read-back matches the reviewed script
+exactly. Plugin/application history and billing/provider settings remain untouched.
+
+## Pinned Opus-low held-out replacements
+
+Ten fresh orbs launched at approximately 05:09 UTC on October 13. They use the
+same exact natural prompts, requested Opus 5.5/low, and ten-worker grouping.
+Downloaded application/plugin HEADs and both prompt SHA-256 values match the
+freeze in all ten orbs. This is a source audit, not an unchanged final working-tree
+or service-state audit. The pin changes setup/snapshot identity, so these wall
+times include its startup overhead and must not be treated as isolated model
+inference times.
+
+| Case | Repetition | Thread | Actionable raw/final | Wall time | Reported planner tokens |
+| --- | --- | --- | --- | --- | ---: |
+| Pagy | 1 | [Run](https://ampcode.com/threads/T-01a133a9-f053-757c-bf96-4b2f0514dfde) | 0/2 → 0/2 | 5m 42s | 44815 |
+| Pagy | 2 | [Run](https://ampcode.com/threads/T-01a133a9-f969-7268-8b8c-aeef78012bbb) | 1/2 → 1/2 | 4m 55s | 44487 |
+| Pagy | 3 | [Run](https://ampcode.com/threads/T-01a133aa-01e2-7781-8bf3-0b17f1a2d60d) | 1/2 → 1/2 | 5m 27s | 43753 |
+| Pagy | 4 | [Run](https://ampcode.com/threads/T-01a133aa-0e0f-721e-8689-d1e25112b728) | 2/2 → 2/2 | 3m 38s | 42918 |
+| Pagy | 5 | [Run](https://ampcode.com/threads/T-01a133aa-17da-74a8-ba42-8155f152d4ec) | 1/2 → 1/2 | 4m 50s | 45572 |
+| Faraday | 1 | [Run](https://ampcode.com/threads/T-01a133aa-2102-726a-b427-24c2cd6f6984) | 1/2 → 1/2 | 1m 57s | 46108 |
+| Faraday | 2 | [Run](https://ampcode.com/threads/T-01a133aa-2a4d-7294-ba40-6e47232a4bd8) | 0/2 → 0/2 | 3m 04s | 40041 |
+| Faraday | 3 | [Run](https://ampcode.com/threads/T-01a133aa-336c-70ab-ae56-f3e7a756e32d) | 1/2 → 1/2 | 7m 52s | 44877 |
+| Faraday | 4 | [Run](https://ampcode.com/threads/T-01a133aa-3cc5-70f1-8f13-8594cd1f0536) | 2/2 → 2/2 | 3m 35s | 41835 |
+| Faraday | 5 | [Run](https://ampcode.com/threads/T-01a133aa-4489-752f-91b5-dc06c2d2d17d) | 0/2 → 0/2 | 6m 48s | 44847 |
+
+Pagy median: 4m 55s, range 3m 38s–5m 42s; sample time SD 0.80 min. Faraday
+median: 3m 35s, range 1m 57s–7m 52s; sample time SD 2.54 min. Both recall
+ranges are 0–2/2, with median 1/2. Reported planner token medians are 44487
+(42918–45572) and 44847 (40041–46108), respectively. These are native first
+Agent-return footers, not total billed usage; Faraday run 2's footer precedes
+resumed work and particularly understates the complete workflow.
+
+All ten original turns were collected before metadata follow-ups. Pagy has 5/10
+actionable family memberships in each layer: PG1 2/5, PG2 3/5. Every Pagy repair
+recipe is valid, but incomplete impact explanations in runs 1–3 and incorrect
+blank-page exemptions in runs 1 and 5 prevent full actionability credit. Runs 2,
+4 and 5 misdescribe require-only as the silent-drift stage; the remaining reader
+failure masks that stage. Preserve these errors separately from recall.
+
+Faraday has 4/10 actionable memberships per layer. Only run 4 fully connects both
+registration failures to pre-HTTP failure, pending citation state and fallback
+retries. Run 2's native hand-back contains no findings, and its final is a delta
+summary after asynchronous reports, not a complete plan. Retain its zero recall
+and timing as a workflow/delivery failure, not a fast successful full plan.
+Runs 1, 2 and 4 have not established a compatible complete application bundle;
+JSON compatibility remains a separate lane prerequisite rather than a third
+selected finding. Run 5's claim of immediate permanent failure without retries
+is incorrect: unhandled errors enter Sidekiq fallback retries.
+
+Validation is partial, not absent: no raw/final family fully specifies the
+strict scenario/control matrix. Collected main-trace log excerpts in Pagy run 2
+and Faraday run 2 support limited diagnostic results. Nested experiment paths and
+green-suite claims are not independent execution proof. Pagy run 5 and Faraday
+run 3 disclose accidental shared-Redis writes and unsafe whole-key cleanup advice.
+Faraday run 5 discloses a transient working-checkout edit and restoration. These
+workflow failures are separate from recall, and final clean status does not prove
+preservation throughout. No worker changes were integrated.
+
+Independent quote/count/hash reconciliation found no mismatches. A targeted
+upstream-source check confirms that `faraday-retry` 2.2.1 and 2.4.0 skip a retry
+when `Retry-After` exceeds `max_interval`; they do not merely clamp the sleep.
+The optional cap advice in runs 1 and 3 omits this retry-policy tradeoff.
+
+Native audits cover 27 planner instances, all served `claude-opus-5-5` at low
+effort on CLI 2.1.296. Eight orbs self-delegate through depth 3, Pagy run 4 through
+depth 2, and Faraday run 1 has one planner. Faraday run 2 resumes planners during
+the original turn. Requested-model fields and the original process environment
+remain unknown where not recorded; unset follow-up variables prove neither.
+Audit-file main-session timestamps sometimes include pre-follow-up attachment
+rows, so benchmark timing still comes only from immutable original exports.
+
+Reviewed assessments, model audits and the 30-row CSV are under
+`.amp/in/artifacts/planner-suite-20261012/`; full exports remain private. Opus low
+is assessed on all four cases, with no tuning after held-out exposure.
+
+## Sonnet medium: frozen development batch launched
+
+Ten fresh sample-project orbs launched at approximately 05:31 UTC on October 13,
+requesting `claude-sonnet-5-5` and medium effort. The prompts and concurrency
+grouping are unchanged. Complete and assess Rails/Sidekiq before launching the
+ten Pagy/Faraday workers. Assess the complete configuration before Haiku medium.
+The temporary project pin remains active; restore its previous empty value after
+the suite. Actual served model/effort will be audited, not inferred from requests.
+
+| Case | Repetition | Thread |
+| --- | --- | --- |
+| Rails | 1 | [Run](https://ampcode.com/threads/T-01a133bd-b6bb-76de-945c-5391d23035e3) |
+| Rails | 2 | [Run](https://ampcode.com/threads/T-01a133bd-bfc9-761d-a1f1-18033ab9e5fc) |
+| Rails | 3 | [Run](https://ampcode.com/threads/T-01a133bd-c927-76f5-b340-ccefb4b035b0) |
+| Rails | 4 | [Run](https://ampcode.com/threads/T-01a133bd-d62c-704f-9a49-3e2091a0282f) |
+| Rails | 5 | [Run](https://ampcode.com/threads/T-01a133bd-deab-712c-9d70-c752d06e553b) |
+| Sidekiq | 1 | [Run](https://ampcode.com/threads/T-01a133bd-eb33-72f8-a569-f45fc5e4ced4) |
+| Sidekiq | 2 | [Run](https://ampcode.com/threads/T-01a133bd-f47c-72ef-ba93-f6efd8743a41) |
+| Sidekiq | 3 | [Run](https://ampcode.com/threads/T-01a133bd-fcd6-76b8-a2af-a38b2f7e92e8) |
+| Sidekiq | 4 | [Run](https://ampcode.com/threads/T-01a133be-054f-720e-87d6-848f85f740a8) |
+| Sidekiq | 5 | [Run](https://ampcode.com/threads/T-01a133be-0e63-74ea-b918-2cbbb717c51d) |
