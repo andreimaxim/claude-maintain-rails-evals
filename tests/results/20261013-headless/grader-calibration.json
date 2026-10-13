@@ -1,0 +1,1738 @@
+{
+  "note": "Agreement of scripts/grade-plan.ts with the October 12 hand grades on final responses. v1 = first instructions on all 79 runs. v2 = current instructions, tuned only on Opus-low and Sonnet runs; Opus-high and Haiku runs were held back. v2-repeat re-grades the tuning split to measure grader self-consistency.",
+  "v2_instructions_sha256": "c405ad0f3874725c5fd9d725b7a17e19c10cb912d51de4f746ffbdad2aa55594",
+  "v1_all": {
+    "overall": {
+      "runs": 79,
+      "families": 557,
+      "exact_judgment_agreement": {
+        "impact": 0.912,
+        "applicability": 0.943,
+        "recommendation": 0.95,
+        "validation": 0.745
+      },
+      "actionable_agreement": 0.892,
+      "actionable_kappa": 0.766,
+      "hand_only_actionable": 54,
+      "grader_only_actionable": 6,
+      "run_count_mean_difference": -0.61,
+      "run_count_mean_absolute_difference": 0.68,
+      "run_count_max_absolute_difference": 5
+    },
+    "by_case": {
+      "faraday": {
+        "runs": 20,
+        "families": 40,
+        "exact_judgment_agreement": {
+          "impact": 0.95,
+          "applicability": 0.95,
+          "recommendation": 0.95,
+          "validation": 1
+        },
+        "actionable_agreement": 0.95,
+        "actionable_kappa": 0.9,
+        "hand_only_actionable": 2,
+        "grader_only_actionable": 0,
+        "run_count_mean_difference": -0.1,
+        "run_count_mean_absolute_difference": 0.1,
+        "run_count_max_absolute_difference": 1
+      },
+      "pagy": {
+        "runs": 20,
+        "families": 40,
+        "exact_judgment_agreement": {
+          "impact": 0.9,
+          "applicability": 0.9,
+          "recommendation": 0.925,
+          "validation": 0.95
+        },
+        "actionable_agreement": 0.775,
+        "actionable_kappa": 0.534,
+        "hand_only_actionable": 7,
+        "grader_only_actionable": 2,
+        "run_count_mean_difference": -0.25,
+        "run_count_mean_absolute_difference": 0.45,
+        "run_count_max_absolute_difference": 1
+      },
+      "rails": {
+        "runs": 19,
+        "families": 437,
+        "exact_judgment_agreement": {
+          "impact": 0.913,
+          "applicability": 0.945,
+          "recommendation": 0.959,
+          "validation": 0.68
+        },
+        "actionable_agreement": 0.906,
+        "actionable_kappa": 0.792,
+        "hand_only_actionable": 38,
+        "grader_only_actionable": 3,
+        "run_count_mean_difference": -1.84,
+        "run_count_mean_absolute_difference": 1.84,
+        "run_count_max_absolute_difference": 5
+      },
+      "sidekiq": {
+        "runs": 20,
+        "families": 40,
+        "exact_judgment_agreement": {
+          "impact": 0.875,
+          "applicability": 0.95,
+          "recommendation": 0.875,
+          "validation": 1
+        },
+        "actionable_agreement": 0.8,
+        "actionable_kappa": 0.556,
+        "hand_only_actionable": 7,
+        "grader_only_actionable": 1,
+        "run_count_mean_difference": -0.3,
+        "run_count_mean_absolute_difference": 0.4,
+        "run_count_max_absolute_difference": 2
+      }
+    },
+    "by_configuration": {
+      "haiku-5.5-medium": {
+        "runs": 19,
+        "families": 122,
+        "exact_judgment_agreement": {
+          "impact": 0.877,
+          "applicability": 0.852,
+          "recommendation": 0.91,
+          "validation": 0.754
+        },
+        "actionable_agreement": 0.869,
+        "actionable_kappa": 0.732,
+        "hand_only_actionable": 14,
+        "grader_only_actionable": 2,
+        "run_count_mean_difference": -0.63,
+        "run_count_mean_absolute_difference": 0.84,
+        "run_count_max_absolute_difference": 5
+      },
+      "opus-5.5-high": {
+        "runs": 20,
+        "families": 145,
+        "exact_judgment_agreement": {
+          "impact": 0.938,
+          "applicability": 0.952,
+          "recommendation": 0.952,
+          "validation": 0.717
+        },
+        "actionable_agreement": 0.91,
+        "actionable_kappa": 0.637,
+        "hand_only_actionable": 13,
+        "grader_only_actionable": 0,
+        "run_count_mean_difference": -0.65,
+        "run_count_mean_absolute_difference": 0.65,
+        "run_count_max_absolute_difference": 4
+      },
+      "opus-5.5-low": {
+        "runs": 20,
+        "families": 145,
+        "exact_judgment_agreement": {
+          "impact": 0.917,
+          "applicability": 0.979,
+          "recommendation": 0.959,
+          "validation": 0.717
+        },
+        "actionable_agreement": 0.883,
+        "actionable_kappa": 0.745,
+        "hand_only_actionable": 16,
+        "grader_only_actionable": 1,
+        "run_count_mean_difference": -0.75,
+        "run_count_mean_absolute_difference": 0.75,
+        "run_count_max_absolute_difference": 4
+      },
+      "sonnet-5.5-medium": {
+        "runs": 20,
+        "families": 145,
+        "exact_judgment_agreement": {
+          "impact": 0.91,
+          "applicability": 0.972,
+          "recommendation": 0.972,
+          "validation": 0.793
+        },
+        "actionable_agreement": 0.903,
+        "actionable_kappa": 0.794,
+        "hand_only_actionable": 11,
+        "grader_only_actionable": 3,
+        "run_count_mean_difference": -0.4,
+        "run_count_mean_absolute_difference": 0.5,
+        "run_count_max_absolute_difference": 3
+      }
+    },
+    "runs": [
+      {
+        "id": "haiku-5.5-medium-faraday-1",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.094134
+      },
+      {
+        "id": "haiku-5.5-medium-faraday-2",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.17269800000000002
+      },
+      {
+        "id": "haiku-5.5-medium-faraday-3",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.123728
+      },
+      {
+        "id": "haiku-5.5-medium-faraday-4",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.15704400000000002
+      },
+      {
+        "id": "haiku-5.5-medium-faraday-5",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.110264
+      },
+      {
+        "id": "haiku-5.5-medium-pagy-1",
+        "hand_actionable": 1,
+        "grader_actionable": 0,
+        "cost_usd": 0.07245599999999999
+      },
+      {
+        "id": "haiku-5.5-medium-pagy-2",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.055678
+      },
+      {
+        "id": "haiku-5.5-medium-pagy-3",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.034742
+      },
+      {
+        "id": "haiku-5.5-medium-pagy-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.06877
+      },
+      {
+        "id": "haiku-5.5-medium-pagy-5",
+        "hand_actionable": 1,
+        "grader_actionable": 0,
+        "cost_usd": 0.039214
+      },
+      {
+        "id": "haiku-5.5-medium-rails-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.2803656
+      },
+      {
+        "id": "haiku-5.5-medium-rails-3",
+        "hand_actionable": 3,
+        "grader_actionable": 3,
+        "cost_usd": 0.188714
+      },
+      {
+        "id": "haiku-5.5-medium-rails-4",
+        "hand_actionable": 17,
+        "grader_actionable": 13,
+        "cost_usd": 0.23323400000000002
+      },
+      {
+        "id": "haiku-5.5-medium-rails-5",
+        "hand_actionable": 18,
+        "grader_actionable": 13,
+        "cost_usd": 0.23160200000000003
+      },
+      {
+        "id": "haiku-5.5-medium-sidekiq-1",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.070572
+      },
+      {
+        "id": "haiku-5.5-medium-sidekiq-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.12440699999999999
+      },
+      {
+        "id": "haiku-5.5-medium-sidekiq-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.1306242
+      },
+      {
+        "id": "haiku-5.5-medium-sidekiq-4",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.145364
+      },
+      {
+        "id": "haiku-5.5-medium-sidekiq-5",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.0359762
+      },
+      {
+        "id": "opus-5.5-high-faraday-1",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.1154732
+      },
+      {
+        "id": "opus-5.5-high-faraday-2",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.11907319999999999
+      },
+      {
+        "id": "opus-5.5-high-faraday-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.10248120000000001
+      },
+      {
+        "id": "opus-5.5-high-faraday-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0901652
+      },
+      {
+        "id": "opus-5.5-high-faraday-5",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.1088692
+      },
+      {
+        "id": "opus-5.5-high-pagy-1",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.099918
+      },
+      {
+        "id": "opus-5.5-high-pagy-2",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.109806
+      },
+      {
+        "id": "opus-5.5-high-pagy-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.114594
+      },
+      {
+        "id": "opus-5.5-high-pagy-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.07702600000000001
+      },
+      {
+        "id": "opus-5.5-high-pagy-5",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.084838
+      },
+      {
+        "id": "opus-5.5-high-rails-1",
+        "hand_actionable": 21,
+        "grader_actionable": 19,
+        "cost_usd": 0.22703
+      },
+      {
+        "id": "opus-5.5-high-rails-2",
+        "hand_actionable": 20,
+        "grader_actionable": 18,
+        "cost_usd": 0.614179
+      },
+      {
+        "id": "opus-5.5-high-rails-3",
+        "hand_actionable": 19,
+        "grader_actionable": 17,
+        "cost_usd": 0.256062
+      },
+      {
+        "id": "opus-5.5-high-rails-4",
+        "hand_actionable": 21,
+        "grader_actionable": 17,
+        "cost_usd": 0.24714600000000003
+      },
+      {
+        "id": "opus-5.5-high-rails-5",
+        "hand_actionable": 21,
+        "grader_actionable": 20,
+        "cost_usd": 0.207158
+      },
+      {
+        "id": "opus-5.5-high-sidekiq-1",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0974922
+      },
+      {
+        "id": "opus-5.5-high-sidekiq-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.1308448
+      },
+      {
+        "id": "opus-5.5-high-sidekiq-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.1292674
+      },
+      {
+        "id": "opus-5.5-high-sidekiq-4",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.10231219999999999
+      },
+      {
+        "id": "opus-5.5-high-sidekiq-5",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0883042
+      },
+      {
+        "id": "opus-5.5-low-faraday-1",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.0997054
+      },
+      {
+        "id": "opus-5.5-low-faraday-2",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.0570692
+      },
+      {
+        "id": "opus-5.5-low-faraday-3",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.0713812
+      },
+      {
+        "id": "opus-5.5-low-faraday-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.07582520000000001
+      },
+      {
+        "id": "opus-5.5-low-faraday-5",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.1037212
+      },
+      {
+        "id": "opus-5.5-low-pagy-1",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.072142
+      },
+      {
+        "id": "opus-5.5-low-pagy-2",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.10306420000000001
+      },
+      {
+        "id": "opus-5.5-low-pagy-3",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.072702
+      },
+      {
+        "id": "opus-5.5-low-pagy-4",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.081898
+      },
+      {
+        "id": "opus-5.5-low-pagy-5",
+        "hand_actionable": 1,
+        "grader_actionable": 0,
+        "cost_usd": 0.07469799999999999
+      },
+      {
+        "id": "opus-5.5-low-rails-1",
+        "hand_actionable": 18,
+        "grader_actionable": 16,
+        "cost_usd": 0.28352
+      },
+      {
+        "id": "opus-5.5-low-rails-2",
+        "hand_actionable": 19,
+        "grader_actionable": 15,
+        "cost_usd": 0.206154
+      },
+      {
+        "id": "opus-5.5-low-rails-3",
+        "hand_actionable": 13,
+        "grader_actionable": 13,
+        "cost_usd": 0.17303
+      },
+      {
+        "id": "opus-5.5-low-rails-4",
+        "hand_actionable": 16,
+        "grader_actionable": 14,
+        "cost_usd": 0.18137
+      },
+      {
+        "id": "opus-5.5-low-rails-5",
+        "hand_actionable": 17,
+        "grader_actionable": 17,
+        "cost_usd": 0.19065800000000002
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-1",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.0817802
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-2",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.07630419999999999
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0668642
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-4",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.0634122
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-5",
+        "hand_actionable": 2,
+        "grader_actionable": 0,
+        "cost_usd": 0.0863882
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-1",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.12044179999999999
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-2",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.1242866
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0786412
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-4",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.0783732
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-5",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.0964252
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-1",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.052578
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-2",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.08518600000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-3",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.062206000000000004
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-4",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.07442599999999999
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-5",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.093282
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-1",
+        "hand_actionable": 17,
+        "grader_actionable": 14,
+        "cost_usd": 0.1609568
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-2",
+        "hand_actionable": 18,
+        "grader_actionable": 16,
+        "cost_usd": 0.18476599999999999
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-3",
+        "hand_actionable": 14,
+        "grader_actionable": 13,
+        "cost_usd": 0.164178
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-4",
+        "hand_actionable": 17,
+        "grader_actionable": 17,
+        "cost_usd": 0.19637000000000002
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-5",
+        "hand_actionable": 15,
+        "grader_actionable": 14,
+        "cost_usd": 0.16199
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-1",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.0907826
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-2",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.12224319999999998
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-3",
+        "hand_actionable": 1,
+        "grader_actionable": 0,
+        "cost_usd": 0.07516020000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-4",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.0717962
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-5",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.0646682
+      }
+    ],
+    "grading_cost_usd": 9.87
+  },
+  "v2_tune": {
+    "overall": {
+      "runs": 40,
+      "families": 290,
+      "exact_judgment_agreement": {
+        "impact": 0.9,
+        "applicability": 0.948,
+        "recommendation": 0.976,
+        "validation": 0.745
+      },
+      "actionable_agreement": 0.89,
+      "actionable_kappa": 0.744,
+      "hand_only_actionable": 14,
+      "grader_only_actionable": 18,
+      "run_count_mean_difference": 0.1,
+      "run_count_mean_absolute_difference": 0.65,
+      "run_count_max_absolute_difference": 4
+    },
+    "by_case": {
+      "faraday": {
+        "runs": 10,
+        "families": 20,
+        "exact_judgment_agreement": {
+          "impact": 0.7,
+          "applicability": 0.9,
+          "recommendation": 0.95,
+          "validation": 1
+        },
+        "actionable_agreement": 0.8,
+        "actionable_kappa": 0.612,
+        "hand_only_actionable": 0,
+        "grader_only_actionable": 4,
+        "run_count_mean_difference": 0.4,
+        "run_count_mean_absolute_difference": 0.4,
+        "run_count_max_absolute_difference": 1
+      },
+      "pagy": {
+        "runs": 10,
+        "families": 20,
+        "exact_judgment_agreement": {
+          "impact": 0.65,
+          "applicability": 0.8,
+          "recommendation": 1,
+          "validation": 1
+        },
+        "actionable_agreement": 0.65,
+        "actionable_kappa": 0.271,
+        "hand_only_actionable": 2,
+        "grader_only_actionable": 5,
+        "run_count_mean_difference": 0.3,
+        "run_count_mean_absolute_difference": 0.7,
+        "run_count_max_absolute_difference": 1
+      },
+      "rails": {
+        "runs": 10,
+        "families": 230,
+        "exact_judgment_agreement": {
+          "impact": 0.952,
+          "applicability": 0.961,
+          "recommendation": 0.978,
+          "validation": 0.678
+        },
+        "actionable_agreement": 0.935,
+        "actionable_kappa": 0.846,
+        "hand_only_actionable": 11,
+        "grader_only_actionable": 4,
+        "run_count_mean_difference": -0.7,
+        "run_count_mean_absolute_difference": 0.9,
+        "run_count_max_absolute_difference": 4
+      },
+      "sidekiq": {
+        "runs": 10,
+        "families": 20,
+        "exact_judgment_agreement": {
+          "impact": 0.75,
+          "applicability": 1,
+          "recommendation": 0.95,
+          "validation": 1
+        },
+        "actionable_agreement": 0.7,
+        "actionable_kappa": -0.091,
+        "hand_only_actionable": 1,
+        "grader_only_actionable": 5,
+        "run_count_mean_difference": 0.4,
+        "run_count_mean_absolute_difference": 0.6,
+        "run_count_max_absolute_difference": 1
+      }
+    },
+    "by_configuration": {
+      "opus-5.5-low": {
+        "runs": 20,
+        "families": 145,
+        "exact_judgment_agreement": {
+          "impact": 0.952,
+          "applicability": 0.972,
+          "recommendation": 0.966,
+          "validation": 0.697
+        },
+        "actionable_agreement": 0.931,
+        "actionable_kappa": 0.839,
+        "hand_only_actionable": 7,
+        "grader_only_actionable": 3,
+        "run_count_mean_difference": -0.2,
+        "run_count_mean_absolute_difference": 0.4,
+        "run_count_max_absolute_difference": 2
+      },
+      "sonnet-5.5-medium": {
+        "runs": 20,
+        "families": 145,
+        "exact_judgment_agreement": {
+          "impact": 0.848,
+          "applicability": 0.924,
+          "recommendation": 0.986,
+          "validation": 0.793
+        },
+        "actionable_agreement": 0.848,
+        "actionable_kappa": 0.651,
+        "hand_only_actionable": 7,
+        "grader_only_actionable": 15,
+        "run_count_mean_difference": 0.4,
+        "run_count_mean_absolute_difference": 0.9,
+        "run_count_max_absolute_difference": 4
+      }
+    },
+    "runs": [
+      {
+        "id": "opus-5.5-low-faraday-1",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.0912518
+      },
+      {
+        "id": "opus-5.5-low-faraday-2",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.07959419999999999
+      },
+      {
+        "id": "opus-5.5-low-faraday-3",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.14069500000000001
+      },
+      {
+        "id": "opus-5.5-low-faraday-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0862102
+      },
+      {
+        "id": "opus-5.5-low-faraday-5",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.1110662
+      },
+      {
+        "id": "opus-5.5-low-pagy-1",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.08757419999999999
+      },
+      {
+        "id": "opus-5.5-low-pagy-2",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.06988
+      },
+      {
+        "id": "opus-5.5-low-pagy-3",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.056560000000000006
+      },
+      {
+        "id": "opus-5.5-low-pagy-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.06761600000000001
+      },
+      {
+        "id": "opus-5.5-low-pagy-5",
+        "hand_actionable": 1,
+        "grader_actionable": 0,
+        "cost_usd": 0.077576
+      },
+      {
+        "id": "opus-5.5-low-rails-1",
+        "hand_actionable": 18,
+        "grader_actionable": 16,
+        "cost_usd": 0.369417
+      },
+      {
+        "id": "opus-5.5-low-rails-2",
+        "hand_actionable": 19,
+        "grader_actionable": 18,
+        "cost_usd": 0.229252
+      },
+      {
+        "id": "opus-5.5-low-rails-3",
+        "hand_actionable": 13,
+        "grader_actionable": 13,
+        "cost_usd": 0.17334799999999997
+      },
+      {
+        "id": "opus-5.5-low-rails-4",
+        "hand_actionable": 16,
+        "grader_actionable": 15,
+        "cost_usd": 0.18184799999999998
+      },
+      {
+        "id": "opus-5.5-low-rails-5",
+        "hand_actionable": 17,
+        "grader_actionable": 17,
+        "cost_usd": 0.196436
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-1",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0839742
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.09335979999999999
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0726222
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0666902
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-5",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.1122204
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-1",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.0771272
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-2",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.07848720000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0735792
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-4",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.09035119999999999
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-5",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.0914032
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-1",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.062076000000000006
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-2",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.067304
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-3",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.06004400000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-4",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.06728400000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-5",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.0895
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-1",
+        "hand_actionable": 17,
+        "grader_actionable": 13,
+        "cost_usd": 0.42941539999999995
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-2",
+        "hand_actionable": 18,
+        "grader_actionable": 18,
+        "cost_usd": 0.191884
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-3",
+        "hand_actionable": 14,
+        "grader_actionable": 14,
+        "cost_usd": 0.18751600000000002
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-4",
+        "hand_actionable": 17,
+        "grader_actionable": 17,
+        "cost_usd": 0.196828
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-5",
+        "hand_actionable": 15,
+        "grader_actionable": 16,
+        "cost_usd": 0.174828
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-1",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.07763420000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-2",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.11027600000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-3",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.0684782
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-4",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.0852356
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-5",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.059006199999999995
+      }
+    ],
+    "grading_cost_usd": 4.79
+  },
+  "v2_test": {
+    "overall": {
+      "runs": 39,
+      "families": 267,
+      "exact_judgment_agreement": {
+        "impact": 0.903,
+        "applicability": 0.903,
+        "recommendation": 0.929,
+        "validation": 0.727
+      },
+      "actionable_agreement": 0.884,
+      "actionable_kappa": 0.736,
+      "hand_only_actionable": 22,
+      "grader_only_actionable": 9,
+      "run_count_mean_difference": -0.33,
+      "run_count_mean_absolute_difference": 0.69,
+      "run_count_max_absolute_difference": 4
+    },
+    "by_case": {
+      "faraday": {
+        "runs": 10,
+        "families": 20,
+        "exact_judgment_agreement": {
+          "impact": 0.85,
+          "applicability": 0.95,
+          "recommendation": 0.95,
+          "validation": 1
+        },
+        "actionable_agreement": 0.8,
+        "actionable_kappa": 0.524,
+        "hand_only_actionable": 2,
+        "grader_only_actionable": 2,
+        "run_count_mean_difference": 0,
+        "run_count_mean_absolute_difference": 0.4,
+        "run_count_max_absolute_difference": 1
+      },
+      "pagy": {
+        "runs": 10,
+        "families": 20,
+        "exact_judgment_agreement": {
+          "impact": 0.85,
+          "applicability": 1,
+          "recommendation": 0.75,
+          "validation": 0.95
+        },
+        "actionable_agreement": 0.75,
+        "actionable_kappa": -0.087,
+        "hand_only_actionable": 1,
+        "grader_only_actionable": 4,
+        "run_count_mean_difference": 0.3,
+        "run_count_mean_absolute_difference": 0.3,
+        "run_count_max_absolute_difference": 2
+      },
+      "rails": {
+        "runs": 9,
+        "families": 207,
+        "exact_judgment_agreement": {
+          "impact": 0.913,
+          "applicability": 0.889,
+          "recommendation": 0.942,
+          "validation": 0.652
+        },
+        "actionable_agreement": 0.903,
+        "actionable_kappa": 0.791,
+        "hand_only_actionable": 19,
+        "grader_only_actionable": 1,
+        "run_count_mean_difference": -2,
+        "run_count_mean_absolute_difference": 2,
+        "run_count_max_absolute_difference": 4
+      },
+      "sidekiq": {
+        "runs": 10,
+        "families": 20,
+        "exact_judgment_agreement": {
+          "impact": 0.9,
+          "applicability": 0.9,
+          "recommendation": 0.95,
+          "validation": 1
+        },
+        "actionable_agreement": 0.9,
+        "actionable_kappa": 0.692,
+        "hand_only_actionable": 0,
+        "grader_only_actionable": 2,
+        "run_count_mean_difference": 0.2,
+        "run_count_mean_absolute_difference": 0.2,
+        "run_count_max_absolute_difference": 1
+      }
+    },
+    "by_configuration": {
+      "haiku-5.5-medium": {
+        "runs": 19,
+        "families": 122,
+        "exact_judgment_agreement": {
+          "impact": 0.861,
+          "applicability": 0.836,
+          "recommendation": 0.902,
+          "validation": 0.762
+        },
+        "actionable_agreement": 0.844,
+        "actionable_kappa": 0.685,
+        "hand_only_actionable": 11,
+        "grader_only_actionable": 8,
+        "run_count_mean_difference": -0.16,
+        "run_count_mean_absolute_difference": 0.79,
+        "run_count_max_absolute_difference": 4
+      },
+      "opus-5.5-high": {
+        "runs": 20,
+        "families": 145,
+        "exact_judgment_agreement": {
+          "impact": 0.938,
+          "applicability": 0.959,
+          "recommendation": 0.952,
+          "validation": 0.697
+        },
+        "actionable_agreement": 0.917,
+        "actionable_kappa": 0.64,
+        "hand_only_actionable": 11,
+        "grader_only_actionable": 1,
+        "run_count_mean_difference": -0.5,
+        "run_count_mean_absolute_difference": 0.6,
+        "run_count_max_absolute_difference": 4
+      }
+    },
+    "runs": [
+      {
+        "id": "haiku-5.5-medium-faraday-1",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.07206480000000001
+      },
+      {
+        "id": "haiku-5.5-medium-faraday-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0911272
+      },
+      {
+        "id": "haiku-5.5-medium-faraday-3",
+        "hand_actionable": 1,
+        "grader_actionable": 0,
+        "cost_usd": 0.13670939999999998
+      },
+      {
+        "id": "haiku-5.5-medium-faraday-4",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.12650319999999998
+      },
+      {
+        "id": "haiku-5.5-medium-faraday-5",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.0969832
+      },
+      {
+        "id": "haiku-5.5-medium-pagy-1",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.043808
+      },
+      {
+        "id": "haiku-5.5-medium-pagy-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0789942
+      },
+      {
+        "id": "haiku-5.5-medium-pagy-3",
+        "hand_actionable": 0,
+        "grader_actionable": 2,
+        "cost_usd": 0.031200000000000006
+      },
+      {
+        "id": "haiku-5.5-medium-pagy-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.066108
+      },
+      {
+        "id": "haiku-5.5-medium-pagy-5",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.034292
+      },
+      {
+        "id": "haiku-5.5-medium-rails-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.3136658
+      },
+      {
+        "id": "haiku-5.5-medium-rails-3",
+        "hand_actionable": 3,
+        "grader_actionable": 2,
+        "cost_usd": 0.3634004
+      },
+      {
+        "id": "haiku-5.5-medium-rails-4",
+        "hand_actionable": 17,
+        "grader_actionable": 15,
+        "cost_usd": 0.237432
+      },
+      {
+        "id": "haiku-5.5-medium-rails-5",
+        "hand_actionable": 18,
+        "grader_actionable": 14,
+        "cost_usd": 0.2628
+      },
+      {
+        "id": "haiku-5.5-medium-sidekiq-1",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.0496822
+      },
+      {
+        "id": "haiku-5.5-medium-sidekiq-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0784902
+      },
+      {
+        "id": "haiku-5.5-medium-sidekiq-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.10450219999999999
+      },
+      {
+        "id": "haiku-5.5-medium-sidekiq-4",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.1210902
+      },
+      {
+        "id": "haiku-5.5-medium-sidekiq-5",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.0376342
+      },
+      {
+        "id": "opus-5.5-high-faraday-1",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.1003512
+      },
+      {
+        "id": "opus-5.5-high-faraday-2",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.1270112
+      },
+      {
+        "id": "opus-5.5-high-faraday-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.105424
+      },
+      {
+        "id": "opus-5.5-high-faraday-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0765832
+      },
+      {
+        "id": "opus-5.5-high-faraday-5",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.1271272
+      },
+      {
+        "id": "opus-5.5-high-pagy-1",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.11045740000000001
+      },
+      {
+        "id": "opus-5.5-high-pagy-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.10292399999999999
+      },
+      {
+        "id": "opus-5.5-high-pagy-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.096792
+      },
+      {
+        "id": "opus-5.5-high-pagy-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.07996400000000001
+      },
+      {
+        "id": "opus-5.5-high-pagy-5",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.070656
+      },
+      {
+        "id": "opus-5.5-high-rails-1",
+        "hand_actionable": 21,
+        "grader_actionable": 19,
+        "cost_usd": 0.1634158
+      },
+      {
+        "id": "opus-5.5-high-rails-2",
+        "hand_actionable": 20,
+        "grader_actionable": 18,
+        "cost_usd": 0.23244800000000002
+      },
+      {
+        "id": "opus-5.5-high-rails-3",
+        "hand_actionable": 19,
+        "grader_actionable": 15,
+        "cost_usd": 0.2674
+      },
+      {
+        "id": "opus-5.5-high-rails-4",
+        "hand_actionable": 21,
+        "grader_actionable": 18,
+        "cost_usd": 0.247744
+      },
+      {
+        "id": "opus-5.5-high-rails-5",
+        "hand_actionable": 21,
+        "grader_actionable": 21,
+        "cost_usd": 0.20873600000000003
+      },
+      {
+        "id": "opus-5.5-high-sidekiq-1",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.11598699999999999
+      },
+      {
+        "id": "opus-5.5-high-sidekiq-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.1180222
+      },
+      {
+        "id": "opus-5.5-high-sidekiq-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.1319074
+      },
+      {
+        "id": "opus-5.5-high-sidekiq-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.117769
+      },
+      {
+        "id": "opus-5.5-high-sidekiq-5",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0931868
+      }
+    ],
+    "grading_cost_usd": 5.04
+  },
+  "v2_repeat": {
+    "overall": {
+      "runs": 40,
+      "families": 290,
+      "exact_judgment_agreement": {
+        "impact": 0.903,
+        "applicability": 0.966,
+        "recommendation": 0.976,
+        "validation": 0.731
+      },
+      "actionable_agreement": 0.903,
+      "actionable_kappa": 0.772,
+      "hand_only_actionable": 9,
+      "grader_only_actionable": 19,
+      "run_count_mean_difference": 0.25,
+      "run_count_mean_absolute_difference": 0.6,
+      "run_count_max_absolute_difference": 1
+    },
+    "by_case": {
+      "faraday": {
+        "runs": 10,
+        "families": 20,
+        "exact_judgment_agreement": {
+          "impact": 0.7,
+          "applicability": 0.9,
+          "recommendation": 0.95,
+          "validation": 1
+        },
+        "actionable_agreement": 0.8,
+        "actionable_kappa": 0.612,
+        "hand_only_actionable": 0,
+        "grader_only_actionable": 4,
+        "run_count_mean_difference": 0.4,
+        "run_count_mean_absolute_difference": 0.4,
+        "run_count_max_absolute_difference": 1
+      },
+      "pagy": {
+        "runs": 10,
+        "families": 20,
+        "exact_judgment_agreement": {
+          "impact": 0.65,
+          "applicability": 0.8,
+          "recommendation": 1,
+          "validation": 1
+        },
+        "actionable_agreement": 0.65,
+        "actionable_kappa": 0.271,
+        "hand_only_actionable": 2,
+        "grader_only_actionable": 5,
+        "run_count_mean_difference": 0.3,
+        "run_count_mean_absolute_difference": 0.7,
+        "run_count_max_absolute_difference": 1
+      },
+      "rails": {
+        "runs": 10,
+        "families": 230,
+        "exact_judgment_agreement": {
+          "impact": 0.957,
+          "applicability": 0.983,
+          "recommendation": 0.978,
+          "validation": 0.661
+        },
+        "actionable_agreement": 0.952,
+        "actionable_kappa": 0.884,
+        "hand_only_actionable": 6,
+        "grader_only_actionable": 5,
+        "run_count_mean_difference": -0.1,
+        "run_count_mean_absolute_difference": 0.7,
+        "run_count_max_absolute_difference": 1
+      },
+      "sidekiq": {
+        "runs": 10,
+        "families": 20,
+        "exact_judgment_agreement": {
+          "impact": 0.75,
+          "applicability": 1,
+          "recommendation": 0.95,
+          "validation": 1
+        },
+        "actionable_agreement": 0.7,
+        "actionable_kappa": -0.091,
+        "hand_only_actionable": 1,
+        "grader_only_actionable": 5,
+        "run_count_mean_difference": 0.4,
+        "run_count_mean_absolute_difference": 0.6,
+        "run_count_max_absolute_difference": 1
+      }
+    },
+    "by_configuration": {
+      "opus-5.5-low": {
+        "runs": 20,
+        "families": 145,
+        "exact_judgment_agreement": {
+          "impact": 0.959,
+          "applicability": 0.972,
+          "recommendation": 0.966,
+          "validation": 0.697
+        },
+        "actionable_agreement": 0.945,
+        "actionable_kappa": 0.87,
+        "hand_only_actionable": 5,
+        "grader_only_actionable": 3,
+        "run_count_mean_difference": -0.1,
+        "run_count_mean_absolute_difference": 0.4,
+        "run_count_max_absolute_difference": 1
+      },
+      "sonnet-5.5-medium": {
+        "runs": 20,
+        "families": 145,
+        "exact_judgment_agreement": {
+          "impact": 0.848,
+          "applicability": 0.959,
+          "recommendation": 0.986,
+          "validation": 0.766
+        },
+        "actionable_agreement": 0.862,
+        "actionable_kappa": 0.676,
+        "hand_only_actionable": 4,
+        "grader_only_actionable": 16,
+        "run_count_mean_difference": 0.6,
+        "run_count_mean_absolute_difference": 0.8,
+        "run_count_max_absolute_difference": 1
+      }
+    },
+    "runs": [
+      {
+        "id": "opus-5.5-low-faraday-1",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.0912518
+      },
+      {
+        "id": "opus-5.5-low-faraday-2",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.07959419999999999
+      },
+      {
+        "id": "opus-5.5-low-faraday-3",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.14069500000000001
+      },
+      {
+        "id": "opus-5.5-low-faraday-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0862102
+      },
+      {
+        "id": "opus-5.5-low-faraday-5",
+        "hand_actionable": 0,
+        "grader_actionable": 0,
+        "cost_usd": 0.1110662
+      },
+      {
+        "id": "opus-5.5-low-pagy-1",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.08757419999999999
+      },
+      {
+        "id": "opus-5.5-low-pagy-2",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.06988
+      },
+      {
+        "id": "opus-5.5-low-pagy-3",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.056560000000000006
+      },
+      {
+        "id": "opus-5.5-low-pagy-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.06761600000000001
+      },
+      {
+        "id": "opus-5.5-low-pagy-5",
+        "hand_actionable": 1,
+        "grader_actionable": 0,
+        "cost_usd": 0.077576
+      },
+      {
+        "id": "opus-5.5-low-rails-1",
+        "hand_actionable": 18,
+        "grader_actionable": 17,
+        "cost_usd": 0.1471468
+      },
+      {
+        "id": "opus-5.5-low-rails-2",
+        "hand_actionable": 19,
+        "grader_actionable": 18,
+        "cost_usd": 0.1320734
+      },
+      {
+        "id": "opus-5.5-low-rails-3",
+        "hand_actionable": 13,
+        "grader_actionable": 13,
+        "cost_usd": 0.12697279999999997
+      },
+      {
+        "id": "opus-5.5-low-rails-4",
+        "hand_actionable": 16,
+        "grader_actionable": 15,
+        "cost_usd": 0.12088279999999998
+      },
+      {
+        "id": "opus-5.5-low-rails-5",
+        "hand_actionable": 17,
+        "grader_actionable": 18,
+        "cost_usd": 0.14085199999999998
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-1",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0839742
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-2",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.09335979999999999
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0726222
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-4",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0666902
+      },
+      {
+        "id": "opus-5.5-low-sidekiq-5",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.1122204
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-1",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.0771272
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-2",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.07848720000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-3",
+        "hand_actionable": 2,
+        "grader_actionable": 2,
+        "cost_usd": 0.0735792
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-4",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.09035119999999999
+      },
+      {
+        "id": "sonnet-5.5-medium-faraday-5",
+        "hand_actionable": 0,
+        "grader_actionable": 1,
+        "cost_usd": 0.0914032
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-1",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.062076000000000006
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-2",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.067304
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-3",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.06004400000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-4",
+        "hand_actionable": 2,
+        "grader_actionable": 1,
+        "cost_usd": 0.06728400000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-pagy-5",
+        "hand_actionable": 1,
+        "grader_actionable": 1,
+        "cost_usd": 0.0895
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-1",
+        "hand_actionable": 17,
+        "grader_actionable": 16,
+        "cost_usd": 0.25411760000000005
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-2",
+        "hand_actionable": 18,
+        "grader_actionable": 18,
+        "cost_usd": 0.12473619999999999
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-3",
+        "hand_actionable": 14,
+        "grader_actionable": 14,
+        "cost_usd": 0.127199
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-4",
+        "hand_actionable": 17,
+        "grader_actionable": 18,
+        "cost_usd": 0.15195580000000003
+      },
+      {
+        "id": "sonnet-5.5-medium-rails-5",
+        "hand_actionable": 15,
+        "grader_actionable": 16,
+        "cost_usd": 0.1094658
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-1",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.07763420000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-2",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.11027600000000001
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-3",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.0684782
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-4",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.0852356
+      },
+      {
+        "id": "sonnet-5.5-medium-sidekiq-5",
+        "hand_actionable": 1,
+        "grader_actionable": 2,
+        "cost_usd": 0.059006199999999995
+      }
+    ],
+    "grading_cost_usd": 3.89
+  }
+}

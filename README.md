@@ -176,6 +176,46 @@ The evaluation scripts are TypeScript in `scripts/` and run directly on Node 26 
 later, with no build step. Run their tests with `npm test`. `npm install` adds the
 TypeScript compiler for `npm run typecheck`; the scripts themselves need no packages.
 
+## Hill climbing uses an automated grader and a headless baseline
+
+The next goal is Opus-high Rails recall at much lower time and cost, for routine
+maintenance. Cases are split by role: Pagy, Faraday, a patch bump and a no-op for
+training; Rails for hill climbing; Sidekiq for testing. Every configuration runs
+five repetitions.
+
+**`scripts/grade-plan.ts` grades a plan against the answer key.** A headless Opus
+5.5 session at high effort, with no tools, receives
+[the grading instructions](tests/grader-instructions.md), the case's answer-key
+section and the plan, and returns the four judgments for each selected finding.
+The script counts actionable findings. A Rails plan costs about $0.20 to grade.
+
+**The grader agrees with the hand grades about as well as with itself.**
+`scripts/calibrate-grader.ts` graded the 79 hand-graded final plans. The first
+instructions were stricter than the hand graders, by 1.8 findings per Rails run.
+Two rules were revised using only the Opus-low and Sonnet runs: a concrete
+failure in this application counts as impact without the key's full consequence
+chain, and a repair is not marked down for omitting a prerequisite the key lists
+separately. On the held-back Opus-high and Haiku runs, actionable agreement is
+0.88 (kappa 0.74) and per-run counts differ by 0.69 on average. Re-grading the
+same Rails plans agreed on 97% of findings, with per-run counts moving by 0 to 3.
+Rails stays 1 to 2 findings per run stricter than the hand grades, concentrated
+in R21 recommendations and R11, R14 and R19 impact. Compare variants under the
+same grader version rather than against the October 12 hand-graded counts. The
+[calibration record](tests/results/20261013-headless/grader-calibration.json)
+keeps all four passes.
+
+**The headless Opus-low Rails baseline scores a median of 16 of 23.** Five runs
+of the frozen bundle through `claude -p --plugin-dir` scored 16, 16, 16, 18 and
+17, with a median of 13.0 minutes and $2.90 per run. The October 12 Opus-low runs
+score a median of 16 under the same grader, so the harness change did not shift
+recall. Every run left the checkout unchanged. No plan fully specified any
+finding's validation. R02 was never actionable, R25 never, R09, R14 and R19 in
+one run each. Each run nested the planner three levels deep: the planner loads
+`upgrade-gem`, which delegates to another planner. The October 12 runs show the
+same pattern. The [baseline record](tests/results/20261013-headless/baseline-opus-low-rails/summary.json)
+keeps each run's plan, receipt and grade; archives with thinking blocks are not
+committed.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:
