@@ -15,30 +15,32 @@ upgrade is a separate capability, not the result these tests measure.
 
 ## Run evaluations from this repo; run each test in an app orb
 
-**A thread in the evals project coordinates the evaluation.** Configure Amp
-project `andrei/claude-maintain-rails-evals` with this repository as its primary
-repository and both `andreimaxim/claude-maintain-rails-sample` and
-`andreimaxim/claude-plugins` as additional repositories to clone. Its orb has:
+**A thread in the evals project coordinates the evaluation.** This repository
+owns the [frozen skill and subagent prompt](tests/planner-inputs/README.md), their
+hashes, test cases, evidence and grading. A plugin checkout is no longer needed
+to prepare worker inputs. The coordinator can retain an application checkout for
+inspection; workers must not receive the answer keys.
 
-- `/home/user/workspace/repo`: this evals repository, where coordination and
-  assessment happen.
-- `/home/user/workspace/repos/claude-maintain-rails-sample`: the application
-  checkout available to the coordinator.
-- `/home/user/workspace/repos/claude-plugins`: the general plugin checkout
-  available to the coordinator.
-
-**Each run happens in a dedicated orb in the application's Amp project.** For
-Margin Notes, that is `andrei/claude-maintain-rails-sample`, with the sample app
-as its primary repository and `andreimaxim/claude-plugins` configured as an
-additional repository to clone. Each run's orb has:
+**Each run happens in a dedicated app orb.** For future runs, use an isolated
+worker project with `andreimaxim/claude-maintain-rails-sample` as its only
+repository and the generated eval-owned pre-setup script. No worker project has
+yet been activated with this setup; changing project settings requires approval.
+The [bundle instructions](tests/planner-inputs/README.md) describe generation,
+hash checks and installation before Claude Code starts. Each worker receives:
 
 - `/home/user/workspace/repo`: the application and the model's working directory.
-- `/home/user/workspace/repos/claude-plugins`: the plugin checkout loaded by the
-  app's setup, as described below.
+- `/home/user/workspace/repos/claude-plugins/plugins/maintain-rails`: four embedded
+  runtime files at the path expected by the frozen app's setup. This is a
+  filesystem compatibility path, not a checkout of `claude-plugins`.
+
+The October 12 runs used `andrei/claude-maintain-rails-sample` and a plugin
+checkout. That historical route remains recorded below. The eval-owned bundle
+preserves the frozen prompt bytes and namespace without fetching the actively
+used plugin repository.
 
 The coordinator selects cases, starts run threads, waits for their results,
 collects the planner invocations and returned plans, and assesses them here. A
-batch with ten concurrent runs uses ten separate app-project orbs, not ten
+batch with ten concurrent runs uses ten separate app orbs, not ten
 agents sharing the coordinator's application checkout. Start runs with
 `executor: orb`, `agent_mode: external-agent:claude-code`, and features
 `model:claude-opus-5-5` and `effort:high`. This runs Claude Code through the Agent
@@ -100,6 +102,10 @@ traces, raw/final finding assessments, wall times, available token footers,
 descriptive variance, recovered native audits/reports and earlier failure evidence.
 Nested experiment logs were not generally collected, and token footers are not
 billed totals. Source and published-file hashes identify privacy transformations.
+
+The [usage-accounting notes](tests/planner-inputs/README.md#costs-need-a-separate-source)
+distinguish retained token totals, partial cache counters and the whole-tree SDK
+usage needed for API-cost graphs. Complete per-run API costs are not yet available.
 
 The [per-run failure ledger](tests/planner-failures-20261012.json) keeps workflow
 failures and late recoveries separate from finding recall. It records quoted
