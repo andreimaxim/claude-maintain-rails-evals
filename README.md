@@ -282,6 +282,18 @@ validation, but never for the consequence. The
 [v5 record](tests/results/20261013-headless/v5-compact-output-rails/summary.json)
 keeps each run's plan, receipt and grade.
 
+**Asking for each finding's consequence brings Opus low to Opus-high recall.**
+[Variant v6](tests/planner-variants/v6-state-consequence) changes one phrase in
+v4's planner prompt: each finding now also states what breaks or changes in this
+application if nothing is done. Five runs scored 21, 20, 19, 18 and 18 (mean
+19.2) at a median of 11.6 minutes and $3.15. Under the same grader, the October
+12 Opus-high runs score 19, 18, 15, 18 and 21 (mean 18.2) at about 32 minutes and
+$9.60. R14 rose from 1/5 to 5/5 and R01 to 5/5. R21 (0/5, partial
+recommendations), R25 (0/5), R09 (2/5) and R19 (3/5) remain weak, and no plan
+fully specified any validation. The
+[v6 record](tests/results/20261013-headless/v6-state-consequence-rails/summary.json)
+keeps each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:
