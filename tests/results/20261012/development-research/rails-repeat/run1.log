@@ -1,0 +1,459 @@
+Running 46 tests in a single process (parallelization threshold is 50)
+Run options: --seed 46572
+
+# Running:
+
+E
+
+Error:
+NotesControllerTest#test_invalid_pages_show_the_first_page_and_page_size_is_capped_at_50:
+ArgumentError: Wrong number of arguments (expect 1, got 2)
+    config/routes.rb:18:in `block in <main>'
+    config/routes.rb:1:in `<main>'
+    test/controllers/notes_controller_test.rb:4:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:74
+
+E
+
+Error:
+NotesControllerTest#test_renders_an_unbound_search_form:
+NameError: undefined local variable or method `notes_path' for an instance of NotesControllerTest
+    test/controllers/notes_controller_test.rb:18:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:17
+
+E
+
+Error:
+NotesControllerTest#test_edits_a_note's_rich_body,_tags,_highlight,_and_status:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/notes_controller_test.rb:108:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:107
+
+E
+
+Error:
+NotesControllerTest#test_creates_a_note_in_an_owned_notebook:
+NameError: undefined local variable or method `notes_path' for an instance of NotesControllerTest
+    test/controllers/notes_controller_test.rb:99:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:98
+
+E
+
+Error:
+NotesControllerTest#test_deletes_a_note:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/notes_controller_test.rb:168:in `block (2 levels) in <class:NotesControllerTest>'
+    test/controllers/notes_controller_test.rb:167:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:166
+
+E
+
+Error:
+NotesControllerTest#test_rich_text_keeps_collapsible_excerpts_and_drops_unsafe_markup:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/notes_controller_test.rb:138:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:137
+
+E
+
+Error:
+NotesControllerTest#test_filters_by_notebook,_status,_and_title:
+NameError: undefined local variable or method `notes_path' for an instance of NotesControllerTest
+    test/controllers/notes_controller_test.rb:28:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:27
+
+E
+
+Error:
+NotesControllerTest#test_shows_an_empty_state_when_nothing_matches:
+NameError: undefined local variable or method `notes_path' for an instance of NotesControllerTest
+    test/controllers/notes_controller_test.rb:42:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:41
+
+E
+
+Error:
+NotesControllerTest#test_lists_the_reader's_notes_newest_first_at_both_list_paths:
+NameError: undefined local variable or method `notes_path' for an instance of NotesControllerTest
+    test/controllers/notes_controller_test.rb:7:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:6
+
+E
+
+Error:
+NotesControllerTest#test_another_reader's_notes_and_notebooks_cannot_be_reached:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/notes_controller_test.rb:175:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:174
+
+E
+
+Error:
+NotesControllerTest#test_a_blank_title_re-renders_the_form_with_the_submitted_values:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/notes_controller_test.rb:152:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:151
+
+E
+
+Error:
+NotesControllerTest#test_pages_through_filtered_notes_newest_first,_keeping_the_filters_and_page_size:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/notes_controller_test.rb:51:in `block (2 levels) in <class:NotesControllerTest>'
+    test/controllers/notes_controller_test.rb:51:in `downto'
+    test/controllers/notes_controller_test.rb:51:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:48
+
+E
+
+Error:
+NotesControllerTest#test_a_note_cannot_be_filed_in_another_reader's_notebook:
+NameError: undefined local variable or method `notes_path' for an instance of NotesControllerTest
+    test/controllers/notes_controller_test.rb:192:in `block (2 levels) in <class:NotesControllerTest>'
+    test/controllers/notes_controller_test.rb:191:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:190
+
+F
+
+Failure:
+NotebooksControllerTest#test_rejects_a_blank_name [test/controllers/notebooks_controller_test.rb:57]:
+Expected response to be a <422: unprocessable_entity>, but was a <302: Found> redirect to <http://www.example.com/session/new>
+Response body: .
+Expected: 422
+  Actual: 302
+
+bin/rails test test/controllers/notebooks_controller_test.rb:52
+
+F
+
+Failure:
+NotebooksControllerTest#test_lists_only_the_reader's_notebooks [test/controllers/notebooks_controller_test.rb:9]:
+Expected at least 1 element matching "li a", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/notebooks_controller_test.rb:6
+
+F
+
+Failure:
+NotebooksControllerTest#test_another_reader's_notebook_settings_cannot_be_reached [test/controllers/notebooks_controller_test.rb:44]:
+ActiveRecord::RecordNotFound expected but nothing was raised.
+
+bin/rails test test/controllers/notebooks_controller_test.rb:41
+
+F
+
+Failure:
+NotebooksControllerTest#test_settings_update_the_name_and_export_heading_but_keep_the_slug [test/controllers/notebooks_controller_test.rb:26]:
+Expected at least 1 element matching "input[type=hidden][name='notebook[slug]'][value=novels]", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/notebooks_controller_test.rb:22
+
+F
+
+Failure:
+NotebooksControllerTest#test_creates_a_notebook_owned_by_the_reader_with_a_slug_from_its_name [test/controllers/notebooks_controller_test.rb:14]:
+`users(:reader).notebooks.count` didn't change by 1, but by 0.
+Expected: 3
+  Actual: 2
+
+bin/rails test test/controllers/notebooks_controller_test.rb:13
+
+F
+
+Failure:
+DigestsControllerTest#test_a_digest_request_is_released_when_its_job_cannot_be_queued [test/controllers/digests_controller_test.rb:51]:
+[Redis::CannotConnectError] exception expected, not
+Class: <NameError>
+Message: <"undefined local variable or method `digest_path' for an instance of DigestsControllerTest">
+---Backtrace---
+test/controllers/digests_controller_test.rb:51:in `block (4 levels) in <class:DigestsControllerTest>'
+test/controllers/digests_controller_test.rb:51:in `block (3 levels) in <class:DigestsControllerTest>'
+test/controllers/digests_controller_test.rb:50:in `block (2 levels) in <class:DigestsControllerTest>'
+test/controllers/digests_controller_test.rb:49:in `block in <class:DigestsControllerTest>'
+---------------
+
+bin/rails test test/controllers/digests_controller_test.rb:45
+
+E
+
+Error:
+DigestsControllerTest#test_a_reader_can_request_one_digest_per_UTC_day,_listing_ready_notes_updated_that_day:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/digests_controller_test.rb:8:in `block in <class:DigestsControllerTest>'
+
+bin/rails test test/controllers/digests_controller_test.rb:5
+
+/tmp/mn-rails81-plan/app/models/import.rb:1: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/csv.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add csv to your Gemfile or gemspec to silence this warning.
+F
+
+Failure:
+ImportsControllerTest#test_previews_a_CSV_without_saving,_then_imports_every_row_and_offers_a_receipt [test/controllers/imports_controller_test.rb:20]:
+Expected response to be a <2XX: success>, but was a <302: Found> redirect to <http://www.example.com/session/new>
+Response body: 
+
+bin/rails test test/controllers/imports_controller_test.rb:6
+
+E
+
+Error:
+ImportsControllerTest#test_another_reader's_notebook_cannot_receive_or_reveal_imports:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    app/models/import.rb:105:in `build_row'
+    app/models/import.rb:92:in `block in parse'
+    app/models/import.rb:82:in `parse'
+    app/models/import.rb:33:in `rows'
+    app/models/import.rb:112:in `csv_is_importable'
+    test/controllers/imports_controller_test.rb:94:in `block in <class:ImportsControllerTest>'
+
+bin/rails test test/controllers/imports_controller_test.rb:92
+
+F
+
+Failure:
+ImportsControllerTest#test_rejects_a_missing_CSV_or_one_without_the_documented_header_row [test/controllers/imports_controller_test.rb:78]:
+Expected response to be a <422: unprocessable_entity>, but was a <302: Found> redirect to <http://www.example.com/session/new>
+Response body: .
+Expected: 422
+  Actual: 302
+
+bin/rails test test/controllers/imports_controller_test.rb:75
+
+F
+
+Failure:
+ImportsControllerTest#test_invalid_rows_are_shown_with_their_errors,_and_applying_them_saves_nothing [test/controllers/imports_controller_test.rb:58]:
+Expected response to be a <422: unprocessable_entity>, but was a <302: Found> redirect to <http://www.example.com/session/new>
+Response body: .
+Expected: 422
+  Actual: 302
+
+bin/rails test test/controllers/imports_controller_test.rb:48
+
+E
+
+Error:
+ExportsControllerTest#test_cancelling_a_queued_export_means_the_worker_writes_no_file:
+ActiveRecord::RecordNotFound: Couldn't find Export with [WHERE "exports"."notebook_id" = $1]
+    test/controllers/exports_controller_test.rb:97:in `block in <class:ExportsControllerTest>'
+
+bin/rails test test/controllers/exports_controller_test.rb:94
+
+E
+
+Error:
+ExportsControllerTest#test_a_reader_exports_a_notebook_as_Markdown_and_downloads_it_until_it_expires:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/exports_controller_test.rb:12:in `block in <class:ExportsControllerTest>'
+
+bin/rails test test/controllers/exports_controller_test.rb:9
+
+2026-10-12T15:04:06.866Z pid=42759 tid=11p7 WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+E
+
+Error:
+ExportsControllerTest#test_the_cached_availability_indicator_does_not_authorize_a_download:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    app/models/export.rb:33:in `generate'
+    app/jobs/export_job.rb:10:in `perform'
+    test/controllers/exports_controller_test.rb:66:in `block (2 levels) in <class:ExportsControllerTest>'
+    test/controllers/exports_controller_test.rb:66:in `block in <class:ExportsControllerTest>'
+
+bin/rails test test/controllers/exports_controller_test.rb:59
+
+E
+
+Error:
+ExportsControllerTest#test_another_reader's_exports_cannot_be_requested,_seen,_cancelled,_or_downloaded:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    app/models/export.rb:33:in `generate'
+    test/controllers/exports_controller_test.rb:120:in `block in <class:ExportsControllerTest>'
+
+bin/rails test test/controllers/exports_controller_test.rb:118
+
+E
+
+Error:
+NoteTest#test_newest_first_breaks_created_at_ties_by_descending_id:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/models/note_test.rb:6:in `block in <class:NoteTest>'
+
+bin/rails test test/models/note_test.rb:4
+
+E
+
+Error:
+NoteTest#test_title_search_is_case-insensitive_and_treats_wildcards_literally:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/models/note_test.rb:13:in `block in <class:NoteTest>'
+
+bin/rails test test/models/note_test.rb:12
+
+E
+
+Error:
+NoteTest#test_rejects_rich_text_attachments_larger_than_one_megabyte:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/models/note_test.rb:21:in `block in <class:NoteTest>'
+
+bin/rails test test/models/note_test.rb:20
+
+E
+
+Error:
+SessionsControllerTest#test_signing_in_with_the_correct_password_opens_the_note_list:
+NameError: undefined local variable or method `notes_path' for an instance of SessionsControllerTest
+    test/controllers/sessions_controller_test.rb:13:in `block in <class:SessionsControllerTest>'
+
+bin/rails test test/controllers/sessions_controller_test.rb:10
+
+F
+
+Failure:
+SessionsControllerTest#test_a_wrong_password_re-renders_the_form_without_signing_in [test/controllers/sessions_controller_test.rb:21]:
+Expected response to be a <422: unprocessable_entity>, but was a <500: Internal Server Error>.
+Expected: 422
+  Actual: 500
+
+bin/rails test test/controllers/sessions_controller_test.rb:18
+
+E
+
+Error:
+SessionsControllerTest#test_signing_out_ends_the_session:
+NameError: undefined local variable or method `notes_path' for an instance of SessionsControllerTest
+    test/controllers/sessions_controller_test.rb:35:in `block in <class:SessionsControllerTest>'
+
+bin/rails test test/controllers/sessions_controller_test.rb:29
+
+E
+
+Error:
+SessionsControllerTest#test_signed-out_readers_are_sent_to_sign_in:
+NameError: undefined local variable or method `notes_path' for an instance of SessionsControllerTest
+    test/controllers/sessions_controller_test.rb:5:in `block in <class:SessionsControllerTest>'
+
+bin/rails test test/controllers/sessions_controller_test.rb:4
+
+E
+
+Error:
+ActivityReportsControllerTest#test_a_notebook's_notes_are_counted_by_UTC_creation_date,_newest_first:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/activity_reports_controller_test.rb:12:in `block in <class:ActivityReportsControllerTest>'
+
+bin/rails test test/controllers/activity_reports_controller_test.rb:8
+
+F
+
+Failure:
+ActivityReportsControllerTest#test_an_empty_notebook_says_so,_and_another_reader's_notebook_is_not_found [test/controllers/activity_reports_controller_test.rb:31]:
+Expected response to be a <2XX: success>, but was a <302: Found> redirect to <http://www.example.com/session/new>
+Response body: 
+
+bin/rails test test/controllers/activity_reports_controller_test.rb:27
+
+F
+
+Failure:
+AccountsControllerTest#test_a_reader_chooses_their_time_zone [test/controllers/accounts_controller_test.rb:8]:
+Expected at least 1 element matching "select[name=\"user[time_zone]\"] option[selected]", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/accounts_controller_test.rb:6
+
+E
+
+Error:
+ExportTest#test_a_cancellation_recorded_while_the_worker_is_running_stops_it_before_the_next_note:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/models/export_test.rb:6:in `block in <class:ExportTest>'
+
+bin/rails test test/models/export_test.rb:4
+
+E
+
+Error:
+CitationEnrichmentsControllerTest#test_provider_credentials_from_the_environment_reach_the_server_unchanged:
+NoMethodError: undefined method `secrets' for #<MarginNotes::Application:0x00007f78b9dc7f88>
+    test/controllers/citation_enrichments_controller_test.rb:117:in `with_provider'
+    test/controllers/citation_enrichments_controller_test.rb:43:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:40
+
+E
+
+Error:
+CitationEnrichmentsControllerTest#test_a_provider_that_stays_unavailable_or_refuses_the_request_leaves_a_visible_failure:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/citation_enrichments_controller_test.rb:61:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:60
+
+E
+
+Error:
+CitationEnrichmentsControllerTest#test_readers_can_only_request_metadata_through_their_own_cited_notes:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/citation_enrichments_controller_test.rb:91:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:90
+
+E
+
+Error:
+CitationEnrichmentsControllerTest#test_fetches_a_manually_entered_DOI's_title_and_source_URL,_retrying_one_unavailable_response:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/citation_enrichments_controller_test.rb:8:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:7
+
+E
+
+Error:
+RemindersControllerTest#test_a_reader_schedules_a_reminder_in_their_time_zone_and_is_emailed_once_it_is_due:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/reminders_controller_test.rb:8:in `block in <class:RemindersControllerTest>'
+
+bin/rails test test/controllers/reminders_controller_test.rb:6
+
+E
+
+Error:
+RemindersControllerTest#test_an_imported_reminder_is_scheduled_at_its_exact_time,_and_postponing_replaces_it:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/reminders_controller_test.rb:39:in `block in <class:RemindersControllerTest>'
+
+bin/rails test test/controllers/reminders_controller_test.rb:38
+
+E
+
+Error:
+RemindersControllerTest#test_a_reminder_needs_a_time,_and_another_reader's_notes_cannot_be_reminded:
+ArgumentError: Note model aliases `color`, but `color` is not an attribute. Use `alias_method :highlight_color, :color` or define the method manually.
+    test/controllers/reminders_controller_test.rb:61:in `block in <class:RemindersControllerTest>'
+
+bin/rails test test/controllers/reminders_controller_test.rb:60
+
+
+
+Finished in 5.085250s, 9.0458 runs/s, 3.7363 assertions/s.
+46 runs, 19 assertions, 12 failures, 34 errors, 0 skips

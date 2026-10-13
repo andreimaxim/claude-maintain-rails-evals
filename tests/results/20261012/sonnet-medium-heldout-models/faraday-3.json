@@ -1,0 +1,113 @@
+{
+  "sessionId": "e5fea9af-c080-4c6f-864a-4fa37c5b3a09",
+  "originalTurnWindow": {
+    "start": "2026-10-13T06:12:47.540Z (queue enqueue)",
+    "end": "2026-10-13T06:19:18.504Z (final assistant row, stop_reason end_turn)",
+    "followUpExcludedFrom": "2026-10-13T06:26:19.662Z (enqueue) onward: queue-operation, attachment, user, assistant and metadata rows"
+  },
+  "instances": [
+    {
+      "agentId": null,
+      "agentType": "main (top-level session; Skill maintain-rails:upgrade-gem then Agent)",
+      "spawnDepth": 0,
+      "parentAgentId": null,
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T06:12:47.628Z",
+      "finalTimestamp": "2026-10-13T06:19:18.504Z",
+      "assistantTurns": 4,
+      "assistantRows": 5,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/e5fea9af-c080-4c6f-864a-4fa37c5b3a09.jsonl",
+        "sha256": "9406d3689200831b9654072fce4e9b3f36add76c8a1b14525f21792a08767a98",
+        "sha256Scope": "first 38 lines only (original turn); the file now also holds follow-up rows",
+        "fullFileSha256AtAuditTime": "98b563780675630de587ada49e4ee1c7af0ef004542a57c231b6ac44f44b5571",
+        "fullFileGrowsWithFollowUp": true
+      }
+    },
+    {
+      "agentId": "a2ac97fc80305f96a",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": null,
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T06:12:52.474Z",
+      "finalTimestamp": "2026-10-13T06:19:00.957Z",
+      "assistantTurns": 3,
+      "assistantRows": 3,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/e5fea9af-c080-4c6f-864a-4fa37c5b3a09/subagents/agent-a2ac97fc80305f96a.jsonl",
+        "sha256": "420a729986e1d9afffa2a467b701b859ffef5d9195e4095d87e572b9e14c78b0"
+      }
+    },
+    {
+      "agentId": "a8213e91e6d8a6858",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 2,
+      "parentAgentId": "a2ac97fc80305f96a",
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T06:12:55.483Z",
+      "finalTimestamp": "2026-10-13T06:18:38.905Z",
+      "assistantTurns": 3,
+      "assistantRows": 3,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/e5fea9af-c080-4c6f-864a-4fa37c5b3a09/subagents/agent-a8213e91e6d8a6858.jsonl",
+        "sha256": "5077e7fbfa45f0a9664ebeb9f8d6bcecafd2907d2e761a6eebfd8781f6ff4da8"
+      }
+    },
+    {
+      "agentId": "aa9d4b26a5da39420",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 3,
+      "parentAgentId": "a8213e91e6d8a6858",
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T06:12:58.591Z",
+      "finalTimestamp": "2026-10-13T06:18:16.605Z",
+      "assistantTurns": 25,
+      "assistantRows": 47,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/e5fea9af-c080-4c6f-864a-4fa37c5b3a09/subagents/agent-aa9d4b26a5da39420.jsonl",
+        "sha256": "77668f91d3c205ba1af784d876516b1856552a3d4284c1da2a43713f625c1bde"
+      }
+    }
+  ],
+  "nestingChain": "main -> a2ac97fc80305f96a (depth 1) -> a8213e91e6d8a6858 (depth 2) -> aa9d4b26a5da39420 (depth 3); depth 3 made only Bash (24) and Skill (1) calls. Parent/depth come from each agent's .meta.json; depth 1 has no parentAgentId key (parent is the main session).",
+  "agentToolInputs": "All three Agent calls used subagent_type maintain-rails:gem-upgrade-planner and run_in_background=false; none set a model or effort parameter.",
+  "resumedOriginalCalls": [],
+  "resumedOriginalCallsNote": "No SendMessage/resume tool calls and no resumed agent transcripts in the original window; each agent has one transcript file and one meta.json.",
+  "envStatus": {
+    "currentShell": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unset",
+      "checkedAt": "during follow-up turn, in a Bash tool shell",
+      "values_recorded": false
+    },
+    "originalProcess": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unknown",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unknown",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unknown",
+      "reason": "Transcript does not record the original process environment; the current shell may differ from it."
+    }
+  },
+  "methodNotes": "assistantTurns = unique message.id among assistant rows (one API message can span several rows); assistantRows = raw rows. perTurnEffort/requestedModel/version taken from assistant rows (all agents uniform; top-level 'effort' field also 'medium'). First/final timestamps span user/assistant/attachment rows in the original window; queue-operation and metadata rows (ai-title, last-prompt, atis-latch) carry no usable timestamps or were excluded. Entrypoint sdk-ts for all rows.",
+  "limitations": [
+    "Main-session file is shared with the follow-up; its full-file SHA changes as the follow-up proceeds, so the original-only SHA is over the first 38 lines.",
+    "Subagent files had no rows at or after the follow-up cutoff.",
+    "Only status of the three env vars in the current shell is known; original-process values are unknown and no values were recorded.",
+    "requestedModel/perTurnEffort are as logged by Claude Code 2.1.296; whether the model came from a default, agent definition or env override is not recorded.",
+    "Planner report text said the subagent had no subagent tool; that matches depth 3 only (depth 1 and 2 did call Agent).",
+    "Counts and timestamps were computed with a script in /tmp/audit.py; I ran the audit once and checked by cross-reading raw rows, no independent second tool."
+  ]
+}

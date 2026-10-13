@@ -1,0 +1,152 @@
+{
+  "sessionId": "0777633f-d475-4ded-bf4e-c85aa4ce17ce",
+  "sessionIdCount": 1,
+  "originalTurnBoundary": {
+    "cutoffTimestampExclusive": "2026-10-13T06:26:19.017Z",
+    "rule": "original = main-session rows with timestamp < first follow-up queue-operation; the follow-up queue-operation/user/attachment/assistant rows are excluded",
+    "excludedFollowupTimestampedRows": 21,
+    "excludedFollowupAssistantRows": 9
+  },
+  "instances": [
+    {
+      "agentId": "main",
+      "agentType": "main-session (native, no agentType)",
+      "spawnDepth": 0,
+      "parentAgentId": null,
+      "requestedModel": [
+        "claude-sonnet-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T06:12:33.748Z",
+      "finalTimestamp": "2026-10-13T06:16:17.143Z",
+      "assistantTurns": 4,
+      "assistantTranscriptRows": 5,
+      "distinctMessageIds": 4,
+      "timestampedRowsCounted": 28,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/0777633f-d475-4ded-bf4e-c85aa4ce17ce.jsonl",
+        "sha256": "79803808d119d53f7b67b754c5f35c0046c11a959b4ada1a5379c61fd87544d6"
+      }
+    },
+    {
+      "agentId": "a73bf3e905c7a425b",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": "main",
+      "requestedModel": [
+        "claude-sonnet-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T06:12:39.235Z",
+      "finalTimestamp": "2026-10-13T06:15:58.933Z",
+      "assistantTurns": 4,
+      "assistantTranscriptRows": 5,
+      "distinctMessageIds": 4,
+      "timestampedRowsCounted": 25,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/0777633f-d475-4ded-bf4e-c85aa4ce17ce/subagents/agent-a73bf3e905c7a425b.jsonl",
+        "sha256": "cd42e6552c568bbf80c72cd6d307b48d19ddea8ee73be01c58145db966fe7561"
+      }
+    },
+    {
+      "agentId": "aa5b9aa897a48e1ea",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 2,
+      "parentAgentId": "a73bf3e905c7a425b",
+      "requestedModel": [
+        "claude-sonnet-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T06:12:42.894Z",
+      "finalTimestamp": "2026-10-13T06:15:37.664Z",
+      "assistantTurns": 3,
+      "assistantTranscriptRows": 3,
+      "distinctMessageIds": 3,
+      "timestampedRowsCounted": 21,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/0777633f-d475-4ded-bf4e-c85aa4ce17ce/subagents/agent-aa5b9aa897a48e1ea.jsonl",
+        "sha256": "98f0f0af08c491f084a1bf832a8d9a805555cd4c1d429fe23a05fb3ee85663a4"
+      }
+    },
+    {
+      "agentId": "a5ee63f856944f4c9",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 3,
+      "parentAgentId": "aa5b9aa897a48e1ea",
+      "requestedModel": [
+        "claude-sonnet-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T06:12:46.644Z",
+      "finalTimestamp": "2026-10-13T06:15:19.519Z",
+      "assistantTurns": 22,
+      "assistantTranscriptRows": 42,
+      "distinctMessageIds": 22,
+      "timestampedRowsCounted": 99,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/0777633f-d475-4ded-bf4e-c85aa4ce17ce/subagents/agent-a5ee63f856944f4c9.jsonl",
+        "sha256": "2c58dbfde0b5652faeb267f2cc690ac89dcbb4f4708efbd4ada9d99414d3894e"
+      }
+    }
+  ],
+  "resumedOriginalCalls": {
+    "count": 0,
+    "evidence": "No SendMessage tool_use in main or subagent transcripts; each of the 3 Agent tool_use calls has a distinct toolUseId/agentId, no agentId reuse, each subagent transcript starts with a fresh root user row (parentUuid null). All 3 Agent calls had run_in_background=false."
+  },
+  "environmentVariables": {
+    "currentShell": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unset",
+      "scope": "Bash tool shell of the follow-up turn, checked at audit time (06:26+)"
+    },
+    "originalProcess": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unknown",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unknown",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unknown",
+      "scope": "Environment of the original Claude Code process is not recorded in the JSONL and was not inspected; current-shell status is not evidence for it"
+    }
+  },
+  "limitations": [
+    "assistantTurns counts distinct requestId per instance; the JSONL splits one API response into one row per content block (assistantTranscriptRows).",
+    "requestedModel and perTurnEffort are read from per-row fields in the transcript; they record the requested/effective values as logged, not how they were chosen (e.g. env var vs default vs agent definition).",
+    "No Agent call set a model or effort override (inputs contain only description, subagent_type, run_in_background, and a stray subtype_type on the first call), so any values come from defaults/agent definition.",
+    "Sub-agent transcripts have no end marker; finalTimestamp is the last timestamped row. Subagent files were last modified 06:15 and contain no follow-up rows.",
+    "Main-session original counts exclude non-timestamped rows (last-prompt, ai-title, atis-latch) which cannot be time-bounded.",
+    "The main reply earlier reported the planner as a single call; transcripts show a 3-deep nested chain of gem-upgrade-planner agents (a73bf3e905c7a425b -> aa5b9aa897a48e1ea -> a5ee63f856944f4c9). The earlier report's 'no subagent tool' note comes from the depth-3 agent.",
+    "Main transcript file is still being appended by the follow-up, so its SHA256 covers the file as of audit time, including follow-up rows; it will differ from a later download. Subagent file hashes are stable.",
+    "Findings were not independently re-validated against the experiment logs; this audit covers only session metadata."
+  ]
+}

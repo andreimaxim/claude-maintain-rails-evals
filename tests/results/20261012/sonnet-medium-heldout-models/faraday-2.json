@@ -1,0 +1,118 @@
+{
+  "sessionId": "0b917c43-6440-40ec-bca9-57778b0b84cb",
+  "scope": "Original benchmark turn only: main-file lines 1-38 (06:12:41.922Z to 06:16:58.956Z). Follow-up rows (queue-operation enqueue/dequeue at 06:26:19, and the user, attachment and assistant rows after line 38) are excluded from counts and timestamps. All subagent files end by 06:16:45Z, so none contain follow-up rows.",
+  "instances": [
+    {
+      "agentId": "main",
+      "agentType": "main session (no agentType recorded)",
+      "spawnDepth": 0,
+      "parentAgentId": null,
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T06:12:41.922Z",
+      "finalTimestamp": "2026-10-13T06:16:58.956Z",
+      "assistantTurns": 4,
+      "assistantTranscriptRows": 5,
+      "notes": "assistantTurns counts distinct message.id; one message is split across 2 rows. Tool uses in order: Skill, Bash, Agent, then final text. firstTimestamp is the queue-operation enqueue row; the first user row is 06:12:41.997Z.",
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/0b917c43-6440-40ec-bca9-57778b0b84cb.jsonl",
+        "sha256OfOriginalLines1to38": "0a229f4d5a63569cd6c43541263b34b107576f50ffd2a6ac9dcdb55495447f49",
+        "sha256OfWholeFileAtAuditTime": "e239628f3fc81395aaf77e0340a9620cc8c6036de80e3d9c21d24136f3b11f2f",
+        "linesAtAuditTime": 72,
+        "note": "The whole-file hash is volatile because the current follow-up turn keeps appending rows. Use the lines 1-38 hash for the original turn."
+      }
+    },
+    {
+      "agentId": "a23e141474cf24bd3",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": null,
+      "parentNote": "meta.json has no parentAgentId; the parent is the main session (Agent call toolu_013RDJ78RWu4cefms4Dwqd57).",
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T06:12:47.100Z",
+      "finalTimestamp": "2026-10-13T06:16:45.438Z",
+      "firstAssistantTimestamp": "2026-10-13T06:12:48.875Z",
+      "finalAssistantTimestamp": "2026-10-13T06:16:45.438Z",
+      "assistantTurns": 3,
+      "assistantTranscriptRows": 3,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/0b917c43-6440-40ec-bca9-57778b0b84cb/subagents/agent-a23e141474cf24bd3.jsonl",
+        "sha256": "b95492dd4d3f439200eb992046f035faed49ef9411cf7534d5a16f4df722bb68"
+      }
+    },
+    {
+      "agentId": "a093c4ae62c5c4ca0",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 2,
+      "parentAgentId": "a23e141474cf24bd3",
+      "spawnedByToolUseId": "toolu_01J5HnyvnVz8KtadoriAYx4y",
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T06:12:50.649Z",
+      "finalTimestamp": "2026-10-13T06:16:30.607Z",
+      "firstAssistantTimestamp": "2026-10-13T06:12:52.467Z",
+      "finalAssistantTimestamp": "2026-10-13T06:16:30.607Z",
+      "assistantTurns": 3,
+      "assistantTranscriptRows": 3,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/0b917c43-6440-40ec-bca9-57778b0b84cb/subagents/agent-a093c4ae62c5c4ca0.jsonl",
+        "sha256": "a054ac607288a03bde61fb351f2a18a547385a249a2357b27351619ae4417ca0"
+      }
+    },
+    {
+      "agentId": "a96b3c6ad03892495",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 3,
+      "parentAgentId": "a093c4ae62c5c4ca0",
+      "spawnedByToolUseId": "toolu_018rNZ6MneK8MNPpdojmMo8x",
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T06:12:54.053Z",
+      "finalTimestamp": "2026-10-13T06:16:15.588Z",
+      "firstAssistantTimestamp": "2026-10-13T06:12:55.617Z",
+      "finalAssistantTimestamp": "2026-10-13T06:16:15.588Z",
+      "assistantTurns": 22,
+      "assistantTranscriptRows": 40,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/0b917c43-6440-40ec-bca9-57778b0b84cb/subagents/agent-a96b3c6ad03892495.jsonl",
+        "sha256": "8539723da1dccfac7e3835ba10c7f02c97223784a5a1a39eb4a07c28ec59c58a"
+      }
+    }
+  ],
+  "resumedOriginalCalls": {
+    "count": 0,
+    "evidence": "No SendMessage tool_use appears in main-file lines 1-38 or in any subagent assistant row. The only tool uses were Skill, Bash and Agent in the main session, and Agent and Skill in a23e141474cf24bd3 and a093c4ae62c5c4ca0. Every Agent call was a fresh foreground spawn (requestShape foreground, requestNonInteractive true in meta.json)."
+  },
+  "environmentVariables": {
+    "currentShell": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unset",
+      "note": "Checked in a Bash tool shell during the follow-up turn. Only set/unset status was recorded, never values."
+    },
+    "originalProcess": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unknown",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unknown",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unknown",
+      "note": "Not recorded in the JSONL. The current shell status does not prove the original process environment. The transcript shows entrypoint sdk-ts and CLI version 2.1.296 throughout."
+    }
+  },
+  "limitations": [
+    "assistantTurns counts distinct message.id per file. One API response is written as several rows, so row counts are higher and are listed separately.",
+    "requestedModel, perTurnEffort and effort come from per-row JSONL fields. No assistant row in any file disagrees: all are claude-sonnet-5-5 and medium.",
+    "The planner's hand-back said it had no subagent tool, but the transcript shows a nested spawn chain from depth 1 to 3 (a23e141474cf24bd3, then a093c4ae62c5c4ca0, then a96b3c6ad03892495), each with the same agent type and prompt. I report the transcript as recorded and did not investigate why.",
+    "Main-file lines 11, 16-18, 25-27 and 36-38 (atis-latch, last-prompt, ai-title) carry no timestamp. They sit inside lines 1-38 and were treated as original by position, not by time.",
+    "The original/follow-up split is by file position and timestamp (line 39 is the enqueue at 06:26:19.043Z). I did not verify it against any other record.",
+    "The main JSONL is still being appended by the current turn, so its full-file hash and line count will differ after this audit.",
+    "I did not read any environment variable value and did not inspect the original process's environment."
+  ]
+}

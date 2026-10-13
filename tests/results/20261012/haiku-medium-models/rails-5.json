@@ -1,0 +1,374 @@
+{
+  "schema": "model-audit/v1",
+  "sessionId": "f81aea36-270d-4daa-96ac-acca23ad4e46",
+  "originalTurn": {
+    "userPromptAt": "2026-10-13T06:29:28.017Z",
+    "userPrompt": "Upgrade the rails gem to 8.1.0",
+    "mainFinalAt": "2026-10-13T06:50:43.801Z"
+  },
+  "evaluationBoundary": {
+    "originalScopeLines": "1-95",
+    "startsAt": "2026-10-13T06:29:27.932Z (first queue-operation record)",
+    "endsAt": "2026-10-13T06:50:43.801Z (main final end_turn text)",
+    "excluded": "lines 96+ : the collection follow-up user message, its queue/attachment/system rows, and this turn's tool rows"
+  },
+  "cliVersion": [
+    "2.1.296"
+  ],
+  "modelFindings": {
+    "allRecordedAgentModelsEqualRequestedModel": true,
+    "distinctAssistantMessageModels": [
+      "claude-haiku-5-5"
+    ],
+    "distinctEffortLevels": [
+      "medium"
+    ],
+    "note": "All recorded assistant messages in scope are claude-haiku-5-5 at effort medium. Subagents do not record a different model."
+  },
+  "envStatus": {
+    "status": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unset"
+    },
+    "note": "Original process environment is not recorded; statuses are the current shell's set/unset state only, values not recorded."
+  },
+  "sources": [
+    {
+      "role": "main",
+      "path": "/home/user/.claude/projects/-home-user-workspace-repo/f81aea36-270d-4daa-96ac-acca23ad4e46.jsonl",
+      "fullFileSha256AtCollection": "c882c3a4d99112a85f54f893d53d34129a8649c18122688bb68e7544327f6607",
+      "fullFileLineCount": 176,
+      "originalScopeLines": "1-95",
+      "originalScopeSha256": "2a84d3f1c8cff14be52bb989e3ec76054a7e53314eb52b1ba6ea0c33a63f8712",
+      "excludedFromScope": "lines 96-176 (collection follow-up, its queue, attachment, and tool rows; file still growing during this turn)"
+    },
+    {
+      "role": "subagent:ad4eb2693c7f57f59",
+      "path": "/home/user/.claude/projects/-home-user-workspace-repo/f81aea36-270d-4daa-96ac-acca23ad4e46/subagents/agent-ad4eb2693c7f57f59.jsonl",
+      "sha256": "a0bceaf5a744b3f3a493a3d7bb72ae738bb9e7bc2f078f89668d5c511e488819",
+      "lineCount": 33
+    },
+    {
+      "role": "subagent:a9557a6b28f046b21",
+      "path": "/home/user/.claude/projects/-home-user-workspace-repo/f81aea36-270d-4daa-96ac-acca23ad4e46/subagents/agent-a9557a6b28f046b21.jsonl",
+      "sha256": "252e584c5645f12cb8cb8a697345c1194958c2ccf397179c878f78c186480442",
+      "lineCount": 25
+    },
+    {
+      "role": "subagent:a3190cae6bf77ef7d",
+      "path": "/home/user/.claude/projects/-home-user-workspace-repo/f81aea36-270d-4daa-96ac-acca23ad4e46/subagents/agent-a3190cae6bf77ef7d.jsonl",
+      "sha256": "2ef8ea7c3e8d0cf26aec5b2adbf2a4f99a5193f76b5873b9a3e1c44b431a89ba",
+      "lineCount": 42
+    },
+    {
+      "role": "subagent:a6ebf87d41decad9f",
+      "path": "/home/user/.claude/projects/-home-user-workspace-repo/f81aea36-270d-4daa-96ac-acca23ad4e46/subagents/agent-a6ebf87d41decad9f.jsonl",
+      "sha256": "6964ef7705b5a68da2b9b1d86589a171eecff794d243814ace000def9fe29533",
+      "lineCount": 531
+    }
+  ],
+  "agents": [
+    {
+      "agentLabel": "main",
+      "agentId": null,
+      "sessionId": "f81aea36-270d-4daa-96ac-acca23ad4e46",
+      "recordedAgentType": null,
+      "recordedDescription": null,
+      "depth": 0,
+      "parent": null,
+      "requestShape": "interactive main thread",
+      "sourcePath": "/home/user/.claude/projects/-home-user-workspace-repo/f81aea36-270d-4daa-96ac-acca23ad4e46.jsonl",
+      "requestedModel": [
+        "claude-haiku-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-haiku-5-5"
+      ],
+      "effort": [
+        "medium"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "originalFirstTimestamp": "2026-10-13T06:29:27.932Z",
+      "originalFirstUserPromptTimestamp": "2026-10-13T06:29:28.017Z",
+      "originalFinalTimestamp": "2026-10-13T06:50:43.801Z",
+      "uniqueAssistantMessageCount": 13,
+      "toolUseCounts": {
+        "Agent": 2,
+        "Bash": 3,
+        "SendMessage": 1,
+        "Skill": 1,
+        "TaskStop": 3,
+        "ToolSearch": 2
+      },
+      "resumedCalls": [
+        {
+          "by": "main",
+          "to": "ad4eb2693c7f57f59",
+          "sentAt": "2026-10-13T06:29:47.268Z",
+          "kind": "SendMessage to a running agent, delivered as a resume"
+        }
+      ],
+      "limitations": [
+        "Original process environment not recorded; only current env status is reported in envStatus.",
+        "Thinking and signature blocks excluded by design.",
+        "Original scope ends at line 95; the file continues with the excluded collection follow-up.",
+        "Main agent has no agentType; it is not a subagent."
+      ]
+    },
+    {
+      "agentLabel": "ad4eb2693c7f57f59",
+      "agentId": "ad4eb2693c7f57f59",
+      "sessionId": "f81aea36-270d-4daa-96ac-acca23ad4e46",
+      "recordedAgentType": "maintain-rails:gem-upgrade-planner",
+      "recordedDescription": "Plan rails upgrade to 8.1.0",
+      "toolUseId": "toolu_01Vha99wmNubK2kkwqYKZZAf",
+      "depth": 1,
+      "parent": "main",
+      "requestShape": "foreground",
+      "requestNonInteractive": true,
+      "sourcePath": "/home/user/.claude/projects/-home-user-workspace-repo/f81aea36-270d-4daa-96ac-acca23ad4e46/subagents/agent-ad4eb2693c7f57f59.jsonl",
+      "sourceSha256": "a0bceaf5a744b3f3a493a3d7bb72ae738bb9e7bc2f078f89668d5c511e488819",
+      "requestedModel": [
+        "claude-haiku-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-haiku-5-5"
+      ],
+      "effort": [
+        "medium"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "originalFirstTimestamp": "2026-10-13T06:29:32.615Z",
+      "originalFinalTimestamp": "2026-10-13T06:29:54.095Z",
+      "originalFirstAssistantTimestamp": "2026-10-13T06:29:34.070Z",
+      "originalFinalAssistantTimestamp": "2026-10-13T06:29:54.095Z",
+      "uniqueAssistantMessageCount": 6,
+      "assistantRecordCount": 10,
+      "stopReasons": [
+        "end_turn",
+        "tool_use"
+      ],
+      "toolUseCounts": {
+        "Agent": 1,
+        "ListAgents": 1,
+        "SendMessage": 1,
+        "Skill": 1
+      },
+      "resumedCalls": [
+        {
+          "by": "main",
+          "sentAt": "2026-10-13T06:29:47.268Z",
+          "delivered": "2026-10-13T06:29:47.288Z"
+        }
+      ],
+      "agentsSpawned": [
+        {
+          "agentId": "a9557a6b28f046b21",
+          "at": "2026-10-13T06:29:36.160Z",
+          "kind": "Agent (run_in_background unset)"
+        }
+      ],
+      "messagesSent": [
+        {
+          "to": "a9557a6b28f046b21",
+          "at": "2026-10-13T06:29:51.840Z",
+          "kind": "SendMessage"
+        }
+      ],
+      "proseSelfDescription": "Says the planner is running in the background, will return the full plan later; final status says the plan is not ready and that it asked its child agent to return the plan.",
+      "selfAnalysisOrFallbackReporter": false,
+      "limitations": [
+        "Meta requestShape is foreground, but its first status text says it is running in the background."
+      ]
+    },
+    {
+      "agentLabel": "a9557a6b28f046b21",
+      "agentId": "a9557a6b28f046b21",
+      "sessionId": "f81aea36-270d-4daa-96ac-acca23ad4e46",
+      "recordedAgentType": "maintain-rails:gem-upgrade-planner",
+      "recordedDescription": "Plan rails 8.1.0 upgrade",
+      "toolUseId": "toolu_015KPvHKwGpKd9YDFKZMghcr",
+      "depth": 2,
+      "parent": "ad4eb2693c7f57f59",
+      "requestShape": "background",
+      "requestNonInteractive": true,
+      "sourcePath": "/home/user/.claude/projects/-home-user-workspace-repo/f81aea36-270d-4daa-96ac-acca23ad4e46/subagents/agent-a9557a6b28f046b21.jsonl",
+      "sourceSha256": "252e584c5645f12cb8cb8a697345c1194958c2ccf397179c878f78c186480442",
+      "requestedModel": [
+        "claude-haiku-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-haiku-5-5"
+      ],
+      "effort": [
+        "medium"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "originalFirstTimestamp": "2026-10-13T06:29:36.165Z",
+      "originalFinalTimestamp": "2026-10-13T06:29:54.583Z",
+      "originalFirstAssistantTimestamp": "2026-10-13T06:29:37.623Z",
+      "originalFinalAssistantTimestamp": "2026-10-13T06:29:54.583Z",
+      "uniqueAssistantMessageCount": 4,
+      "assistantRecordCount": 6,
+      "stopReasons": [
+        "end_turn",
+        "tool_use"
+      ],
+      "toolUseCounts": {
+        "Agent": 1,
+        "Skill": 1
+      },
+      "resumedCalls": [
+        {
+          "by": "ad4eb2693c7f57f59",
+          "sentAt": "2026-10-13T06:29:51.840Z",
+          "delivered": "2026-10-13T06:29:51.857Z"
+        }
+      ],
+      "agentsSpawned": [
+        {
+          "agentId": "a3190cae6bf77ef7d",
+          "at": "2026-10-13T06:29:40.262Z",
+          "kind": "Agent"
+        }
+      ],
+      "messagesSent": [],
+      "proseSelfDescription": "Says the plan is being produced by its child planner and that it will return the plan when that completes; final status repeats this.",
+      "selfAnalysisOrFallbackReporter": false,
+      "limitations": [
+        "Stopped as a loop participant: its final status does not contain the plan."
+      ]
+    },
+    {
+      "agentLabel": "a3190cae6bf77ef7d",
+      "agentId": "a3190cae6bf77ef7d",
+      "sessionId": "f81aea36-270d-4daa-96ac-acca23ad4e46",
+      "recordedAgentType": "maintain-rails:gem-upgrade-planner",
+      "recordedDescription": "Plan rails 8.1.0 upgrade",
+      "toolUseId": "toolu_01T1otjbdWWuBjEju2KxNp9g",
+      "depth": 3,
+      "parent": "a9557a6b28f046b21",
+      "requestShape": "background",
+      "requestNonInteractive": true,
+      "sourcePath": "/home/user/.claude/projects/-home-user-workspace-repo/f81aea36-270d-4daa-96ac-acca23ad4e46/subagents/agent-a3190cae6bf77ef7d.jsonl",
+      "sourceSha256": "2ef8ea7c3e8d0cf26aec5b2adbf2a4f99a5193f76b5873b9a3e1c44b431a89ba",
+      "requestedModel": [
+        "claude-haiku-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-haiku-5-5"
+      ],
+      "effort": [
+        "medium"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "originalFirstTimestamp": "2026-10-13T06:29:40.267Z",
+      "originalFinalTimestamp": "2026-10-13T06:30:00.101Z",
+      "originalFirstAssistantTimestamp": "2026-10-13T06:29:41.765Z",
+      "originalFinalAssistantTimestamp": "2026-10-13T06:29:56.928Z",
+      "uniqueAssistantMessageCount": 7,
+      "assistantRecordCount": 14,
+      "stopReasons": [
+        "tool_use"
+      ],
+      "toolUseCounts": {
+        "Bash": 4,
+        "Read": 1,
+        "Skill": 1,
+        "ToolSearch": 1
+      },
+      "resumedCalls": [],
+      "agentsSpawned": [],
+      "messagesSent": [],
+      "proseSelfDescription": "Says it cannot reach the planner agent because no subagent tool is available and that it will follow the brief inline; this text is mid-run, not a final response.",
+      "selfAnalysisOrFallbackReporter": true,
+      "limitations": [
+        "Killed by main via TaskStop at 2026-10-13T06:30:00.096Z; no end_turn response recorded.",
+        "The killed-task notification text is not in this transcript as a final response."
+      ]
+    },
+    {
+      "agentLabel": "a6ebf87d41decad9f",
+      "agentId": "a6ebf87d41decad9f",
+      "sessionId": "f81aea36-270d-4daa-96ac-acca23ad4e46",
+      "recordedAgentType": "maintain-rails:gem-upgrade-planner",
+      "recordedDescription": "Plan rails 7.0.8.7 to 8.1.0",
+      "toolUseId": "toolu_013VoHnf4RLFT99fpC98sxhV",
+      "depth": 1,
+      "parent": "main",
+      "requestShape": "foreground",
+      "requestNonInteractive": true,
+      "sourcePath": "/home/user/.claude/projects/-home-user-workspace-repo/f81aea36-270d-4daa-96ac-acca23ad4e46/subagents/agent-a6ebf87d41decad9f.jsonl",
+      "sourceSha256": "6964ef7705b5a68da2b9b1d86589a171eecff794d243814ace000def9fe29533",
+      "requestedModel": [
+        "claude-haiku-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-haiku-5-5"
+      ],
+      "effort": [
+        "medium"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "originalFirstTimestamp": "2026-10-13T06:30:03.545Z",
+      "originalFinalTimestamp": "2026-10-13T06:50:18.060Z",
+      "originalFirstAssistantTimestamp": "2026-10-13T06:30:05.483Z",
+      "originalFinalAssistantTimestamp": "2026-10-13T06:50:18.060Z",
+      "uniqueAssistantMessageCount": 96,
+      "assistantRecordCount": 303,
+      "stopReasons": [
+        "end_turn",
+        "tool_use"
+      ],
+      "toolUseCounts": {
+        "Bash": 94,
+        "Skill": 1,
+        "ToolSearch": 1,
+        "WebFetch": 22
+      },
+      "resumedCalls": [],
+      "agentsSpawned": [],
+      "messagesSent": [],
+      "proseSelfDescription": "Final commentary says it did not delegate further and that the plan is its own direct analysis, not the planner's output.",
+      "selfAnalysisOrFallbackReporter": true,
+      "limitations": [
+        "Fresh foreground spawn after the stalled runs; not a resume.",
+        "Self-analysis reporter: its recorded agentType is the planner, but its prose says it performed the analysis directly and used no subagent.",
+        "Ran 96 unique assistant messages with Bash and WebFetch tool calls against disposable copies under /tmp/mn-exp; repository unchanged at the collection point per its report."
+      ]
+    }
+  ],
+  "limitations": [
+    "Recorded agentType values come from subagent meta files; prose self-descriptions are reported separately as proseSelfDescription.",
+    "The main transcript file continues to grow during the collection turn; use originalScopeSha256 for the stable original range.",
+    "Subagent 'a3190cae6bf77ef7d' was killed before a final response; its final text is absent.",
+    "Thinking and signatures are excluded; tool inputs and environment dumps are excluded.",
+    "No original background agents were waited on or messaged during collection."
+  ]
+}

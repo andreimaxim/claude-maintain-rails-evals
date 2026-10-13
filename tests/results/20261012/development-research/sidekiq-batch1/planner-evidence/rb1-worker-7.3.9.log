@@ -1,0 +1,31 @@
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/core_ext/object.rb:13: warning: bigdecimal was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add bigdecimal to your Gemfile or gemspec to silence this warning.
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/notifications.rb:4: warning: mutex_m was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add mutex_m to your Gemfile or gemspec to silence this warning.
+2026-10-12T15:40:48.544Z pid=50333 tid=149x INFO: Booted Rails 7.0.8.7 application in development environment
+2026-10-12T15:40:48.544Z pid=50333 tid=149x INFO: Running in ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+2026-10-12T15:40:48.544Z pid=50333 tid=149x INFO: See LICENSE and the LGPL-3.0 for licensing details.
+2026-10-12T15:40:48.544Z pid=50333 tid=149x INFO: Upgrade to Sidekiq Pro for more features and support: https://sidekiq.org
+2026-10-12T15:40:48.544Z pid=50333 tid=149x INFO: Sidekiq 7.3.9 connecting to Redis with options {:size=>10, :pool_name=>"internal", :url=>"redis://127.0.0.1:6391/7"}
+2026-10-12T15:40:48.545Z pid=50333 tid=149x INFO: Sidekiq 7.3.9 connecting to Redis with options {:size=>5, :pool_name=>"default", :url=>"redis://127.0.0.1:6391/7"}
+2026-10-12T15:40:48.591Z pid=50333 tid=1e89 class=ExportJob jid=d2f8dbae116eeac1f57c7bc7 INFO: start
+2026-10-12T15:40:48.591Z pid=50333 tid=1e8x class=ExportJob jid=d1b622d133d7c7a1ed675ac2 INFO: start
+2026-10-12T15:40:48.591Z pid=50333 tid=1e9h class=DigestJob jid=0b601e86e0ebac02ba4e48a4 INFO: start
+2026-10-12T15:40:48.721Z pid=50333 tid=1e8x class=ExportJob jid=d1b622d133d7c7a1ed675ac2 elapsed=0.13 INFO: fail
+2026-10-12T15:40:48.723Z pid=50333 tid=1e8x WARN: {"context":"Job raised exception","job":{"retry":true,"queue":"default","args":[-1,{"format":"markdown"}],"class":"ExportJob","jid":"d1b622d133d7c7a1ed675ac2","created_at":1791819647.730797,"enqueued_at":1791819647.7308087}}
+2026-10-12T15:40:48.723Z pid=50333 tid=1e8x WARN: ActiveRecord::RecordNotFound: Couldn't find Export with 'id'=-1
+2026-10-12T15:40:48.723Z pid=50333 tid=1e8x WARN: app/jobs/export_job.rb:10:in `perform'
+2026-10-12T15:40:48.896Z pid=50333 tid=1e89 class=ExportJob jid=d2f8dbae116eeac1f57c7bc7 WARN: DEPRECATION WARNING: Rails 7.0 has deprecated Enumerable.sum in favor of Ruby's native implementation available since 2.4. Sum of non-numeric elements requires an initial argument. (called from generate at /tmp/sidekiq-upgrade-exp/upgraded-cp2/app/models/export.rb:42)
+2026-10-12T15:40:48.925Z pid=50333 tid=1e89 class=ExportJob jid=d2f8dbae116eeac1f57c7bc7 INFO: [36m  Disk Storage (0.5ms) [0m[32mUploaded file to key: fb34g555j9n355hsix0jnpawhfzf (checksum: z9aby7VfWDhH07UZau6/kA==)[0m
+2026-10-12T15:40:48.964Z pid=50333 tid=1e89 class=ExportJob jid=d2f8dbae116eeac1f57c7bc7 elapsed=0.372 INFO: done
+2026-10-12T15:40:48.996Z pid=50333 tid=1e9h class=DigestJob jid=0b601e86e0ebac02ba4e48a4 INFO: Performing DigestJob (Job ID: 919e5bf4-5302-4d03-90c2-819ca0d17895) from Sidekiq(default) enqueued at 2026-10-12T15:40:47Z with arguments: #<GlobalID:0x00007f9b9db4e7c8 @uri=#<URI::GID gid://margin-notes/User/6>>, Mon, 12 Oct 2026 15:40:47.726001741 UTC +00:00, "1.0"
+2026-10-12T15:40:49.026Z pid=50333 tid=1e9h class=DigestJob jid=0b601e86e0ebac02ba4e48a4 INFO:   Rendered digest_mailer/daily_digest.text.erb within layouts/mailer (Duration: 6.3ms | Allocations: 4180)
+2026-10-12T15:40:49.026Z pid=50333 tid=1e9h class=DigestJob jid=0b601e86e0ebac02ba4e48a4 INFO:   Rendered layout layouts/mailer.text.erb (Duration: 6.7ms | Allocations: 4403)
+2026-10-12T15:40:49.031Z pid=50333 tid=1e9h class=DigestJob jid=0b601e86e0ebac02ba4e48a4 INFO: Delivered mail 6accff8174a2_c49d3ae8227b0@e2b.local.mail (3.7ms)
+2026-10-12T15:40:49.032Z pid=50333 tid=1e9h class=DigestJob jid=0b601e86e0ebac02ba4e48a4 INFO: Performed DigestJob (Job ID: 919e5bf4-5302-4d03-90c2-819ca0d17895) from Sidekiq(default) in 339.07ms
+2026-10-12T15:40:49.032Z pid=50333 tid=1e9h class=DigestJob jid=0b601e86e0ebac02ba4e48a4 elapsed=0.44 INFO: done
+2026-10-12T15:40:57.745Z pid=50333 tid=149x INFO: Shutting down
+2026-10-12T15:40:57.745Z pid=50333 tid=149x INFO: Terminating quiet threads for default capsule
+2026-10-12T15:40:57.746Z pid=50333 tid=1e8t INFO: Scheduler exiting...
+2026-10-12T15:40:58.247Z pid=50333 tid=qs5 INFO: Pausing to allow jobs to finish...
+2026-10-12T15:40:59.248Z pid=50333 tid=149x INFO: Bye!

@@ -1,0 +1,15 @@
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/core_ext/object/json.rb:5: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/bigdecimal.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add bigdecimal to your Gemfile or gemspec to silence this warning.
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/notifications/fanout.rb:3: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/mutex_m.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add mutex_m to your Gemfile or gemspec to silence this warning.
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/sidekiq-upgrade-exp/scripts/probe.rb:17:in `block (2 levels) in <main>')
+sidekiq=6.5.12 redis-gem=4.8.1 redis-client=n/a connection_pool=2.5.5 rails=7.0.8.7
+REDIS_URL=redis://127.0.0.1:6399/0 adapter=ActiveJob::QueueAdapters::SidekiqAdapter adapter_source=/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activejob-7.0.8.7/lib/active_job/queue_adapters/sidekiq_adapter.rb
+connection class yielded by Sidekiq.redis: Redis (Class)
+default concurrency: 10 (Integer)
+strict args mode: :warn (Symbol)
+Sidekiq.redis sadd with Redis down: RAISED Redis::CannotConnectError: Error connecting to Redis on 127.0.0.1:6399 (Errno::ECONNREFUSED)  ancestors=Redis::CannotConnectError<Redis::BaseConnectionError<Redis::BaseError<RuntimeError
+ExportJob.perform_async (string keys) with Redis down: RAISED Redis::CannotConnectError: Error connecting to Redis on 127.0.0.1:6399 (Errno::ECONNREFUSED)  ancestors=Redis::CannotConnectError<Redis::BaseConnectionError<Redis::BaseError<RuntimeError
+Notebook#request_export with Redis down: RAISED Redis::CannotConnectError: Error connecting to Redis on 127.0.0.1:6399 (Errno::ECONNREFUSED)  ancestors=Redis::CannotConnectError<Redis::BaseConnectionError<Redis::BaseError<RuntimeError
+exports leaked by failed request_export: 0
+User#request_digest with Redis down: RAISED Redis::CannotConnectError: Error connecting to Redis on 127.0.0.1:6399 (Errno::ECONNREFUSED)  ancestors=Redis::CannotConnectError<Redis::BaseConnectionError<Redis::BaseError<RuntimeError

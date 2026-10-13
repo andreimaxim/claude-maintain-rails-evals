@@ -1,0 +1,569 @@
+diff --git a/Gemfile b/Gemfile
+index 7360cdf..1460cbd 100644
+--- a/Gemfile
++++ b/Gemfile
+@@ -4,8 +4,10 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+ ruby "3.3.6"
+ 
+ # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+-gem "rails", "7.0.8.7"
++gem "rails", "8.1.0"
+ gem "concurrent-ruby", "1.3.4"
++# Rails 8.1.0 calls JSON.parse with a positional options hash, which json 3 rejects
++gem "json", "< 3"
+ 
+ # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+ gem "sprockets-rails"
+diff --git a/Gemfile.lock b/Gemfile.lock
+index 4f6fbbe..3488c67 100644
+--- a/Gemfile.lock
++++ b/Gemfile.lock
+@@ -1,75 +1,85 @@
+ GEM
+   remote: https://rubygems.org/
+   specs:
+-    actioncable (7.0.8.7)
+-      actionpack (= 7.0.8.7)
+-      activesupport (= 7.0.8.7)
++    action_text-trix (2.1.19)
++      railties
++    actioncable (8.1.0)
++      actionpack (= 8.1.0)
++      activesupport (= 8.1.0)
+       nio4r (~> 2.0)
+       websocket-driver (>= 0.6.1)
+-    actionmailbox (7.0.8.7)
+-      actionpack (= 7.0.8.7)
+-      activejob (= 7.0.8.7)
+-      activerecord (= 7.0.8.7)
+-      activestorage (= 7.0.8.7)
+-      activesupport (= 7.0.8.7)
+-      mail (>= 2.7.1)
+-      net-imap
+-      net-pop
+-      net-smtp
+-    actionmailer (7.0.8.7)
+-      actionpack (= 7.0.8.7)
+-      actionview (= 7.0.8.7)
+-      activejob (= 7.0.8.7)
+-      activesupport (= 7.0.8.7)
+-      mail (~> 2.5, >= 2.5.4)
+-      net-imap
+-      net-pop
+-      net-smtp
+-      rails-dom-testing (~> 2.0)
+-    actionpack (7.0.8.7)
+-      actionview (= 7.0.8.7)
+-      activesupport (= 7.0.8.7)
+-      rack (~> 2.0, >= 2.2.4)
++      zeitwerk (~> 2.6)
++    actionmailbox (8.1.0)
++      actionpack (= 8.1.0)
++      activejob (= 8.1.0)
++      activerecord (= 8.1.0)
++      activestorage (= 8.1.0)
++      activesupport (= 8.1.0)
++      mail (>= 2.8.0)
++    actionmailer (8.1.0)
++      actionpack (= 8.1.0)
++      actionview (= 8.1.0)
++      activejob (= 8.1.0)
++      activesupport (= 8.1.0)
++      mail (>= 2.8.0)
++      rails-dom-testing (~> 2.2)
++    actionpack (8.1.0)
++      actionview (= 8.1.0)
++      activesupport (= 8.1.0)
++      nokogiri (>= 1.8.5)
++      rack (>= 2.2.4)
++      rack-session (>= 1.0.1)
+       rack-test (>= 0.6.3)
+-      rails-dom-testing (~> 2.0)
+-      rails-html-sanitizer (~> 1.0, >= 1.2.0)
+-    actiontext (7.0.8.7)
+-      actionpack (= 7.0.8.7)
+-      activerecord (= 7.0.8.7)
+-      activestorage (= 7.0.8.7)
+-      activesupport (= 7.0.8.7)
++      rails-dom-testing (~> 2.2)
++      rails-html-sanitizer (~> 1.6)
++      useragent (~> 0.16)
++    actiontext (8.1.0)
++      action_text-trix (~> 2.1.15)
++      actionpack (= 8.1.0)
++      activerecord (= 8.1.0)
++      activestorage (= 8.1.0)
++      activesupport (= 8.1.0)
+       globalid (>= 0.6.0)
+       nokogiri (>= 1.8.5)
+-    actionview (7.0.8.7)
+-      activesupport (= 7.0.8.7)
++    actionview (8.1.0)
++      activesupport (= 8.1.0)
+       builder (~> 3.1)
+-      erubi (~> 1.4)
+-      rails-dom-testing (~> 2.0)
+-      rails-html-sanitizer (~> 1.1, >= 1.2.0)
+-    activejob (7.0.8.7)
+-      activesupport (= 7.0.8.7)
++      erubi (~> 1.11)
++      rails-dom-testing (~> 2.2)
++      rails-html-sanitizer (~> 1.6)
++    activejob (8.1.0)
++      activesupport (= 8.1.0)
+       globalid (>= 0.3.6)
+-    activemodel (7.0.8.7)
+-      activesupport (= 7.0.8.7)
+-    activerecord (7.0.8.7)
+-      activemodel (= 7.0.8.7)
+-      activesupport (= 7.0.8.7)
+-    activestorage (7.0.8.7)
+-      actionpack (= 7.0.8.7)
+-      activejob (= 7.0.8.7)
+-      activerecord (= 7.0.8.7)
+-      activesupport (= 7.0.8.7)
++    activemodel (8.1.0)
++      activesupport (= 8.1.0)
++    activerecord (8.1.0)
++      activemodel (= 8.1.0)
++      activesupport (= 8.1.0)
++      timeout (>= 0.4.0)
++    activestorage (8.1.0)
++      actionpack (= 8.1.0)
++      activejob (= 8.1.0)
++      activerecord (= 8.1.0)
++      activesupport (= 8.1.0)
+       marcel (~> 1.0)
+-      mini_mime (>= 1.1.0)
+-    activesupport (7.0.8.7)
+-      concurrent-ruby (~> 1.0, >= 1.0.2)
++    activesupport (8.1.0)
++      base64
++      bigdecimal
++      concurrent-ruby (~> 1.0, >= 1.3.1)
++      connection_pool (>= 2.2.5)
++      drb
+       i18n (>= 1.6, < 2)
++      json
++      logger (>= 1.4.2)
+       minitest (>= 5.1)
+-      tzinfo (~> 2.0)
++      securerandom (>= 0.3)
++      tzinfo (~> 2.0, >= 2.0.5)
++      uri (>= 0.13.1)
+     addressable (2.9.0)
+       public_suffix (>= 2.0.2, < 8.0)
+     base64 (0.3.0)
+     bcrypt (3.1.22)
++    bigdecimal (4.1.3)
+     bindex (0.8.1)
+     bootsnap (1.26.0)
+       msgpack (~> 1.5)
+@@ -90,6 +100,7 @@ GEM
+     debug (1.11.1)
+       irb (~> 1.10)
+       reline (>= 0.3.8)
++    drb (2.2.3)
+     erb (6.0.7)
+     erubi (1.13.1)
+     faraday (1.10.4)
+@@ -132,6 +143,7 @@ GEM
+     jbuilder (2.15.1)
+       actionview (>= 7.0.0)
+       activesupport (>= 7.0.0)
++    json (2.21.2)
+     logger (1.7.0)
+     loofah (2.25.2)
+       crass (~> 1.0.2)
+@@ -144,7 +156,6 @@ GEM
+       net-smtp
+     marcel (1.2.1)
+     matrix (0.4.3)
+-    method_source (1.1.0)
+     mini_mime (1.1.5)
+     minitest (5.27.0)
+     msgpack (1.8.5)
+@@ -190,22 +201,27 @@ GEM
+       nio4r (~> 2.0)
+     racc (1.8.1)
+     rack (2.2.24)
++    rack-session (1.0.2)
++      rack (< 3)
+     rack-test (2.2.0)
+       rack (>= 1.3)
+-    rails (7.0.8.7)
+-      actioncable (= 7.0.8.7)
+-      actionmailbox (= 7.0.8.7)
+-      actionmailer (= 7.0.8.7)
+-      actionpack (= 7.0.8.7)
+-      actiontext (= 7.0.8.7)
+-      actionview (= 7.0.8.7)
+-      activejob (= 7.0.8.7)
+-      activemodel (= 7.0.8.7)
+-      activerecord (= 7.0.8.7)
+-      activestorage (= 7.0.8.7)
+-      activesupport (= 7.0.8.7)
++    rackup (1.0.1)
++      rack (< 3)
++      webrick
++    rails (8.1.0)
++      actioncable (= 8.1.0)
++      actionmailbox (= 8.1.0)
++      actionmailer (= 8.1.0)
++      actionpack (= 8.1.0)
++      actiontext (= 8.1.0)
++      actionview (= 8.1.0)
++      activejob (= 8.1.0)
++      activemodel (= 8.1.0)
++      activerecord (= 8.1.0)
++      activestorage (= 8.1.0)
++      activesupport (= 8.1.0)
+       bundler (>= 1.15.0)
+-      railties (= 7.0.8.7)
++      railties (= 8.1.0)
+     rails-dom-testing (2.3.0)
+       activesupport (>= 5.0.0)
+       minitest
+@@ -213,13 +229,15 @@ GEM
+     rails-html-sanitizer (1.7.1)
+       loofah (~> 2.25, >= 2.25.2)
+       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
+-    railties (7.0.8.7)
+-      actionpack (= 7.0.8.7)
+-      activesupport (= 7.0.8.7)
+-      method_source
++    railties (8.1.0)
++      actionpack (= 8.1.0)
++      activesupport (= 8.1.0)
++      irb (~> 1.13)
++      rackup (>= 1.0.0)
+       rake (>= 12.2)
+-      thor (~> 1.0)
+-      zeitwerk (~> 2.5)
++      thor (~> 1.0, >= 1.2.2)
++      tsort (>= 0.2)
++      zeitwerk (~> 2.6)
+     rake (13.4.2)
+     rbs (4.2.0)
+       logger
+@@ -236,6 +254,7 @@ GEM
+       io-console (~> 0.5)
+     ruby2_keywords (0.0.5)
+     rubyzip (3.7.0)
++    securerandom (0.4.1)
+     selenium-webdriver (4.51.0)
+       base64 (~> 0.2)
+       logger (~> 1.4)
+@@ -263,11 +282,14 @@ GEM
+       railties (>= 6.0.0)
+     tzinfo (2.0.6)
+       concurrent-ruby (~> 1.0)
++    uri (1.1.2)
++    useragent (0.16.11)
+     web-console (4.2.1)
+       actionview (>= 6.0.0)
+       activemodel (>= 6.0.0)
+       bindex (>= 0.4.0)
+       railties (>= 6.0.0)
++    webrick (1.9.2)
+     websocket (1.2.11)
+     websocket-driver (0.8.2)
+       base64
+@@ -297,11 +319,12 @@ DEPENDENCIES
+   faraday (= 1.10.4)
+   importmap-rails
+   jbuilder
++  json (< 3)
+   minitest (~> 5.25)
+   pagy (= 8.6.3)
+   pg (= 1.6.0)
+   puma (~> 5.0)
+-  rails (= 7.0.8.7)
++  rails (= 8.1.0)
+   redis (= 4.8.1)
+   selenium-webdriver
+   sidekiq (= 6.5.12)
+diff --git a/app/controllers/notes_controller.rb b/app/controllers/notes_controller.rb
+index 7a184c3..710c5f3 100644
+--- a/app/controllers/notes_controller.rb
++++ b/app/controllers/notes_controller.rb
+@@ -9,7 +9,7 @@ class NotesController < ApplicationController
+ 
+     if params[:notebook_id].present?
+       @notebook = current_user.notebooks.find(params[:notebook_id])
+-      @notes = @notes.where(notebooks: @notebook)
++      @notes = @notes.where(notebook: @notebook)
+     end
+ 
+     @notes = @notes.where(status: params[:status]) if Note.statuses.key?(params[:status])
+diff --git a/app/jobs/citation_enrichment_job.rb b/app/jobs/citation_enrichment_job.rb
+index a92150a..41552c2 100644
+--- a/app/jobs/citation_enrichment_job.rb
++++ b/app/jobs/citation_enrichment_job.rb
+@@ -4,7 +4,7 @@ class CitationEnrichmentJob < ApplicationJob
+   # Three attempts in all, each of which may already have retried once on 503.
+   # After the last, the failure is recorded rather than handed to the queue's
+   # own retries.
+-  retry_on Citation::Provider::Unavailable, wait: :exponentially_longer, attempts: 3 do |job, error|
++  retry_on Citation::Provider::Unavailable, wait: :polynomially_longer, attempts: 3 do |job, error|
+     job.arguments.first.fail_enrichment(error.message)
+   end
+ 
+diff --git a/app/mailers/digest_mailer.rb b/app/mailers/digest_mailer.rb
+index fd37d82..0534d3a 100644
+--- a/app/mailers/digest_mailer.rb
++++ b/app/mailers/digest_mailer.rb
+@@ -5,6 +5,7 @@ class DigestMailer < ApplicationMailer
+   # local day near midnight.
+   def daily_digest
+     @reader, requested_at = params.values_at(:reader, :requested_at)
++    requested_at = requested_at.utc
+     @date = requested_at.to_date
+     @notes = @reader.notes.status_ready.where(updated_at: requested_at.all_day).includes(:notebook).order(:updated_at, :id)
+     @completion = BigDecimal(params[:completion])
+diff --git a/app/models/citation/provider.rb b/app/models/citation/provider.rb
+index 8c14cc2..5b20e49 100644
+--- a/app/models/citation/provider.rb
++++ b/app/models/citation/provider.rb
+@@ -10,7 +10,7 @@ class Citation::Provider
+ 
+   Metadata = Struct.new(:title, :source_url)
+ 
+-  def initialize(settings = Rails.application.secrets.citation_provider.to_h)
++  def initialize(settings = Rails.configuration.x.citation_provider.to_h)
+     @url, @user, @password = settings.values_at(:url, :user, :password)
+   end
+ 
+diff --git a/app/models/export.rb b/app/models/export.rb
+index c6e0fd2..c215965 100644
+--- a/app/models/export.rb
++++ b/app/models/export.rb
+@@ -39,7 +39,7 @@ class Export < ApplicationRecord
+       return unless record_progress(index + 1)
+     end
+ 
+-    finish(fragments.sum)
++    finish(fragments.join)
+   end
+ 
+   # The authoritative check for downloading the file.
+diff --git a/app/models/import.rb b/app/models/import.rb
+index 9ec0ca8..a307ab1 100644
+--- a/app/models/import.rb
++++ b/app/models/import.rb
+@@ -52,12 +52,9 @@ class Import < ApplicationRecord
+ 
+     transaction do
+       save!
+-      rows.each do |row|
+-        return false unless row.note.save
+-      end
+-    end
+-
+-    true
++      raise ActiveRecord::Rollback unless rows.all? { |row| row.note.save }
++      true
++    end || false
+   end
+ 
+   def receipt
+@@ -65,7 +62,7 @@ class Import < ApplicationRecord
+       csv << %w[ title doi ]
+       notes.includes(:citation).order(:id).each do |note|
+         citation = note.citation
+-        csv << [ note.title, citation && citation[:id] ]
++        csv << [ note.title, citation&.doi ]
+       end
+     end
+   end
+diff --git a/app/models/note.rb b/app/models/note.rb
+index 6a35c80..956854e 100644
+--- a/app/models/note.rb
++++ b/app/models/note.rb
+@@ -7,11 +7,12 @@ class Note < ApplicationRecord
+   belongs_to :citation, optional: true, foreign_key: :citation_doi, validate: true
+   has_rich_text :body
+ 
+-  enum status: { draft: 0, ready: 1 }, _prefix: true
++  enum :status, { draft: 0, ready: 1 }, prefix: true
+ 
+-  serialize :tags, JSON
++  serialize :tags, coder: JSON
+   store_accessor :settings, :color
+-  alias_attribute :highlight_color, :color
++  alias_method :highlight_color, :color
++  alias_method :highlight_color=, :color=
+ 
+   validates :title, presence: true
+   validates :color, inclusion: { in: HIGHLIGHT_COLORS }, allow_blank: true
+@@ -41,7 +42,7 @@ class Note < ApplicationRecord
+   # The result keeps the reminder's UTC offset, so across a daylight saving
+   # change its wall-clock time differs from the reader's local time.
+   def next_day_reminder_at
+-    reminder_at.to_time + 86_400
++    reminder_at.to_time.getlocal(reminder_at.utc_offset) + 86_400
+   end
+ 
+   def reminder_scheduled?
+@@ -58,7 +59,7 @@ class Note < ApplicationRecord
+       self.reminder_epoch = epoch
+ 
+       if reminder_epoch && valid?
+-        job = NoteReminderJob.set(wait_until: reminder_epoch).perform_later(self)
++        job = NoteReminderJob.set(wait_until: Time.at(reminder_epoch)).perform_later(self)
+         update!(reminder_job_id: job.job_id, reminder_sent_at: nil)
+       else
+         errors.add(:base, "Choose a date and time for the reminder") if reminder_epoch.nil?
+diff --git a/app/views/imports/preview.html.erb b/app/views/imports/preview.html.erb
+index f526756..6075f31 100644
+--- a/app/views/imports/preview.html.erb
++++ b/app/views/imports/preview.html.erb
+@@ -19,7 +19,7 @@
+   </div>
+ <% end %>
+ 
+-<% annotations = @import.annotations.stringify_keys %>
++<% annotations = @import.annotations %>
+ 
+ <ol class="import-rows">
+   <% @import.rows.each do |row| %>
+diff --git a/app/views/notes/index.html.erb b/app/views/notes/index.html.erb
+index e9ef741..b8d2051 100644
+--- a/app/views/notes/index.html.erb
++++ b/app/views/notes/index.html.erb
+@@ -9,7 +9,7 @@
+ </div>
+ <p id="digest_hint" class="hint">Emails you the ready notes updated today (UTC). You can request it once per UTC day.</p>
+ 
+-<%= form_with(model: nil, url: notes_path, method: :get, class: "search", html: { role: "search" }) do |form| %>
++<%= form_with(url: notes_path, method: :get, class: "search", html: { role: "search" }) do |form| %>
+   <div class="field">
+     <%= form.label :query, "Title contains" %>
+     <%= form.search_field :query, value: params[:query] %>
+diff --git a/config/application.rb b/config/application.rb
+index 3f458b9..ac761e1 100644
+--- a/config/application.rb
++++ b/config/application.rb
+@@ -22,5 +22,7 @@ module MarginNotes
+     # Jobs run in Sidekiq workers, which keep them in Redis (REDIS_URL, or
+     # redis://localhost:6379 by default). Tests use Active Job's test adapter.
+     config.active_job.queue_adapter = :sidekiq
++
++    config.x.citation_provider = config_for(:citation_provider)
+   end
+ end
+diff --git a/config/citation_provider.yml b/config/citation_provider.yml
+new file mode 100644
+index 0000000..c0c8389
+--- /dev/null
++++ b/config/citation_provider.yml
+@@ -0,0 +1,11 @@
++development: &local
++  url: <%= ENV.fetch("CITATION_PROVIDER_URL", "http://127.0.0.1:9393").to_json %>
++  user: <%= ENV.fetch("CITATION_PROVIDER_USER", "margin-notes").to_json %>
++  password: <%= ENV.fetch("CITATION_PROVIDER_PASSWORD", "local-only").to_json %>
++
++test: *local
++
++production:
++  url: <%= ENV["CITATION_PROVIDER_URL"].to_json %>
++  user: <%= ENV["CITATION_PROVIDER_USER"].to_json %>
++  password: <%= ENV["CITATION_PROVIDER_PASSWORD"].to_json %>
+diff --git a/config/environments/test.rb b/config/environments/test.rb
+index f082cb6..e8cb789 100644
+--- a/config/environments/test.rb
++++ b/config/environments/test.rb
+@@ -28,7 +28,7 @@ Rails.application.configure do
+   config.cache_store = :null_store
+ 
+   # Raise exceptions instead of rendering exception templates.
+-  config.action_dispatch.show_exceptions = false
++  config.action_dispatch.show_exceptions = :none
+ 
+   # Disable request forgery protection in test environment.
+   config.action_controller.allow_forgery_protection = false
+diff --git a/config/initializers/action_text.rb b/config/initializers/action_text.rb
+index e31e39b..f25975a 100644
+--- a/config/initializers/action_text.rb
++++ b/config/initializers/action_text.rb
+@@ -1,3 +1,10 @@
+-# Rich text may contain collapsible excerpts. Extend Action Text's inherited
+-# allowlist, which keeps the safe defaults and attachment markup.
+-ActionText::ContentHelper.allowed_tags += %w[ details summary ]
++# Rich text may contain collapsible excerpts. Extend Action Text's default
++# allowlist, which keeps the sanitizer's safe defaults and attachment markup.
++# Action Text replaces its sanitizer when Action View loads, so this runs after.
++Rails.application.config.after_initialize do
++  ActiveSupport.on_load(:action_view) do
++    ActionText::ContentHelper.allowed_tags =
++      ActionText::ContentHelper.sanitizer.class.allowed_tags +
++      [ ActionText::Attachment.tag_name, "figure", "figcaption", "details", "summary" ]
++  end
++end
+diff --git a/config/routes.rb b/config/routes.rb
+index 07ebb3a..824dcab 100644
+--- a/config/routes.rb
++++ b/config/routes.rb
+@@ -15,7 +15,8 @@ Rails.application.routes.draw do
+   end
+ 
+   # /journal is a bookmark alias for the canonical /notes list.
+-  get "/notes", "/journal", to: "notes#index"
++  get "/notes", to: "notes#index", as: :notes
++  get "/journal", to: "notes#index", as: :journal
+   resources :notes, except: :index do
+     resource :citation_enrichment, only: :create
+     resource :reminder, only: :create
+diff --git a/config/secrets.yml b/config/secrets.yml
+deleted file mode 100644
+index b8f332a..0000000
+--- a/config/secrets.yml
++++ /dev/null
+@@ -1,18 +0,0 @@
+-# Settings read through Rails.application.secrets. Supply values through the
+-# environment; never commit real credentials. Development and tests default to
+-# the local stand-in provider started by bin/citation-provider.
+-
+-development:
+-  citation_provider: &local_citation_provider
+-    url: <%= ENV.fetch("CITATION_PROVIDER_URL", "http://127.0.0.1:9393").to_json %>
+-    user: <%= ENV.fetch("CITATION_PROVIDER_USER", "margin-notes").to_json %>
+-    password: <%= ENV.fetch("CITATION_PROVIDER_PASSWORD", "local-only").to_json %>
+-
+-test:
+-  citation_provider: *local_citation_provider
+-
+-production:
+-  citation_provider:
+-    url: <%= ENV["CITATION_PROVIDER_URL"].to_json %>
+-    user: <%= ENV["CITATION_PROVIDER_USER"].to_json %>
+-    password: <%= ENV["CITATION_PROVIDER_PASSWORD"].to_json %>
+diff --git a/test/controllers/citation_enrichments_controller_test.rb b/test/controllers/citation_enrichments_controller_test.rb
+index c5ce1b0..52a92a9 100644
+--- a/test/controllers/citation_enrichments_controller_test.rb
++++ b/test/controllers/citation_enrichments_controller_test.rb
+@@ -42,7 +42,7 @@ class CitationEnrichmentsControllerTest < ActionDispatch::IntegrationTest
+ 
+     requests = with_provider([200, { title: "Configured work", url: "https://example.org/configured" }]) do
+       env = {
+-        "CITATION_PROVIDER_URL" => Rails.application.secrets.citation_provider[:url],
++        "CITATION_PROVIDER_URL" => Rails.configuration.x.citation_provider[:url],
+         "CITATION_PROVIDER_USER" => user,
+         "CITATION_PROVIDER_PASSWORD" => password
+       }
+@@ -114,12 +114,12 @@ class CitationEnrichmentsControllerTest < ActionDispatch::IntegrationTest
+       server.add_tcp_listener("127.0.0.1", 0)
+       server.run
+ 
+-      settings = Rails.application.secrets.citation_provider
+-      Rails.application.secrets.citation_provider = settings.merge(url: "http://127.0.0.1:#{server.connected_ports.first}")
++      settings = Rails.configuration.x.citation_provider
++      Rails.configuration.x.citation_provider = settings.merge(url: "http://127.0.0.1:#{server.connected_ports.first}")
+       yield
+       requests
+     ensure
+-      Rails.application.secrets.citation_provider = settings if settings
++      Rails.configuration.x.citation_provider = settings if settings
+       server&.stop(true)
+     end
+ 

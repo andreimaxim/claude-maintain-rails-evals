@@ -1,0 +1,58 @@
+--- a/app/models/notebook.rb
++++ b/app/models/notebook.rb
+@@ -23,9 +23,9 @@
+   # the worker can always load it, and removed again if Redis refuses the job.
+   def request_export
+     export = exports.create!
+-    export.update!(job_id: ExportJob.perform_async(export.id, { format: "markdown" }))
++    export.update!(job_id: ExportJob.perform_async(export.id, { "format" => "markdown" }))
+     export
+-  rescue Redis::BaseError
++  rescue StandardError
+     export&.destroy
+     raise
+   end
+--- a/app/models/user.rb
++++ b/app/models/user.rb
+@@ -35,10 +35,10 @@
+     requested_at = Time.current.in_time_zone(time_zone)
+     key = "digest_requests:#{requested_at.utc.to_date.iso8601}"
+ 
+-    if Sidekiq.redis { |redis| redis.sadd(key, id) }
++    if Sidekiq.redis { |redis| redis.call("SADD", key, id) } == 1
+       begin
+         Sidekiq.redis { |redis| redis.expire(key, DIGEST_RESERVATIONS_KEPT_FOR.to_i) }
+-        DigestJob.perform_later(self, requested_at, reading_completion)
++        DigestJob.perform_later(self, requested_at, reading_completion.to_s)
+       rescue StandardError
+         Sidekiq.redis { |redis| redis.srem(key, id) }
+         raise
+--- a/test/controllers/digests_controller_test.rb
++++ b/test/controllers/digests_controller_test.rb
+@@ -58,6 +58,26 @@
+     end
+   end
+ 
++  test "a digest job is queued and run through Sidekiq's JSON payload" do
++    release_digest_reservations "2026-10-08"
++    wrapper = ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper
++    wrapper.clear
++    sidekiq = ActiveJob::QueueAdapters::SidekiqAdapter.new
++    sign_in_as users(:reader)
++
++    travel_to Time.utc(2026, 10, 8, 12) do
++      DigestJob.stub(:perform_later, ->(*args) { DigestJob.new(*args).tap { |job| sidekiq.enqueue(job) } }) do
++        post digest_path
++      end
++      assert_equal "Today's reading digest is on its way.", flash[:notice]
++      payload = wrapper.jobs.sole
++      assert_equal "DigestJob", payload["wrapped"]
++      assert_kind_of String, payload["args"].first["arguments"].third
++      assert_difference(-> { ActionMailer::Base.deliveries.size }, 1) { wrapper.drain }
++    end
++    assert_match(/% of your notes were ready/, ActionMailer::Base.deliveries.last.body.to_s)
++  end
++
+   private
+     # Reservations are kept in Redis, outside the test database's transactions.
+     def release_digest_reservations(*dates)

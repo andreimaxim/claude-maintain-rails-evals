@@ -1,0 +1,173 @@
+{
+  "sessionId": "38815f35-a9de-45a1-ab06-c8da5daf7305",
+  "auditedAt": "2026-10-13T06:10:48.287706Z",
+  "scope": "Original benchmark turn only (prompt \"Upgrade the sidekiq gem to 7.3.9\"); follow-up rows (JSONL line 39 onward, incl. its queue-operation/attachment rows) excluded from counts and timestamps.",
+  "instances": [
+    {
+      "agentId": null,
+      "label": "main session (original turn)",
+      "agentType": "main",
+      "spawnDepth": 0,
+      "parentAgentId": null,
+      "requestedModel": null,
+      "requestedModelNote": "no --model/override visible in JSONL; main model came from session default (unknown source)",
+      "firstTimestamp": "2026-10-13T05:31:23.669Z",
+      "finalTimestamp": "2026-10-13T05:43:27.024Z",
+      "assistantTurns": {
+        "assistantRows": 5,
+        "distinctRequestIds": 4,
+        "note": "assistantRows counts each assistant JSONL row (one per content block: thinking/text/tool_use); distinctRequestIds approximates API calls"
+      },
+      "firstAssistantTimestamp": "2026-10-13T05:31:26.347Z",
+      "finalAssistantTimestamp": "2026-10-13T05:43:27.024Z",
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/38815f35-a9de-45a1-ab06-c8da5daf7305.jsonl",
+        "sha256_originalRowsOnly": "7230f424ba08e18c7559ae1b46395f8107bc89f6de27508c22bec531281d324d",
+        "originalRowsIncluded": "JSONL lines 1-38 (0-based 0-37)",
+        "sha256_wholeFileAtAuditTime": "54f3d99d22e8737f1ecd855c00198b3d2307b6d3db43bebfee1fe9893e146d6c",
+        "wholeFileNote": "file also contains this follow-up turn from line 39 onward and keeps growing, so the whole-file hash is not stable"
+      }
+    },
+    {
+      "agentId": "af8f2c4935d9ac623",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": "main session",
+      "spawnedByToolUseId": "toolu_01HWNX1DiKQQxmTnfsgeSDHf",
+      "requestShape": "foreground",
+      "requestedModel": null,
+      "requestedModelNote": "Agent tool_use input had no 'model' field; agent definition frontmatter has no model/effort field; harness result reported resolvedModel claude-sonnet-5-5 for depth 1 (inherited)",
+      "firstTimestamp": "2026-10-13T05:31:30.355Z",
+      "finalTimestamp": "2026-10-13T05:43:05.187Z",
+      "assistantTurns": {
+        "assistantRows": 4,
+        "distinctRequestIds": 3,
+        "note": "assistantRows counts each assistant JSONL row (one per content block: thinking/text/tool_use); distinctRequestIds approximates API calls"
+      },
+      "firstAssistantTimestamp": "2026-10-13T05:31:31.797Z",
+      "finalAssistantTimestamp": "2026-10-13T05:43:05.187Z",
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/38815f35-a9de-45a1-ab06-c8da5daf7305/subagents/agent-af8f2c4935d9ac623.jsonl",
+        "sha256": "95275129fa297cab5544243df9b5f661f87c66cc7eefdb29e0fcfe034ccfd543",
+        "metaPath": "/home/user/.claude/projects/-home-user-workspace-repo/38815f35-a9de-45a1-ab06-c8da5daf7305/subagents/agent-af8f2c4935d9ac623.meta.json",
+        "metaSha256": "ad7cdb7e94740dc6a8446e272928e7dca2703ad8851ddecb141d9a850701c1f9"
+      }
+    },
+    {
+      "agentId": "aaa3727eee8a091b9",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 2,
+      "parentAgentId": "af8f2c4935d9ac623",
+      "spawnedByToolUseId": "toolu_01LLkB7irDbPHvoggt3FcQsz",
+      "requestShape": "foreground",
+      "requestedModel": null,
+      "requestedModelNote": "Agent tool_use input had no 'model' field; agent definition frontmatter has no model/effort field; harness result reported resolvedModel claude-sonnet-5-5 for depth 1 (inherited)",
+      "firstTimestamp": "2026-10-13T05:31:33.533Z",
+      "finalTimestamp": "2026-10-13T05:42:42.106Z",
+      "assistantTurns": {
+        "assistantRows": 4,
+        "distinctRequestIds": 3,
+        "note": "assistantRows counts each assistant JSONL row (one per content block: thinking/text/tool_use); distinctRequestIds approximates API calls"
+      },
+      "firstAssistantTimestamp": "2026-10-13T05:31:34.878Z",
+      "finalAssistantTimestamp": "2026-10-13T05:42:42.106Z",
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/38815f35-a9de-45a1-ab06-c8da5daf7305/subagents/agent-aaa3727eee8a091b9.jsonl",
+        "sha256": "9c17271cbece419e6425b73a28510f5b7d487c99be0e165cadf92858911e56e6",
+        "metaPath": "/home/user/.claude/projects/-home-user-workspace-repo/38815f35-a9de-45a1-ab06-c8da5daf7305/subagents/agent-aaa3727eee8a091b9.meta.json",
+        "metaSha256": "8a28f146bddc42197b250c1c7fb00a2840dc276245649f287fe2e1a75f4f797c"
+      }
+    },
+    {
+      "agentId": "a93b7bc4ea506d955",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 3,
+      "parentAgentId": "aaa3727eee8a091b9",
+      "spawnedByToolUseId": "toolu_01TKPoUfmCAwBdM8YQS4CLmJ",
+      "requestShape": "foreground",
+      "requestedModel": null,
+      "requestedModelNote": "Agent tool_use input had no 'model' field; agent definition frontmatter has no model/effort field; harness result reported resolvedModel claude-sonnet-5-5 for depth 1 (inherited)",
+      "firstTimestamp": "2026-10-13T05:31:36.392Z",
+      "finalTimestamp": "2026-10-13T05:42:21.120Z",
+      "assistantTurns": {
+        "assistantRows": 59,
+        "distinctRequestIds": 30,
+        "note": "assistantRows counts each assistant JSONL row (one per content block: thinking/text/tool_use); distinctRequestIds approximates API calls"
+      },
+      "firstAssistantTimestamp": "2026-10-13T05:31:38.165Z",
+      "finalAssistantTimestamp": "2026-10-13T05:42:21.120Z",
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/38815f35-a9de-45a1-ab06-c8da5daf7305/subagents/agent-a93b7bc4ea506d955.jsonl",
+        "sha256": "c5898684d0d006008d1cd24d2b83f33b01d4cd530e6295d69274d0bc08011510",
+        "metaPath": "/home/user/.claude/projects/-home-user-workspace-repo/38815f35-a9de-45a1-ab06-c8da5daf7305/subagents/agent-a93b7bc4ea506d955.meta.json",
+        "metaSha256": "0adebcc58b9e16f0465ba801a972a04bccbec484164d4788852456c40601af2c"
+      }
+    }
+  ],
+  "chainFinding": "Three nested gem-upgrade-planner instances: depth1 (af8f..) -> depth2 (aaa3..) -> depth3 (a93b..). Depth 1 and 2 each only called Skill maintain-rails:upgrade-gem and then re-delegated to another planner (2 tool uses each); only depth 3 did the experiments (59 assistant rows). The \"2 tool uses\" in the hand-back is depth 1 alone, so it was consistent with the depth-3 work, not a discrepancy. Reported duration 694852 ms (~11.6 min) matches.",
+  "resumedOriginalCalls": {
+    "count": 0,
+    "evidence": "No SendMessage/resume tool_use in the main or nested transcripts; every Agent call has run_in_background=false and no agentId reuse. The depth-1 result reported canContinueAgent=true but was not continued in the original turn."
+  },
+  "environment": {
+    "currentShellObservation": {
+      "observedAt": "audit time, from the Bash tool shell of the follow-up turn",
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unset",
+      "claudeCliVersionOnPath": "2.1.296",
+      "settingsJsonFile": "~/.claude/settings.json has no model or effort keys and its env block does not name these variables (key names only inspected)"
+    },
+    "originalProcess": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unknown",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unknown",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unknown",
+      "note": "Not recorded in the original JSONL rows (the variable names occur only in follow-up rows). The shell observation does not prove the original process environment."
+    }
+  },
+  "limitations": [
+    "Model/effort evidence is the per-row message.model and effort fields; these are what the transcript recorded, not an independent API-side confirmation.",
+    "Effort is \"medium\" on every assistant row of every instance; its source (default, flag, setting, or env) is unknown. Whether the env vars were set in the original process is unknown.",
+    "requestedModel is null because no model override was passed on any Agent call and the agent definition (/home/user/workspace/repos/claude-plugins/plugins/maintain-rails/agents/gem-upgrade-planner.md, read at audit time, may differ from the version loaded originally) has no model field.",
+    "Assistant row counts are per content block; distinctRequestIds is the closer proxy for API calls and some request ids span several rows.",
+    "Main-session whole-file SHA256 is unstable because the follow-up is appended to the same file; sha256_originalRowsOnly covers original lines only and assumes the file bytes for those lines are unchanged.",
+    "Subagent JSONL files appear complete for the original turn; none contains follow-up rows (last timestamps ~05:42-05:43Z).",
+    "The planner report text claims experiments in /tmp/sk; this audit did not verify them (collection only)."
+  ]
+}

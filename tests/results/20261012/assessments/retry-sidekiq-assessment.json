@@ -1,0 +1,1073 @@
+{
+  "assessment": "Five completed Sidekiq planner original turns; plans, not implementation",
+  "assessed_at": "2026-10-12",
+  "scope": {
+    "plugin_candidate": "11b074b79a35be55d5768ba3799b1dff768dfb94",
+    "application": "9938031e54e1d7d074f1200a0da17e49390c86fa",
+    "revision_evidence": "Candidate identity supplied by coordinator; initial_repositories in all five traces confirms the application SHA. These traces do not independently contain a plugin-byte comparison.",
+    "freeze_disposition": "Assess and freeze this exact candidate without tuning. No plugin/application changes, additional runs, worker messages or held-out access were performed. This assessment does not itself create a plugin freeze tag or certify its bytes.",
+    "only_output_written": "/tmp/planner-suite-20261012/retry-sidekiq-assessment.json",
+    "rubric_read_first": [
+      "tests/planner-development.md",
+      "tests/planner-development-batch1-20261012.md"
+    ]
+  },
+  "method": {
+    "statuses": [
+      "supported",
+      "partial",
+      "missing",
+      "incorrect"
+    ],
+    "actionable": "Application impact, applicability and recommendation must all be supported. Validation is independent and is not an implementation pass.",
+    "validation": "Supported requires the full scenario and controls in the key. SK1: real Redis/worker, persisted job ID, completed export, exact ordered Markdown bytes, rejection queue/row state. SK2: real Redis first/duplicate, another reader, another UTC day, enqueue-failure reservation release, both versions for an advance patch. Reported checks remain model-reported unless their output is collected in the main trace.",
+    "raw_source": "background_planner_report is null in all files. Raw is the native main_tool_trace Agent result for maintain-rails:gem-upgrade-planner, not the final response or an assumed absent report.",
+    "wrapper_handling": "Removed only the native '[Subagent hand-back]' preamble through 'The report follows:', the harness's two-space indentation, and agentId/usage metadata for comparison. Indentation is not authored content. All authored introductions and closing notes were read and considered.",
+    "comparison": "Normalized raw/final line comparison plus complete report reading. In every run the central plan is delivered unchanged; differences are introductions and closing commentary. Nested self-described planner text is not separately recovered independent discovery.",
+    "extra_risks": "Digest BigDecimal, Redis error cleanup, connection_pool and old-epoch scheduling are assessed separately, never added to the two selected-family denominator. SADD call('SADD', ...) == 1 and array sadd(...).positive? are valid cross-version repairs. Scalar sadd(key,id)==1 is not.",
+    "evidence_limits": [
+      "No nested experiment logs were collected for these five runs. Named paths, tables and delegated spot-check claims are not independently inspected experiment archives.",
+      "Main-agent Bash outputs in runs 3 and 4 contain selected log excerpts; those excerpts support only their specific bundle, suite and error statements.",
+      "Main-agent clean git status in all five runs supports tracked working-tree preservation at that instant, not a complete filesystem, environment, database or service audit.",
+      "Disposable modifications described in the plans do not constitute implementation in the working application. Several runs explicitly leave experimental databases behind.",
+      "No production Redis, load/throughput, concurrent mixed fleet, complete queue-family matrix or in-flight shutdown behavior was independently established.",
+      "Five repetitions do not establish reliability. No weighted score or overall correctness pass is assigned."
+    ]
+  },
+  "totals": {
+    "runs": 5,
+    "selected_families_per_run": 2,
+    "raw_actionable_per_run": [
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "final_actionable_per_run": [
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "raw_actionable_total": 10,
+    "final_actionable_total": 10,
+    "raw_full_validation_per_run": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "final_full_validation_per_run": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "raw_full_validation_total": 0,
+    "final_full_validation_total": 0,
+    "selected_family_omissions": 0,
+    "selected_family_actionability_lost_in_delivery": 0,
+    "central_plans_delivered_unchanged": 5,
+    "skill_invoked": 5,
+    "planner_invoked": 5,
+    "plans_delivered_before_edit_approval": 5,
+    "extras_present_raw_and_final": {
+      "digest_BigDecimal": 5,
+      "Redis_error_cleanup": 5,
+      "connection_pool_scheduler": 5,
+      "old_epochs_below_1e9": 3
+    },
+    "interpretation": "All ten selected findings are actionable in both layers, but all ten validations are partial. Delivery retains substantive findings and also retains errors. This Sidekiq result is not an improvement in selected-family recall over the earlier batch, which also had 10/10 raw and final actionable findings. The observable delivery change is full central-plan preservation."
+  },
+  "runs": [
+    {
+      "run": 1,
+      "trace": "/tmp/planner-suite-20261012/retry-collected/sidekiq-1.json",
+      "thread": "https://ampcode.com/threads/T-01a13140-2d86-7568-b150-4bcca5794937",
+      "raw_tool_id": "TU-7aILz8dOFwxVqcIrvD1YA1",
+      "raw": {
+        "SK1": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "The result is a permanent \"Queued\" export with no job.",
+            "reference": "Summary item 5, R2 and R5; strict-args ArgumentError explicitly included"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "on 7.3.9, three export tests fail with `ArgumentError ... :format is a Symbol`"
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "Change `{ format: \"markdown\" }` to `{ \"format\" => \"markdown\" }`.",
+            "reference": "R2 also preserves existing string-key stored jobs and worker decoding"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "run an export to completion",
+            "reason": "Suite errors, reported mixed-version completion, and orphan-row/error probes discriminate part of SK1; no exact Markdown byte assertion or fully specified queue/row rejection matrix with persisted job ID."
+          },
+          "actionable": true
+        },
+        "SK2": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "a second request on the same day is no longer refused"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "On 6.5.12, `sadd` returns `true`/`false`; on 7.3.9 it returns `1`/`0`."
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "Use `Sidekiq.redis { |r| r.call(\"SADD\", key, id) } == 1`."
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "After the change: first request `true`, second `false`.",
+            "reason": "Real-Redis and both-client behavior reported; failure reservation release described. Another reader and another UTC day are not specified. No collected full scenario/control matrix."
+          },
+          "actionable": true
+        },
+        "counts": {
+          "actionable": 2,
+          "full_validation": 0
+        }
+      },
+      "final": {
+        "SK1": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "The result is a permanent \"Queued\" export with no job."
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "on 7.3.9, three export tests fail with `ArgumentError ... :format is a Symbol`"
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "Change `{ format: \"markdown\" }` to `{ \"format\" => \"markdown\" }`."
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "run an export to completion",
+            "reason": "Same central plan as raw; exact ordered Markdown bytes and complete queue/row/job-ID rejection checks absent."
+          },
+          "actionable": true
+        },
+        "SK2": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "a second request on the same day is no longer refused"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "On 6.5.12, `sadd` returns `true`/`false`; on 7.3.9 it returns `1`/`0`."
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "Use `Sidekiq.redis { |r| r.call(\"SADD\", key, id) } == 1`."
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "After the change: first request `true`, second `false`.",
+            "reason": "Same central plan; another-reader and next-UTC-day controls absent."
+          },
+          "actionable": true
+        },
+        "counts": {
+          "actionable": 2,
+          "full_validation": 0
+        }
+      },
+      "extra_findings": [
+        {
+          "risk": "digest_BigDecimal",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "Pass `reading_completion.to_s(\"F\")`.",
+          "reason": "Correct prerequisite for Sidekiq 7 strict args under Rails 7.0; existing mailer accepts the decimal string. Real adapter rejection and first/duplicate behavior reported, not independently collected."
+        },
+        {
+          "risk": "Redis_error_cleanup",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "Wrap only the push and rescue `StandardError` there",
+          "boundary": "Narrow enqueue-only rescue with update!(job_id:) afterward is safe against post-enqueue persistence failures. Genuine RedisClient error mismatch and original false-positive stub explained."
+        },
+        {
+          "risk": "connection_pool_scheduler",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "add `gem \"connection_pool\", \"~> 2.5\"` (or `\"< 3\"`)",
+          "reason": "Required for the reported 3.0.2 resolution, not optional. Describes scheduler crash and a cp2 real-reminder control; uncollected nested logs limit verification. 'always' is too broad outside that resolver result."
+        },
+        {
+          "risk": "old_epoch_scheduling",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "Use `set(wait_until: [reminder_epoch, Time.current.to_i].max)`.",
+          "reason": "Correctly identifies reachable positive epochs below 1e9 as relative delays and preserves immediate delivery for past times. Epoch-specific trial is model-reported; replacement/ownership controls absent."
+        }
+      ],
+      "material_errors": [
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "Default Redis timeout rises from 1s to 3s",
+          "judgment": "incorrect",
+          "correction": "Application baseline redis-rb timeout is 5 seconds; Sidekiq target sets 3. This is a reduction, not 1 to 3."
+        }
+      ],
+      "omissions": [
+        "Full SK1 and SK2 validation controls",
+        "No post-enqueue persistence-failure control for the otherwise narrow cleanup"
+      ],
+      "rollout_rollback": {
+        "judgment": "partial",
+        "quotes": [
+          "Web and worker can be deployed in either order.",
+          "I did not test this."
+        ],
+        "reason": "Preparation-first sequence, portable repairs and dependency pin are sound. Queued/scheduled/retry/dead compatibility remains reported representative evidence, not proof for all job paths or in-flight/concurrent fleets. 'all run late' is a recovery expectation, not a no-loss guarantee for time-sensitive work. The untested quote refers to rollback to original unprepared code."
+      },
+      "delivery": {
+        "central_plan": "unchanged",
+        "selected_loss": "none",
+        "changes": "Drops raw introductory self-delegation note and replaces authored closing 'My notes'. No finding/repair/gate lost. Final credits checks to delegated agent rather than claiming a rerun.",
+        "approval_gate": "Implementation offered only after delivery; no plan withheld."
+      },
+      "workflow": {
+        "skill": "maintain-rails:upgrade-gem observed",
+        "planner": "maintain-rails:gem-upgrade-planner observed, foreground",
+        "preservation": "Parent Bash git status --short produces no status entries; prep.patch exists. No nested logs collected. Raw admits retained margin_notes_exp_* databases.",
+        "parent_evidence": "Only current-version and clean-status/patch-existence checks; final delegated verification claims remain model-reported."
+      }
+    },
+    {
+      "run": 2,
+      "trace": "/tmp/planner-suite-20261012/retry-collected/sidekiq-2.json",
+      "thread": "https://ampcode.com/threads/T-01a13140-35a6-72ef-8bd4-dcffeab67c1d",
+      "raw_tool_id": "TU-4YOwAGUAHTynq9HWLvd03Q",
+      "raw": {
+        "SK1": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "stays `queued` with `job_id: nil`"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "On 7.3.9 this raises `ArgumentError: ... :format is a Symbol`."
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "use `{ \"format\" => \"markdown\" }`.",
+            "reference": "R2 preserves options.fetch(\"format\") and stored jobs"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "the existing `exports_controller_test.rb` fails with 3 errors on 7.3.9 and passes after the change",
+            "reason": "Reports suite, orphan-row probes and mixed-worker exports, but no exact Markdown bytes or complete real queue/row/job-ID rejection assertions."
+          },
+          "actionable": true
+        },
+        "SK2": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "the once-per-day digest limit silently stops working"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "`sadd` returns `1`/`0`. Both are truthy in Ruby"
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "`Sidekiq.redis { |redis| redis.sadd(key, [id]) }.positive?`",
+            "reason": "Array SADD returns integer on both clients; positive? is equivalent to ==1 for one member."
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "a second request on the same day is refused",
+            "reason": "Real Redis/controller and advance-patch both-version checks reported, but another reader and another UTC day not specified; failure-release test name is not the entire matrix."
+          },
+          "actionable": true
+        },
+        "counts": {
+          "actionable": 2,
+          "full_validation": 0
+        }
+      },
+      "final": {
+        "SK1": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "stays `queued` with `job_id: nil`"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "On 7.3.9 this raises `ArgumentError: ... :format is a Symbol`."
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "use `{ \"format\" => \"markdown\" }`."
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "the existing `exports_controller_test.rb` fails with 3 errors on 7.3.9 and passes after the change",
+            "reason": "Same central plan; exact bytes and full real rejection/completion matrix absent."
+          },
+          "actionable": true
+        },
+        "SK2": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "the once-per-day digest limit silently stops working"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "`sadd` returns `1`/`0`. Both are truthy in Ruby"
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "`Sidekiq.redis { |redis| redis.sadd(key, [id]) }.positive?`"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "a second request on the same day is refused",
+            "reason": "Same central plan; another-reader and next-UTC-day controls absent."
+          },
+          "actionable": true
+        },
+        "counts": {
+          "actionable": 2,
+          "full_validation": 0
+        }
+      },
+      "extra_findings": [
+        {
+          "risk": "digest_BigDecimal",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "`DigestJob.perform_later(self, requested_at, reading_completion.to_s)`",
+          "reason": "Correct prerequisite and unchanged decoder; fake-adapter strict-args guard plus real probes reported, not independently collected."
+        },
+        {
+          "risk": "Redis_error_cleanup",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "partial",
+          "validation": "partial",
+          "quote": "`rescue StandardError`",
+          "boundary": "Primary recommendation widens existing method-level rescue across enqueue and later update!, so a successfully queued export can be destroyed. Report explicitly identifies this and supplies safe enqueue-only alternative, but labels it untested and still ships the unsafe primary."
+        },
+        {
+          "risk": "connection_pool_scheduler",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "add `gem \"connection_pool\", \"< 3\"`",
+          "reason": "Correct required bound for 3.0.2 resolution; compares real cp3 scheduler failure and cp2 reminder. Nested logs uncollected."
+        }
+      ],
+      "material_errors": [
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "`rescue StandardError`",
+          "judgment": "incorrect",
+          "correction": "Make enqueue-only cleanup the primary recommendation; method-level rescue can delete an export whose job is already queued when update! fails."
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "halves throughput for slow jobs",
+          "judgment": "incorrect",
+          "correction": "Default concurrency 10 to 5 is real, with production overrides conditional. No workload/load evidence establishes a 50% throughput reduction."
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "On Rails 7.2+ it would delay enqueues made inside transactions.",
+          "judgment": "incorrect",
+          "correction": "Retained load_defaults 7.0 preserves :never. Adapter preference affects enqueues under the :default gate, not inevitably on a later Rails version."
+        }
+      ],
+      "omissions": [
+        "Full SK1 and SK2 validation controls",
+        "Old positive reminder epochs below 1e9: report says past jobs run immediately either way without identifying this exception"
+      ],
+      "rollout_rollback": {
+        "judgment": "partial",
+        "quotes": [
+          "Jobs already in Redis can be processed by either version in both directions.",
+          "A short overlap of old and new web and worker processes is safe given X1 and X2."
+        ],
+        "reason": "Preparation-first plan and keep-preparation rollback are sound for selected payload repairs, but primary cleanup remains unsafe. Sequential representative jobs/readable dead entries do not establish all queue paths, simultaneous fleet safety or in-flight shutdown. An old-epoch exception is omitted."
+      },
+      "delivery": {
+        "central_plan": "unchanged",
+        "selected_loss": "none",
+        "changes": "Replaces raw introduction and closing self-verification section; source/lockfile and scheduler-confirmation bullets not retained in final commentary, though the central experiment table is unchanged. Keeps monitoring nuance and all selected repairs.",
+        "approval_gate": "Explicit asks about constraint approval and implementation follow the complete plan, not a delivery gate."
+      },
+      "workflow": {
+        "skill": "maintain-rails:upgrade-gem observed",
+        "planner": "maintain-rails:gem-upgrade-planner observed, foreground",
+        "preservation": "Parent Bash clean git status and source excerpts. Shared Postgres skexp_* experiment databases left for later cleanup; Redis reportedly stopped.",
+        "parent_evidence": "Source/working-tree checks only; no parent-collected scheduler or suite output. Raw closing 'confirmed' log checks remain model output."
+      }
+    },
+    {
+      "run": 3,
+      "trace": "/tmp/planner-suite-20261012/retry-collected/sidekiq-3.json",
+      "thread": "https://ampcode.com/threads/T-01a13140-3cf1-7227-b3f9-4e67e5e0792a",
+      "raw_tool_id": "TU-72YlKSARSB4eex5pkX3VsS",
+      "raw": {
+        "SK1": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "The reader sees a queued export that never runs.",
+            "reference": "R2 exports server error plus R5 explicit strict-args ArgumentError missed by cleanup"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "symbol hash keys fail the check"
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "use `{ \"format\" => \"markdown\" }`.",
+            "reference": "R2 existing worker string decoding and stored payload retained"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "an export and a digest all completed",
+            "reason": "Reported real workers, strict rejection and row probes cover part of scenario. No exact ordered Markdown bytes or complete rejection queue/persisted job-ID checks."
+          },
+          "actionable": true
+        },
+        "SK2": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "every request queues a digest, and the reader is never told it was already requested"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "7.3.9: it returns `1`/`0`, and `0` is truthy in Ruby."
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "`Sidekiq.redis { |redis| redis.call(\"SADD\", key, id) } == 1`"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "first request `true`, second `false`, against real Redis",
+            "reason": "Explicit two-version real-Redis first/duplicate; another reader, another UTC day and discriminating enqueue-failure reservation checks not fully specified."
+          },
+          "actionable": true
+        },
+        "counts": {
+          "actionable": 2,
+          "full_validation": 0
+        }
+      },
+      "final": {
+        "SK1": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "The reader sees a queued export that never runs."
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "symbol hash keys fail the check"
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "use `{ \"format\" => \"markdown\" }`."
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "an export and a digest all completed",
+            "reason": "Same central plan; exact bytes and complete rejection/job-ID state assertions absent."
+          },
+          "actionable": true
+        },
+        "SK2": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "every request queues a digest, and the reader is never told it was already requested"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "7.3.9: it returns `1`/`0`, and `0` is truthy in Ruby."
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "`Sidekiq.redis { |redis| redis.call(\"SADD\", key, id) } == 1`"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "first request `true`, second `false`, against real Redis",
+            "reason": "Same central plan; other-reader/day and complete failure-release controls absent."
+          },
+          "actionable": true
+        },
+        "counts": {
+          "actionable": 2,
+          "full_validation": 0
+        }
+      },
+      "extra_findings": [
+        {
+          "risk": "digest_BigDecimal",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "pass `reading_completion.to_s`",
+          "reason": "Correct strict-args prerequisite and existing decoder; real probe and payload equality reported, not independently collected."
+        },
+        {
+          "risk": "Redis_error_cleanup",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "rescue `StandardError` around `perform_async` only",
+          "boundary": "Explicitly destroys/re-raises on enqueue failure, then persists job ID outside rescue. Correct narrow boundary; do not carry earlier batch run 3's broad-rescue objection into this report."
+        },
+        {
+          "risk": "connection_pool_scheduler",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "add `gem \"connection_pool\", \"< 3\"`",
+          "reason": "Required blocker recognized. Main trace collects actual cp3 timed_stack pop error and lock differences. Reported cp2 reminder/retry completion not independently collected; ordinary suite success is not scheduler proof."
+        },
+        {
+          "risk": "old_epoch_scheduling",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "otherwise `perform_later(self)`",
+          "reason": "Correct past-versus-future branch and relative threshold. Explicit old epoch plus future control reported; replacement/ownership controls and underlying trial logs absent."
+        },
+        {
+          "risk": "latent_RedisCacheStore_pool3",
+          "impact": "partial",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "That is latent here, since the production cache store is commented out.",
+          "reason": "Plausible conditional extra, appropriately not called an active application failure; nested one-liner log not collected."
+        }
+      ],
+      "material_errors": [
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "default Redis timeouts rise to 3 s",
+          "judgment": "incorrect",
+          "correction": "App baseline is 5 seconds and target 3; 'rise' reverses the actual change even though target value is correct."
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "Enqueues inside `with_lock` (`Note#schedule_reminder`, `Citation#request_enrichment`) would then be deferred until commit",
+          "judgment": "incorrect",
+          "correction": "A later Rails version alone is insufficient under retained load_defaults 7.0; requires :default gate rather than :never."
+        }
+      ],
+      "omissions": [
+        "Full SK1 and SK2 validation controls",
+        "No independently collected real provider retry_on, Action Cable or production environment checks"
+      ],
+      "rollout_rollback": {
+        "judgment": "partial",
+        "quotes": [
+          "Rollout and rollback were safe once the changes were in.",
+          "Rollback is safe as long as the step 1 changes stay in"
+        ],
+        "reason": "Safe portable repairs and preparation-first/pin order. Reported sequential queue/schedule/retry paths do not establish universal or concurrent-fleet safety. Main trace confirms suite counts and cp3 error, not forward/rollback completion. Correctly separates untagged rollout files from cp2/cp3 variants."
+      },
+      "delivery": {
+        "central_plan": "unchanged",
+        "selected_loss": "none",
+        "changes": "Replaces the raw authored 'Notes on the plan above', which itself speaks as a parent and claims removal of unrecovered inner sections. Those claimed inner sections are not separately available. Final retains all central findings and explicitly limits parent checks to observed excerpts.",
+        "approval_gate": "Constraint/version decision requested after full delivery."
+      },
+      "workflow": {
+        "skill": "maintain-rails:upgrade-gem observed",
+        "planner": "maintain-rails:gem-upgrade-planner observed, foreground",
+        "preservation": "Parent Bash clean git status and unchanged Gemfile/source lines. Isolated private PostgreSQL cluster and Redis described, now stopped; data retained under /tmp/sk-exp.",
+        "parent_evidence": "Collected summaries: baseline 46 runs/325 assertions/0 failures/errors/skips; target cp3 46/274/1 failure/3 errors; prep6 and prep7 each 50/335/0 failures/errors/skips. Actual cp3 pop ArgumentError and lock diff collected. Initial tail command failed; subsequent grep recovered summaries. No forward/rollback or probe logs read by parent."
+      }
+    },
+    {
+      "run": 4,
+      "trace": "/tmp/planner-suite-20261012/retry-collected/sidekiq-4.json",
+      "thread": "https://ampcode.com/threads/T-01a13140-4614-70ed-9df8-459c959022e4",
+      "raw_tool_id": "TU-2yZ2Iih6r6GqAtvXPaxgz6",
+      "raw": {
+        "SK1": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "three `ExportsControllerTest` tests error with `:format is a Symbol`",
+            "reference": "R3 target rejection of request_export; R5 separately explains queued/no-job orphan effect"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "Under 6.5 the current code only logs a warning."
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "use `{ \"format\" => \"markdown\" }`.",
+            "reference": "R3 decoder unchanged and explicit preparatory patch"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "completed with a file",
+            "reason": "Suite rejection and real mixed-worker completion reported, but no exact ordered Markdown bytes and no complete real queue/row rejection/persisted job-ID assertions."
+          },
+          "actionable": true
+        },
+        "SK2": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "Every repeat request would queue another digest."
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "a duplicate returns `0`, which Ruby treats as true"
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "`Sidekiq.redis { |redis| redis.sadd(key, [id]) } == 1`"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "Requesting a digest twice in one UTC day shows the \"already requested\" notice.",
+            "reason": "Both-client integer behavior and guards reported. Another reader and next UTC day absent; reservation-release full control matrix not specified."
+          },
+          "actionable": true
+        },
+        "counts": {
+          "actionable": 2,
+          "full_validation": 0
+        }
+      },
+      "final": {
+        "SK1": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "three `ExportsControllerTest` tests error with `:format is a Symbol`"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "Under 6.5 the current code only logs a warning."
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "use `{ \"format\" => \"markdown\" }`."
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "completed with a file",
+            "reason": "Same central plan; exact bytes and complete rejection/job-ID state checks absent."
+          },
+          "actionable": true
+        },
+        "SK2": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "Every repeat request would queue another digest."
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "a duplicate returns `0`, which Ruby treats as true"
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "`Sidekiq.redis { |redis| redis.sadd(key, [id]) } == 1`"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "Requesting a digest twice in one UTC day shows the \"already requested\" notice.",
+            "reason": "Same central plan; other-reader/day and complete reservation-release controls absent."
+          },
+          "actionable": true
+        },
+        "counts": {
+          "actionable": 2,
+          "full_validation": 0
+        }
+      },
+      "extra_findings": [
+        {
+          "risk": "digest_BigDecimal",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "pass `reading_completion.to_s`",
+          "reason": "Correct prerequisite and decoder; parent actually collects current-code BigDecimal rejection excerpt. Real-adapter fake-mode guard is honestly still proposed, not established by round-trip guard."
+        },
+        {
+          "risk": "Redis_error_cleanup",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "A method-wide `StandardError` rescue would be wrong",
+          "boundary": "Explicit enqueue-only rescue plus displayed begin/rescue ending before export.update!: safe narrow boundary. Real outage rows reported; persistence-failure control not run."
+        },
+        {
+          "risk": "connection_pool_scheduler",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "add `gem \"connection_pool\", \"2.5.5\"` (or `\"~> 2.5\"`)",
+          "reason": "Required pin correctly distinguishes green cp3 suite from dead scheduler; parent collects 1 versus 0 terminated-with-exception counts and cp3 ArgumentError. No independently collected complete reminder/retry state matrix."
+        },
+        {
+          "risk": "latent_RedisCacheStore_pool3",
+          "impact": "partial",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "The app doesn't use that store today",
+          "reason": "Properly conditional extra; same pool pin, uncollected nested one-liner trial."
+        }
+      ],
+      "material_errors": [
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "matches the pool but halves throughput",
+          "judgment": "incorrect",
+          "correction": "Default concurrency changes, but throughput is workload-dependent and production overrides unknown. No load evidence supports halving."
+        }
+      ],
+      "omissions": [
+        "Full SK1 and SK2 validation controls",
+        "Reachable positive old reminder epochs below 1e9 misinterpreted by Sidekiq-owned adapter"
+      ],
+      "rollout_rollback": {
+        "judgment": "partial",
+        "quotes": [
+          "No queue drain is needed.",
+          "When the scheduler or retry poller re-pushes a stored job, it reloads JSON, which always passes."
+        ],
+        "reason": "Preparation-first, pin and keep-preparation rollback are sensible for sampled payloads. 'always passes' and no-drain claims exceed representative queue/schedule/retry evidence; no full job matrix, in-flight shutdown or concurrent-fleet proof. Old-epoch new-enqueue risk omitted."
+      },
+      "delivery": {
+        "central_plan": "unchanged",
+        "selected_loss": "none",
+        "changes": "Replaces authored 'Additional commentary' with actual parent checks. Keeps all selected and extra risk sections, explicit narrow rescue and preparatory code. Only actual collected log excerpts justify parent's confirmation statements.",
+        "approval_gate": "Implementation approval requested after full report."
+      },
+      "workflow": {
+        "skill": "maintain-rails:upgrade-gem observed",
+        "planner": "maintain-rails:gem-upgrade-planner observed, foreground",
+        "preservation": "Parent Bash git status clean; patch and candidate guards exist. Reports experimental margin_notes_exp* databases retained and isolated Redis stopped.",
+        "parent_evidence": "Collected cp3 exception count 1 versus pinned 0; wrong-number-of-arguments line; current digest BigDecimal error; target suite 46 runs/274 assertions/1 failure/3 errors/0 skips; prepared pinned suite 50/332/0 failures/errors/skips. These are limited excerpts, not collected full nested experiments."
+      }
+    },
+    {
+      "run": 5,
+      "trace": "/tmp/planner-suite-20261012/retry-collected/sidekiq-5.json",
+      "thread": "https://ampcode.com/threads/T-01a13140-4e91-720c-b8d2-755cb8acd580",
+      "raw_tool_id": "TU-7HoUAMZiuQrvM9ZeFFx6Rm",
+      "raw": {
+        "SK1": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "left stuck in `queued`, because the rescue on line 28 doesn't match `ArgumentError`"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "`{ format: \"markdown\" }` now raises before the job is queued."
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "use `{ \"format\" => \"markdown\" }`."
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "3 `ExportsControllerTest` errors on 7.3.9, gone after the fix",
+            "reason": "Reports strict rejection and mixed-worker exports, but no exact ordered Markdown bytes or full Redis queue/row/job-ID assertions."
+          },
+          "actionable": true
+        },
+        "SK2": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "the one-digest-per-day check never refuses a repeat request"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "`sadd` returns `0`/`1`, and `0` is truthy in Ruby"
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "`Sidekiq.redis { |redis| redis.sadd(key, [id]) }.positive?`"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "`digests_controller_test.rb:21` fails on 7.3.9 and passes after the fix",
+            "reason": "Array-return portability explained and suites reported. Another reader/day and complete enqueue-failure reservation controls absent; test citation alone is not a full real-Redis matrix."
+          },
+          "actionable": true
+        },
+        "counts": {
+          "actionable": 2,
+          "full_validation": 0
+        }
+      },
+      "final": {
+        "SK1": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "left stuck in `queued`, because the rescue on line 28 doesn't match `ArgumentError`"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "`{ format: \"markdown\" }` now raises before the job is queued."
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "use `{ \"format\" => \"markdown\" }`."
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "3 `ExportsControllerTest` errors on 7.3.9, gone after the fix",
+            "reason": "Same central plan; exact bytes and complete rejection/completion state matrix absent."
+          },
+          "actionable": true
+        },
+        "SK2": {
+          "impact": {
+            "judgment": "supported",
+            "quote": "the one-digest-per-day check never refuses a repeat request"
+          },
+          "applicability": {
+            "judgment": "supported",
+            "quote": "`sadd` returns `0`/`1`, and `0` is truthy in Ruby"
+          },
+          "recommendation": {
+            "judgment": "supported",
+            "quote": "`Sidekiq.redis { |redis| redis.sadd(key, [id]) }.positive?`"
+          },
+          "validation": {
+            "judgment": "partial",
+            "quote": "`digests_controller_test.rb:21` fails on 7.3.9 and passes after the fix",
+            "reason": "Same central plan; other-reader/day and full failure-release controls absent."
+          },
+          "actionable": true
+        },
+        "counts": {
+          "actionable": 2,
+          "full_validation": 0
+        }
+      },
+      "extra_findings": [
+        {
+          "risk": "digest_BigDecimal",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "pass `reading_completion.to_s(\"F\")`",
+          "reason": "Correct strict-args prerequisite and existing mailer decoding. Round-trip guard, real probes and worker trials are reported, not independently collected."
+        },
+        {
+          "risk": "Redis_error_cleanup",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "change to `rescue RedisClient::Error` in the bump commit itself",
+          "boundary": "Primary class-specific method rescue is valid for target Redis failures and explicitly coupled to gem upgrade/revert; not enqueue-only, but does not broaden to normal database update! failures. StandardError alternative is explicitly acknowledged to destroy already-enqueued exports on update! failure; must not use it method-wide. No post-enqueue failure-injection control."
+        },
+        {
+          "risk": "connection_pool_scheduler",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "add `gem \"connection_pool\", \"< 3\"`",
+          "reason": "Correct required pin despite false last-7.x-release statement. Reports real cp3/cp2 reminder/retry control; nested logs not collected."
+        },
+        {
+          "risk": "old_epoch_scheduling",
+          "impact": "supported",
+          "applicability": "supported",
+          "recommendation": "supported",
+          "validation": "partial",
+          "quote": "`set(wait_until: [reminder_epoch, Time.current.to_i].max)`",
+          "reason": "Correct relative-delay threshold, reachability and repair. Suggested >=now test cannot distinguish wrong far-future target scheduling; real Redis probe remains model-reported."
+        }
+      ],
+      "material_errors": [
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "7.3.9 is the last 7.x release",
+          "judgment": "incorrect",
+          "correction": "Sidekiq 7.3.10 was published 2025-12-09 and itself constrains connection_pool <3. Checked against the RubyGems 7.3.10 version API. Exact requested 7.3.9 still needs the pin."
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "per-process throughput halves",
+          "judgment": "incorrect",
+          "correction": "Default threads 10 to 5 does not imply a measured throughput ratio; production CLI/environment overrides are explicitly unknown elsewhere in this report."
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "from Rails 7.2 the enqueues inside `with_lock`",
+          "judgment": "incorrect",
+          "correction": "After-commit behavior additionally requires the :default gate; retained load_defaults 7.0 remains :never."
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quote": "`enqueued_jobs.sole[:at] >= Time.current.to_i`",
+          "judgment": "incorrect",
+          "correction": "This assertion passes a wildly far-future time as well as a correct immediate schedule. Failing on baseline does not prove it catches the target relative-epoch regression. Assert immediate queue placement/due time and include threshold/future controls."
+        }
+      ],
+      "omissions": [
+        "Full SK1 and SK2 validation controls",
+        "Narrow enqueue-only cleanup not selected for StandardError alternative",
+        "Dead-set and actual citation retry_on mixed-version paths explicitly not exercised"
+      ],
+      "rollout_rollback": {
+        "judgment": "partial",
+        "quotes": [
+          "Web and worker processes can restart in any order.",
+          "R5 must go back together with the gem."
+        ],
+        "reason": "Preparation-first and target-only RedisClient rescue rollback constraint are explicit and sound. Representative sequential mixed jobs do not prove simultaneous fleet or all job paths. Headline 'every recommended change on both' is overbroad because R5 is expressly target-only. Digest=false checker caveat is unresolved: a reminder timestamp alone cannot prove digest mail delivery."
+      },
+      "delivery": {
+        "central_plan": "unchanged",
+        "selected_loss": "none",
+        "changes": "Prepends plan-only introduction and replaces authored 'Notes from me'. Retains all selected repairs, target-only rescue deployment/rollback gate, old-epoch repair and every material error.",
+        "approval_gate": "Implementation offered only after full plan."
+      },
+      "workflow": {
+        "skill": "maintain-rails:upgrade-gem observed",
+        "planner": "maintain-rails:gem-upgrade-planner observed, foreground",
+        "preservation": "Parent Bash clean git status/source excerpts and experiment log filenames. Experimental mn_skq_* databases left behind; Redis reportedly stopped.",
+        "parent_evidence": "No nested log contents were collected. Existing filenames do not establish reported suite, scheduler or mixed-job outcomes."
+      }
+    }
+  ],
+  "cross_run_findings": {
+    "delivery": "All five normalized central plans are unchanged in final responses. No SK1/SK2 actionability loss. Introduction/commentary edits are not equivalent to losing authored findings. Report-as-parent closing sections are replaced rather than silently treated as independent parent verification.",
+    "cleanup_boundaries": "Runs 1, 3 and 4 explicitly narrow StandardError cleanup to enqueue. Run 2 still prioritizes the unsafe method-wide version, although it recognizes and offers a safe alternative. Run 5 primarily uses target-only RedisClient::Error with coupled rollback; its explicitly hazardous StandardError alternative is not a safe advance patch without narrowing.",
+    "pool_readiness": "All five identify and require the connection_pool cap. Run 4 especially distinguishes a green prepared cp3 suite from a dead real scheduler. Collected parent excerpts in runs 3/4 support cp3 failure, not complete scheduler readiness or universal rollout safety.",
+    "timeout": "Run 1 says 1 to 3; run 3 says rise to 3. Both are incorrect for baseline 5 to target 3. Runs 4's target-only 3-second statement is correct; runs 2 and 5 make no corresponding timeout comparison.",
+    "after_commit": "Runs 2, 3 and 5 omit the later Rails :default gate. Runs 1 and 4 correctly say Rails 7.0 ignores adapter preference and do not make the erroneous inevitable later-version claim.",
+    "throughput": "Runs 2, 4 and 5 claim halving without load evidence. Run 3 correctly says throughput may drop; run 1 asks for an explicit thread-count decision without promising a ratio.",
+    "old_epochs": "Genuine extra in runs 1, 3 and 5; omitted in 2 and 4. Positive epochs below 1e9 are relatively interpreted. Correct remedies preserve immediate processing of past reminders. Specific observed dates remain model-reported.",
+    "digest_prerequisite": "Every raw/final report includes decimal-string production, so SK2 is not presented as sufficient while ignoring strict-args digest rejection.",
+    "unsafe_upgrade_order": "No selected-family advance-patch order error found: all recommend JSON-native arguments and portable array/call SADD fixes before gem bump. Run 5 correctly defers RedisClient rescue to the bump and reverts it with the gem.",
+    "no_independent_nested_reproductions": "No original-turn report table or authored spot-check note is counted as a separately collected nested experiment. Main trace log excerpts are labeled independently of reported experiments."
+  },
+  "unresolved_factual_questions": [
+    "Production Redis version, provider/proxy RESP3 and TLS behavior, eviction policy, and actual worker startup/concurrency/shutdown overrides.",
+    "Whether external producers/console scripts enqueue non-JSON arguments or use Redis client API/error assumptions outside this repository.",
+    "Actual complete SK1 real-worker output bytes and rejection queue/row/job-ID state; complete SK2 other-reader/next-UTC-day/enqueue-failure controls across both versions.",
+    "Full nested experiment scripts, prerequisite patches, dependency locks and logs needed to verify each claimed original-turn outcome, especially cp2 scheduler/retry completion and forward/rollback delivery.",
+    "Run 5's digest=false cross-copy mail checker explanation: actual digest mail artifacts are needed; reminder_sent_at proves only reminder delivery.",
+    "Existing queued exports without job IDs, mis-scheduled old-epoch reminders and already-delivered duplicates in production; rollback alone cannot undo those application effects.",
+    "Concurrent mixed fleets, in-flight graceful shutdown, real provider retry_on, Action Cable and performance under deployed pool/load settings remain unverified."
+  ],
+  "references": [
+    {
+      "id": "rubric",
+      "path": "tests/planner-development.md",
+      "sections": [
+        "Assess the plan and the workflow separately",
+        "Sidekiq: two selected findings and additional observed risks",
+        "Provenance and limitations"
+      ]
+    },
+    {
+      "id": "prior_batch_adjudications",
+      "path": "tests/planner-development-batch1-20261012.md",
+      "note": "Used for established adjudications and delivery comparison, not substituted for reading these new reports."
+    },
+    {
+      "id": "redis_baseline_timeout",
+      "url": "https://github.com/redis/redis-rb/blob/v4.8.1/lib/redis/client.rb#L10-L19",
+      "evidence": "Established adjudication: 5-second baseline"
+    },
+    {
+      "id": "target_timeout",
+      "url": "https://github.com/sidekiq/sidekiq/blob/v7.3.9/lib/sidekiq/redis_connection.rb#L26-L35",
+      "evidence": "Established adjudication: target timeout 3 seconds"
+    },
+    {
+      "id": "after_commit_default",
+      "url": "https://github.com/rails/rails/blob/v7.2.0/activejob/lib/active_job/enqueuing.rb#L43-L55",
+      "evidence": "Established adjudication: retained defaults do not imply :default"
+    },
+    {
+      "id": "after_commit_gate",
+      "url": "https://github.com/rails/rails/blob/v7.2.0/activejob/lib/active_job/enqueue_after_transaction_commit.rb#L6-L25",
+      "evidence": "Established adjudication: adapter preference applies under :default"
+    },
+    {
+      "id": "sidekiq_7_3_10",
+      "url": "https://rubygems.org/api/v2/rubygems/sidekiq/versions/7.3.10.json",
+      "retrieved": "2026-10-12",
+      "observed": {
+        "version": "7.3.10",
+        "version_created_at": "2025-12-09T16:20:13.729Z",
+        "connection_pool_requirement": ">= 2.3.0, < 3"
+      }
+    }
+  ]
+}

@@ -1,0 +1,492 @@
+Running 46 tests in a single process (parallelization threshold is 50)
+Run options: --seed 43683
+
+# Running:
+
+F
+
+Failure:
+RemindersControllerTest#test_a_reader_schedules_a_reminder_in_their_time_zone_and_is_emailed_once_it_is_due [test/controllers/reminders_controller_test.rb:11]:
+Expected response to be a <3XX: redirect>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/reminders_controller_test.rb:10:in `block in <class:RemindersControllerTest>'
+
+
+bin/rails test test/controllers/reminders_controller_test.rb:6
+
+F
+
+Failure:
+RemindersControllerTest#test_a_reminder_needs_a_time,_and_another_reader's_notes_cannot_be_reminded [test/controllers/reminders_controller_test.rb:64]:
+Expected response to be a <422: unprocessable_entity>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/reminders_controller_test.rb:63:in `block in <class:RemindersControllerTest>'
+.
+Expected: 422
+  Actual: 500
+
+bin/rails test test/controllers/reminders_controller_test.rb:60
+
+E
+
+Error:
+RemindersControllerTest#test_an_imported_reminder_is_scheduled_at_its_exact_time,_and_postponing_replaces_it:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/reminders_controller_test.rb:40:in `block in <class:RemindersControllerTest>'
+
+bin/rails test test/controllers/reminders_controller_test.rb:38
+
+/tmp/mn-rails81-plan/app/models/import.rb:1: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/csv.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add csv to your Gemfile or gemspec to silence this warning.
+F
+
+Failure:
+ImportsControllerTest#test_another_reader's_notebook_cannot_receive_or_reveal_imports [test/controllers/imports_controller_test.rb:98]:
+ActiveRecord::RecordNotFound expected but nothing was raised.
+
+bin/rails test test/controllers/imports_controller_test.rb:92
+
+F
+
+Failure:
+ImportsControllerTest#test_invalid_rows_are_shown_with_their_errors,_and_applying_them_saves_nothing [test/controllers/imports_controller_test.rb:58]:
+Expected response to be a <422: unprocessable_entity>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/imports_controller_test.rb:56:in `block in <class:ImportsControllerTest>'
+.
+Expected: 422
+  Actual: 500
+
+bin/rails test test/controllers/imports_controller_test.rb:48
+
+F
+
+Failure:
+ImportsControllerTest#test_rejects_a_missing_CSV_or_one_without_the_documented_header_row [test/controllers/imports_controller_test.rb:78]:
+Expected response to be a <422: unprocessable_entity>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/imports_controller_test.rb:76:in `block in <class:ImportsControllerTest>'
+.
+Expected: 422
+  Actual: 500
+
+bin/rails test test/controllers/imports_controller_test.rb:75
+
+F
+
+Failure:
+ImportsControllerTest#test_previews_a_CSV_without_saving,_then_imports_every_row_and_offers_a_receipt [test/controllers/imports_controller_test.rb:20]:
+Expected response to be a <2XX: success>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/imports_controller_test.rb:17:in `block (2 levels) in <class:ImportsControllerTest>'
+    test/controllers/imports_controller_test.rb:16:in `block in <class:ImportsControllerTest>'
+
+
+bin/rails test test/controllers/imports_controller_test.rb:6
+
+F
+
+Failure:
+NotesControllerTest#test_creates_a_note_in_an_owned_notebook [test/controllers/notes_controller_test.rb:101]:
+Expected response to be a <3XX: redirect>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/notes_controller_test.rb:99:in `block in <class:NotesControllerTest>'
+
+
+bin/rails test test/controllers/notes_controller_test.rb:98
+
+E
+
+Error:
+NotesControllerTest#test_invalid_pages_show_the_first_page_and_page_size_is_capped_at_50:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/notes_controller_test.rb:75:in `block (2 levels) in <class:NotesControllerTest>'
+    test/controllers/notes_controller_test.rb:75:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:74
+
+F
+
+Failure:
+NotesControllerTest#test_deletes_a_note [test/controllers/notes_controller_test.rb:167]:
+`Note.count` didn't change by -1, but by 0.
+Expected: 2
+  Actual: 3
+
+bin/rails test test/controllers/notes_controller_test.rb:166
+
+E
+
+Error:
+NotesControllerTest#test_pages_through_filtered_notes_newest_first,_keeping_the_filters_and_page_size:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/notes_controller_test.rb:51:in `block (2 levels) in <class:NotesControllerTest>'
+    test/controllers/notes_controller_test.rb:51:in `downto'
+    test/controllers/notes_controller_test.rb:51:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:48
+
+F
+
+Failure:
+NotesControllerTest#test_a_blank_title_re-renders_the_form_with_the_submitted_values [test/controllers/notes_controller_test.rb:156]:
+Expected response to be a <422: unprocessable_entity>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/notes_controller_test.rb:154:in `block in <class:NotesControllerTest>'
+.
+Expected: 422
+  Actual: 500
+
+bin/rails test test/controllers/notes_controller_test.rb:151
+
+F
+
+Failure:
+NotesControllerTest#test_lists_the_reader's_notes_newest_first_at_both_list_paths [test/controllers/notes_controller_test.rb:10]:
+Expected response to be a <2XX: success>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/notes_controller_test.rb:8:in `block (2 levels) in <class:NotesControllerTest>'
+    test/controllers/notes_controller_test.rb:7:in `each'
+    test/controllers/notes_controller_test.rb:7:in `block in <class:NotesControllerTest>'
+
+
+bin/rails test test/controllers/notes_controller_test.rb:6
+
+F
+
+Failure:
+NotesControllerTest#test_shows_an_empty_state_when_nothing_matches [test/controllers/notes_controller_test.rb:45]:
+Expected at least 1 element matching ".empty", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/notes_controller_test.rb:41
+
+E
+
+Error:
+NotesControllerTest#test_edits_a_note's_rich_body,_tags,_highlight,_and_status:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/notes_controller_test.rb:109:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:107
+
+F
+
+Failure:
+NotesControllerTest#test_renders_an_unbound_search_form [test/controllers/notes_controller_test.rb:20]:
+Expected at least 1 element matching "form[role=search][action=\"/notes\"][method=get]", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/notes_controller_test.rb:17
+
+F
+
+Failure:
+NotesControllerTest#test_another_reader's_notes_and_notebooks_cannot_be_reached [test/controllers/notes_controller_test.rb:177]:
+ActiveRecord::RecordNotFound expected but nothing was raised.
+
+bin/rails test test/controllers/notes_controller_test.rb:174
+
+F
+
+Failure:
+NotesControllerTest#test_a_note_cannot_be_filed_in_another_reader's_notebook [test/controllers/notes_controller_test.rb:195]:
+Expected response to be a <422: unprocessable_entity>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/notes_controller_test.rb:192:in `block (2 levels) in <class:NotesControllerTest>'
+    test/controllers/notes_controller_test.rb:191:in `block in <class:NotesControllerTest>'
+.
+Expected: 422
+  Actual: 500
+
+bin/rails test test/controllers/notes_controller_test.rb:190
+
+F
+
+Failure:
+NotesControllerTest#test_filters_by_notebook,_status,_and_title [test/controllers/notes_controller_test.rb:29]:
+Expected at least 1 element matching ".note h2", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/notes_controller_test.rb:27
+
+F
+
+Failure:
+NotesControllerTest#test_rich_text_keeps_collapsible_excerpts_and_drops_unsafe_markup [test/controllers/notes_controller_test.rb:144]:
+Expected at least 1 element matching ".trix-content details summary", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/notes_controller_test.rb:137
+
+E
+
+Error:
+ExportsControllerTest#test_a_reader_exports_a_notebook_as_Markdown_and_downloads_it_until_it_expires:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/exports_controller_test.rb:12:in `block in <class:ExportsControllerTest>'
+
+bin/rails test test/controllers/exports_controller_test.rb:9
+
+E
+
+Error:
+ExportsControllerTest#test_another_reader's_exports_cannot_be_requested,_seen,_cancelled,_or_downloaded:
+TypeError: String can't be coerced into Integer
+    app/models/export.rb:42:in `+'
+    app/models/export.rb:42:in `sum'
+    app/models/export.rb:42:in `generate'
+    test/controllers/exports_controller_test.rb:120:in `block in <class:ExportsControllerTest>'
+
+bin/rails test test/controllers/exports_controller_test.rb:118
+
+2026-10-12T15:04:21.517Z pid=42893 tid=11ld WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+E
+
+Error:
+ExportsControllerTest#test_the_cached_availability_indicator_does_not_authorize_a_download:
+TypeError: String can't be coerced into Integer
+    app/models/export.rb:42:in `+'
+    app/models/export.rb:42:in `sum'
+    app/models/export.rb:42:in `generate'
+    app/jobs/export_job.rb:10:in `perform'
+    test/controllers/exports_controller_test.rb:66:in `block (2 levels) in <class:ExportsControllerTest>'
+    test/controllers/exports_controller_test.rb:66:in `block in <class:ExportsControllerTest>'
+
+bin/rails test test/controllers/exports_controller_test.rb:59
+
+E
+
+Error:
+ExportsControllerTest#test_cancelling_a_queued_export_means_the_worker_writes_no_file:
+ActiveRecord::RecordNotFound: Couldn't find Export with [WHERE "exports"."notebook_id" = $1]
+    test/controllers/exports_controller_test.rb:97:in `block in <class:ExportsControllerTest>'
+
+bin/rails test test/controllers/exports_controller_test.rb:94
+
+E
+
+Error:
+DigestsControllerTest#test_a_reader_can_request_one_digest_per_UTC_day,_listing_ready_notes_updated_that_day:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/digests_controller_test.rb:11:in `block (2 levels) in <class:DigestsControllerTest>'
+    test/controllers/digests_controller_test.rb:10:in `block in <class:DigestsControllerTest>'
+
+bin/rails test test/controllers/digests_controller_test.rb:5
+
+F
+
+Failure:
+DigestsControllerTest#test_a_digest_request_is_released_when_its_job_cannot_be_queued [test/controllers/digests_controller_test.rb:51]:
+Redis::CannotConnectError expected but nothing was raised.
+
+bin/rails test test/controllers/digests_controller_test.rb:45
+
+E
+
+Error:
+CitationEnrichmentsControllerTest#test_a_provider_that_stays_unavailable_or_refuses_the_request_leaves_a_visible_failure:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/citation_enrichments_controller_test.rb:62:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:60
+
+F
+
+Failure:
+CitationEnrichmentsControllerTest#test_fetches_a_manually_entered_DOI's_title_and_source_URL,_retrying_one_unavailable_response [test/controllers/citation_enrichments_controller_test.rb:10]:
+Expected: "10.1000/eliot.1871"
+  Actual: nil
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:7
+
+E
+
+Error:
+CitationEnrichmentsControllerTest#test_readers_can_only_request_metadata_through_their_own_cited_notes:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/citation_enrichments_controller_test.rb:92:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:90
+
+E
+
+Error:
+CitationEnrichmentsControllerTest#test_provider_credentials_from_the_environment_reach_the_server_unchanged:
+NoMethodError: undefined method `secrets' for #<MarginNotes::Application:0x00007fed6a393d48>
+    test/controllers/citation_enrichments_controller_test.rb:117:in `with_provider'
+    test/controllers/citation_enrichments_controller_test.rb:43:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:40
+
+E
+
+Error:
+NoteTest#test_newest_first_breaks_created_at_ties_by_descending_id:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/models/note_test.rb:6:in `block in <class:NoteTest>'
+
+bin/rails test test/models/note_test.rb:4
+
+E
+
+Error:
+NoteTest#test_rejects_rich_text_attachments_larger_than_one_megabyte:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/models/note_test.rb:21:in `block in <class:NoteTest>'
+
+bin/rails test test/models/note_test.rb:20
+
+E
+
+Error:
+NoteTest#test_title_search_is_case-insensitive_and_treats_wildcards_literally:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/models/note_test.rb:13:in `block in <class:NoteTest>'
+
+bin/rails test test/models/note_test.rb:12
+
+F
+
+Failure:
+AccountsControllerTest#test_a_reader_chooses_their_time_zone [test/controllers/accounts_controller_test.rb:8]:
+Expected at least 1 element matching "select[name=\"user[time_zone]\"] option[selected]", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/accounts_controller_test.rb:6
+
+F
+
+Failure:
+ActivityReportsControllerTest#test_an_empty_notebook_says_so,_and_another_reader's_notebook_is_not_found [test/controllers/activity_reports_controller_test.rb:31]:
+Expected response to be a <2XX: success>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/activity_reports_controller_test.rb:30:in `block in <class:ActivityReportsControllerTest>'
+
+
+bin/rails test test/controllers/activity_reports_controller_test.rb:27
+
+E
+
+Error:
+ActivityReportsControllerTest#test_a_notebook's_notes_are_counted_by_UTC_creation_date,_newest_first:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/activity_reports_controller_test.rb:12:in `block in <class:ActivityReportsControllerTest>'
+
+bin/rails test test/controllers/activity_reports_controller_test.rb:8
+
+E
+
+Error:
+ExportTest#test_a_cancellation_recorded_while_the_worker_is_running_stops_it_before_the_next_note:
+ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/models/export_test.rb:6:in `block in <class:ExportTest>'
+
+bin/rails test test/models/export_test.rb:4
+
+F
+
+Failure:
+NotebooksControllerTest#test_settings_update_the_name_and_export_heading_but_keep_the_slug [test/controllers/notebooks_controller_test.rb:26]:
+Expected at least 1 element matching "input[type=hidden][name='notebook[slug]'][value=novels]", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/notebooks_controller_test.rb:22
+
+F
+
+Failure:
+NotebooksControllerTest#test_another_reader's_notebook_settings_cannot_be_reached [test/controllers/notebooks_controller_test.rb:44]:
+ActiveRecord::RecordNotFound expected but nothing was raised.
+
+bin/rails test test/controllers/notebooks_controller_test.rb:41
+
+F
+
+Failure:
+NotebooksControllerTest#test_creates_a_notebook_owned_by_the_reader_with_a_slug_from_its_name [test/controllers/notebooks_controller_test.rb:14]:
+`users(:reader).notebooks.count` didn't change by 1, but by 0.
+Expected: 3
+  Actual: 2
+
+bin/rails test test/controllers/notebooks_controller_test.rb:13
+
+F
+
+Failure:
+NotebooksControllerTest#test_lists_only_the_reader's_notebooks [test/controllers/notebooks_controller_test.rb:9]:
+Expected at least 1 element matching "li a", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/notebooks_controller_test.rb:6
+
+F
+
+Failure:
+NotebooksControllerTest#test_rejects_a_blank_name [test/controllers/notebooks_controller_test.rb:57]:
+Expected response to be a <422: unprocessable_entity>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/notebooks_controller_test.rb:54:in `block (2 levels) in <class:NotebooksControllerTest>'
+    test/controllers/notebooks_controller_test.rb:53:in `block in <class:NotebooksControllerTest>'
+.
+Expected: 422
+  Actual: 500
+
+bin/rails test test/controllers/notebooks_controller_test.rb:52
+
+F
+
+Failure:
+SessionsControllerTest#test_a_wrong_password_re-renders_the_form_without_signing_in [test/controllers/sessions_controller_test.rb:26]:
+Expected response to be a <3XX: redirect>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/sessions_controller_test.rb:25:in `block in <class:SessionsControllerTest>'
+
+
+bin/rails test test/controllers/sessions_controller_test.rb:18
+
+.F
+
+Failure:
+SessionsControllerTest#test_signing_out_ends_the_session [test/controllers/sessions_controller_test.rb:33]:
+Expected response to be a <3XX: redirect>, but was a <500: Internal Server Error>
+
+Exception while processing request: ArgumentError: wrong number of arguments (given 2, expected 1)
+    test/controllers/sessions_controller_test.rb:32:in `block in <class:SessionsControllerTest>'
+
+
+bin/rails test test/controllers/sessions_controller_test.rb:29
+
+F
+
+Failure:
+SessionsControllerTest#test_signing_in_with_the_correct_password_opens_the_note_list [test/controllers/sessions_controller_test.rb:15]:
+--- expected
++++ actual
+@@ -1 +1 @@
+-"Notes"
++"We're sorry, but something went wrong."
+.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/sessions_controller_test.rb:10
+
+
+
+Finished in 3.982201s, 11.5514 runs/s, 11.0492 assertions/s.
+46 runs, 44 assertions, 28 failures, 17 errors, 0 skips

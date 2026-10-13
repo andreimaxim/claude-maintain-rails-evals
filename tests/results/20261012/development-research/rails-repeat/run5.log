@@ -1,0 +1,74 @@
+Running 46 tests in a single process (parallelization threshold is 50)
+Run options: --seed 49031
+
+# Running:
+
+.../tmp/mn-rails81-plan/app/models/import.rb:1: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/csv.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add csv to your Gemfile or gemspec to silence this warning.
+.F
+
+Failure:
+ImportsControllerTest#test_invalid_rows_are_shown_with_their_errors,_and_applying_them_saves_nothing [test/controllers/imports_controller_test.rb:65]:
+`record_counts` changed.
+Expected: [0, 3, 0, 1]
+  Actual: [1, 4, 1, 2]
+
+bin/rails test test/controllers/imports_controller_test.rb:48
+
+F
+
+Failure:
+ImportsControllerTest#test_previews_a_CSV_without_saving,_then_imports_every_row_and_offers_a_receipt [test/controllers/imports_controller_test.rb:45]:
+--- expected
++++ actual
+@@ -1,4 +1,6 @@
++# encoding: ASCII-8BIT
++#    valid: true
+ "title,doi
+-On idleness,10.1000/Essays.1
+-Of experience,10.1000/Essays.1
++On idleness,
++Of experience,
+ "
+
+
+bin/rails test test/controllers/imports_controller_test.rb:6
+
+.........Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+.Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+Redis#srem will always return an Integer in Redis 5.0.0. Use Redis#srem? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:43:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+........2026-10-12T15:06:10.838Z pid=44278 tid=zsa WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+..2026-10-12T15:06:10.987Z pid=44278 tid=zsa WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+.2026-10-12T15:06:11.038Z pid=44278 tid=zsa WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+.................E
+
+Error:
+CitationEnrichmentsControllerTest#test_a_provider_that_stays_unavailable_or_refuses_the_request_leaves_a_visible_failure:
+RuntimeError: Couldn't determine a delay based on :exponentially_longer
+    app/models/citation.rb:20:in `block in request_enrichment'
+    app/models/citation.rb:15:in `request_enrichment'
+    app/controllers/citation_enrichments_controller.rb:7:in `create'
+    test/controllers/citation_enrichments_controller_test.rb:65:in `block (3 levels) in <class:CitationEnrichmentsControllerTest>'
+    test/controllers/citation_enrichments_controller_test.rb:65:in `block (2 levels) in <class:CitationEnrichmentsControllerTest>'
+    test/controllers/citation_enrichments_controller_test.rb:119:in `with_provider'
+    test/controllers/citation_enrichments_controller_test.rb:64:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:60
+
+.
+
+Finished in 3.081625s, 14.9272 runs/s, 105.4638 assertions/s.
+46 runs, 325 assertions, 2 failures, 1 errors, 0 skips

@@ -1,0 +1,138 @@
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/core_ext/object.rb:13: warning: bigdecimal was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add bigdecimal to your Gemfile or gemspec to silence this warning.
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/notifications.rb:4: warning: mutex_m was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add mutex_m to your Gemfile or gemspec to silence this warning.
+2026-10-12T15:41:05.599Z pid=50488 tid=141g INFO: Booted Rails 7.0.8.7 application in development environment
+2026-10-12T15:41:05.599Z pid=50488 tid=141g INFO: Running in ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+2026-10-12T15:41:05.599Z pid=50488 tid=141g INFO: See LICENSE and the LGPL-3.0 for licensing details.
+2026-10-12T15:41:05.599Z pid=50488 tid=141g INFO: Upgrade to Sidekiq Pro for more features and support: https://sidekiq.org
+2026-10-12T15:41:05.599Z pid=50488 tid=141g INFO: Booting Sidekiq 6.5.12 with Sidekiq::RedisConnection::RedisAdapter options {:url=>"redis://127.0.0.1:6391/7"}
+2026-10-12T15:41:05.605Z pid=50488 tid=1e70 class=ExportJob jid=58a7e7ceec34c6af5c3cf8aa INFO: start
+2026-10-12T15:41:05.606Z pid=50488 tid=1e68 class=DigestJob jid=f5e22bdc402a032c7ec55c5b INFO: start
+2026-10-12T15:41:05.606Z pid=50488 tid=1e9g class=ExportJob jid=f464282379bfcd89d3e5614a INFO: start
+2026-10-12T15:41:05.780Z pid=50488 tid=1e9g class=ExportJob jid=f464282379bfcd89d3e5614a elapsed=0.174 INFO: fail
+2026-10-12T15:41:05.780Z pid=50488 tid=1e9g WARN: {"context":"Job raised exception","job":{"retry":true,"queue":"default","args":[-1,{"format":"markdown"}],"class":"ExportJob","jid":"f464282379bfcd89d3e5614a","created_at":1791819660.4377086,"enqueued_at":1791819660.437721}}
+2026-10-12T15:41:05.781Z pid=50488 tid=1e9g WARN: ActiveRecord::RecordNotFound: Couldn't find Export with 'id'=-1
+2026-10-12T15:41:05.781Z pid=50488 tid=1e9g WARN: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activerecord-7.0.8.7/lib/active_record/core.rb:284:in `find'
+/tmp/sidekiq-upgrade-exp/baseline-fixed/app/jobs/export_job.rb:10:in `perform'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:202:in `execute_job'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:170:in `block (2 levels) in process'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/middleware/chain.rb:172:in `invoke'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:169:in `block in process'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:136:in `block (6 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_retry.rb:113:in `local'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:135:in `block (5 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/rails.rb:14:in `block in call'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/execution_wrapper.rb:92:in `wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/reloader.rb:72:in `block in wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/execution_wrapper.rb:92:in `wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/reloader.rb:71:in `wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/rails.rb:13:in `call'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:131:in `block (4 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:263:in `stats'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:126:in `block (3 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_logger.rb:13:in `call'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:125:in `block (2 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_retry.rb:80:in `global'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:124:in `block in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_logger.rb:39:in `prepare'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:123:in `dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:168:in `process'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:78:in `process_one'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:68:in `run'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/component.rb:8:in `watchdog'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/component.rb:17:in `block in safe_thread'
+2026-10-12T15:41:05.899Z pid=50488 tid=1e70 class=ExportJob jid=58a7e7ceec34c6af5c3cf8aa WARN: DEPRECATION WARNING: Rails 7.0 has deprecated Enumerable.sum in favor of Ruby's native implementation available since 2.4. Sum of non-numeric elements requires an initial argument. (called from generate at /tmp/sidekiq-upgrade-exp/baseline-fixed/app/models/export.rb:42)
+2026-10-12T15:41:05.935Z pid=50488 tid=1e70 class=ExportJob jid=58a7e7ceec34c6af5c3cf8aa INFO: [36m  Disk Storage (1.0ms) [0m[32mUploaded file to key: onwltc9tz9jvzsj4ydx4jyd0pw3f (checksum: Ucm7lIsHJd9tSH+o1ia6qA==)[0m
+2026-10-12T15:41:05.970Z pid=50488 tid=1e70 class=ExportJob jid=58a7e7ceec34c6af5c3cf8aa elapsed=0.365 INFO: done
+2026-10-12T15:41:06.020Z pid=50488 tid=1e68 class=DigestJob jid=f5e22bdc402a032c7ec55c5b INFO: Performing DigestJob (Job ID: b4f11391-1451-4edc-88a7-7a418e39298c) from Sidekiq(default) enqueued at 2026-10-12T15:41:00Z with arguments: #<GlobalID:0x00007f30e076ac60 @uri=#<URI::GID gid://margin-notes/User/7>>, Mon, 12 Oct 2026 15:41:00.433024492 UTC +00:00, "1.0"
+2026-10-12T15:41:06.059Z pid=50488 tid=1e68 class=DigestJob jid=f5e22bdc402a032c7ec55c5b INFO:   Rendered digest_mailer/daily_digest.text.erb within layouts/mailer (Duration: 6.5ms | Allocations: 4180)
+2026-10-12T15:41:06.059Z pid=50488 tid=1e68 class=DigestJob jid=f5e22bdc402a032c7ec55c5b INFO:   Rendered layout layouts/mailer.text.erb (Duration: 6.9ms | Allocations: 4403)
+2026-10-12T15:41:06.065Z pid=50488 tid=1e68 class=DigestJob jid=f5e22bdc402a032c7ec55c5b INFO: Delivered mail 6accff92f760_c5383b386421@e2b.local.mail (4.0ms)
+2026-10-12T15:41:06.065Z pid=50488 tid=1e68 class=DigestJob jid=f5e22bdc402a032c7ec55c5b INFO: Performed DigestJob (Job ID: b4f11391-1451-4edc-88a7-7a418e39298c) from Sidekiq(default) in 339.76ms
+2026-10-12T15:41:06.065Z pid=50488 tid=1e68 class=DigestJob jid=f5e22bdc402a032c7ec55c5b elapsed=0.46 INFO: done
+2026-10-12T15:41:19.887Z pid=50488 tid=1de4 class=ExportJob jid=d1b622d133d7c7a1ed675ac2 INFO: start
+2026-10-12T15:41:19.891Z pid=50488 tid=1e70 class=NoteReminderJob jid=188f352c04703cb28f919003 INFO: start
+2026-10-12T15:41:19.891Z pid=50488 tid=1de4 class=ExportJob jid=d1b622d133d7c7a1ed675ac2 elapsed=0.004 INFO: fail
+2026-10-12T15:41:19.892Z pid=50488 tid=1de4 WARN: {"context":"Job raised exception","job":{"retry":true,"queue":"default","args":[-1,{"format":"markdown"}],"class":"ExportJob","jid":"d1b622d133d7c7a1ed675ac2","created_at":1791819647.730797,"enqueued_at":1791819679.88749,"error_message":"Couldn't find Export with 'id'=-1","error_class":"ActiveRecord::RecordNotFound","failed_at":1791819648.7212005,"retry_count":0}}
+2026-10-12T15:41:19.892Z pid=50488 tid=1de4 WARN: ActiveRecord::RecordNotFound: Couldn't find Export with 'id'=-1
+2026-10-12T15:41:19.892Z pid=50488 tid=1de4 WARN: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activerecord-7.0.8.7/lib/active_record/core.rb:284:in `find'
+/tmp/sidekiq-upgrade-exp/baseline-fixed/app/jobs/export_job.rb:10:in `perform'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:202:in `execute_job'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:170:in `block (2 levels) in process'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/middleware/chain.rb:172:in `invoke'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:169:in `block in process'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:136:in `block (6 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_retry.rb:113:in `local'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:135:in `block (5 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/rails.rb:14:in `block in call'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/execution_wrapper.rb:92:in `wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/reloader.rb:72:in `block in wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/execution_wrapper.rb:92:in `wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/reloader.rb:71:in `wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/rails.rb:13:in `call'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:131:in `block (4 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:263:in `stats'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:126:in `block (3 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_logger.rb:13:in `call'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:125:in `block (2 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_retry.rb:80:in `global'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:124:in `block in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_logger.rb:39:in `prepare'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:123:in `dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:168:in `process'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:78:in `process_one'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:68:in `run'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/component.rb:8:in `watchdog'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/component.rb:17:in `block in safe_thread'
+2026-10-12T15:41:19.892Z pid=50488 tid=1e68 class=NoteReminderJob jid=6274ec9871fd9fa0774465b4 INFO: start
+2026-10-12T15:41:19.910Z pid=50488 tid=1e70 class=NoteReminderJob jid=188f352c04703cb28f919003 INFO: Performing NoteReminderJob (Job ID: 1035fe5c-58f2-41de-88b5-c3ad62b0a1ba) from Sidekiq(default) enqueued at 2026-10-12T15:40:47Z with arguments: #<GlobalID:0x00007f30dda25980 @uri=#<URI::GID gid://margin-notes/Note/5>>
+2026-10-12T15:41:19.915Z pid=50488 tid=1e68 class=NoteReminderJob jid=6274ec9871fd9fa0774465b4 INFO: Performing NoteReminderJob (Job ID: 2c1a03bd-f6e8-491f-91a2-3c0b9479d2f4) from Sidekiq(default) enqueued at 2026-10-12T15:41:00Z with arguments: #<GlobalID:0x00007f30dd895480 @uri=#<URI::GID gid://margin-notes/Note/7>>
+2026-10-12T15:41:19.928Z pid=50488 tid=1e70 class=NoteReminderJob jid=188f352c04703cb28f919003 INFO:   Rendered reminder_mailer/note_reminder.text.erb within layouts/mailer (Duration: 0.8ms | Allocations: 370)
+2026-10-12T15:41:19.930Z pid=50488 tid=1e70 class=NoteReminderJob jid=188f352c04703cb28f919003 INFO:   Rendered layout layouts/mailer.text.erb (Duration: 2.5ms | Allocations: 1412)
+2026-10-12T15:41:19.932Z pid=50488 tid=1e70 class=NoteReminderJob jid=188f352c04703cb28f919003 INFO: Delivered mail 6accff9fe3423_c5383b246437b@e2b.local.mail (1.4ms)
+2026-10-12T15:41:19.934Z pid=50488 tid=1e68 class=NoteReminderJob jid=6274ec9871fd9fa0774465b4 INFO:   Rendered reminder_mailer/note_reminder.text.erb within layouts/mailer (Duration: 0.2ms | Allocations: 113)
+2026-10-12T15:41:19.935Z pid=50488 tid=1e70 class=NoteReminderJob jid=188f352c04703cb28f919003 INFO: Performed NoteReminderJob (Job ID: 1035fe5c-58f2-41de-88b5-c3ad62b0a1ba) from Sidekiq(default) in 26.72ms
+2026-10-12T15:41:19.935Z pid=50488 tid=1e68 class=NoteReminderJob jid=6274ec9871fd9fa0774465b4 INFO:   Rendered layout layouts/mailer.text.erb (Duration: 0.9ms | Allocations: 676)
+2026-10-12T15:41:19.935Z pid=50488 tid=1e70 class=NoteReminderJob jid=188f352c04703cb28f919003 elapsed=0.044 INFO: done
+2026-10-12T15:41:19.936Z pid=50488 tid=1e68 class=NoteReminderJob jid=6274ec9871fd9fa0774465b4 INFO: Delivered mail 6accff9fe48d5_c5383b3864435@e2b.local.mail (0.7ms)
+2026-10-12T15:41:19.937Z pid=50488 tid=1e68 class=NoteReminderJob jid=6274ec9871fd9fa0774465b4 INFO: Performed NoteReminderJob (Job ID: 2c1a03bd-f6e8-491f-91a2-3c0b9479d2f4) from Sidekiq(default) in 25.78ms
+2026-10-12T15:41:19.937Z pid=50488 tid=1e68 class=NoteReminderJob jid=6274ec9871fd9fa0774465b4 elapsed=0.045 INFO: done
+2026-10-12T15:41:30.401Z pid=50488 tid=1eas class=ExportJob jid=f464282379bfcd89d3e5614a INFO: start
+2026-10-12T15:41:30.404Z pid=50488 tid=1eas class=ExportJob jid=f464282379bfcd89d3e5614a elapsed=0.004 INFO: fail
+2026-10-12T15:41:30.404Z pid=50488 tid=1eas WARN: {"context":"Job raised exception","job":{"retry":true,"queue":"default","args":[-1,{"format":"markdown"}],"class":"ExportJob","jid":"f464282379bfcd89d3e5614a","created_at":1791819660.4377086,"enqueued_at":1791819690.4007998,"error_message":"Couldn't find Export with 'id'=-1","error_class":"ActiveRecord::RecordNotFound","failed_at":1791819665.777008,"retry_count":0}}
+2026-10-12T15:41:30.404Z pid=50488 tid=1eas WARN: ActiveRecord::RecordNotFound: Couldn't find Export with 'id'=-1
+2026-10-12T15:41:30.404Z pid=50488 tid=1eas WARN: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activerecord-7.0.8.7/lib/active_record/core.rb:284:in `find'
+/tmp/sidekiq-upgrade-exp/baseline-fixed/app/jobs/export_job.rb:10:in `perform'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:202:in `execute_job'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:170:in `block (2 levels) in process'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/middleware/chain.rb:172:in `invoke'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:169:in `block in process'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:136:in `block (6 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_retry.rb:113:in `local'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:135:in `block (5 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/rails.rb:14:in `block in call'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/execution_wrapper.rb:92:in `wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/reloader.rb:72:in `block in wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/execution_wrapper.rb:92:in `wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/reloader.rb:71:in `wrap'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/rails.rb:13:in `call'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:131:in `block (4 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:263:in `stats'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:126:in `block (3 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_logger.rb:13:in `call'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:125:in `block (2 levels) in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_retry.rb:80:in `global'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:124:in `block in dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/job_logger.rb:39:in `prepare'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:123:in `dispatch'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:168:in `process'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:78:in `process_one'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/processor.rb:68:in `run'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/component.rb:8:in `watchdog'
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/sidekiq-6.5.12/lib/sidekiq/component.rb:17:in `block in safe_thread'
+2026-10-12T15:41:49.802Z pid=50488 tid=141g INFO: Shutting down
+2026-10-12T15:41:49.802Z pid=50488 tid=141g INFO: Terminating quiet threads
+2026-10-12T15:41:49.802Z pid=50488 tid=1e7c INFO: Scheduler exiting...
+2026-10-12T15:41:50.302Z pid=50488 tid=141g INFO: Pausing to allow jobs to finish...
+2026-10-12T15:41:50.803Z pid=50488 tid=141g INFO: Bye!

@@ -1,0 +1,95 @@
+{
+  "sessionId": "49c89030-e271-4ad1-bd0a-fd14e42c4893",
+  "generatedBy": "follow-up shell (separate turn, same session file); not the original process",
+  "originalTurnCutoff": {
+    "excludeAtOrAfter": "2026-10-13T05:27:25.140Z",
+    "reason": "follow-up audit user message begins here"
+  },
+  "instances": [
+    {
+      "agentId": "main-session",
+      "agentType": "main (Claude Code root)",
+      "spawnDepth": 0,
+      "parentAgentId": null,
+      "requestedModel": [
+        "\"claude-opus-5-5\""
+      ],
+      "assistantMessageModel": [
+        "claude-opus-5-5"
+      ],
+      "perTurnEffort": [
+        "\"low\""
+      ],
+      "effort": [
+        "\"low\""
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T05:09:49.279Z",
+      "finalTimestamp": "2026-10-13T05:11:08.559Z",
+      "assistantTurns": 5,
+      "assistantMessageIds": 4,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/49c89030-e271-4ad1-bd0a-fd14e42c4893.jsonl",
+        "sha256": "1f49e3ab15127d539562d222409ea62459e99a7b9a25aae6ff3afcd5f094eacf",
+        "note": "file also contains this follow-up; hash covers the whole file at audit time; counts/timestamps exclude entries at/after cutoff"
+      }
+    },
+    {
+      "agentId": "a670da1bf85a2eaff",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": "main-session",
+      "parentToolUseId": "toolu_018ubtjAGAUL1vfkwLS4sgR8",
+      "resumed": false,
+      "requestedModel": [
+        "\"claude-opus-5-5\""
+      ],
+      "assistantMessageModel": [
+        "claude-opus-5-5"
+      ],
+      "perTurnEffort": [
+        "\"low\""
+      ],
+      "effort": [
+        "\"low\""
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T05:09:54.502Z",
+      "finalTimestamp": "2026-10-13T05:10:47.489Z",
+      "assistantTurns": 8,
+      "assistantMessageIds": 5,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/49c89030-e271-4ad1-bd0a-fd14e42c4893/subagents/agent-a670da1bf85a2eaff.jsonl",
+        "sha256": "230447f54f9a75ef8ee4b1c9c21df49f20f00814381288bdb094bc27a4bf99bf",
+        "metaPath": "/home/user/.claude/projects/-home-user-workspace-repo/49c89030-e271-4ad1-bd0a-fd14e42c4893/subagents/agent-a670da1bf85a2eaff.meta.json",
+        "metaSha256": "e30b7edb54c29ea2f36427d24856719513717331373ad9f1ae1693cd786e0f89"
+      }
+    }
+  ],
+  "nestedPlannerInstances": {
+    "count": 0,
+    "note": "planner invoked the upgrade-gem Skill but spawned no Agent; no further subagent JSONL exists; no SendMessage resumptions found"
+  },
+  "environment": {
+    "originalProcess": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unknown",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unknown",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unknown"
+    },
+    "followUpShell": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unset"
+    },
+    "note": "original process env is not recorded in transcripts; follow-up shell status does not prove original status"
+  },
+  "limitations": [
+    "perTurnEffort/requestedModel taken from transcript entry fields as recorded by CLI 2.1.296",
+    "assistantTurns counts assistant JSONL entries (one API response may span several entries); assistantMessageIds gives distinct message ids",
+    "main transcript hash changes as this follow-up appends to it"
+  ]
+}

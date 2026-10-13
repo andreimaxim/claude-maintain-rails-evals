@@ -1,0 +1,2207 @@
+{
+  "assessment": "Five completed requested Haiku 5.5/medium Pagy outcomes; substantive deliveries and last responses graded independently",
+  "assessed_at": "2026-10-13",
+  "scope": {
+    "prompt": "Upgrade the pagy gem to 9.3.5",
+    "lane": "Pagy 8.6.3 to 9.3.5, Rails and other application dependencies retained",
+    "requested_model": "claude-haiku-5-5",
+    "requested_effort": "medium",
+    "actual_model_provenance": "Downloaded original-turn native audits establish recorded claude-haiku-5-5 and medium effort for all root sessions and all recorded planner instances. This is message.model/per-turn effort evidence, not a provider-routing or reasoning-budget audit. Pagy3 has zero agents. Follow-up collection turns are excluded.",
+    "rubric": "tests/planner-held-out.md, PG1 and PG2, with independent four-field judgments from tests/planner-development.md",
+    "structural_precedent": "/tmp/planner-suite-20261012/haiku-medium-sidekiq-assessment.json (structure only, not evidence about these runs)",
+    "source_exports": "/tmp/planner-suite-20261012/haiku-medium-heldout-settled/pagy-{1..5}.json",
+    "only_output_written": "/tmp/planner-suite-20261012/haiku-medium-pagy-assessment.json",
+    "constraints": "No app experiments, planner changes, private output-file reads, live-thread contact, or source input modifications. Entire original JSON exports read locally; private thinking excluded from grades. Existing main tool outputs inspected, not re-executed. No unseen second reports or uncollected nested logs credited."
+  },
+  "method": {
+    "judgments": [
+      "supported",
+      "partial",
+      "missing",
+      "incorrect"
+    ],
+    "actionable": "A family is actionable only if impact, applicability and recommendation are all supported. PG1 is one coordinated migration family, not one count per rename. PG2 is separate. Counts are not overall correctness passes.",
+    "PG1": "Credit the application-specific boot failure, removed view accessor and silent configuration/URL drift together. A valid full repair preserves default 10, per_page, cap 50, overflow and the authorized filtered ordered relation; require and accessor renames alone are incomplete. Exact values omitted by a later summary are not inherited from an earlier report or a diff.",
+    "PG2": "Credit invalid-page regression after PG1 repair, not malformed per_page baseline defects. An explicit public-call page clamp or equivalent controller backend normalization is valid; generic claims that a clamp was implemented without its rule are partial recommendations. Overflow handles stale positive pages, not invalid values.",
+    "fully_specified_validation": "Supported requires the complete discriminating public scenario/control family in the held-out key. Green ordinary suites, helper probes and named tests are partial evidence, not a complete asymmetric request matrix. Proposed validation may be specified without being executed; all execution claims are separately classified.",
+    "layers": "raw requires a substantive completed report with recorded maintain-rails:gem-upgrade-planner identity/type. Status handbacks are never raw plans. Parent and author's fallback labels do not establish actual reporter type. returned_reports grades every available substantive visible delivery; final grades only the last original assistant response, with its own exact quote membership. Raw null means unavailable or absent, not a zero-scored planner.",
+    "timing": "wall_time_ms is initial request createdAt through final recorded idle updatedAt in the immutable settled export. successful_plan_wall_time_ms requires the complete designated report actually delivered without replacement by a lossy summary. Only run4 qualifies; HTML entity escaping is a lossless transport change but is not literal byte preservation. Earlier status timestamps are message boundaries, not invented idle transitions.",
+    "quote_membership": "Every assessment has source/message_id. Its quotes must occur literally in the text blocks of that message, never another message or report. Reasons are grader analysis. Ancillary issues identify their own source message or tool result. Authored experiments are not independently collected passes."
+  },
+  "runs": [
+    {
+      "run": 1,
+      "run_id": "pagy-1",
+      "thread": "T-01a13426-729c-750b-880f-1418adce50da",
+      "source_export_sha256": "c868e02b12fe9e2b8fab84d24c09fcf392a3a44e559a639d8b1c8cbaeab23652",
+      "request_sent_at": "2026-10-13T07:24:59.162Z",
+      "idle_at": "2026-10-13T07:32:44.192Z",
+      "wall_time_ms": 465030,
+      "successful_plan_wall_time_ms": null,
+      "raw": {
+        "report_id": "pagy-1-native-a384903052b7936c8",
+        "source": "haiku-medium-heldout-reports/pagy-1.json#/reports/6",
+        "agent_id": "a384903052b7936c8",
+        "agent_type": "maintain-rails:gem-upgrade-planner",
+        "spawn_depth": 3,
+        "timestamp": "2026-10-13T07:32:34.042Z",
+        "text_sha256": "bd4570bfd20101686170c89e9aa8b29e68fbe5e16fedab668d7dd0b28360aac4",
+        "source_file_sha256": "a328c91c867668ba6dc865d61f45a75c6bacb9ca46438d3d10ec1e65eb133798",
+        "observed_model": "claude-haiku-5-5",
+        "observed_effort": "medium",
+        "provenance": "Last completed original native report feeding final message21. Recorded designated type overrides authored direct-planning label.",
+        "PG1": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "The unmodified 9.3.5 app does not boot.",
+              "Fixing only the `require` would silently give 20 items per page and ignore the `per_page` select.",
+              "A call to `items` would raise `NoMethodError`."
+            ],
+            "applicability": [
+              "`config/initializers/pagy.rb` lines 6-9.",
+              "`/home/user/workspace/repo/app/views/notes/index.html.erb` line 30 (`@pagy.items`)."
+            ],
+            "recommendation": [
+              "`require \"pagy/extras/limit\"`",
+              "`Pagy::DEFAULT[:limit] = 10`, `[:limit_param] = :per_page`, `[:limit_max] = 50`. Keep `:overflow = :last_page`.",
+              "Recommendation: `@pagy.limit`."
+            ],
+            "validation": [
+              "500 is capped to 50, `per_page` is honored",
+              "Outputs identical (`diff` exit 0, 320 lines each)",
+              "The silent-default case from only fixing the `require` is source-based and was not run."
+            ]
+          },
+          "reasons": {
+            "impact": "Boot, accessor failure and ignored default/parameter/cap settings identified. Require-only silent-drift wording is misleading: reader failure masks it; separately recorded issue does not erase correct diagnosis.",
+            "applicability": "Exact application initializer and view call, mapped defaults contrasted with target20/:limit/100.",
+            "recommendation": "Complete 10/per_page/50/overflow and reader migration, coordinated with gem; no ownership/filter/order change.",
+            "validation": "Authored suites, probes and three HTML requests are partial, not asymmetric owned/filter-excluded/foreign membership with actual Next-follow, selection/range, exact queries, alias/empty/auth controls."
+          }
+        },
+        "PG2": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "blank, zero, negative, and nonnumeric `page` values raise `Pagy::VariableError` instead of showing page 1.",
+              "The overflow extra rescues only `OverflowError`, not `VariableError`."
+            ],
+            "applicability": [
+              "`/home/user/workspace/repo/app/controllers/notes_controller.rb` line 18 (`pagy(@notes)`)",
+              "F1, F2, F3 only"
+            ],
+            "recommendation": [
+              "keep the contract with `pagy(@notes, page: [params[:page].to_i, 1].max)`",
+              "Option (a) is what I verified."
+            ],
+            "validation": [
+              "46 runs, 325 assertions, 0 failures, 0 errors on both. Probe rows for `page` identical across versions.",
+              "page 99999 shows page 5 of 5, notes 51-52"
+            ]
+          },
+          "reasons": {
+            "impact": "Four invalid inputs regress from pageone to exception; overflow explicitly not a repair.",
+            "applicability": "Native request boundary and PG1-prepared variant isolate PG2.",
+            "recommendation": "Portable public-call clamp is selected and verified in authored report; alternative contract change is a product choice, not credited as repair.",
+            "validation": "Authored both-version checks and stale-positive control remain partial without full invalid-input pageone-content/filter/ownership/valid-navigation matrix."
+          }
+        },
+        "counts": {
+          "actionable": 2,
+          "fully_specified_validation": 0
+        },
+        "material_issues": [
+          {
+            "kind": "require_only_drift_stage_incorrect",
+            "quotes": [
+              "Fixing only the `require` would silently give 20 items per page and ignore the `per_page` select."
+            ],
+            "reason": "Require-only app repair leaves @pagy.items and fails rendering; silent page-size/selector drift becomes publicly observable only after the reader is also repaired. Authored source inference, not a collected stage experiment."
+          }
+        ]
+      },
+      "native_alternates": [
+        {
+          "report_id": "pagy-1-native-abf6f2503777b137d",
+          "source": "haiku-medium-heldout-reports/pagy-1.json#/reports/5",
+          "agent_id": "abf6f2503777b137d",
+          "agent_type": "maintain-rails:gem-upgrade-planner",
+          "spawn_depth": 3,
+          "text_sha256": "27fff02f6d133cc71093320b2c24ece0330e9a17767af4b5f55a1417118e061b",
+          "timestamp": "2026-10-13T07:31:06.268Z",
+          "source_file_sha256": "cfae8a09849449414e6d26f2c4cb5c7de065b22e1e4d587786d06bb44daf7fde",
+          "observed_model": "claude-haiku-5-5",
+          "observed_effort": "medium",
+          "PG1": {
+            "judgments": {
+              "impact": "supported",
+              "applicability": "supported",
+              "recommendation": "supported",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [
+                "A bare bump fails at boot.",
+                "the default page size is 20 instead of 10, `per_page` is ignored, `per_page=500` is not capped",
+                "Without the change, the list page raises `NoMethodError`."
+              ],
+              "applicability": [
+                "`config/initializers/pagy.rb:6-8`",
+                "`/home/user/workspace/repo/app/views/notes/index.html.erb:30` (`@pagy.items`)"
+              ],
+              "recommendation": [
+                "Set `limit = 10`, `limit_param = :per_page`, `limit_max = 50`.",
+                "Keep `require \"pagy/extras/overflow\"` and `overflow = :last_page`.",
+                "`@pagy.items` becomes `@pagy.limit`."
+              ],
+              "validation": [
+                "Candidate, full suite | 47 runs, 0 failures",
+                "The candidate on a real populated database, which the test fixtures do not fully cover."
+              ]
+            },
+            "reasons": {
+              "impact": "Complete boot/reader/default/URL/cap chain; ambiguous half-migration stage separately flagged.",
+              "applicability": "Exact application initializer/view.",
+              "recommendation": "Full mapped values, require/reader, overflow and coordinated release.",
+              "validation": "Authored suites/probes and proposed default test lack the complete public asymmetric request controls."
+            }
+          },
+          "PG2": {
+            "judgments": {
+              "impact": "supported",
+              "applicability": "supported",
+              "recommendation": "supported",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [
+                "`page=0`, `-1`, `two`, and blank all raise. On 8.6.3 they all show page 1."
+              ],
+              "applicability": [
+                "on the mechanically renamed copy, the existing `invalid pages show the first page` test errors"
+              ],
+              "recommendation": [
+                "def pagy_get_page(vars, **)\n    [super.to_i, 1].max\n  end",
+                "This matches 8.6.3 exactly, so it works on both versions."
+              ],
+              "validation": [
+                "Clamp override on 8.6.3 | 14 runs, 0 failures",
+                "Candidate (mechanical plus clamp override), notes tests | 14 runs, 0 failures"
+              ]
+            },
+            "reasons": {
+              "impact": "All four invalid inputs with baselinepageone comparison.",
+              "applicability": "Post-PG1 request-boundary failure.",
+              "recommendation": "Equivalent controller backend clamp compatible with both versions.",
+              "validation": "Authored both-version suites/probes lack complete invalid-content/filter/ownership/first-next-last-stale99 controls."
+            }
+          },
+          "counts": {
+            "actionable": 2,
+            "fully_specified_validation": 0
+          }
+        }
+      ],
+      "final": {
+        "source": "haiku-medium-heldout-settled/pagy-1.json#/messages/messageId=21",
+        "message_id": 21,
+        "timestamp": "2026-10-13T07:32:44.064Z",
+        "provenance": "Parent summary of two native designated plans; selected last native report a384903052b7936c8 is not reproduced in full.",
+        "PG1": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "partial",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "The naive bump fails at boot because `pagy/extras/items` no longer exists in 9.x.",
+              "The `:items*` keys in `config/initializers/pagy.rb` are silently ignored in 9.x, so they must become `:limit*`."
+            ],
+            "applicability": [
+              "`@pagy.items` in `app/views/notes/index.html.erb` must become `@pagy.limit`."
+            ],
+            "recommendation": [
+              "The fix is to require `pagy/extras/limit`.",
+              "The `:items*` keys in `config/initializers/pagy.rb` are silently ignored in 9.x, so they must become `:limit*`.",
+              "The Gemfile, lockfile, initializer, and view must ship together"
+            ],
+            "validation": [
+              "the first plan reports 47 runs on the full suite, and the second reports 46. I haven't reconciled that."
+            ]
+          },
+          "reasons": {
+            "impact": "Boot and ignored keys retained, but summary drops removed-reader rendering consequence and concrete default10-to20, per_page, cap and generated-link drift.",
+            "applicability": "Exact initializer and note-list accessor in the target lane.",
+            "recommendation": "Correct require/accessor and coupled release, but :items* to :limit* shorthand omits exact keys and preserved 10/:per_page/50 settings and overflow. Earlier complete recipe cannot fill final gaps.",
+            "validation": "Unreconciled authored suite totals, no complete asymmetric owned/filter-excluded/foreign request and Next-href matrix."
+          }
+        },
+        "PG2": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "9.x raises `VariableError` for blank, zero, negative, or nonnumeric `page` values, where 8.6.3 showed page 1."
+            ],
+            "applicability": [
+              "The existing test at `test/controllers/notes_controller_test.rb` catches this, so the controller must clamp `page` to at least 1."
+            ],
+            "recommendation": [
+              "The second passes `page: [params[:page].to_i, 1].max` into `pagy(@notes)`.",
+              "The clamp can ship on 8.6.3 first."
+            ],
+            "validation": [
+              "Both were tested, but I haven't compared them myself."
+            ]
+          },
+          "reasons": {
+            "impact": "All four invalid inputs and changed page-one behavior stated explicitly.",
+            "applicability": "Native notes controller and test tied to changed parsing, not per_page.",
+            "recommendation": "Concrete portable request-boundary clamp; accepts preserving documented behavior as default recommendation despite presenting a product-choice alternative.",
+            "validation": "Both-version authored checks claimed, but no complete PG1-prepared request comparison with membership, stale page99, filtered ownership and valid-navigation controls."
+          }
+        }
+      },
+      "returned_reports": [
+        {
+          "report_id": "pagy-1-first-visible-plan",
+          "source": "haiku-medium-heldout-settled/pagy-1.json#/messages/messageId=18",
+          "message_id": 18,
+          "timestamp": "2026-10-13T07:31:22.055Z",
+          "provenance": "Literal full native designated report abf6f2503777b137d plus parent commentary, despite misleading authored direct-investigation label.",
+          "PG1": {
+            "judgments": {
+              "impact": "supported",
+              "applicability": "supported",
+              "recommendation": "supported",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [
+                "A bare bump fails at boot.",
+                "the default page size is 20 instead of 10, `per_page` is ignored, `per_page=500` is not capped",
+                "Without the change, the list page raises `NoMethodError`.",
+                "Without it, generated links use `limit=`."
+              ],
+              "applicability": [
+                "`config/initializers/pagy.rb:6-8`. `DEFAULT[:items]`, `DEFAULT[:items_param]`, and `DEFAULT[:max_items]` are not read by 9.3.5",
+                "`@pagy.items` becomes `@pagy.limit`."
+              ],
+              "recommendation": [
+                "`DEFAULT[:limit] = 10`, `DEFAULT[:limit_param] = :per_page`, `DEFAULT[:limit_max] = 50`.",
+                "Keep `require \"pagy/extras/overflow\"` and `overflow = :last_page`.",
+                "`@pagy.items` becomes `@pagy.limit`."
+              ],
+              "validation": [
+                "Candidate, full suite | 47 runs, 0 failures",
+                "Adding the default-page-size test (F7 item 6) and confirming it fails on the half-migrated copy.",
+                "The candidate on a real populated database, which the test fixtures do not fully cover."
+              ]
+            },
+            "reasons": {
+              "impact": "Complete boot/accessor/drift chain, including wrong default, ignored parameter/cap and generated links. Ambiguous half-migration experiment stage is separately flagged rather than erasing correct source diagnoses.",
+              "applicability": "Exact native settings and rendering call; no unrelated dependency changes.",
+              "recommendation": "Complete limit migration and overflow/public parameter preservation in coordinated release. No filtering/ownership/order alteration recommended.",
+              "validation": "Authored suite/probe outcomes and proposed default check are partial. No exact owned asymmetric ordered positions, followed Next href, selection/range/filter/alias/empty/auth matrix."
+            }
+          },
+          "PG2": {
+            "judgments": {
+              "impact": "supported",
+              "applicability": "supported",
+              "recommendation": "supported",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [
+                "`page=0`, `-1`, `two`, and blank all raise. On 8.6.3 they all show page 1."
+              ],
+              "applicability": [
+                "on the mechanically renamed copy, the existing `invalid pages show the first page` test errors",
+                "`/home/user/workspace/repo/app/controllers/notes_controller.rb:18` (`pagy(@notes)`)"
+              ],
+              "recommendation": [
+                "def pagy_get_page(vars, **)\n    [super.to_i, 1].max\n  end",
+                "This matches 8.6.3 exactly, so it works on both versions. It is the preparatory change."
+              ],
+              "validation": [
+                "Clamp override on 8.6.3 | 14 runs, 0 failures",
+                "Candidate (mechanical plus clamp override), notes tests | 14 runs, 0 failures",
+                "A page past the end shows the last page on both versions (probe `page=9`)."
+              ]
+            },
+            "reasons": {
+              "impact": "All four changed invalid inputs with baseline comparison.",
+              "applicability": "Identifies masked invalid-page failure after configuration and reader repair.",
+              "recommendation": "Equivalent private controller normalization around backend parser valid on both recorded versions; no target-only rename claimed preparatory.",
+              "validation": "Both-version suite/probes and a positive overflow probe remain partial. No complete public page-one content comparisons with filtering/ownership and first/next/last/stale99 controls."
+            }
+          },
+          "counts": {
+            "actionable": 2,
+            "fully_specified_validation": 0
+          }
+        },
+        {
+          "report_id": "pagy-1-last-summary",
+          "message_id": 21,
+          "assessment_ref": "runs[0].final",
+          "counts": {
+            "actionable": 1,
+            "fully_specified_validation": 0
+          }
+        }
+      ],
+      "counts": {
+        "raw": {
+          "actionable": 2,
+          "fully_specified_validation": 0
+        },
+        "final": {
+          "actionable": 1,
+          "fully_specified_validation": 0
+        },
+        "returned_reports": [
+          {
+            "report_id": "pagy-1-first-visible-plan",
+            "actionable": 2,
+            "fully_specified_validation": 0
+          },
+          {
+            "report_id": "pagy-1-last-summary",
+            "actionable": 1,
+            "fully_specified_validation": 0
+          }
+        ]
+      },
+      "material_issues": [
+        {
+          "kind": "ambiguous_half_migration_stage",
+          "message_id": 18,
+          "quotes": [
+            "half-migrated copy that loads `limit` but keeps the old keys",
+            "the `per_page` select has no selected option"
+          ],
+          "reason": "A require-only repair with unchanged @pagy.items must fail rendering before silent selector drift is observable. Report also diagnoses the removed reader, but does not say this half copy repaired it. Do not credit this as a collected require-only drift experiment."
+        },
+        {
+          "kind": "preexisting_research_provenance",
+          "message_id": 18,
+          "quotes": [
+            "were already in that directory before I started. I did not create them and cannot verify their origin."
+          ],
+          "reason": "Authored use of preexisting changelog files with acknowledged unknown origin; source-confirmed selected findings remain valid, independent isolation/origin not established."
+        },
+        {
+          "kind": "overbroad_mixed_deploy_claim",
+          "message_id": 21,
+          "quotes": [
+            "because a mixed-version deploy crashes",
+            "Neither tested two live processes."
+          ],
+          "reason": "Mismatched code/gem is boot-unsafe; two internally consistent old/new releases are not automatically boot-incompatible. Final conflates partial deployment with a valid mixed fleet."
+        },
+        {
+          "kind": "delivery_loss",
+          "message_id": 21,
+          "quotes": [
+            "they must become `:limit*`."
+          ],
+          "reason": "Last summary loses exact PG1 values/keys, overflow and concrete drift details from both native 2/2 plans; final is 1/2. Second complete report graded independently as raw, not inherited by final."
+        },
+        {
+          "kind": "contradictory_authored_provenance",
+          "message_id": 21,
+          "quotes": [
+            "I do have the `Agent` tool, and I used it to launch the planner.",
+            "the second plan's work was done by an agent that wasn't the planner either."
+          ],
+          "reason": "Both complete authors are recorded maintain-rails:gem-upgrade-planner at depth3; parent fallback labels are false as agent-type attribution. Leaf inability to delegate further is not proof it is not a designated planner."
+        }
+      ],
+      "delivery": {
+        "skill_invoked": true,
+        "designated_planner_invoked": true,
+        "completed_designated_report": true,
+        "plan_before_edit_approval": true,
+        "last_delivery_loss": true,
+        "literal_raw_report_preserved": false,
+        "full_plan_timing_eligible": false,
+        "native_preservation": "Earlier alternate abf6f2503777b137d is a literal substring of message18. Selected raw a384903052b7936c8 is absent in full from every assistant delivery; message21 summarizes both, losing PG1 default10/per_page/cap50/overflow and experiment detail. Earlier alternate full delivery is replaced by lossy summary, so no successful full-plan time.",
+        "working_file_preservation": "Main message20 contains clean git status, HEAD 9938031 and unchanged Gemfile 8.6.3. No collected nested service/database cleanup evidence."
+      },
+      "workflow": {
+        "status": "designated_status_handbacks_then_two_completed_designated_reports_and_lossy_final",
+        "native_agent_count": 6,
+        "native_complete_reports": 2,
+        "native_status_only_handbacks": 5,
+        "retry_count": 2,
+        "retry_kind": "Resume first designated agent, then fresh foreground designated invocation",
+        "early_nonplan_message_ids": [
+          8,
+          13,
+          16,
+          17
+        ],
+        "last_nonplan_timestamp": "2026-10-13T07:26:27.219Z",
+        "early_idle_timestamp": null,
+        "quotes_message_id": 16,
+        "quotes": [
+          "The planner has now returned a status note four times",
+          "I've stopped retrying."
+        ],
+        "service_policy": "Experiments described in reports, not independently collected nested commands. No inferred service preservation."
+      },
+      "native_footer_usage": [
+        {
+          "message_id": 15,
+          "agent_id": "a7c0fefd1293c9872",
+          "reported_subagent_tokens": 41075,
+          "reported_tool_uses": 4,
+          "reported_duration_ms": 9493,
+          "status_only": true,
+          "completed_plan": false
+        }
+      ],
+      "limitations": [
+        "Nested suite/probe/service claims remain authored; only main clean state and pins directly visible.",
+        "Footer tokens are a status handback's reported usage, not total successful-plan cost."
+      ]
+    },
+    {
+      "run": 2,
+      "run_id": "pagy-2",
+      "thread": "T-01a13426-7ba8-74fd-bacd-80f3f08a9aa3",
+      "source_export_sha256": "8b946931fef986a748dc9957c253e2be5ea39ae2712b9853c9fc18cf2d05c2e0",
+      "request_sent_at": "2026-10-13T07:25:01.478Z",
+      "idle_at": "2026-10-13T07:31:00.589Z",
+      "wall_time_ms": 359111,
+      "successful_plan_wall_time_ms": null,
+      "raw": {
+        "report_id": "pagy-2-native-a47efcf0e780743fe",
+        "source": "haiku-medium-heldout-reports/pagy-2.json#/reports/3",
+        "agent_id": "a47efcf0e780743fe",
+        "agent_type": "maintain-rails:gem-upgrade-planner",
+        "spawn_depth": 3,
+        "timestamp": "2026-10-13T07:30:48.151Z",
+        "text_sha256": "21380ba47fa1cf32ddb1ef1242fc1fb598e3b3bfc10902dbbd553546c76a2535",
+        "source_file_sha256": "789690efc0da9d97df016edb487ab61f4612c33aa207757df1f533c339c9f549",
+        "observed_model": "claude-haiku-5-5",
+        "observed_effort": "medium",
+        "provenance": "Last native completed designated report, reduced to corrected final message17; authored own-plan disclaimer does not change recorded type.",
+        "PG1": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "raises `LoadError` at Rails boot, so every process fails before any pagination code runs.",
+              "Setting them is a silent no-op, so page size would silently fall to 20.",
+              "6 of 13 controller tests error with `ActionView::Template::Error: undefined method 'items' for an instance of Pagy`"
+            ],
+            "applicability": [
+              "`/home/user/workspace/repo/config/initializers/pagy.rb` line 2.",
+              "`/home/user/workspace/repo/app/views/notes/index.html.erb` line 30 (`options_for_select([5, 10, 25, 50], @pagy.items)`)."
+            ],
+            "recommendation": [
+              "replace the require with `require \"pagy/extras/limit\"`.",
+              "set `Pagy::DEFAULT[:limit] = 10`, `Pagy::DEFAULT[:limit_param] = :per_page`, `Pagy::DEFAULT[:limit_max] = 50`, and keep `Pagy::DEFAULT[:overflow] = :last_page`.",
+              "use `@pagy.limit` on 9.3.5."
+            ],
+            "validation": [
+              "13 runs, 42 assertions, 6 errors",
+              "Full `bin/rails test` and `bin/rails test:system` on the 9.3.5 copy with the complete required change set"
+            ]
+          },
+          "reasons": {
+            "impact": "Boot, removed-reader error and silent default20/per_page/cap/link vocabulary drift explicitly diagnosed.",
+            "applicability": "Exact application settings and accessor.",
+            "recommendation": "Complete coordinated10/per_page/50/overflow/reader repair.",
+            "validation": "Only committed and experimental initializer variants reported executed; complete repair/suites proposed. No full asymmetric public controls."
+          }
+        },
+        "PG2": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "`page=\"\"`, `\"0\"`, `\"-1\"`, and `\"two\"` raise `Pagy::VariableError` on 9.3.5.",
+              "On 8.6.3 these all show page 1.",
+              "In production this is a 500 for bad URLs."
+            ],
+            "applicability": [
+              "`NotesController#index` line 18 (`pagy(@notes)`)",
+              "The `overflow` extra rescues only `OverflowError`"
+            ],
+            "recommendation": [
+              "`@pagy, @notes = pagy(@notes, page: [params.fetch(:page, 1).to_i, 1].max)`",
+              "This is source-based for 8.6.3 and not yet executed in Rails."
+            ],
+            "validation": [
+              "Request tests for `page=0`, `page=-1`, `page=two`, `page=` (expect page 1)",
+              "Source-based on 8.6.3, not yet executed in Rails."
+            ]
+          },
+          "reasons": {
+            "impact": "Complete invalid-input 500 versus baselinepageone regression.",
+            "applicability": "Native request boundary; overflow not invalid-page handling.",
+            "recommendation": "Portable params.fetch/to_i/min1 clamp correctly selected with honest advance-patch testing gap.",
+            "validation": "Mixed experimental reader/page failures and proposed invalid requests are partial; lacks PG1-prepared full content/control matrix and executed baseline advance patch."
+          }
+        },
+        "counts": {
+          "actionable": 2,
+          "fully_specified_validation": 0
+        }
+      },
+      "native_alternates": [
+        {
+          "report_id": "pagy-2-native-abf84a4f3a772419e",
+          "source": "haiku-medium-heldout-reports/pagy-2.json#/reports/2",
+          "agent_id": "abf84a4f3a772419e",
+          "agent_type": "maintain-rails:gem-upgrade-planner",
+          "spawn_depth": 1,
+          "timestamp": "2026-10-13T07:27:32.870Z",
+          "text_sha256": "67faebd542f8b59403787598450a6756d1cc5ed38201b24f5a2669277e2e9520",
+          "source_file_sha256": "9b327bed544b0cc69045e1b31ee4fde70e0ef0979c7a8734626edd0875343a06",
+          "observed_model": "claude-haiku-5-5",
+          "observed_effort": "medium",
+          "PG1": {
+            "judgments": {
+              "impact": "partial",
+              "applicability": "supported",
+              "recommendation": "supported",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [
+                "This path is expected to disappear, which would fail at boot.",
+                "`per_page` URLs could stop working and the page size could fall back to the gem default.",
+                "Whether 9.x ignores unknown keys silently is unverified."
+              ],
+              "applicability": [
+                "`config/initializers/pagy.rb:6-8` sets `Pagy::DEFAULT[:items]`, `[:items_param]`, and `[:max_items]`.",
+                "`app/views/notes/index.html.erb:30` calls `@pagy.items`"
+              ],
+              "recommendation": [
+                "require `pagy/extras/limit`",
+                "keeping `per_page` as the URL parameter and 10 and 50 as the defaults and cap.",
+                "`@pagy.items` becomes `@pagy.limit`."
+              ],
+              "validation": [
+                "per_page=5 is honored and the select is marked selected",
+                "per_page=500 is capped at 50",
+                "Manually request `/notes?per_page=25&page=2` and `/journal?per_page=5`"
+              ]
+            },
+            "reasons": {
+              "impact": "Expected boot/URL risk, not complete reader-render/default20/cap drift diagnosis.",
+              "applicability": "Exact application settings and accessor.",
+              "recommendation": "Complete renamed defaults/parameter/cap/overflow/reader, with acknowledged inversion caveat.",
+              "validation": "Proposed size/select/cap/link tests lack full asymmetric content/public control matrix. Incorrect default-test assurance recorded separately."
+            }
+          },
+          "PG2": {
+            "judgments": {
+              "impact": "missing",
+              "applicability": "missing",
+              "recommendation": "incorrect",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [],
+              "applicability": [],
+              "recommendation": [
+                "No changes are needed in `app/controllers/notes_controller.rb` or `app/helpers/application_helper.rb` unless the 9.3.5 source changes the `pagy()` or helper signatures."
+              ],
+              "validation": [
+                "the invalid-value test at `:70-84` uses `page` values only",
+                "Run `bin/rails test test/controllers/notes_controller_test.rb` on the copy."
+              ]
+            },
+            "reasons": {
+              "impact": "No invalid-page target regression identified.",
+              "applicability": "No post-PG1 removed-clamp applicability.",
+              "recommendation": "Unsafe no-controller-change assurance misses necessary behavior repair.",
+              "validation": "Existing test/suite reference without PG2 isolation/content/control matrix."
+            }
+          },
+          "counts": {
+            "actionable": 0,
+            "fully_specified_validation": 0
+          }
+        }
+      ],
+      "final": {
+        "source": "haiku-medium-heldout-settled/pagy-2.json#/messages/messageId=17",
+        "message_id": 17,
+        "timestamp": "2026-10-13T07:31:00.453Z",
+        "provenance": "Parent corrected summary of native designated report a47efcf0e780743fe, not full handback. Parent's not-planner label is contradicted by recorded type.",
+        "PG1": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "Boot fails.",
+              "The `items`, `items_param`, and `max_items` defaults are ignored in 9.x. Without replacements, page size silently falls to 20 and `per_page` is ignored.",
+              "With a corrected initializer, 6 of 13 controller tests still error on this."
+            ],
+            "applicability": [
+              "`config/initializers/pagy.rb:2` requires `pagy/extras/items`, which no longer exists.",
+              "`app/views/notes/index.html.erb:30` calls `@pagy.items`, which doesn't exist in 9.x."
+            ],
+            "recommendation": [
+              "Set `limit: 10`, `limit_param: :per_page` (keeps existing URLs and bookmarks working), `limit_max: 50`, and `overflow: :last_page`.",
+              "require `pagy/extras/limit` and `pagy/extras/overflow`.",
+              "`@pagy.items` becomes `@pagy.limit`."
+            ],
+            "validation": [
+              "The logs show `LoadError: cannot load such file -- pagy/extras/items`",
+              "The 9.3.5 controller tests with the corrected config have not been run yet."
+            ]
+          },
+          "reasons": {
+            "impact": "Boot, post-initializer reader errors and ignored old settings/default20/per_page drift explicitly linked. Ignored max_items also identifies loss of configured cap; no requirement to state target fallback100 to earn impact.",
+            "applicability": "Exact committed require, default keys and view call. Unlike earlier report, target effects stated rather than merely suspected.",
+            "recommendation": "Complete explicit 10/per_page/50/overflow/reader migration with version bump. No authorization, order or filter change recommended.",
+            "validation": "Main spot-check confirms removed extra and boot-error logs only. Report candidly lacks corrected-config controller run; no full asymmetric public migration controls."
+          }
+        },
+        "PG2": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "`page` values of `0`, `-1`, `two`, or blank raise `Pagy::VariableError` instead of showing page 1. In production that's a 500 for bad URLs."
+            ],
+            "applicability": [
+              "`ARCHITECTURE.md:17-23` would become false.",
+              "`notes_controller.rb:18`: clamp the page before calling pagy"
+            ],
+            "recommendation": [
+              "`pagy(@notes, page: [params.fetch(:page, 1).to_i, 1].max)`. This also works on 8.6.3."
+            ],
+            "validation": [
+              "Only the \"committed\" and \"experimental\" variants were executed.",
+              "The 9.3.5 controller tests with the corrected config have not been run yet."
+            ]
+          },
+          "reasons": {
+            "impact": "Complete four invalid input regression and user-visible HTTP500 versus pageone.",
+            "applicability": "Request boundary and current documented controller behavior; not baseline malformed page-size defects.",
+            "recommendation": "Explicit params.fetch equivalent portable clamp, after complete PG1 changes.",
+            "validation": "Reported unpatched experimental failures and corrected-run gap are partial; no complete PG1-prepared invalid-content comparisons, valid/stale/ownership controls or baseline advance-patch check."
+          }
+        }
+      },
+      "returned_reports": [
+        {
+          "report_id": "pagy-2-earlier-source-only-plan",
+          "source": "haiku-medium-heldout-settled/pagy-2.json#/messages/messageId=14",
+          "message_id": 14,
+          "timestamp": "2026-10-13T07:27:46.658Z",
+          "provenance": "Full native designated report abf84a4f3a772419e delivered with two HTML entity escapes and commentary. Source-only own-plan label does not change recorded agent type.",
+          "PG1": {
+            "judgments": {
+              "impact": "partial",
+              "applicability": "supported",
+              "recommendation": "supported",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [
+                "This path is expected to disappear, which would fail at boot.",
+                "`per_page` URLs could stop working and the page size could fall back to the gem default.",
+                "Whether 9.x ignores unknown keys silently is unverified."
+              ],
+              "applicability": [
+                "`config/initializers/pagy.rb:6-8` sets `Pagy::DEFAULT[:items]`, `[:items_param]`, and `[:max_items]`.",
+                "`app/views/notes/index.html.erb:30` calls `@pagy.items`"
+              ],
+              "recommendation": [
+                "require `pagy/extras/limit`",
+                "keeping `per_page` as the URL parameter and 10 and 50 as the defaults and cap.",
+                "`@pagy.items` becomes `@pagy.limit`."
+              ],
+              "validation": [
+                "per_page=5 is honored and the select is marked selected",
+                "per_page=500 is capped at 50",
+                "Manually request `/notes?per_page=25&amp;page=2` and `/journal?per_page=5`"
+              ]
+            },
+            "reasons": {
+              "impact": "Expected boot/URL drift rather than full target diagnosis, no explicit post-require view rendering failure or observed ignored default10-to20/cap behavior.",
+              "applicability": "Exact settings and accessor connected to changelog rename.",
+              "recommendation": "Valid complete rename with explicit preserved10/per_page/50, kept overflow described elsewhere. Unverified inversion caveat is not an incompatible selected repair.",
+              "validation": "Useful proposed size/select/cap/info/link checks, but no full asymmetric membership, followed Next, all filter/auth/alias/empty controls. No checks claimed executed."
+            }
+          },
+          "PG2": {
+            "judgments": {
+              "impact": "missing",
+              "applicability": "missing",
+              "recommendation": "incorrect",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [],
+              "applicability": [],
+              "recommendation": [
+                "No changes are needed in `app/controllers/notes_controller.rb` or `app/helpers/application_helper.rb` unless the 9.3.5 source changes the `pagy()` or helper signatures."
+              ],
+              "validation": [
+                "the invalid-value test at `:70-84` uses `page` values only",
+                "Run `bin/rails test test/controllers/notes_controller_test.rb` on the copy."
+              ]
+            },
+            "reasons": {
+              "impact": "No invalid-page target500 versus baselinepageone finding; per_page docs speculation is a different baseline concern.",
+              "applicability": "No target removed-clamp diagnosis or applicability after PG1 repair.",
+              "recommendation": "Express no-controller-change assurance misses required request normalization, contingent only on API signature rather than behavior.",
+              "validation": "Recognizes existing invalid-page test and proposes suite; does not specify PG2 isolation/content matrix or baseline preparatory repair."
+            }
+          },
+          "counts": {
+            "actionable": 0,
+            "fully_specified_validation": 0
+          }
+        },
+        {
+          "report_id": "pagy-2-corrected-final-summary",
+          "message_id": 17,
+          "assessment_ref": "runs[1].final",
+          "counts": {
+            "actionable": 2,
+            "fully_specified_validation": 0
+          }
+        }
+      ],
+      "counts": {
+        "raw": {
+          "actionable": 2,
+          "fully_specified_validation": 0
+        },
+        "final": {
+          "actionable": 2,
+          "fully_specified_validation": 0
+        },
+        "returned_reports": [
+          {
+            "report_id": "pagy-2-earlier-source-only-plan",
+            "actionable": 0,
+            "fully_specified_validation": 0
+          },
+          {
+            "report_id": "pagy-2-corrected-final-summary",
+            "actionable": 2,
+            "fully_specified_validation": 0
+          }
+        ]
+      },
+      "material_issues": [
+        {
+          "kind": "missed_invalid_page_repair_in_earlier_plan",
+          "message_id": 14,
+          "quotes": [
+            "No changes are needed in `app/controllers/notes_controller.rb`"
+          ],
+          "reason": "Unsafe controller omission in earlier delivery; corrected by last response, not silently erased."
+        },
+        {
+          "kind": "incorrect_default_size_test_assurance",
+          "message_id": 14,
+          "quotes": [
+            "The default page size of 10 is covered by the test at `:70-84` and the test at `:72-75`."
+          ],
+          "reason": "Named invalid-page tests do not establish dedicated no-per_page default-size coverage; earlier report overstates ability of existing suite to discriminate silent default drift."
+        },
+        {
+          "kind": "uncorroborated_changelog_inversion",
+          "message_id": 14,
+          "quotes": [
+            "which the changelog describes as \"now inverted\""
+          ],
+          "reason": "Confused inversion wording, acknowledged unverified in final. Exact limit_max50 recipe is valid; no invented semantic inversion credited."
+        },
+        {
+          "kind": "contradictory_boot_novelty",
+          "message_id": 17,
+          "quotes": [
+            "it changes my earlier plan in one important way: upgrading the gem alone will break the app at boot."
+          ],
+          "reason": "Earlier plan already predicts boot failure. Real improvement is definitive source/error evidence and PG2 repair, not newly recognizing boot risk."
+        },
+        {
+          "kind": "incorrect_authored_fallback_type",
+          "message_id": 17,
+          "quotes": [
+            "I did delegate to `maintain-rails:gem-upgrade-planner` earlier; that agent returned only a status note, so this plan is not its output."
+          ],
+          "reason": "Completed source-only and later experimental authors are recorded designated planners at depth1 and3, not general-purpose fallback authors. Status handbacks did not preclude later completion."
+        }
+      ],
+      "delivery": {
+        "skill_invoked": true,
+        "designated_planner_invoked": true,
+        "completed_designated_report": true,
+        "plan_before_edit_approval": true,
+        "last_delivery_loss": true,
+        "last_delivery_improves_earlier_grade": true,
+        "literal_raw_report_preserved": false,
+        "full_plan_timing_eligible": false,
+        "native_preservation": "Earlier source-only alternate is preserved after lossless > and & entity decoding in message14 (not literally). Last completed raw a47efcf0e780743fe is never delivered in full; message17 retains both actionable recipes but drops the full findings, environment, rollout and check matrix. Equal selected counts do not mean literal or full-plan preservation.",
+        "working_file_preservation": "Main message16 shows clean status. It lists original experiment log files and greps LoadError/no-items extra; no corrected target test run independently collected."
+      },
+      "workflow": {
+        "status": "designated_status_handbacks_then_source_only_and_experimental_designated_reports_summary_final",
+        "native_agent_count": 3,
+        "native_complete_reports": 2,
+        "native_status_only_handbacks": 2,
+        "retry_count": 1,
+        "early_nonplan_message_ids": [
+          8,
+          13
+        ],
+        "last_nonplan_timestamp": "2026-10-13T07:26:04.865Z",
+        "early_idle_timestamp": null
+      },
+      "native_footer_usage": [],
+      "limitations": [
+        "Main LoadError/extra-list spot-check confirms PG1 boot path only, not repaired app behavior or the report's other experiments.",
+        "Native model fields do not establish actual reasoning token budget or provider routing."
+      ]
+    },
+    {
+      "run": 3,
+      "run_id": "pagy-3",
+      "thread": "T-01a13426-84b8-77f9-a1cb-8f6b9d092ac1",
+      "source_export_sha256": "62d4c7e427a97fe3a144a12c23e92bdd80486c8307f23aef5eaa6328bff08702",
+      "request_sent_at": "2026-10-13T07:25:03.750Z",
+      "idle_at": "2026-10-13T07:26:54.184Z",
+      "wall_time_ms": 110434,
+      "successful_plan_wall_time_ms": null,
+      "raw": null,
+      "raw_absence": {
+        "reason": "No skill or planner invocation. Parent implemented the upgrade directly in the working application. Implementation trace is not a raw completed plan.",
+        "completed_report_author_type": "main implementation agent"
+      },
+      "final": {
+        "source": "haiku-medium-heldout-settled/pagy-3.json#/messages/messageId=36",
+        "message_id": 36,
+        "timestamp": "2026-10-13T07:26:54.077Z",
+        "provenance": "Delivered implementation summary, graded as written rather than supplemented with its preceding diff or commands.",
+        "PG1": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "partial",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "the `pagy/extras/items` extra no longer exists, so the app couldn't boot."
+            ],
+            "applicability": [
+              "**Initializer** (`config/initializers/pagy.rb`)",
+              "**View** (`app/views/notes/index.html.erb`): `@pagy.items` became `@pagy.limit`."
+            ],
+            "recommendation": [
+              "It now uses `pagy/extras/limit`, with `limit`, `limit_param: :per_page`, and `limit_max: 50`.",
+              "The `per_page` URL parameter and the cap of 50 are unchanged."
+            ],
+            "validation": [
+              "Unit and controller tests pass (46 runs, 0 failures); the browser suite has no tests, so it didn't run anything.",
+              "`bin/rails zeitwerk:check` passes."
+            ]
+          },
+          "reasons": {
+            "impact": "Boot failure explicit; removed-reader render failure and silent default/parameter/cap/link drift omitted.",
+            "applicability": "Correct concrete initializer/view call sites.",
+            "recommendation": "Correct require/reader/parameter/cap, but final omits limit10 and overflow preservation. Actual diff implements them; that does not supply missing final words.",
+            "validation": "Main actual target suite/boot outputs visible, but no complete asymmetric dataset/public navigation/filter/auth contract checks. Zero system tests honestly disclosed, not browser coverage."
+          }
+        },
+        "PG2": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "partial",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "Pagy 9 raises `VariableError` on `page=0`, while the app's documented behavior is that blank, zero, negative, or nonnumeric pages show the first page."
+            ],
+            "applicability": [
+              "**Controller** (`app/controllers/notes_controller.rb`)"
+            ],
+            "recommendation": [
+              "I clamp the page in the controller, which keeps that rule at the HTTP boundary."
+            ],
+            "validation": [
+              "Unit and controller tests pass (46 runs, 0 failures)"
+            ]
+          },
+          "reasons": {
+            "impact": "Changed invalid zero and full documented invalid-input pageone contract identified.",
+            "applicability": "Correct native controller HTTP boundary, not page-size defect.",
+            "recommendation": "Final says it clamps but provides no clamp expression or explicit input conversion/minimum rule. Correct expression in message31/diff35 is recorded separately, not inherited.",
+            "validation": "Main real repaired-target suite passes after observed PG1-prepared failure. No baseline advance-patch run or full invalid-content/navigation/filter/ownership control matrix."
+          }
+        }
+      },
+      "returned_reports": [
+        {
+          "report_id": "pagy-3-implementation-summary",
+          "message_id": 36,
+          "assessment_ref": "runs[2].final",
+          "counts": {
+            "actionable": 0,
+            "fully_specified_validation": 0
+          }
+        }
+      ],
+      "counts": {
+        "raw": null,
+        "final": {
+          "actionable": 0,
+          "fully_specified_validation": 0
+        },
+        "returned_reports": [
+          {
+            "report_id": "pagy-3-implementation-summary",
+            "actionable": 0,
+            "fully_specified_validation": 0
+          }
+        ]
+      },
+      "material_issues": [
+        {
+          "kind": "plan_only_workflow_violation",
+          "message_id": 6,
+          "quotes": [
+            "I'll bump the pin and update the lockfile."
+          ],
+          "reason": "No skill/planner invocation, no plan-before-edit approval. Direct changes to working Gemfile/lock, initializer, view, controller and two docs; not an eligible successful-plan timing sample."
+        },
+        {
+          "kind": "implementation_detail_not_delivered",
+          "message_id": 36,
+          "quotes": [
+            "with `limit`, `limit_param: :per_page`, and `limit_max: 50`",
+            "I clamp the page in the controller"
+          ],
+          "reason": "Correct literal limit10/overflow and controller clamp are in recorded implementation diff, not final summary; both families' final recommendations partial under independent-delivery grading."
+        }
+      ],
+      "main_trace_evidence": [
+        {
+          "message_id": 7,
+          "kind": "real_bundle_update",
+          "exact_literals": [
+            "Fetching pagy 9.3.5 (was 8.6.3)",
+            "Bundle updated!",
+            "178:    pagy (9.3.5)",
+            "301:  pagy (= 9.3.5)"
+          ]
+        },
+        {
+          "message_id": 17,
+          "kind": "bare_target_boot_failure",
+          "exact_literals": [
+            "cannot load such file -- pagy/extras/items (LoadError)"
+          ]
+        },
+        {
+          "message_id": 25,
+          "kind": "PG1_repaired_target_PG2_failure",
+          "exact_literals": [
+            "All is good!",
+            "Pagy::VariableError: expected :page >= 1; got 0",
+            "46 runs, 305 assertions, 0 failures, 1 errors, 0 skips"
+          ]
+        },
+        {
+          "message_id": 31,
+          "kind": "target_clamp_and_passing_suite",
+          "exact_literals": [
+            "18:    @pagy, @notes = pagy(@notes, page: [params[:page].to_i, 1].max)",
+            "46 runs, 325 assertions, 0 failures, 0 errors, 0 skips"
+          ]
+        },
+        {
+          "message_id": 33,
+          "kind": "empty_system_suite",
+          "exact_literals": [
+            "0 runs, 0 assertions, 0 failures, 0 errors, 0 skips"
+          ]
+        },
+        {
+          "message_id": 35,
+          "kind": "actual_implementation_diff",
+          "exact_literals": [
+            "+Pagy::DEFAULT[:limit] = 10",
+            "+Pagy::DEFAULT[:limit_param] = :per_page",
+            "+Pagy::DEFAULT[:limit_max] = 50",
+            " Pagy::DEFAULT[:overflow] = :last_page",
+            " M app/controllers/notes_controller.rb",
+            " M config/initializers/pagy.rb"
+          ],
+          "interpretation": "Actual implementation has the complete selected repair. This is separate evidence about changed application, not a raw plan or extra final quote credit."
+        }
+      ],
+      "delivery": {
+        "skill_invoked": false,
+        "designated_planner_invoked": false,
+        "completed_designated_report": false,
+        "plan_before_edit_approval": false,
+        "last_delivery_loss": "Detailed implementation trace reduced to incomplete summary; no earlier substantive delivered plan",
+        "literal_raw_report_preserved": false,
+        "working_file_preservation": "Violated: seven tracked application files changed, final diff/status directly observed. Nothing committed per final; no commit command visible."
+      },
+      "workflow": {
+        "status": "implemented_without_skill_or_planner_in_plan_only_benchmark",
+        "retry_count": 0,
+        "application_files_changed": [
+          "Gemfile",
+          "Gemfile.lock",
+          "config/initializers/pagy.rb",
+          "app/views/notes/index.html.erb",
+          "app/controllers/notes_controller.rb",
+          "ARCHITECTURE.md",
+          "docs/guides/controllers.md"
+        ],
+        "main_application_commands_observed": true,
+        "no_assessor_experiments": true
+      },
+      "native_footer_usage": [],
+      "limitations": [
+        "Native audit confirms zero agents and root claude-haiku-5-5/medium; no provider-routing or actual reasoning-budget audit.",
+        "Main target tests/boot/diff are visible, unlike authored nested experiments in other runs. They still do not constitute complete held-out validation.",
+        "No baseline comparison or browser coverage independently observed in this original run.",
+        "Implemented repair quality does not repair the plan-only workflow violation or final-delivery omissions."
+      ]
+    },
+    {
+      "run": 4,
+      "run_id": "pagy-4",
+      "thread": "T-01a13426-8eac-7429-8e43-5bc5029f1a84",
+      "source_export_sha256": "bd08d5576f6376b514803a2b15a2634785c8d7defccfd2407ff6546e1f971d95",
+      "request_sent_at": "2026-10-13T07:25:09.375Z",
+      "idle_at": "2026-10-13T07:30:46.473Z",
+      "wall_time_ms": 337098,
+      "successful_plan_wall_time_ms": 337098,
+      "raw": {
+        "report_id": "pagy-4-native-ace4d53a246c2c089",
+        "source": "haiku-medium-heldout-reports/pagy-4.json#/entries/25",
+        "agent_id": "ace4d53a246c2c089",
+        "agent_type": "maintain-rails:gem-upgrade-planner",
+        "spawn_depth": 1,
+        "timestamp": "2026-10-13T07:30:30.604Z",
+        "text_sha256": "b184f3941059b118ee07cac775ab7aeccd1320015d831b8913d4fb368a05cce5",
+        "source_file_sha256": "f50669cb94daec3f8f9df6e6caf41fb4406b863d934a5b2722430a423d4b9f02",
+        "observed_model": "claude-haiku-5-5",
+        "observed_effort": "medium",
+        "provenance": "Single completed native designated report, delivered in full in message10 with HTML entity escaping and appended commentary.",
+        "PG1": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "The current initializer therefore raises `LoadError` at boot.",
+              "the default page size, the `per_page` param name, and the 50-cap would all fall back.",
+              "The view at `index.html.erb:30` raises `undefined method 'items'`."
+            ],
+            "applicability": [
+              "`config/initializers/pagy.rb:6-9`",
+              "`limit` (core default 20), `limit_param` (`:limit`), and `limit_max` (100)"
+            ],
+            "recommendation": [
+              "require \"pagy/extras/limit\"\n  require \"pagy/extras/overflow\"\n  Pagy::DEFAULT[:limit] = 10\n  Pagy::DEFAULT[:limit_param] = :per_page\n  Pagy::DEFAULT[:limit_max] = 50\n  Pagy::DEFAULT[:overflow] = :last_page",
+              "Replacement: `@pagy.limit`.",
+              "Next and prev links keep `per_page` as before."
+            ],
+            "validation": [
+              "`pagy9-initonly` | Initializer ported (F2) only | 46 runs, 274 assertions, 7 errors",
+              "`pagy9-port-clamp` | 9.3.5 with ported initializer, view, and clamp | 46 runs, 325 assertions, 0 failures, 0 errors"
+            ]
+          },
+          "reasons": {
+            "impact": "Complete boot/reader/ignored-config drift chain.",
+            "applicability": "Native initializer/view with staged masking correctly distinguished.",
+            "recommendation": "Complete coordinated10/per_page/50/overflow/reader recipe retaining filtered ordered relation.",
+            "validation": "Authored staged suites, not complete asymmetric content/Next/filter/alias/empty/auth controls; browser proposed."
+          }
+        },
+        "PG2": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "Invalid page parsing regresses to HTTP 500",
+              "Affected inputs: `\"\"`, `\"0\"`, `\"-1\"`, `\"two\"`."
+            ],
+            "applicability": [
+              "`VariableError` is not an `OverflowError`, so the `:last_page` overflow handler does not catch it.",
+              "`pagy9-initonly` and `pagy9-port` both fail `invalid pages show the first page`"
+            ],
+            "recommendation": [
+              "`@pagy, @notes = pagy(@notes, page: [params[:page].to_i, 1].max)`.",
+              "Land this on 8.6.3 first."
+            ],
+            "validation": [
+              "`baseline-clamp` | 8.6.3 with explicit page clamp (F4) | 46 runs, 325 assertions, 0 failures, 0 errors",
+              "`pagy9-port` | Initializer and view ported | 46 runs, 305 assertions, 1 error"
+            ]
+          },
+          "reasons": {
+            "impact": "Four invalid-page inputs and HTTP500, distinguished from overflow.",
+            "applicability": "PG1-prepared variant isolates native parser change.",
+            "recommendation": "Portable public-call clamp and valid baseline advance patch.",
+            "validation": "Both-version authored suites remain partial without full content/filter/ownership/valid-navigation/stale99 controls."
+          }
+        },
+        "counts": {
+          "actionable": 2,
+          "fully_specified_validation": 0
+        }
+      },
+      "native_alternates": [],
+      "final": {
+        "source": "haiku-medium-heldout-settled/pagy-4.json#/messages/messageId=10",
+        "message_id": 10,
+        "timestamp": "2026-10-13T07:30:46.303Z",
+        "provenance": "Complete designated native ace4d53a246c2c089 report with three > entity escapes and appended parent commentary; lossless full delivery, not literal byte preservation.",
+        "PG1": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "The current initializer therefore raises `LoadError` at boot.",
+              "the default page size, the `per_page` param name, and the 50-cap would all fall back.",
+              "The view at `index.html.erb:30` raises `undefined method 'items'`."
+            ],
+            "applicability": [
+              "`limit` (core default 20), `limit_param` (`:limit`), and `limit_max` (100)",
+              "The app's `items`, `items_param`, and `max_items` settings are ignored"
+            ],
+            "recommendation": [
+              "require \"pagy/extras/limit\"\n  require \"pagy/extras/overflow\"\n  Pagy::DEFAULT[:limit] = 10\n  Pagy::DEFAULT[:limit_param] = :per_page\n  Pagy::DEFAULT[:limit_max] = 50\n  Pagy::DEFAULT[:overflow] = :last_page",
+              "Replacement: `@pagy.limit`.",
+              "Next and prev links keep `per_page` as before."
+            ],
+            "validation": [
+              "`pagy9-initonly` | Initializer ported (F2) only | 46 runs, 274 assertions, 7 errors",
+              "`pagy9-port-clamp` | 9.3.5 with ported initializer, view, and clamp | 46 runs, 325 assertions, 0 failures, 0 errors",
+              "A browser/system test (`bin/rails test:system`) for the notes filter form and per-page select."
+            ]
+          },
+          "reasons": {
+            "impact": "Full boot/reader/ignored-config chain with target defaults and public URL consequences.",
+            "applicability": "Exact native initializer/reader/settings with complete staged distinction. Does not confuse require-only failure with silent drift.",
+            "recommendation": "Exact coordinated limit10/per_page/50/accessor/overflow recipe, kept filtered ordered relation and no owner-scope alterations.",
+            "validation": "Authored staged suites useful but no complete asymmetric owned/filter-excluded/foreign dataset, exact positions/actual Next href/default25/cap/filter/alias/empty/auth request controls. Browser remains proposed."
+          }
+        },
+        "PG2": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "Invalid page parsing regresses to HTTP 500",
+              "Affected inputs: `\"\"`, `\"0\"`, `\"-1\"`, `\"two\"`."
+            ],
+            "applicability": [
+              "`VariableError` is not an `OverflowError`, so the `:last_page` overflow handler does not catch it.",
+              "`pagy9-initonly` and `pagy9-port` both fail `invalid pages show the first page`"
+            ],
+            "recommendation": [
+              "`@pagy, @notes = pagy(@notes, page: [params[:page].to_i, 1].max)`.",
+              "Land this on 8.6.3 first."
+            ],
+            "validation": [
+              "`baseline-clamp` | 8.6.3 with explicit page clamp (F4) | 46 runs, 325 assertions, 0 failures, 0 errors",
+              "`pagy9-port` | Initializer and view ported | 46 runs, 305 assertions, 1 error"
+            ]
+          },
+          "reasons": {
+            "impact": "Complete invalid-input regression and correct distinction from positive-page overflow.",
+            "applicability": "Changed native parser with PG1-prepared variant demonstrated in authored report.",
+            "recommendation": "Concrete portable public-call clamp and correct advance deployment gate.",
+            "validation": "Authored baseline-clamp/repaired-target suites specify prerequisites and four inputs, but no full invalid-content comparison with first/next/last/stale99 and filtering/ownership. No independently collected nested test logs."
+          }
+        }
+      },
+      "returned_reports": [
+        {
+          "report_id": "pagy-4-full-visible-plan",
+          "message_id": 10,
+          "assessment_ref": "runs[3].final",
+          "counts": {
+            "actionable": 2,
+            "fully_specified_validation": 0
+          }
+        }
+      ],
+      "counts": {
+        "raw": {
+          "actionable": 2,
+          "fully_specified_validation": 0
+        },
+        "final": {
+          "actionable": 2,
+          "fully_specified_validation": 0
+        },
+        "returned_reports": [
+          {
+            "report_id": "pagy-4-full-visible-plan",
+            "actionable": 2,
+            "fully_specified_validation": 0
+          }
+        ]
+      },
+      "extra_findings": [
+        {
+          "risk": "malformed_page_size_not_new",
+          "message_id": 10,
+          "judgment": "supported",
+          "quotes": [
+            "`per_page` values `abc`, `0`, and `-5` raises `Pagy::VariableError` on both 8.6.3 and the 9.3.5 clamp variant."
+          ],
+          "reason": "Correctly separates baseline limitation from selected invalid-page regression."
+        },
+        {
+          "risk": "stateless_rollout",
+          "message_id": 10,
+          "judgment": "supported",
+          "quotes": [
+            "Pagy is stateless. It writes no DB rows, job arguments, cache keys, or Sidekiq payloads."
+          ],
+          "reason": "No data migration or queued payload migration justified; deployment URL/code-gem compatibility still needs validation."
+        }
+      ],
+      "material_issues": [
+        {
+          "kind": "incorrect_initial_lock_attribution",
+          "message_id": 6,
+          "quotes_in_tool_input": [
+            "at line 301 (of another gem)"
+          ],
+          "reason": "Parent briefing mislabels app DEPENDENCIES entry; final explicitly corrects it, no bad dependency recommendation retained."
+        },
+        {
+          "kind": "unclear_isolation_claim",
+          "message_id": 10,
+          "quotes": [
+            "Each copy has its own Postgres cluster on `127.0.0.1:55432` (data at `/tmp/exp/pgdata`, log at `/tmp/exp/pg.log`), database `margin_notes_test`"
+          ],
+          "reason": "Same endpoint/data/database path cannot by itself establish simultaneous per-copy clusters. Sequential reuse could be isolated, but scheduling/cleanup uncollected; no contamination asserted."
+        },
+        {
+          "kind": "overbroad_mixed_html_assurance",
+          "message_id": 10,
+          "quotes": [
+            "both return the same HTML structure",
+            "No real multi-server deploy was simulated."
+          ],
+          "reason": "Representative authored suite/source analysis does not establish all mixed-release HTML/URL behavior. Correct partial code/gem mismatch warning remains distinct."
+        },
+        {
+          "kind": "unverified_target_reconfirmation_gate",
+          "message_id": 10,
+          "quotes": [
+            "Do you want 9.3.5 specifically, or a newer release?"
+          ],
+          "reason": "Explicit original request already names target. Asking optional reconfirmation after delivering plan is not a delivery gate, but upstream43.x claim remains unverified and does not justify a different lane."
+        }
+      ],
+      "delivery": {
+        "skill_invoked": true,
+        "designated_planner_invoked": true,
+        "completed_designated_report": true,
+        "plan_before_edit_approval": true,
+        "last_delivery_loss": false,
+        "literal_raw_report_preserved": false,
+        "full_report_preserved_after_entity_decoding": true,
+        "full_plan_timing_eligible": true,
+        "native_preservation": "Native text is not a literal substring because three > characters became &gt;. After HTML entity decoding, the entire native report is a substring of message10; only leading newline and appended commentary are additional. No substantive losses and no later summary replacement. Request-to-settled-idle337098ms; native completion07:30:30.604Z, delivery07:30:46.303Z.",
+        "working_file_preservation": "Only main version grep collected; clean repo and disposable-copy isolation asserted in report, no independent main post-plan status."
+      },
+      "workflow": {
+        "status": "background_designated_report_complete_lossless_full_final_delivery",
+        "native_agent_count": 1,
+        "native_complete_reports": 1,
+        "native_status_only_handbacks": 25,
+        "native_status_classification_note": "25 intermediate narration text records from this same agent, not25 completed plans or25 separate agent instances.",
+        "retry_count": 0,
+        "early_nonplan_message_ids": [
+          8
+        ],
+        "last_nonplan_timestamp": "2026-10-13T07:26:52.025Z",
+        "early_idle_timestamp": null,
+        "irrelevant_tool_result_message_id": 9,
+        "irrelevant_tool_result": "Tool discovery listing, not application validation or completed report."
+      },
+      "native_footer_usage": [],
+      "limitations": [
+        "Nested tests, fetching/upstream sources, isolation and clean working state are authored claims, not separately collected commands.",
+        "Native transcript model/effort fields do not establish provider routing or actual reasoning-budget use."
+      ]
+    },
+    {
+      "run": 5,
+      "run_id": "pagy-5",
+      "thread": "T-01a13426-aa78-7758-b6cf-800dd6d8aafc",
+      "source_export_sha256": "dce3220a397e0e60604c63960e1dfb16200339a4794e2f7d3c9f85c9419fa1c7",
+      "request_sent_at": "2026-10-13T07:25:13.009Z",
+      "idle_at": "2026-10-13T07:31:49.361Z",
+      "wall_time_ms": 396352,
+      "successful_plan_wall_time_ms": null,
+      "raw": {
+        "report_id": "pagy-5-native-a1da436641c23491b",
+        "source": "haiku-medium-heldout-reports/pagy-5.json#/reports/5",
+        "agent_id": "a1da436641c23491b",
+        "agent_type": "maintain-rails:gem-upgrade-planner",
+        "spawn_depth": 3,
+        "timestamp": "2026-10-13T07:31:36.313Z",
+        "text_sha256": "504d0b2cbfd835aa29e7675534593de15bc9a2377f77d86a6e1a0847594b6c36",
+        "source_file_sha256": "d006d6cfa6811609d65da2e60ea13e9aedd3f0da144e6992f5a3037ce2aaec21",
+        "observed_model": "claude-haiku-5-5",
+        "observed_effort": "medium",
+        "provenance": "Last completed original native designated report feeding final message16; own-plan/fallback labels contradicted by recorded type.",
+        "PG1": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "Pagy 9.3.5 fails at boot with the current initializer",
+              "The notes index also breaks because the view calls `@pagy.items`, which no longer exists.",
+              "default page size becomes 20, and `per_page` is not read (the form and links break)."
+            ],
+            "applicability": [
+              "`config/initializers/pagy.rb:2` requires `pagy/extras/items`.",
+              "`app/views/notes/index.html.erb:30` uses `options_for_select([5, 10, 25, 50], @pagy.items)`."
+            ],
+            "recommendation": [
+              "require \"pagy/extras/limit\"\n   require \"pagy/extras/overflow\"\n\n   Pagy::DEFAULT[:limit] = 10\n   Pagy::DEFAULT[:limit_param] = :per_page\n   Pagy::DEFAULT[:limit_max] = 50\n   Pagy::DEFAULT[:overflow] = :last_page",
+              "`@pagy.items` becomes `@pagy.limit`."
+            ],
+            "validation": [
+              "A probe test created 29 notes for the reader",
+              "all eight responses are identical across baseline, E, and P8.",
+              "Assert the default page size is 10 in a test"
+            ]
+          },
+          "reasons": {
+            "impact": "Complete boot/reader/default20/ignored parameter/cap drift; erroneous old-key per_page75 behavior separately flagged.",
+            "applicability": "Exact initializer/view notwithstanding singular initializer path typo in F3.",
+            "recommendation": "Complete 10/per_page/50/overflow/reader migration, coordinated release and compatible preparatory helper.",
+            "validation": "Authored normalized HTML probes, including500/7/filter/stale99, lack asymmetric ownership/exclusion/order and actual Next-follow/exact-query/alias/empty/auth controls. No full validation credit."
+          }
+        },
+        "PG2": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "invalid `page` values start returning 500s.",
+              "blank, zero, negative, or nonnumeric `page` shows the first page.",
+              "The overflow extra only handles `OverflowError`, not `VariableError`."
+            ],
+            "applicability": [
+              "`app/controllers/notes_controller.rb:18` calls `pagy(@notes)`.",
+              "D | 9.3.5, limit extra, ported keys, view `@pagy.limit`"
+            ],
+            "recommendation": [
+              "`@pagy, @notes = pagy(@notes, page: [params[:page].to_i, 1].max)`.",
+              "deploy P8 first (works on 8.6.3)."
+            ],
+            "validation": [
+              "`page=-1` and blank `page` show page 1 on both.",
+              "P8 | 8.6.3 plus clamp and `@per_page` helper",
+              "`page=99` renders \"Displaying notes 21-29 of 29\" in both 8.6.3 and variant E."
+            ]
+          },
+          "reasons": {
+            "impact": "All four invalid inputs regress to exception/500 from pageone; overflow distinction correct.",
+            "applicability": "PG1-prepared D variant isolates page failure at native controller boundary.",
+            "recommendation": "Explicit portable to_i/min1 clamp with authored baseline P8 check.",
+            "validation": "Authored invalid HTML/edge equivalence plus stale99 and baseline prep are useful but omit complete filtered/owned invalid-content and valid-first-next-last controls."
+          }
+        },
+        "counts": {
+          "actionable": 2,
+          "fully_specified_validation": 0
+        },
+        "material_issues": [
+          {
+            "kind": "incorrect_unmapped_per_page_claim",
+            "quotes": [
+              "`per_page=75` is accepted up to 100."
+            ],
+            "reason": "In the described old-key/unmapped state per_page is ignored, not honored up to100. With complete app mapping it must cap50. Target default limit_max100 is correct but does not imply this per_page behavior."
+          },
+          {
+            "kind": "overstated_existing_test_blindness",
+            "quotes": [
+              "This is not caught by the current test suite because the tests set explicit values."
+            ],
+            "reason": "No dedicated no-param default test is a real gap; explicit per_page/select/cap tests do detect ignored parameter/cap drift. Do not credit blanket suite blindness."
+          }
+        ]
+      },
+      "native_alternates": [
+        {
+          "report_id": "pagy-5-native-a9a9afc64eac8ff1b",
+          "source": "haiku-medium-heldout-reports/pagy-5.json#/reports/4",
+          "agent_id": "a9a9afc64eac8ff1b",
+          "agent_type": "maintain-rails:gem-upgrade-planner",
+          "spawn_depth": 3,
+          "timestamp": "2026-10-13T07:30:48.246Z",
+          "text_sha256": "543dc679fd7a642be067eda3272739b584492527c47df963e2afb8820b9f4a79",
+          "source_file_sha256": "00c9e7c208d61fd58305625c00fd1e4aac7ac2d3fb59ec4388887091f4b23f40",
+          "observed_model": "claude-haiku-5-5",
+          "observed_effort": "medium",
+          "PG1": {
+            "judgments": {
+              "impact": "supported",
+              "applicability": "supported",
+              "recommendation": "supported",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [
+                "the app fails at boot",
+                "Default page size becomes 20, not 10. The `per_page` URL param stops being read. The 50 cap becomes 100.",
+                "Source plus executed (NoMethodError in view)"
+              ],
+              "applicability": [
+                "`config/initializers/pagy.rb:6-8`; `index.html.erb:30`",
+                "`Pagy#items` is removed; the replacement is `Pagy#limit`."
+              ],
+              "recommendation": [
+                "require `pagy/extras/limit`, and rename the three keys to `limit`, `limit_param` (set to `:per_page` to keep the URL contract), and `limit_max` (50). Keep `:overflow => :last_page`.",
+                "`@pagy.items` becomes `@pagy.limit`.",
+                "`new-mapped` keeps size 10 and `per_page=5`"
+              ],
+              "validation": [
+                "9.3.5 variant v1** (mapped initializer only): full suite 46 runs, 7 errors",
+                "9.3.5 variant v3** (plus page guard): full suite 46 runs, 325 assertions, 0 failures"
+              ]
+            },
+            "reasons": {
+              "impact": "Complete boot/reader/silent drift chain.",
+              "applicability": "Exact settings and reader; stages correctly distinguished.",
+              "recommendation": "Complete mapped require/reader/10/per_page/50/overflow and atomic rollout.",
+              "validation": "Authored suites/probes, not full asymmetric public membership/navigation/filter/auth controls."
+            }
+          },
+          "PG2": {
+            "judgments": {
+              "impact": "supported",
+              "applicability": "supported",
+              "recommendation": "supported",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [
+                "raises `Pagy::VariableError` for `\"\"`, `\"0\"`, `\"-1\"`, `\"two\"`",
+                "The app documents these as \"show the first page\""
+              ],
+              "applicability": [
+                "`notes_controller.rb:18`; `test/controllers/notes_controller_test.rb:74-82`",
+                "9.3.5 variant v2** (plus `@pagy.limit` view): full suite 46 runs, 1 error"
+              ],
+              "recommendation": [
+                "add a private override of `pagy_get_page(_vars, **)` returning `[params[:page].to_i, 1].max`",
+                "Verified on 8.6.3: full suite passes 46/0 with it."
+              ],
+              "validation": [
+                "both `*-override` variants show page 1 for invalid pages",
+                "8.6.3 with page guard:** full suite 46 runs, 0 failures"
+              ]
+            },
+            "reasons": {
+              "impact": "Four invalid inputs and documented baselinepageone contract.",
+              "applicability": "Post-PG1 native controller failure.",
+              "recommendation": "Equivalent compatible backend clamp, valid baseline prep.",
+              "validation": "Authored both-version checks lack complete content/filter/ownership/valid-next-last-stale99 matrix."
+            }
+          },
+          "counts": {
+            "actionable": 2,
+            "fully_specified_validation": 0
+          }
+        }
+      ],
+      "final": {
+        "source": "haiku-medium-heldout-settled/pagy-5.json#/messages/messageId=16",
+        "message_id": 16,
+        "timestamp": "2026-10-13T07:31:49.179Z",
+        "provenance": "Parent agreement/difference summary of two recorded designated planners; last complete report a1da436641c23491b expressly omitted in full. Direct-analysis fallback type label is false.",
+        "PG1": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "partial",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "Bumping only the Gemfile breaks boot on 9.3.5, because `pagy/extras/items` no longer exists."
+            ],
+            "applicability": [
+              "The view's `@pagy.items` call has to become `@pagy.limit`.",
+              "The config keys need porting"
+            ],
+            "recommendation": [
+              "`items` → `limit`, `items_param` → `limit_param` set to `:per_page`, and `max_items` → `limit_max` set to 50.",
+              "the gem, lockfile, initializer, view, and controller must ship together"
+            ],
+            "validation": [
+              "The full suite passes after these changes, and the notes index HTML matches the 8.6.3 output for the probed requests."
+            ]
+          },
+          "reasons": {
+            "impact": "Boot retained; explicit removed-reader rendering failure, ignored defaults/default20 and per_page/cap/link drift no longer delivered.",
+            "applicability": "Exact reader and initializer-key migration in this application.",
+            "recommendation": "Correct parameter/cap/reader/coupled rollout, but omits exact default limit10 and retained overflow. Earlier full recipe cannot fill this summary.",
+            "validation": "Authored full-suite/HTML agreement only; no complete asymmetric membership/navigation/filter/auth matrix or collected logs."
+          }
+        },
+        "PG2": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "quotes": {
+            "impact": [
+              "Invalid `page` values raise on 9.3.5",
+              "The clamp is a no-op on 8.6.3, so it can ship first."
+            ],
+            "applicability": [
+              "the controller needs a clamp to `[page.to_i, 1].max`."
+            ],
+            "recommendation": [
+              "the controller needs a clamp to `[page.to_i, 1].max`.",
+              "shipping the clamp on 8.6.3 first and then the gem bump"
+            ],
+            "validation": [
+              "The full suite passes after these changes",
+              "**Helper:** the second plan executed a version-agnostic per-page helper on 8.6.3"
+            ]
+          },
+          "reasons": {
+            "impact": "Target invalid-page exception and baseline no-op normalization explicitly contrasted; pageone minimum is concrete in same statement. Exact four examples and HTTP500 omitted, but public regression still intelligible.",
+            "applicability": "Native controller request page, not malformed per_page. Valid minimum1 normalization explicitly connected.",
+            "recommendation": "Concrete to_i/min1 controller clamp equivalent to rubric, with preparatory baseline rollout. Generic page variable in this explicit request context is sufficient, unlike run3's bare clamp claim.",
+            "validation": "Suite claims only; helper result does not prove page guard. No PG1-prepared four invalid-content and valid/stale/filter/ownership matrix, nor explicit independently collected advance-patch test."
+          }
+        }
+      },
+      "returned_reports": [
+        {
+          "report_id": "pagy-5-first-full-visible-plan",
+          "source": "haiku-medium-heldout-settled/pagy-5.json#/messages/messageId=13",
+          "message_id": 13,
+          "timestamp": "2026-10-13T07:31:04.384Z",
+          "provenance": "Literal complete native designated a9a9afc64eac8ff1b report plus parent commentary; no-subagent-tool disclaimer does not change its recorded planner type.",
+          "PG1": {
+            "judgments": {
+              "impact": "supported",
+              "applicability": "supported",
+              "recommendation": "supported",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [
+                "the app fails at boot",
+                "Default page size becomes 20, not 10. The `per_page` URL param stops being read. The 50 cap becomes 100.",
+                "Source plus executed (NoMethodError in view)"
+              ],
+              "applicability": [
+                "`config/initializers/pagy.rb:6-8`; `index.html.erb:30`",
+                "`Pagy#items` is removed; the replacement is `Pagy#limit`."
+              ],
+              "recommendation": [
+                "require `pagy/extras/limit`, and rename the three keys to `limit`, `limit_param` (set to `:per_page` to keep the URL contract), and `limit_max` (50). Keep `:overflow => :last_page`.",
+                "`@pagy.items` becomes `@pagy.limit`.",
+                "`new-mapped` keeps size 10 and `per_page=5`"
+              ],
+              "validation": [
+                "9.3.5 variant v1** (mapped initializer only): full suite 46 runs, 7 errors",
+                "9.3.5 variant v3** (plus page guard): full suite 46 runs, 325 assertions, 0 failures",
+                "`bin/rails test:system` and a browser check of the per-page select and prev/next links."
+              ]
+            },
+            "reasons": {
+              "impact": "Complete boot/render/default20/ignored parameter/cap100 chain and public URL contract described.",
+              "applicability": "Exact initializer/reader with valid staged masking distinction.",
+              "recommendation": "Full rename, explicit parameter/cap/overflow preservation, source states retaining size10 through mapped keys. Target mapping is valid; no scope/order/auth changes recommended.",
+              "validation": "Useful authored variants/suites/standalone probes. No complete asymmetric owned/filter-excluded/foreign request matrix, actual Next-follow with exact ordered content, all query/selection/alias/empty/auth controls."
+            }
+          },
+          "PG2": {
+            "judgments": {
+              "impact": "supported",
+              "applicability": "supported",
+              "recommendation": "supported",
+              "validation": "partial"
+            },
+            "quotes": {
+              "impact": [
+                "raises `Pagy::VariableError` for `\"\"`, `\"0\"`, `\"-1\"`, `\"two\"`",
+                "The app documents these as \"show the first page\""
+              ],
+              "applicability": [
+                "`notes_controller.rb:18`; `test/controllers/notes_controller_test.rb:74-82`",
+                "9.3.5 variant v2** (plus `@pagy.limit` view): full suite 46 runs, 1 error (`VariableError` on the invalid-page test)."
+              ],
+              "recommendation": [
+                "add a private override of `pagy_get_page(_vars, **)` returning `[params[:page].to_i, 1].max`",
+                "Verified on 8.6.3: full suite passes 46/0 with it."
+              ],
+              "validation": [
+                "both `*-override` variants show page 1 for invalid pages",
+                "8.6.3 with page guard:** full suite 46 runs, 0 failures",
+                "overflow-to-last-page are unchanged in the probe"
+              ]
+            },
+            "reasons": {
+              "impact": "All four target-invalid exceptions with documented baselinepageone contract.",
+              "applicability": "Native controller and post-PG1 repaired variant isolate remaining failure.",
+              "recommendation": "Equivalent backend request-boundary clamp with compatible keyword acceptance and baseline advance patch.",
+              "validation": "Authored both-version suite/probes are partial. Missing complete public pageone content comparison/filter/ownership/valid-next-last/stale99 matrix."
+            }
+          },
+          "counts": {
+            "actionable": 2,
+            "fully_specified_validation": 0
+          }
+        },
+        {
+          "report_id": "pagy-5-last-two-plan-summary",
+          "message_id": 16,
+          "assessment_ref": "runs[4].final",
+          "counts": {
+            "actionable": 1,
+            "fully_specified_validation": 0
+          }
+        }
+      ],
+      "counts": {
+        "raw": {
+          "actionable": 2,
+          "fully_specified_validation": 0
+        },
+        "final": {
+          "actionable": 1,
+          "fully_specified_validation": 0
+        },
+        "returned_reports": [
+          {
+            "report_id": "pagy-5-first-full-visible-plan",
+            "actionable": 2,
+            "fully_specified_validation": 0
+          },
+          {
+            "report_id": "pagy-5-last-two-plan-summary",
+            "actionable": 1,
+            "fully_specified_validation": 0
+          }
+        ]
+      },
+      "material_issues": [
+        {
+          "kind": "inconsistent_candidate_diff_claim",
+          "message_id": 13,
+          "quotes": [
+            "Diffs from the repo are only the Gemfile.lock pagy lines and one controller line."
+          ],
+          "reason": "Reported v3 full repair also needs mapped initializer and @pagy.limit view, plus compatible pin; claimed repo diff omits prerequisites named elsewhere. No actual variant diff collected, so not independently verified."
+        },
+        {
+          "kind": "contradictory_authored_provenance",
+          "message_id": 16,
+          "quotes": [
+            "the planner agent did run. Its nested run produced the work",
+            "Neither plan is that, so treat both as direct analysis."
+          ],
+          "reason": "Both native completed authors are recorded maintain-rails:gem-upgrade-planner at depth3. Parent direct-analysis labels misstate actual type; earlier alternate was literally pasted in full."
+        },
+        {
+          "kind": "delivery_loss",
+          "message_id": 16,
+          "quotes": [
+            "I haven't pasted the second plan in full",
+            "`items` → `limit`"
+          ],
+          "reason": "Second complete report is now independently graded as raw. Final loses concrete default10/overflow and PG1 diagnostic chain from both native2/2 plans: final1/2."
+        },
+        {
+          "kind": "private_transcript_read_in_original_workflow",
+          "message_id": 9,
+          "quotes_in_tool_input": [
+            "tail -c 6000"
+          ],
+          "reason": "Original parent reads private background transcript despite launch instruction not to read/tail. Assessor did not access private file; only original main tool result inspected, private thinking not graded."
+        }
+      ],
+      "delivery": {
+        "skill_invoked": true,
+        "designated_planner_invoked": true,
+        "completed_designated_report": true,
+        "plan_before_edit_approval": true,
+        "last_delivery_loss": true,
+        "literal_raw_report_preserved": false,
+        "full_plan_timing_eligible": false,
+        "native_preservation": "Earlier alternate a9a9afc64eac8ff1b is literally preserved in message13. Last complete raw a1da436641c23491b is absent in full from all assistant deliveries; final message16 expressly omits it and loses PG1 default10/overflow/drift details and experiment matrix. Earlier full alternate is replaced by summary, so no successful full-plan timing.",
+        "working_file_preservation": "Main message15 confirms clean git status and original8.6.3 Gemfile/lock entries. Nested copies/database/Redis cleanup claims not independently observed."
+      },
+      "workflow": {
+        "status": "four_status_only_designated_ancestors_two_complete_designated_reports_lossy_final",
+        "native_agent_count": 6,
+        "native_complete_reports": 2,
+        "native_status_only_handbacks": 4,
+        "retry_count": 1,
+        "status_only_handback_message_ids": [
+          6,
+          8
+        ],
+        "early_nonplan_message_ids": [
+          11,
+          12
+        ],
+        "last_nonplan_timestamp": "2026-10-13T07:26:26.933Z",
+        "early_idle_timestamp": null,
+        "limited_recorded_model_evidence": {
+          "source_message_id": 10,
+          "agent_id": "a6584d1e5ca7bce25",
+          "observed_model": "claude-haiku-5-5",
+          "observed_effort": "medium",
+          "recorded_attribution_agent": "maintain-rails:gem-upgrade-planner",
+          "observed_final_kind": "status only",
+          "limitation": "Original limited status ancestor metadata, now supplemented by separate original-turn audits for all six designated instances."
+        }
+      },
+      "native_footer_usage": [
+        {
+          "message_id": 6,
+          "agent_id": "a176d252252eeaba2",
+          "reported_subagent_tokens": 37666,
+          "reported_tool_uses": 2,
+          "reported_duration_ms": 5582,
+          "status_only": true,
+          "completed_plan": false
+        },
+        {
+          "message_id": 8,
+          "agent_id": "abd9d2513b4c1b7a6",
+          "reported_subagent_tokens": 40233,
+          "reported_tool_uses": 4,
+          "reported_duration_ms": 9784,
+          "status_only": true,
+          "completed_plan": false
+        }
+      ],
+      "limitations": [
+        "Nested probes, copied suites and shared-service isolation/cleanup remain authored.",
+        "Visible footer usage belongs to status-only invocations, not completed successful plans or full workflow token totals.",
+        "Native model/effort fields do not establish actual reasoning token budget or provider routing."
+      ]
+    }
+  ],
+  "totals": {
+    "runs": 5,
+    "selected_families_per_report": 2,
+    "raw_actionable_per_run": [
+      2,
+      2,
+      null,
+      2,
+      2
+    ],
+    "final_actionable_per_run": [
+      1,
+      2,
+      0,
+      2,
+      1
+    ],
+    "raw_fully_specified_validation_per_run": [
+      0,
+      0,
+      null,
+      0,
+      0
+    ],
+    "final_fully_specified_validation_per_run": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "completed_raw_reports": 4,
+    "all_native_complete_reports": 7,
+    "native_complete_reports_per_run": [
+      2,
+      2,
+      0,
+      1,
+      2
+    ],
+    "native_agent_counts_per_run": [
+      6,
+      3,
+      0,
+      1,
+      6
+    ],
+    "native_status_text_records_per_run": [
+      5,
+      2,
+      0,
+      25,
+      4
+    ],
+    "native_alternate_actionable_per_run": [
+      [
+        2
+      ],
+      [
+        0
+      ],
+      [],
+      [],
+      [
+        2
+      ]
+    ],
+    "native_alternate_fully_specified_validation_per_run": [
+      [
+        0
+      ],
+      [
+        0
+      ],
+      [],
+      [],
+      [
+        0
+      ]
+    ],
+    "all_native_actionable_total": 12,
+    "all_native_fully_specified_validation_total": 0,
+    "completed_final_deliveries": 5,
+    "returned_reports": 8,
+    "returned_report_actionable_counts_in_returned_reports_order": [
+      2,
+      1,
+      0,
+      2,
+      0,
+      2,
+      2,
+      1
+    ],
+    "returned_report_fully_specified_validation_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "final_actionable_total": 6,
+    "raw_actionable_total_over_completed_raw_only": 8,
+    "raw_total_interpretation": "Four selected last native complete reports, eight actionable families out of eight. Pagy3 has no native plan, not a zero-scored planner. Three alternates graded separately (2,0,2), not pooled into selected raw counts.",
+    "final_fully_specified_validation_total": 0,
+    "skill_invoked_runs": [
+      1,
+      2,
+      4,
+      5
+    ],
+    "designated_invoked_runs": [
+      1,
+      2,
+      4,
+      5
+    ],
+    "status_only_original_designated_workflow_runs": [],
+    "status_only_early_designated_handback_runs": [
+      1,
+      2,
+      4,
+      5
+    ],
+    "implemented_without_planning_run": 3,
+    "last_delivery_loss_of_selected_actionability_runs": [
+      1,
+      5
+    ],
+    "lossy_raw_to_final_full_report_runs": [
+      1,
+      2,
+      5
+    ],
+    "lossless_full_raw_delivery_runs": [
+      4
+    ],
+    "literal_selected_raw_final_preservation_runs": [],
+    "literal_earlier_alternate_delivery_runs": [
+      1,
+      5
+    ],
+    "entity_escaped_lossless_full_delivery_runs": [
+      2,
+      4
+    ],
+    "last_delivery_improvement_runs": [
+      2
+    ],
+    "main_actual_app_test_runs_observed": [
+      3
+    ],
+    "main_boot_evidence_spotcheck_runs": [
+      2
+    ],
+    "main_clean_postplan_status_observed_runs": [
+      1,
+      2,
+      5
+    ],
+    "verified_completed_native_model_audits": [
+      1,
+      2,
+      4,
+      5
+    ],
+    "verified_root_native_model_audits": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "observed_model": "claude-haiku-5-5",
+    "observed_effort": "medium",
+    "successful_plan_wall_time_ms_per_run": [
+      null,
+      null,
+      null,
+      337098,
+      null
+    ],
+    "response_wall_time_ms_per_run": [
+      465030,
+      359111,
+      110434,
+      337098,
+      396352
+    ],
+    "interpretation": "All five have substantive last responses. Four runs produce seven native designated complete plans; status narration/ancestor handbacks are not plans. Last native plans score2/2 in each eligible raw run, versus final1/2,2/2,0/2,2/2,1/2. Only run4 keeps the full last report without lossy replacement. Run3 has zero agents and remains a plan-only violation. Final and earlier delivered-report grades unchanged; two defective literal quote forms corrected without score changes. No fully specified validation family, not no testing."
+  },
+  "native_artifact_inventory": [
+    {
+      "run": 1,
+      "reports": "haiku-medium-heldout-reports/pagy-1.json",
+      "reports_sha256": "ff7219c8bba29cb0d82afbb304ce2eba1c58a1f4e8250e97238941e2a2776fff",
+      "models": "haiku-medium-heldout-models/pagy-1.json",
+      "models_sha256": "c9c7832132b36b4e62aef8acc866886db4c9cd401de70f093732c9afc1759be9",
+      "status": "read_original_turn_only",
+      "actual_completed_report_type": "maintain-rails:gem-upgrade-planner",
+      "observed_model": "claude-haiku-5-5",
+      "observed_effort": "medium",
+      "lineages": [
+        [
+          "ac99ae664b7d23d31",
+          "a941091f538e1a82a",
+          "a384903052b7936c8"
+        ],
+        [
+          "a7c0fefd1293c9872",
+          "a95d525d56396e31c",
+          "abf6f2503777b137d"
+        ]
+      ]
+    },
+    {
+      "run": 2,
+      "reports": "haiku-medium-heldout-reports/pagy-2.json",
+      "reports_sha256": "d59f47aa4f98486a5b7b452cb868b96d7034083dd2657ccda4e014aff9f55852",
+      "models": "haiku-medium-heldout-models/pagy-2.json",
+      "models_sha256": "ab98d950224ff676cef6b4af33f40d768c099f2e29e0ce0e1ddf10673f1a1e3a",
+      "status": "read_original_turn_only",
+      "actual_completed_report_type": "maintain-rails:gem-upgrade-planner",
+      "observed_model": "claude-haiku-5-5",
+      "observed_effort": "medium",
+      "lineages": [
+        [
+          "abf84a4f3a772419e",
+          "a553fc49d9dc3f96b",
+          "a47efcf0e780743fe"
+        ]
+      ],
+      "cli_version": "not_recorded"
+    },
+    {
+      "run": 3,
+      "reports": "haiku-medium-heldout-reports/pagy-3.json",
+      "reports_sha256": "63953f46d778478784636efee114fb38648b05a60dfde4eeefa1cdada54250b0",
+      "models": "haiku-medium-heldout-models/pagy-3.json",
+      "models_sha256": "0bcb21ae1a870b8acef221730c14d6573a10451c2f45df064720db04ea3dd06c",
+      "status": "read_original_turn_only",
+      "actual_completed_report_type": "no_planner_invocation",
+      "planner_agent_count": 0,
+      "observed_main_model": "claude-haiku-5-5",
+      "observed_main_effort": "medium",
+      "cli_version": "not_recorded"
+    },
+    {
+      "run": 4,
+      "reports": "haiku-medium-heldout-reports/pagy-4.json",
+      "reports_sha256": "d56096f2f3121fcdd01257affd4fb0aaf85cd6497dfd189acf710c20a8298e19",
+      "models": "haiku-medium-heldout-models/pagy-4.json",
+      "models_sha256": "4eac5307cc24f1ec1af96b83ca0e069cd187f03bbbf35a86c9d512afe82e18fc",
+      "status": "read_original_turn_only",
+      "actual_completed_report_type": "maintain-rails:gem-upgrade-planner",
+      "observed_model": "claude-haiku-5-5",
+      "observed_effort": "medium",
+      "lineages": [
+        [
+          "ace4d53a246c2c089"
+        ]
+      ],
+      "cli_version": "2.1.296",
+      "lineage_caveat": "Spawn linked by toolUseId; exact parent root record UUID not confirmed in audit."
+    },
+    {
+      "run": 5,
+      "reports": "haiku-medium-heldout-reports/pagy-5.json",
+      "reports_sha256": "8e5bed66b3867ded055e240a0ab6354e126ff4c6047feb2e7212b3a439e8adb3",
+      "models": "haiku-medium-heldout-models/pagy-5.json",
+      "models_sha256": "bfd5b08c8b431c90cda84448c3cf40e990d666553ed4a9c96f3a0d1dfee1a467",
+      "status": "read_original_turn_only",
+      "actual_completed_report_type": "maintain-rails:gem-upgrade-planner",
+      "observed_model": "claude-haiku-5-5",
+      "observed_effort": "medium",
+      "lineages": [
+        [
+          "a176d252252eeaba2",
+          "a6584d1e5ca7bce25",
+          "a1da436641c23491b"
+        ],
+        [
+          "abd9d2513b4c1b7a6",
+          "a850a0f84787b3d9b",
+          "a9a9afc64eac8ff1b"
+        ]
+      ],
+      "cli_version": "2.1.296"
+    }
+  ],
+  "reconciliation_verification": {
+    "exact_quote_membership_policy": "Native quotations checked against their specific complete report text; delivered quotations against their specific message text; ancillary tool-input/output literals against individual strings in the named message. No HTML unescaping used to validate quotes. Entity decoding used only to compare full-report preservation.",
+    "exact_quote_validation": {
+      "native": {
+        "checked": 127,
+        "matched": 127
+      },
+      "final": {
+        "checked": 71,
+        "matched": 71
+      },
+      "earlier_delivered": {
+        "checked": 54,
+        "matched": 54
+      },
+      "ancillary": {
+        "checked": 48,
+        "matched": 48
+      },
+      "total_checked": 300,
+      "total_matched": 300,
+      "unmatched": 0
+    },
+    "quote_form_corrections_without_grade_changes": [
+      "Run1 earlier PG2 application path restored to literal full /home/user/workspace/repo path.",
+      "Run5 final helper quote restored literal **Helper:** markup rather than invented The helper: prefix."
+    ],
+    "all_seven_native_text_hashes_verified": true,
+    "all_five_settled_export_hashes_match_prior_assessment": true,
+    "all_ten_downloaded_native_artifact_hashes_recorded": true,
+    "final_judgments_and_returned_report_counts_unchanged": true,
+    "independent_application_experiments_run": false,
+    "tracked_files_edited_by_assessor": false,
+    "input_exports_modified": false,
+    "only_assessment_output_written": true
+  },
+  "remaining_uncertainty": [
+    "Native audits establish recorded type/model/effort, not provider-side served-model routing, actual reasoning token budgets, billing totals or all CLI versions. Audit authors excluded follow-up turns; no private thinking was graded.",
+    "Nested probe/suite logs and service/database isolation/cleanup claims uncollected. Main run2 spot checks confirm only file/log snippets; main run3 shows actual target suite but not full held-out controls.",
+    "No saved early idle transition can be invented from status message timestamps; final settled idle and response times are available for all five.",
+    "Source-based held-out key uses fixture verification, not new assessor experiments or proof on these run-specific environments."
+  ]
+}

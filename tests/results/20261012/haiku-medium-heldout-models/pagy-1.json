@@ -1,0 +1,3354 @@
+{
+  "schema": "claude-code-session-audit/v1",
+  "generatedAt": "2026-10-13T07:41:01.253Z",
+  "scope": {
+    "included": "Original evaluated turn: root-session turns 1 through 6, timestamps before 2026-10-13T07:38:59.461Z.",
+    "excluded": "Follow-up turn 7 (sdk prompt starting 2026-10-13T07:38:59.461Z) and everything after it.",
+    "note": "Subagent transcripts all end before the follow-up starts; see beforeFollowUpStart per agent."
+  },
+  "cliVersion": [
+    "2.1.296"
+  ],
+  "sourceFiles": [
+    {
+      "path": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5.jsonl",
+      "sha256": "1ae738990b2eb5226097970cc10e5136096f5c10562bb1dff5d84e531b9dd886",
+      "sizeBytes": 654580,
+      "containsFollowUp": true,
+      "hashCoversWholeFile": true
+    }
+  ],
+  "rootSession": {
+    "sessionId": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5",
+    "originalTurnPrompts": [
+      {
+        "turnIndex": 1,
+        "timestamp": "2026-10-13T07:25:44.740Z",
+        "turnOrigin": "sdk"
+      },
+      {
+        "turnIndex": 2,
+        "timestamp": "2026-10-13T07:25:59.381Z",
+        "turnOrigin": "task_notification"
+      },
+      {
+        "turnIndex": 3,
+        "timestamp": "2026-10-13T07:26:07.527Z",
+        "turnOrigin": "task_notification"
+      },
+      {
+        "turnIndex": 4,
+        "timestamp": "2026-10-13T07:26:25.188Z",
+        "turnOrigin": "task_notification"
+      },
+      {
+        "turnIndex": 5,
+        "timestamp": "2026-10-13T07:31:06.361Z",
+        "turnOrigin": "task_notification"
+      },
+      {
+        "turnIndex": 6,
+        "timestamp": "2026-10-13T07:32:34.102Z",
+        "turnOrigin": "task_notification"
+      }
+    ],
+    "agentToolCalls": [
+      {
+        "toolUseId": "toolu_01DGq8yXnz5zvU3M3EUxWy36",
+        "timestamp": "2026-10-13T07:25:49.520Z",
+        "subagentType": "maintain-rails:gem-upgrade-planner",
+        "description": "Plan pagy upgrade",
+        "runInBackground": null
+      },
+      {
+        "toolUseId": "toolu_01EmK4YWg5hh9fEGaS4Jf3iq",
+        "timestamp": "2026-10-13T07:26:10.418Z",
+        "subagentType": "maintain-rails:gem-upgrade-planner",
+        "description": "Fresh pagy upgrade plan",
+        "runInBackground": false
+      }
+    ],
+    "sendMessageCalls": [
+      {
+        "toolUseId": "toolu_01QizP143zwHpDqa4f69opVP",
+        "timestamp": "2026-10-13T07:26:04.711Z",
+        "toAgentId": "ac99ae664b7d23d31"
+      }
+    ],
+    "observedAssistantModelsInWindow": [
+      "claude-haiku-5-5"
+    ]
+  },
+  "plannerAgents": [
+    {
+      "agentId": "ac99ae664b7d23d31",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "description": "Plan pagy upgrade",
+      "toolUseId": "toolu_01DGq8yXnz5zvU3M3EUxWy36",
+      "parentAgentId": null,
+      "parentResolution": "absent in meta; toolUseId matches a top-level Agent call in the root session (depth 1)",
+      "spawnDepth": 1,
+      "requestShape": "background",
+      "requestNonInteractive": true,
+      "sourceFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-ac99ae664b7d23d31.jsonl",
+      "sourceSha256": "f93f641afdaf6bd6d39a1fb84c45d7eae95dcabb01c331efd1e41bca63e331c3",
+      "sourceSizeBytes": 190428,
+      "metaFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-ac99ae664b7d23d31.meta.json",
+      "metaSha256": "afd2cf90b956050cbb9f026cf9808b691c896354ebf742276a530304a8b9f974",
+      "promptSha256": "0e3a186a09553609e7a2272305790227d28b3d0485853a1590a4ae322cbb676a",
+      "firstTimestamp": "2026-10-13T07:25:49.528Z",
+      "lastTimestamp": "2026-10-13T07:26:07.466Z",
+      "beforeFollowUpStart": true,
+      "cliVersions": [
+        "2.1.296"
+      ],
+      "observedModels": [
+        "claude-haiku-5-5"
+      ],
+      "requestedModels": [
+        "claude-haiku-5-5"
+      ],
+      "observedEffort": [
+        "medium"
+      ],
+      "observedPerTurnEffort": [
+        "medium"
+      ],
+      "assistantTurnCount": 8,
+      "thinkingBlockCount": 3,
+      "toolUseCounts": {
+        "Skill": 1,
+        "Bash": 1,
+        "Agent": 1
+      },
+      "endTurnCount": 2,
+      "turns": [
+        {
+          "index": 1,
+          "timestamp": "2026-10-13T07:25:50.907Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 2,
+          "timestamp": "2026-10-13T07:25:51.112Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Skill"
+          ]
+        },
+        {
+          "index": 3,
+          "timestamp": "2026-10-13T07:25:52.182Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 4,
+          "timestamp": "2026-10-13T07:25:56.357Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Agent"
+          ]
+        },
+        {
+          "index": 5,
+          "timestamp": "2026-10-13T07:25:57.477Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 6,
+          "timestamp": "2026-10-13T07:25:59.278Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "end_turn",
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 7,
+          "timestamp": "2026-10-13T07:26:07.003Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 8,
+          "timestamp": "2026-10-13T07:26:07.466Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "end_turn",
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        }
+      ]
+    },
+    {
+      "agentId": "a7c0fefd1293c9872",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "description": "Fresh pagy upgrade plan",
+      "toolUseId": "toolu_01EmK4YWg5hh9fEGaS4Jf3iq",
+      "parentAgentId": null,
+      "parentResolution": "absent in meta; toolUseId matches a top-level Agent call in the root session (depth 1)",
+      "spawnDepth": 1,
+      "requestShape": "foreground",
+      "requestNonInteractive": true,
+      "sourceFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-a7c0fefd1293c9872.jsonl",
+      "sourceSha256": "4e34a87018dd37efa68b7951c8c422a32d3d958f20a020cffb960013533cae6c",
+      "sourceSizeBytes": 198431,
+      "metaFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-a7c0fefd1293c9872.meta.json",
+      "metaSha256": "7645cd8267c4cb1f9e2f3e8316e5c4b58e0372bc22896a6e8bac20f1539a4319",
+      "promptSha256": "1ede82ae3df4e8c996d9d148c1f315aaffb5e07d1ec2dc2e3db48e8639e955d1",
+      "firstTimestamp": "2026-10-13T07:26:10.421Z",
+      "lastTimestamp": "2026-10-13T07:26:19.896Z",
+      "beforeFollowUpStart": true,
+      "cliVersions": [
+        "2.1.296"
+      ],
+      "observedModels": [
+        "claude-haiku-5-5"
+      ],
+      "requestedModels": [
+        "claude-haiku-5-5"
+      ],
+      "observedEffort": [
+        "medium"
+      ],
+      "observedPerTurnEffort": [
+        "medium"
+      ],
+      "assistantTurnCount": 9,
+      "thinkingBlockCount": 3,
+      "toolUseCounts": {
+        "Skill": 1,
+        "Bash": 1,
+        "ToolSearch": 1,
+        "Agent": 1
+      },
+      "endTurnCount": 1,
+      "turns": [
+        {
+          "index": 1,
+          "timestamp": "2026-10-13T07:26:12.084Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 2,
+          "timestamp": "2026-10-13T07:26:12.320Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 3,
+          "timestamp": "2026-10-13T07:26:12.598Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Skill"
+          ]
+        },
+        {
+          "index": 4,
+          "timestamp": "2026-10-13T07:26:13.403Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 5,
+          "timestamp": "2026-10-13T07:26:13.639Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "ToolSearch"
+          ]
+        },
+        {
+          "index": 6,
+          "timestamp": "2026-10-13T07:26:15.086Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 7,
+          "timestamp": "2026-10-13T07:26:17.680Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Agent"
+          ]
+        },
+        {
+          "index": 8,
+          "timestamp": "2026-10-13T07:26:18.783Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 9,
+          "timestamp": "2026-10-13T07:26:19.896Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "end_turn",
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        }
+      ]
+    },
+    {
+      "agentId": "a941091f538e1a82a",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "description": "Plan pagy upgrade",
+      "toolUseId": "toolu_01WMg3EacqWHjYVSvaCxU1e6",
+      "parentAgentId": "ac99ae664b7d23d31",
+      "parentResolution": "meta.parentAgentId",
+      "spawnDepth": 2,
+      "requestShape": "background",
+      "requestNonInteractive": true,
+      "sourceFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-a941091f538e1a82a.jsonl",
+      "sourceSha256": "84e558dba94a14ef1304da20b0781ab24a944b1d2e6c45bc06a821e68bea7c84",
+      "sourceSizeBytes": 184172,
+      "metaFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-a941091f538e1a82a.meta.json",
+      "metaSha256": "534aab7c6cc6db2c5b787d53fc5c3902594b5aee2b69a68888425f85c03e42f6",
+      "promptSha256": "c6e8561168907d7133385cc91c05782ae6e6f025d930e476e307349bf1f7ab0b",
+      "firstTimestamp": "2026-10-13T07:25:56.363Z",
+      "lastTimestamp": "2026-10-13T07:26:03.555Z",
+      "beforeFollowUpStart": true,
+      "cliVersions": [
+        "2.1.296"
+      ],
+      "observedModels": [
+        "claude-haiku-5-5"
+      ],
+      "requestedModels": [
+        "claude-haiku-5-5"
+      ],
+      "observedEffort": [
+        "medium"
+      ],
+      "observedPerTurnEffort": [
+        "medium"
+      ],
+      "assistantTurnCount": 5,
+      "thinkingBlockCount": 1,
+      "toolUseCounts": {
+        "Skill": 1,
+        "Bash": 1,
+        "Agent": 1
+      },
+      "endTurnCount": 1,
+      "turns": [
+        {
+          "index": 1,
+          "timestamp": "2026-10-13T07:25:57.411Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 2,
+          "timestamp": "2026-10-13T07:25:57.633Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Skill"
+          ]
+        },
+        {
+          "index": 3,
+          "timestamp": "2026-10-13T07:25:58.332Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 4,
+          "timestamp": "2026-10-13T07:26:02.525Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Agent"
+          ]
+        },
+        {
+          "index": 5,
+          "timestamp": "2026-10-13T07:26:03.555Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "end_turn",
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        }
+      ]
+    },
+    {
+      "agentId": "a95d525d56396e31c",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "description": "Plan pagy 8.6.3 to 9.3.5 upgrade",
+      "toolUseId": "toolu_01AAjxziHWi2eiFsJTmWw2vy",
+      "parentAgentId": "a7c0fefd1293c9872",
+      "parentResolution": "meta.parentAgentId",
+      "spawnDepth": 2,
+      "requestShape": "background",
+      "requestNonInteractive": true,
+      "sourceFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-a95d525d56396e31c.jsonl",
+      "sourceSha256": "6a35668392b8d52372a47d8019d618c3185f58f7ed7ba3a292e2ed5422e0330f",
+      "sourceSizeBytes": 190144,
+      "metaFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-a95d525d56396e31c.meta.json",
+      "metaSha256": "be6c28de43ebcd67517df114aa0753607e0c43d3b2bfcf34da695cec83e28795",
+      "promptSha256": "7207e78f795f46bcf0b2760cf3bacfb1d9803441f96359b64c9c8a84a6045387",
+      "firstTimestamp": "2026-10-13T07:26:17.684Z",
+      "lastTimestamp": "2026-10-13T07:26:25.080Z",
+      "beforeFollowUpStart": true,
+      "cliVersions": [
+        "2.1.296"
+      ],
+      "observedModels": [
+        "claude-haiku-5-5"
+      ],
+      "requestedModels": [
+        "claude-haiku-5-5"
+      ],
+      "observedEffort": [
+        "medium"
+      ],
+      "observedPerTurnEffort": [
+        "medium"
+      ],
+      "assistantTurnCount": 8,
+      "thinkingBlockCount": 2,
+      "toolUseCounts": {
+        "Skill": 1,
+        "ToolSearch": 1,
+        "Bash": 1,
+        "Agent": 1
+      },
+      "endTurnCount": 1,
+      "turns": [
+        {
+          "index": 1,
+          "timestamp": "2026-10-13T07:26:19.153Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 2,
+          "timestamp": "2026-10-13T07:26:19.458Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 3,
+          "timestamp": "2026-10-13T07:26:19.748Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Skill"
+          ]
+        },
+        {
+          "index": 4,
+          "timestamp": "2026-10-13T07:26:19.933Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "ToolSearch"
+          ]
+        },
+        {
+          "index": 5,
+          "timestamp": "2026-10-13T07:26:20.443Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 6,
+          "timestamp": "2026-10-13T07:26:22.008Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 7,
+          "timestamp": "2026-10-13T07:26:24.029Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Agent"
+          ]
+        },
+        {
+          "index": 8,
+          "timestamp": "2026-10-13T07:26:25.080Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "end_turn",
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        }
+      ]
+    },
+    {
+      "agentId": "a384903052b7936c8",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "description": "Plan pagy 8.6.3 to 9.3.5 upgrade",
+      "toolUseId": "toolu_01D9N1GHMsFdoS1FvLN4oFvo",
+      "parentAgentId": "a941091f538e1a82a",
+      "parentResolution": "meta.parentAgentId",
+      "spawnDepth": 3,
+      "requestShape": "background",
+      "requestNonInteractive": true,
+      "sourceFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-a384903052b7936c8.jsonl",
+      "sourceSha256": "a328c91c867668ba6dc865d61f45a75c6bacb9ca46438d3d10ec1e65eb133798",
+      "sourceSizeBytes": 584035,
+      "metaFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-a384903052b7936c8.meta.json",
+      "metaSha256": "4fb3f6db2bb192403c2e38103e5b1da551685d6707ce621afacc2ec6a687d49e",
+      "promptSha256": "74a205ad688c781aaf038a65809488559f176393048908d3115edbe6ebf87fc4",
+      "firstTimestamp": "2026-10-13T07:26:02.530Z",
+      "lastTimestamp": "2026-10-13T07:32:34.042Z",
+      "beforeFollowUpStart": true,
+      "cliVersions": [
+        "2.1.296"
+      ],
+      "observedModels": [
+        "claude-haiku-5-5"
+      ],
+      "requestedModels": [
+        "claude-haiku-5-5"
+      ],
+      "observedEffort": [
+        "medium"
+      ],
+      "observedPerTurnEffort": [
+        "medium"
+      ],
+      "assistantTurnCount": 100,
+      "thinkingBlockCount": 34,
+      "toolUseCounts": {
+        "Skill": 1,
+        "ToolSearch": 2,
+        "Bash": 40
+      },
+      "endTurnCount": 1,
+      "turns": [
+        {
+          "index": 1,
+          "timestamp": "2026-10-13T07:26:04.366Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 2,
+          "timestamp": "2026-10-13T07:26:04.367Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Skill"
+          ]
+        },
+        {
+          "index": 3,
+          "timestamp": "2026-10-13T07:26:05.920Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 4,
+          "timestamp": "2026-10-13T07:26:06.070Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "ToolSearch"
+          ]
+        },
+        {
+          "index": 5,
+          "timestamp": "2026-10-13T07:26:06.982Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "ToolSearch"
+          ]
+        },
+        {
+          "index": 6,
+          "timestamp": "2026-10-13T07:26:08.753Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 7,
+          "timestamp": "2026-10-13T07:26:09.200Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 8,
+          "timestamp": "2026-10-13T07:26:09.878Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 9,
+          "timestamp": "2026-10-13T07:26:10.629Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 10,
+          "timestamp": "2026-10-13T07:26:12.828Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 11,
+          "timestamp": "2026-10-13T07:26:13.078Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 12,
+          "timestamp": "2026-10-13T07:26:13.614Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 13,
+          "timestamp": "2026-10-13T07:26:14.955Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 14,
+          "timestamp": "2026-10-13T07:26:16.052Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 15,
+          "timestamp": "2026-10-13T07:26:16.255Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 16,
+          "timestamp": "2026-10-13T07:26:17.354Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 17,
+          "timestamp": "2026-10-13T07:26:19.376Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 18,
+          "timestamp": "2026-10-13T07:26:19.703Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 19,
+          "timestamp": "2026-10-13T07:26:20.691Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 20,
+          "timestamp": "2026-10-13T07:26:22.167Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 21,
+          "timestamp": "2026-10-13T07:26:23.916Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 22,
+          "timestamp": "2026-10-13T07:26:26.093Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 23,
+          "timestamp": "2026-10-13T07:26:26.448Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 24,
+          "timestamp": "2026-10-13T07:26:26.965Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 25,
+          "timestamp": "2026-10-13T07:26:29.369Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 26,
+          "timestamp": "2026-10-13T07:26:29.818Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 27,
+          "timestamp": "2026-10-13T07:26:33.090Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 28,
+          "timestamp": "2026-10-13T07:26:33.719Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 29,
+          "timestamp": "2026-10-13T07:26:38.524Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 30,
+          "timestamp": "2026-10-13T07:26:38.910Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 31,
+          "timestamp": "2026-10-13T07:26:39.365Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 32,
+          "timestamp": "2026-10-13T07:26:41.419Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 33,
+          "timestamp": "2026-10-13T07:26:42.189Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 34,
+          "timestamp": "2026-10-13T07:26:45.593Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 35,
+          "timestamp": "2026-10-13T07:26:46.471Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 36,
+          "timestamp": "2026-10-13T07:26:47.826Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 37,
+          "timestamp": "2026-10-13T07:26:48.110Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 38,
+          "timestamp": "2026-10-13T07:26:48.740Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 39,
+          "timestamp": "2026-10-13T07:26:50.075Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 40,
+          "timestamp": "2026-10-13T07:26:50.300Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 41,
+          "timestamp": "2026-10-13T07:26:51.691Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 42,
+          "timestamp": "2026-10-13T07:26:53.378Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 43,
+          "timestamp": "2026-10-13T07:26:53.961Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 44,
+          "timestamp": "2026-10-13T07:26:56.431Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 45,
+          "timestamp": "2026-10-13T07:26:56.976Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 46,
+          "timestamp": "2026-10-13T07:26:58.205Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 47,
+          "timestamp": "2026-10-13T07:27:01.170Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 48,
+          "timestamp": "2026-10-13T07:27:01.455Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 49,
+          "timestamp": "2026-10-13T07:27:02.188Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 50,
+          "timestamp": "2026-10-13T07:27:06.523Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 51,
+          "timestamp": "2026-10-13T07:27:07.031Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 52,
+          "timestamp": "2026-10-13T07:27:08.779Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 53,
+          "timestamp": "2026-10-13T07:27:11.934Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 54,
+          "timestamp": "2026-10-13T07:27:12.744Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 55,
+          "timestamp": "2026-10-13T07:27:14.175Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 56,
+          "timestamp": "2026-10-13T07:27:15.957Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 57,
+          "timestamp": "2026-10-13T07:27:16.181Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 58,
+          "timestamp": "2026-10-13T07:27:16.889Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 59,
+          "timestamp": "2026-10-13T07:28:30.155Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 60,
+          "timestamp": "2026-10-13T07:28:31.363Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 61,
+          "timestamp": "2026-10-13T07:28:40.772Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 62,
+          "timestamp": "2026-10-13T07:28:41.263Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 63,
+          "timestamp": "2026-10-13T07:28:42.726Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 64,
+          "timestamp": "2026-10-13T07:29:38.740Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 65,
+          "timestamp": "2026-10-13T07:29:45.416Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 66,
+          "timestamp": "2026-10-13T07:29:45.906Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 67,
+          "timestamp": "2026-10-13T07:29:47.757Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 68,
+          "timestamp": "2026-10-13T07:29:53.554Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 69,
+          "timestamp": "2026-10-13T07:30:02.216Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 70,
+          "timestamp": "2026-10-13T07:30:02.602Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 71,
+          "timestamp": "2026-10-13T07:30:06.774Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 72,
+          "timestamp": "2026-10-13T07:30:26.226Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 73,
+          "timestamp": "2026-10-13T07:30:27.103Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 74,
+          "timestamp": "2026-10-13T07:30:29.164Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 75,
+          "timestamp": "2026-10-13T07:30:30.976Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 76,
+          "timestamp": "2026-10-13T07:30:33.001Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 77,
+          "timestamp": "2026-10-13T07:30:40.646Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 78,
+          "timestamp": "2026-10-13T07:30:41.856Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 79,
+          "timestamp": "2026-10-13T07:30:42.060Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 80,
+          "timestamp": "2026-10-13T07:30:43.871Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 81,
+          "timestamp": "2026-10-13T07:30:49.454Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 82,
+          "timestamp": "2026-10-13T07:30:50.839Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 83,
+          "timestamp": "2026-10-13T07:30:51.043Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 84,
+          "timestamp": "2026-10-13T07:30:52.714Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 85,
+          "timestamp": "2026-10-13T07:31:04.233Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 86,
+          "timestamp": "2026-10-13T07:31:04.866Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 87,
+          "timestamp": "2026-10-13T07:31:08.756Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 88,
+          "timestamp": "2026-10-13T07:31:21.793Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 89,
+          "timestamp": "2026-10-13T07:31:22.424Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 90,
+          "timestamp": "2026-10-13T07:31:24.287Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 91,
+          "timestamp": "2026-10-13T07:31:35.627Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 92,
+          "timestamp": "2026-10-13T07:31:36.087Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 93,
+          "timestamp": "2026-10-13T07:31:37.331Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 94,
+          "timestamp": "2026-10-13T07:31:37.700Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 95,
+          "timestamp": "2026-10-13T07:31:39.415Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 96,
+          "timestamp": "2026-10-13T07:31:51.992Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 97,
+          "timestamp": "2026-10-13T07:31:52.318Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 98,
+          "timestamp": "2026-10-13T07:31:53.300Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 99,
+          "timestamp": "2026-10-13T07:32:13.871Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 100,
+          "timestamp": "2026-10-13T07:32:34.042Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "end_turn",
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        }
+      ]
+    },
+    {
+      "agentId": "abf6f2503777b137d",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "description": "Plan pagy upgrade 8.6.3 to 9.3.5",
+      "toolUseId": "toolu_01S1ER1howin2CEhKiHQ2HsW",
+      "parentAgentId": "a95d525d56396e31c",
+      "parentResolution": "meta.parentAgentId",
+      "spawnDepth": 3,
+      "requestShape": "background",
+      "requestNonInteractive": true,
+      "sourceFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-abf6f2503777b137d.jsonl",
+      "sourceSha256": "cfae8a09849449414e6d26f2c4cb5c7de065b22e1e4d587786d06bb44daf7fde",
+      "sourceSizeBytes": 555148,
+      "metaFile": "6d7488f3-f7ca-4a04-b05e-39e5bc724af5/subagents/agent-abf6f2503777b137d.meta.json",
+      "metaSha256": "886cf72de0cc521770ba455bc8383d4075bd4eeafe8760d7d426e8d5cc5f4ab8",
+      "promptSha256": "ef2d38f52faf5b6486961e6018b991edc75e582f0fb017794c9cd5d94e0ab9d9",
+      "firstTimestamp": "2026-10-13T07:26:24.033Z",
+      "lastTimestamp": "2026-10-13T07:31:06.268Z",
+      "beforeFollowUpStart": true,
+      "cliVersions": [
+        "2.1.296"
+      ],
+      "observedModels": [
+        "claude-haiku-5-5"
+      ],
+      "requestedModels": [
+        "claude-haiku-5-5"
+      ],
+      "observedEffort": [
+        "medium"
+      ],
+      "observedPerTurnEffort": [
+        "medium"
+      ],
+      "assistantTurnCount": 86,
+      "thinkingBlockCount": 29,
+      "toolUseCounts": {
+        "Skill": 1,
+        "ToolSearch": 1,
+        "Bash": 28,
+        "WebFetch": 1
+      },
+      "endTurnCount": 1,
+      "turns": [
+        {
+          "index": 1,
+          "timestamp": "2026-10-13T07:26:25.760Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 2,
+          "timestamp": "2026-10-13T07:26:26.078Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Skill"
+          ]
+        },
+        {
+          "index": 3,
+          "timestamp": "2026-10-13T07:26:26.324Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "ToolSearch"
+          ]
+        },
+        {
+          "index": 4,
+          "timestamp": "2026-10-13T07:26:27.032Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 5,
+          "timestamp": "2026-10-13T07:26:29.764Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 6,
+          "timestamp": "2026-10-13T07:26:30.178Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 7,
+          "timestamp": "2026-10-13T07:26:31.405Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "WebFetch"
+          ]
+        },
+        {
+          "index": 8,
+          "timestamp": "2026-10-13T07:26:32.407Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 9,
+          "timestamp": "2026-10-13T07:26:35.795Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 10,
+          "timestamp": "2026-10-13T07:26:36.082Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 11,
+          "timestamp": "2026-10-13T07:26:37.382Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 12,
+          "timestamp": "2026-10-13T07:26:38.811Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 13,
+          "timestamp": "2026-10-13T07:26:39.201Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 14,
+          "timestamp": "2026-10-13T07:26:40.081Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 15,
+          "timestamp": "2026-10-13T07:26:41.618Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 16,
+          "timestamp": "2026-10-13T07:26:41.824Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 17,
+          "timestamp": "2026-10-13T07:26:43.691Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 18,
+          "timestamp": "2026-10-13T07:26:45.592Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 19,
+          "timestamp": "2026-10-13T07:26:45.958Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 20,
+          "timestamp": "2026-10-13T07:26:46.856Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 21,
+          "timestamp": "2026-10-13T07:26:49.134Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 22,
+          "timestamp": "2026-10-13T07:26:49.563Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 23,
+          "timestamp": "2026-10-13T07:26:50.142Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 24,
+          "timestamp": "2026-10-13T07:26:54.454Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 25,
+          "timestamp": "2026-10-13T07:26:54.785Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 26,
+          "timestamp": "2026-10-13T07:26:55.803Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 27,
+          "timestamp": "2026-10-13T07:27:04.203Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 28,
+          "timestamp": "2026-10-13T07:27:04.569Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 29,
+          "timestamp": "2026-10-13T07:27:06.077Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 30,
+          "timestamp": "2026-10-13T07:27:15.093Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 31,
+          "timestamp": "2026-10-13T07:27:15.643Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 32,
+          "timestamp": "2026-10-13T07:27:16.630Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 33,
+          "timestamp": "2026-10-13T07:27:18.554Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 34,
+          "timestamp": "2026-10-13T07:27:19.010Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 35,
+          "timestamp": "2026-10-13T07:27:19.451Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 36,
+          "timestamp": "2026-10-13T07:27:21.624Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 37,
+          "timestamp": "2026-10-13T07:27:22.018Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 38,
+          "timestamp": "2026-10-13T07:27:22.729Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 39,
+          "timestamp": "2026-10-13T07:27:26.291Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 40,
+          "timestamp": "2026-10-13T07:27:26.758Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 41,
+          "timestamp": "2026-10-13T07:27:27.552Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 42,
+          "timestamp": "2026-10-13T07:27:30.596Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 43,
+          "timestamp": "2026-10-13T07:27:30.882Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 44,
+          "timestamp": "2026-10-13T07:27:31.702Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 45,
+          "timestamp": "2026-10-13T07:27:36.118Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 46,
+          "timestamp": "2026-10-13T07:27:36.589Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 47,
+          "timestamp": "2026-10-13T07:27:37.466Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 48,
+          "timestamp": "2026-10-13T07:27:39.290Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 49,
+          "timestamp": "2026-10-13T07:27:39.518Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 50,
+          "timestamp": "2026-10-13T07:27:40.820Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 51,
+          "timestamp": "2026-10-13T07:27:45.013Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 52,
+          "timestamp": "2026-10-13T07:27:45.360Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 53,
+          "timestamp": "2026-10-13T07:27:46.343Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 54,
+          "timestamp": "2026-10-13T07:28:47.883Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 55,
+          "timestamp": "2026-10-13T07:28:48.189Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 56,
+          "timestamp": "2026-10-13T07:28:49.662Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 57,
+          "timestamp": "2026-10-13T07:29:00.092Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 58,
+          "timestamp": "2026-10-13T07:29:00.521Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 59,
+          "timestamp": "2026-10-13T07:29:01.781Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 60,
+          "timestamp": "2026-10-13T07:29:12.017Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 61,
+          "timestamp": "2026-10-13T07:29:12.385Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 62,
+          "timestamp": "2026-10-13T07:29:13.519Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 63,
+          "timestamp": "2026-10-13T07:29:17.257Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 64,
+          "timestamp": "2026-10-13T07:29:17.727Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 65,
+          "timestamp": "2026-10-13T07:29:19.542Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 66,
+          "timestamp": "2026-10-13T07:29:26.825Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 67,
+          "timestamp": "2026-10-13T07:29:27.356Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 68,
+          "timestamp": "2026-10-13T07:29:27.844Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 69,
+          "timestamp": "2026-10-13T07:29:36.869Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 70,
+          "timestamp": "2026-10-13T07:29:37.561Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 71,
+          "timestamp": "2026-10-13T07:29:41.551Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 72,
+          "timestamp": "2026-10-13T07:29:55.951Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 73,
+          "timestamp": "2026-10-13T07:29:56.969Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 74,
+          "timestamp": "2026-10-13T07:29:58.873Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 75,
+          "timestamp": "2026-10-13T07:30:06.926Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 76,
+          "timestamp": "2026-10-13T07:30:07.457Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 77,
+          "timestamp": "2026-10-13T07:30:08.939Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 78,
+          "timestamp": "2026-10-13T07:30:26.420Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 79,
+          "timestamp": "2026-10-13T07:30:27.034Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 80,
+          "timestamp": "2026-10-13T07:30:28.601Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 81,
+          "timestamp": "2026-10-13T07:30:30.888Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 82,
+          "timestamp": "2026-10-13T07:30:31.506Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 83,
+          "timestamp": "2026-10-13T07:30:46.179Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 84,
+          "timestamp": "2026-10-13T07:30:47.032Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "tool_use",
+          "blockTypes": [
+            "tool_use"
+          ],
+          "toolNames": [
+            "Bash"
+          ]
+        },
+        {
+          "index": 85,
+          "timestamp": "2026-10-13T07:30:49.372Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": null,
+          "blockTypes": [
+            "thinking"
+          ],
+          "toolNames": []
+        },
+        {
+          "index": 86,
+          "timestamp": "2026-10-13T07:31:06.268Z",
+          "model": "claude-haiku-5-5",
+          "requestedModel": "claude-haiku-5-5",
+          "effort": "medium",
+          "perTurnEffort": "medium",
+          "stopReason": "end_turn",
+          "blockTypes": [
+            "text"
+          ],
+          "toolNames": []
+        }
+      ]
+    }
+  ],
+  "unknowns": [
+    "Effort: only the recorded 'effort' and 'perTurnEffort' fields are reported. The files do not show how the effort level was chosen or whether the service applied it exactly.",
+    "Model: 'observedModels' is the message.model value recorded in each assistant entry. The files do not show a separate serving deployment or provider.",
+    "Tool availability: the tool list each agent was given is not recorded. Only the tool calls actually made are listed. Depth-2 and depth-3 planners made no Agent tool calls, so their ability to spawn agents is unobserved.",
+    "Parent of depth-1 agents: meta.parentAgentId is absent. The parent is the root session because each toolUseId matches a top-level Agent tool call in the root session file.",
+    "System prompts, skill-loading context, and tool schemas are not reported. Prompt text is not included; only promptSha256 of the first string user message is given.",
+    "Subagent transcripts record the planner's own text. Copies delivered to the root session as task notifications or hand-backs may differ in escaping or wrapping (for example, '>' appeared as '&gt;' in those copies). finalText here is taken from the subagent transcript.",
+    "Root session sourceSha256 covers the whole file, which the live session still appends to, including the excluded follow-up. Re-hash before relying on it. Subagent files are complete and their hashes are stable.",
+    "Timestamps are the UTC values recorded in the files. They are not verified against the server clock, and no timing or score is derived from them.",
+    "Completeness: these are the only planner transcripts present in this session directory. Planner runs not written to these files cannot be detected from here.",
+    "The claude binary itself was not hashed. CLI version is taken from the 'version' field in the transcripts (2.1.296), matching 'claude --version'.",
+    "Excluded: thinking text and signatures, account and user metadata, cwd and git branch, environment dumps, and credentials."
+  ]
+}

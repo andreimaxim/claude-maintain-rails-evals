@@ -1,0 +1,113 @@
+{
+  "sessionId": "d63273c6-ab61-43a2-b6c6-504ef4012dbf",
+  "originalTurnCutoff": "Records with timestamp before 2026-10-13T05:27:25.233Z (first follow-up queue-operation); follow-up user message at 05:27:25.247Z excluded",
+  "instances": [
+    {
+      "agentId": null,
+      "role": "main session (original turn)",
+      "agentType": "main",
+      "spawnDepth": 0,
+      "parentAgentId": null,
+      "requestedModel": "unknown (main session; no request field recorded)",
+      "assistantMessageModel": "claude-opus-5-5",
+      "perTurnEffort": "low",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:09:48.760Z",
+      "finalTimestamp": "2026-10-13T05:14:29.823Z",
+      "assistantTurns": 5,
+      "assistantTurnsDistinctMessageIds": 4,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/d63273c6-ab61-43a2-b6c6-504ef4012dbf.jsonl",
+        "sha256": "85faf01789297089043b408238f1cc367198a5ccc610f3cdf26b8c3fc7a7fe02",
+        "note": "file also contains this follow-up; hash covers the file as read during the follow-up and will change as it grows"
+      }
+    },
+    {
+      "agentId": "abb5b880c0e1955bd",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": null,
+      "parentChain": [
+        "main"
+      ],
+      "requestedModel": "not specified in Agent call (no model param)",
+      "assistantMessageModel": "claude-opus-5-5",
+      "perTurnEffort": "low",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:09:53.535Z",
+      "finalTimestamp": "2026-10-13T05:14:06.598Z",
+      "assistantTurns": 5,
+      "assistantTurnsDistinctMessageIds": 3,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/d63273c6-ab61-43a2-b6c6-504ef4012dbf/subagents/agent-abb5b880c0e1955bd.jsonl",
+        "sha256": "dd08bc565846bf6707c2e8d1e1e1d57be7d9f6eaf9a626e05ea48383c914f55e"
+      }
+    },
+    {
+      "agentId": "ac25eee457dda4b26",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 2,
+      "parentAgentId": "abb5b880c0e1955bd",
+      "parentChain": [
+        "main",
+        "abb5b880c0e1955bd"
+      ],
+      "requestedModel": "not specified in Agent call (no model param)",
+      "assistantMessageModel": "claude-opus-5-5",
+      "perTurnEffort": "low",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:09:57.569Z",
+      "finalTimestamp": "2026-10-13T05:13:43.159Z",
+      "assistantTurns": 5,
+      "assistantTurnsDistinctMessageIds": 3,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/d63273c6-ab61-43a2-b6c6-504ef4012dbf/subagents/agent-ac25eee457dda4b26.jsonl",
+        "sha256": "d6be2e7c0722c12e7b7f04a01917871041a9a394eb279ec5bb4b6fcea3b410bd"
+      }
+    },
+    {
+      "agentId": "ad2fae08816ea0777",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 3,
+      "parentAgentId": "ac25eee457dda4b26",
+      "parentChain": [
+        "main",
+        "abb5b880c0e1955bd",
+        "ac25eee457dda4b26"
+      ],
+      "requestedModel": "not specified in Agent call (no model param)",
+      "assistantMessageModel": "claude-opus-5-5",
+      "perTurnEffort": "low",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:10:02.329Z",
+      "finalTimestamp": "2026-10-13T05:13:18.891Z",
+      "assistantTurns": 40,
+      "assistantTurnsDistinctMessageIds": 21,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/d63273c6-ab61-43a2-b6c6-504ef4012dbf/subagents/agent-ad2fae08816ea0777.jsonl",
+        "sha256": "4acb9844b6ba5ac57da77133694886f98fa7387bd10d2e60e2671d5d81c58233"
+      }
+    }
+  ],
+  "resumedPlannerCalls": [],
+  "environment": {
+    "originalProcess": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unknown",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unknown",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unknown",
+      "note": "transcripts do not record environment variables"
+    },
+    "followUpShell": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unset",
+      "cliVersion": "2.1.296"
+    }
+  },
+  "limitations": [
+    "assistantTurns counts assistant JSONL records; one API message can span several records, so distinct message.id counts are also given",
+    "Agent definition model/effort frontmatter not located on disk; requestedModel reflects only the Agent tool_use input",
+    "Main transcript is shared with this follow-up; original figures are filtered by timestamp",
+    "No SendMessage tool_use found in any transcript, so no resumed planner calls"
+  ]
+}

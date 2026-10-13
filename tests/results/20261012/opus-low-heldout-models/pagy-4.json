@@ -1,0 +1,91 @@
+{
+  "sessionId": "c9ac372e-f72f-4080-95d6-513cdcf1da61",
+  "scope": "Original turn only (user prompt 2026-10-13T05:09:47.482Z through final assistant reply 2026-10-13T05:12:44.751Z). Follow-up records from 2026-10-13T05:27:25.459Z on in the main transcript are excluded from counts/timestamps.",
+  "originalProcess": {
+    "envVars": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unknown",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unknown",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unknown"
+    },
+    "note": "Transcripts do not record environment variables; the original process environment is not observable."
+  },
+  "followUpShell": {
+    "envVars": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unset"
+    },
+    "note": "Observed in the follow-up Bash shell; may differ from the original process."
+  },
+  "instances": [
+    {
+      "agentId": null,
+      "agentType": "main",
+      "spawnDepth": 0,
+      "parentAgentId": null,
+      "requestedModel": "unknown",
+      "assistantMessageModel": "claude-opus-5-5",
+      "perTurnEffort": "low",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:09:47.482Z",
+      "finalTimestamp": "2026-10-13T05:12:44.751Z",
+      "assistantTurns": 4,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/c9ac372e-f72f-4080-95d6-513cdcf1da61.jsonl",
+        "sha256": "73e987c16112fe05c127bb7fb5c297ac13c29ffa9c80b379c9111021cd00dc20",
+        "shaNote": "Hash of the file at audit time; it includes follow-up records appended after the original turn."
+      }
+    },
+    {
+      "agentId": "a39481e746f7a0c93",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": null,
+      "parentChain": [
+        "main"
+      ],
+      "spawnToolUseId": "toolu_01NFrswbWXkWLWyBvbSKAQsb",
+      "requestedModel": null,
+      "requestedModelNote": "Agent call had no model parameter",
+      "assistantMessageModel": "claude-opus-5-5",
+      "perTurnEffort": "low",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:09:52.389Z",
+      "finalTimestamp": "2026-10-13T05:12:22.487Z",
+      "assistantTurns": 3,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/c9ac372e-f72f-4080-95d6-513cdcf1da61/subagents/agent-a39481e746f7a0c93.jsonl",
+        "sha256": "14a2a1455bdb908ab73c95ddbd9ef9a7fee55fb298300db7b0fc07c65778dc9f"
+      }
+    },
+    {
+      "agentId": "a0076e26a6c79a2f5",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 2,
+      "parentAgentId": "a39481e746f7a0c93",
+      "parentChain": [
+        "main",
+        "a39481e746f7a0c93"
+      ],
+      "spawnToolUseId": "toolu_01JqJ664pYLFsiGeswVGTTpH",
+      "requestedModel": null,
+      "requestedModelNote": "Agent call had no model parameter",
+      "assistantMessageModel": "claude-opus-5-5",
+      "perTurnEffort": "low",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:09:56.253Z",
+      "finalTimestamp": "2026-10-13T05:12:02.396Z",
+      "assistantTurns": 20,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/c9ac372e-f72f-4080-95d6-513cdcf1da61/subagents/agent-a0076e26a6c79a2f5.jsonl",
+        "sha256": "6516a6f0b0368aeaef36a94723ffa9036db35a77ea6b06ef480b6c3a1d036256"
+      }
+    }
+  ],
+  "resumedPlannerCalls": [],
+  "notes": [
+    "assistantTurns = distinct API message ids; each turn may span several JSONL records.",
+    "No SendMessage or resume of any planner was found in the transcripts.",
+    "requestedModel for main is unknown; transcripts record only the response model."
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "sessionId": "02ea440c-2e44-44a9-9d1c-b52c2e87b801",
+  "originalTurnBoundary": {
+    "rule": "rows before the follow-up queue-operation enqueue (06:09:46.765Z); follow-up user/attachment/queue-operation/assistant rows excluded",
+    "originalMainRows": 38,
+    "excludedFollowUpRows": 31
+  },
+  "instances": [
+    {
+      "agentId": "main-session",
+      "agentType": "(main conversation)",
+      "spawnDepth": 0,
+      "parentAgentId": null,
+      "requestedModel": [
+        "claude-sonnet-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "sessionEffortField": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T05:31:20.562Z",
+      "finalTimestamp": "2026-10-13T05:35:33.644Z",
+      "assistantTurns": 4,
+      "assistantRows": 5,
+      "originalRowCount": 38,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/02ea440c-2e44-44a9-9d1c-b52c2e87b801.jsonl",
+        "sha256_original_prefix": "9b1625b6428e076517142003cdab2e671934b69158c452c3f9ae2ef145e11520",
+        "prefixLines": 38,
+        "sha256_whole_file_at_collection": "66ab69bf2394d3b1c1be248445d847b65cabc6d568ee786b6a083542069a24ca",
+        "wholeFileNote": "main file is append-only and still growing with follow-up rows, so whole-file hash is not stable"
+      }
+    },
+    {
+      "agentId": "a7e24158b6b851808",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": null,
+      "requestedModel": [
+        "claude-sonnet-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "sessionEffortField": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T05:31:25.457Z",
+      "finalTimestamp": "2026-10-13T05:35:12.268Z",
+      "assistantTurns": 4,
+      "assistantRows": 5,
+      "originalRowCount": 25,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/02ea440c-2e44-44a9-9d1c-b52c2e87b801/subagents/agent-a7e24158b6b851808.jsonl",
+        "sha256": "b089aefc60caba7fee54e4de7c2f4c1b643360ce2371790b6959d3788ca5ae25"
+      }
+    },
+    {
+      "agentId": "a80ef23415c069719",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 2,
+      "parentAgentId": "a7e24158b6b851808",
+      "requestedModel": [
+        "claude-sonnet-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "sessionEffortField": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T05:31:29.236Z",
+      "finalTimestamp": "2026-10-13T05:34:47.678Z",
+      "assistantTurns": 3,
+      "assistantRows": 4,
+      "originalRowCount": 22,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/02ea440c-2e44-44a9-9d1c-b52c2e87b801/subagents/agent-a80ef23415c069719.jsonl",
+        "sha256": "3c638a9c1dd6d88243843b8e2591d8c2f6ee99f0919cf568ef1ec6c0c11308ba"
+      }
+    },
+    {
+      "agentId": "a489a64decf7bc693",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 3,
+      "parentAgentId": "a80ef23415c069719",
+      "requestedModel": [
+        "claude-sonnet-5-5"
+      ],
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "sessionEffortField": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T05:31:32.263Z",
+      "finalTimestamp": "2026-10-13T05:34:24.201Z",
+      "assistantTurns": 16,
+      "assistantRows": 29,
+      "originalRowCount": 73,
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/02ea440c-2e44-44a9-9d1c-b52c2e87b801/subagents/agent-a489a64decf7bc693.jsonl",
+        "sha256": "a835c1ce2ae6b15a96b28c4effb27b0e344b953545f2b6ee27c9a9c69d407d23"
+      }
+    }
+  ],
+  "resumedOriginalCalls": {
+    "count": 0,
+    "evidence": "No SendMessage/resume tool_use in main or subagent transcripts; each of the 3 planner instances has exactly one Agent launch (toolu ids in meta.json) with requestShape=foreground; the Agent tool inputs carried no model/effort/resume fields; subagent files have no rows after 05:35:12Z and mtimes precede the follow-up."
+  },
+  "launchChain": "main -> a7e24158b6b851808 (depth1, Agent call from main) -> a80ef23415c069719 (depth2, launched by a7e) -> a489a64decf7bc693 (depth3, launched by a80). Each planner re-invoked Skill maintain-rails:upgrade-gem and spawned another planner.",
+  "envVarStatus": {
+    "scope": "CURRENT shell observation made at audit time, NOT the original Claude Code process",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+    "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+    "CLAUDE_CODE_EFFORT_LEVEL": "unset",
+    "originalProcessStatus": "unknown (not recorded in transcripts; original process environment not inspected)"
+  },
+  "currentShellObservation": {
+    "claudeCliVersion": "2.1.296 (claude --version in current shell)"
+  },
+  "limitations": [
+    "Env-var status is from the current shell only; original process environment is unknown.",
+    "Model/effort values come from transcript fields requestedModel, message.model and perTurnEffort on assistant rows; requestedModel is what the CLI recorded, not proof of server-side routing. No explicit model/effort override appears in any Agent call input.",
+    "The transcript effort field and perTurnEffort are both reported (see sessionEffortField); where the effort value came from (default vs setting) is not recorded -> unknown.",
+    "assistantTurns = distinct message.id (API responses); assistantRows counts transcript rows (one per content block). Thinking text is omitted/empty in rows.",
+    "Main transcript is append-only and still growing, so only the original prefix is hashed stably; boundary is inferred from the follow-up queue-operation timestamp.",
+    "Original-process details not in the JSONL (settings.json model/effort, flags, env) were not inspected beyond entrypoint=sdk-ts rows; unknown.",
+    "Timestamps come from timestamped rows only (untimestamped metadata rows like last-prompt/ai-title ignored); main firstTimestamp is the original queue-operation enqueue."
+  ]
+}

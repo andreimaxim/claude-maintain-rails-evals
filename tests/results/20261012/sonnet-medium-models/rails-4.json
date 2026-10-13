@@ -1,0 +1,119 @@
+{
+  "sessionId": "fbbb3cad-7ddf-4495-8a84-e217e3ca40b7",
+  "scope": "Original turn only: root rows with timestamp < 2026-10-13T06:09:48 (the follow-up's queue-operation enqueue at 06:09:48.239Z and everything after it, including its attachment rows, are excluded). Subagent files contain no follow-up rows. Root rows without a timestamp (atis-latch, last-prompt, ai-title) are not counted in timestamps.",
+  "instances": [
+    {
+      "agentId": null,
+      "agentType": "main (root session, no subagent file)",
+      "spawnDepth": 0,
+      "parentAgentId": null,
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:31:08.723Z",
+      "finalTimestamp": "2026-10-13T05:48:17.688Z",
+      "assistantTurns": {
+        "jsonlAssistantRows": 6,
+        "distinctApiMessages": 4
+      },
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/fbbb3cad-7ddf-4495-8a84-e217e3ca40b7.jsonl",
+        "sha256": "76f4a5ab704318dcb0103c38dcdb8b265027eadd03295dab31403947e7df6937",
+        "sha256Note": "Hash of the whole file as it exists now, including the follow-up rows; the file is still being appended to, so the hash will change."
+      }
+    },
+    {
+      "agentId": "a29c2d027e11dff0c",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": null,
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:31:13.785Z",
+      "finalTimestamp": "2026-10-13T05:47:47.072Z",
+      "assistantTurns": {
+        "jsonlAssistantRows": 4,
+        "distinctApiMessages": 3
+      },
+      "toolUseId": "toolu_012ZsuufPqWCJsKeHoZsotAA",
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/fbbb3cad-7ddf-4495-8a84-e217e3ca40b7/subagents/agent-a29c2d027e11dff0c.jsonl",
+        "sha256": "19b1d2db20af97d7809e8c139fc307975e2df1d11e5c89e3fc33fca0ea6e3f9e"
+      }
+    },
+    {
+      "agentId": "ac3feba978027fc27",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 2,
+      "parentAgentId": "a29c2d027e11dff0c",
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:31:16.856Z",
+      "finalTimestamp": "2026-10-13T05:47:15.954Z",
+      "assistantTurns": {
+        "jsonlAssistantRows": 4,
+        "distinctApiMessages": 3
+      },
+      "toolUseId": "toolu_01SKeG5hPRmycj5dLhn7y1fN",
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/fbbb3cad-7ddf-4495-8a84-e217e3ca40b7/subagents/agent-ac3feba978027fc27.jsonl",
+        "sha256": "6469845784cff2c5a2b8b03bf914cde098e6512a69d2808fbd9eedb839609895"
+      }
+    },
+    {
+      "agentId": "a203dc737732974b4",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 3,
+      "parentAgentId": "ac3feba978027fc27",
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:31:21.763Z",
+      "finalTimestamp": "2026-10-13T05:46:45.085Z",
+      "assistantTurns": {
+        "jsonlAssistantRows": 171,
+        "distinctApiMessages": 88
+      },
+      "toolUseId": "toolu_01DSEzWwuzQsK95sLGU425M9",
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/fbbb3cad-7ddf-4495-8a84-e217e3ca40b7/subagents/agent-a203dc737732974b4.jsonl",
+        "sha256": "410f5d1f9b343bdf4f3f918c01fa1b8080b4ca4927c805c1824eb133ea296a6c"
+      }
+    }
+  ],
+  "spawnChain": "root -> a29c2d027e11dff0c (depth 1) -> ac3feba978027fc27 (depth 2) -> a203dc737732974b4 (depth 3). spawnDepth and parentAgentId come from each agent's .meta.json; all three report requestShape=foreground and requestNonInteractive=true. The root's own transcript shows only one Agent call (the depth-1 planner); the depth-2 and depth-3 spawns are recorded only in the subagent files and metas.",
+  "resumedOriginalCalls": {
+    "count": 0,
+    "basis": "No SendMessage tool_use in any original file, only one Agent tool_use per spawning agent, each subagent file starts with a parentUuid-null prompt row and one agentId, and no resume markers appear in row structure. Mentions of 'resume' in the files are only text in skill descriptions."
+  },
+  "environmentVariables": {
+    "currentShellObservation": {
+      "observedAt": "2026-10-13T06:09:52Z (during the follow-up, in the Bash tool shell)",
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unset"
+    },
+    "originalProcess": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unknown",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unknown",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unknown"
+    },
+    "note": "Only set/unset status was recorded, never values. The transcripts do not record the original process environment, so the current shell observation is not evidence about it."
+  },
+  "limitations": [
+    "Original-process environment variables are unknown; the current-shell values are a different observation.",
+    "Model and effort fields come from the transcript rows (message.model, requestedModel, effort, perTurnEffort). All 185 original assistant rows show claude-sonnet-5-5 and medium, so no per-turn difference exists; the logs do not show how that effort or model was selected (settings, agent definition, or inheritance).",
+    "assistantTurns are given as JSONL assistant rows and as distinct API messages (distinct requestId/message id). One API response is often split across several rows (thinking, text, tool_use).",
+    "The root's SHA256 covers the live file, which includes the excluded follow-up rows and will keep changing; the original portion alone has no stored hash. Subagent file hashes are of files that end at 05:47 and should be stable.",
+    "Root rows without timestamps were left out of first/final timestamps. The root's firstTimestamp is its queue-operation enqueue; the first user row is at 05:31:08.805Z.",
+    "The sandboxed Claude Code version for the audit shell was 2.1.296 (claude --version); the transcript rows also say 2.1.296 for every original row.",
+    "This transcript has no 'resumed' flag; zero resumed calls is inferred from the absence of resume evidence.",
+    "The depth-3 agent's file is the largest (365 rows) and its parent file ends at 05:47:15, so the depth-2 and depth-1 agents ran long waiting on it; this audit did not examine their reports' content."
+  ]
+}

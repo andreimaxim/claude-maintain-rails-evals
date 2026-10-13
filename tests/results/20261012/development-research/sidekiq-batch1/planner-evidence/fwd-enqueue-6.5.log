@@ -1,0 +1,15 @@
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/sidekiq-upgrade-exp/baseline/app/models/user.rb:38:in `block in request_digest')
+enqueuing phase=fwd with sidekiq=6.5.12 REDIS_URL=redis://127.0.0.1:6391/4
+2026-10-12T15:39:45.044Z pid=49916 tid=14x4 WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+export id=5 jid=cd30f02fc8ee4ddea28d6f4b
+reminder soon note=3 job=078f3eb8-88e5-4cad-8c22-a3cff6adc0ce; later note=4 job=da59fe9c-1717-4daa-b2d5-518a9cc402ff
+2026-10-12T15:39:45.069Z pid=49916 tid=14x4 WARN: Job arguments to DigestJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+digest queued=true
+failing export jid=6b0342ae2d97d707298b0f50
+queue:default len=3 schedule=2 retry=0

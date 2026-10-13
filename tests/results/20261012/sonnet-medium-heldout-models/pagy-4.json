@@ -1,0 +1,196 @@
+{
+  "sessionId": "4381f7b0-f0a0-461c-8eb3-5625dacce119",
+  "entrypoint": "sdk-ts",
+  "originalFollowUpCutoff": "2026-10-13T06:26:19.038Z",
+  "cutoffRule": "Original = rows with timestamp < cutoff. Follow-up = queue-operation enqueue at cutoff, its user prompt (06:26:19.055Z), its attachments and everything after. Rows without a timestamp (ai-title, last-prompt, atis-latch) are not counted. All three subagent files end before the cutoff.",
+  "instances": [
+    {
+      "agentId": null,
+      "label": "main (original session thread)",
+      "agentType": null,
+      "spawnDepth": 0,
+      "parentAgentId": null,
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "effortField": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T06:12:36.286Z",
+      "finalTimestamp": "2026-10-13T06:15:56.438Z",
+      "firstAssistantTimestamp": "2026-10-13T06:12:38.034Z",
+      "finalAssistantTimestamp": "2026-10-13T06:15:56.438Z",
+      "assistantTurns": 4,
+      "assistantJsonlRows": 5,
+      "rowsCounted": 28,
+      "toolUses": [
+        "Agent",
+        "Bash",
+        "Skill"
+      ],
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/4381f7b0-f0a0-461c-8eb3-5625dacce119.jsonl",
+        "sha256_wholeFileAtAuditTime": "f71c059ec8212573d84dfe95c779e4b0b6834acb1dd8a1cbafa6c8a5768e8d54",
+        "note": "Main file is still being appended by the live session (follow-up rows), so the whole-file hash will not match a later download; rows with timestamp >= cutoff are excluded from all counts."
+      }
+    },
+    {
+      "agentId": "af6ded7bc62982e92",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": null,
+      "parentAgentIdNote": "absent in meta.json: spawned directly by main thread",
+      "description": "Plan pagy upgrade",
+      "spawnToolUseId": "toolu_01REJokWErTvEvc7a2LqY2sN",
+      "requestShape": "foreground",
+      "requestNonInteractive": true,
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "effortField": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T06:12:41.701Z",
+      "finalTimestamp": "2026-10-13T06:15:41.990Z",
+      "firstAssistantTimestamp": "2026-10-13T06:12:43.159Z",
+      "finalAssistantTimestamp": "2026-10-13T06:15:41.990Z",
+      "assistantTurns": 3,
+      "assistantJsonlRows": 3,
+      "rowsCounted": 21,
+      "toolUses": [
+        "Agent",
+        "Skill"
+      ],
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/4381f7b0-f0a0-461c-8eb3-5625dacce119/subagents/agent-af6ded7bc62982e92.jsonl",
+        "sha256": "60f17d5a2ae63bafaa49856e81aa7d1685f5bf82be59362975c167d04013c73b",
+        "metaPath": "/home/user/.claude/projects/-home-user-workspace-repo/4381f7b0-f0a0-461c-8eb3-5625dacce119/subagents/agent-af6ded7bc62982e92.meta.json",
+        "metaSha256": "218a246b18b981ce9f01aba12ea643b77374889a3c7023f435d65fcf7d2e69eb"
+      }
+    },
+    {
+      "agentId": "a60ec309b8fad6445",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 2,
+      "parentAgentId": "af6ded7bc62982e92",
+      "parentAgentIdNote": null,
+      "description": "Plan pagy upgrade",
+      "spawnToolUseId": "toolu_01VbfY9KcroG7BRaVrmt8uym",
+      "requestShape": "foreground",
+      "requestNonInteractive": true,
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "effortField": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T06:12:44.842Z",
+      "finalTimestamp": "2026-10-13T06:15:25.550Z",
+      "firstAssistantTimestamp": "2026-10-13T06:12:46.350Z",
+      "finalAssistantTimestamp": "2026-10-13T06:15:25.550Z",
+      "assistantTurns": 3,
+      "assistantJsonlRows": 4,
+      "rowsCounted": 22,
+      "toolUses": [
+        "Agent",
+        "Skill"
+      ],
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/4381f7b0-f0a0-461c-8eb3-5625dacce119/subagents/agent-a60ec309b8fad6445.jsonl",
+        "sha256": "ab8e6d53ee47107150c609151e0482de96460b22da7648a0d6588a29497a771f",
+        "metaPath": "/home/user/.claude/projects/-home-user-workspace-repo/4381f7b0-f0a0-461c-8eb3-5625dacce119/subagents/agent-a60ec309b8fad6445.meta.json",
+        "metaSha256": "e216d7070b7589bf0b9dbbc16b8b7d758a491733297ee5676d24ececf1e7588d"
+      }
+    },
+    {
+      "agentId": "a3a5fb914f007d6e4",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 3,
+      "parentAgentId": "a60ec309b8fad6445",
+      "parentAgentIdNote": null,
+      "description": "Plan pagy upgrade",
+      "spawnToolUseId": "toolu_013oNKjg2LET4Gx4EYpbj2Y5",
+      "requestShape": "foreground",
+      "requestNonInteractive": true,
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": [
+        "claude-sonnet-5-5"
+      ],
+      "perTurnEffort": [
+        "medium"
+      ],
+      "effortField": [
+        "medium"
+      ],
+      "cliVersion": [
+        "2.1.296"
+      ],
+      "firstTimestamp": "2026-10-13T06:12:47.963Z",
+      "finalTimestamp": "2026-10-13T06:15:07.880Z",
+      "firstAssistantTimestamp": "2026-10-13T06:12:49.658Z",
+      "finalAssistantTimestamp": "2026-10-13T06:15:07.880Z",
+      "assistantTurns": 20,
+      "assistantJsonlRows": 38,
+      "rowsCounted": 90,
+      "toolUses": [
+        "Bash",
+        "Skill"
+      ],
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/4381f7b0-f0a0-461c-8eb3-5625dacce119/subagents/agent-a3a5fb914f007d6e4.jsonl",
+        "sha256": "a6274ff9ad6df33f902ebd0a84747a064b36a0a7efc85f9820dd8c1fd2d8cda8",
+        "metaPath": "/home/user/.claude/projects/-home-user-workspace-repo/4381f7b0-f0a0-461c-8eb3-5625dacce119/subagents/agent-a3a5fb914f007d6e4.meta.json",
+        "metaSha256": "eeec049c309a74abd4435c75c438c143ebe739848c2b734f0cb38b2ecc8a47b3"
+      }
+    }
+  ],
+  "resumedOriginalCalls": {
+    "count": 0,
+    "evidence": "No SendMessage tool_use in the main thread or any subagent file; each of the 3 subagents has exactly one spawn (meta.json) with one contiguous run; main Agent tool_use count is 1 and its result is status completed, agentId af6ded7bc62982e92. Subagent files contain no rows after the original window."
+  },
+  "environmentVariables": {
+    "currentShell": {
+      "scope": "Bash tool shell of the follow-up turn, checked at audit time; says nothing about the original process",
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unset",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unset",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unset"
+    },
+    "originalProcess": {
+      "CLAUDE_CODE_SUBAGENT_MODEL": "unknown",
+      "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "unknown",
+      "CLAUDE_CODE_EFFORT_LEVEL": "unknown",
+      "reason": "The JSONL does not record environment variables and the original process environment was not inspected; the current shell may differ."
+    }
+  },
+  "limitations": [
+    "Env var status for the original process is unknown; only the current shell was checked (set/unset only, values not recorded).",
+    "requestedModel and perTurnEffort are read from per-row fields in the JSONL as logged; the file does not show how they were resolved (flag, env, agent definition, or default).",
+    "The Agent tool_use inputs carry no model parameter (main and nested), so no explicit per-call model override is visible.",
+    "assistantTurns = distinct requestId values (one API response each); a response is split across several JSONL rows (thinking/text/tool_use blocks), counted separately as assistantJsonlRows.",
+    "firstTimestamp/finalTimestamp span all timestamped rows (including attachment, user and queue rows) inside the original window; first/finalAssistantTimestamp cover assistant rows only. Main firstTimestamp is the original prompt enqueue.",
+    "Subagent nesting is 3 deep: af6ded7bc62982e92 (depth 1, from main) spawned a60ec309b8fad6445 (depth 2), which spawned a3a5fb914f007d6e4 (depth 3); the final report of af6ded7bc62982e92 said the planner had no subagent tool, which does not match this nesting. Not investigated further.",
+    "The main JSONL is live and grows with follow-up rows, so its whole-file SHA-256 reflects the audit moment only; subagent files and their meta.json are stable.",
+    "Hashes and counts come from files read in this orb; whether the downloaded copy equals them is the downloader's to check."
+  ]
+}

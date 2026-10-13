@@ -1,0 +1,15 @@
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/core_ext/object/json.rb:5: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/bigdecimal.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add bigdecimal to your Gemfile or gemspec to silence this warning.
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/notifications/fanout.rb:3: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/mutex_m.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add mutex_m to your Gemfile or gemspec to silence this warning.
+sidekiq=7.3.9 redis-gem=4.8.1 redis-client=0.31.0 connection_pool=3.0.2 rails=7.0.8.7
+REDIS_URL=redis://127.0.0.1:6399/0 adapter=ActiveJob::QueueAdapters::SidekiqAdapter adapter_source=/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/sidekiq-7.3.9/lib/active_job/queue_adapters/sidekiq_adapter.rb
+2026-10-12T15:37:50.244Z pid=48542 tid=yuu INFO: Sidekiq 7.3.9 connecting to Redis with options {:size=>10, :pool_name=>"internal", :url=>"redis://127.0.0.1:6399/0"}
+connection class yielded by Sidekiq.redis: Sidekiq::RedisClientAdapter::CompatClient (Class)
+default concurrency: RAISED NameError: uninitialized constant Sidekiq::Capsule  ancestors=DidYouMean::Correctable<ErrorHighlight::CoreExt<NameError
+strict args mode: :raise (Symbol)
+Sidekiq.redis sadd with Redis down: RAISED RedisClient::CannotConnectError: Connection refused - connect(2) for 127.0.0.1:6399 (redis://127.0.0.1:6399)  ancestors=RedisClient::CannotConnectError<RedisClient::ConnectionError<RedisClient::Error<RedisClient::Retriable<RedisClient::HasConfig
+ExportJob.perform_async (string keys) with Redis down: RAISED RedisClient::CannotConnectError: Connection refused - connect(2) for 127.0.0.1:6399 (redis://127.0.0.1:6399)  ancestors=RedisClient::CannotConnectError<RedisClient::ConnectionError<RedisClient::Error<RedisClient::Retriable<RedisClient::HasConfig
+Notebook#request_export with Redis down: RAISED ArgumentError: Job arguments to ExportJob must be native JSON types, but :format is a Symbol.  ancestors=ErrorHighlight::CoreExt<ArgumentError
+exports leaked by failed request_export: 1
+User#request_digest with Redis down: RAISED RedisClient::CannotConnectError: Connection refused - connect(2) for 127.0.0.1:6399 (redis://127.0.0.1:6399)  ancestors=RedisClient::CannotConnectError<RedisClient::ConnectionError<RedisClient::Error<RedisClient::Retriable<RedisClient::HasConfig

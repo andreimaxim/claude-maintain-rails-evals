@@ -514,16 +514,82 @@ reconciled 541 quote memberships, counts, capture/export hashes and wall times
 with no mismatches. Reviewed assessments, native audits and the 50-row CSV are
 under `.amp/in/artifacts/planner-suite-20261012/`.
 
-## Haiku medium: development batch collecting
+## Haiku medium: all twenty outcomes assessed
 
 Ten fresh Rails/Sidekiq orbs launched at approximately 06:29 UTC on October 13,
 requesting `claude-haiku-5-5` and medium effort. All ten source audits match the
-frozen application, plugin HEAD and prompt hashes. Several early idle responses
-are status messages while nested background agents continue. Preserve these
-early exports, but do not count them as fast successful plans. Assess completed
-reports and workflow failures before launching held-out cases. No coordinator
-coaching or planner tuning follows these results. The temporary project pin
-remains active; restore its previous empty value after the suite.
+frozen application, plugin HEAD and prompt hashes. Their outcomes were assessed
+before ten Pagy/Faraday orbs launched at approximately 07:25 UTC. All ten held-out
+source audits also match the freeze. The last held-out response finished at
+07:37:38 UTC. No coordinator coaching, choice-gate answers or planner tuning
+followed these results. The temporary project pre-setup pin was restored to its
+previous empty value on October 13 after the final batch.
+
+These are assessed attempts, not twenty successful planner deliveries. `—` is
+unavailable or absent, not zero accuracy. Response time includes late spontaneous
+delivery and the parent's own retries. Full-plan time requires recovered native
+provenance and complete delivery, excluding implementation, missing plans and
+lossy last summaries. First-handback tokens sometimes describe status responses,
+not the completed report or the entire workflow.
+
+| Case | Run | Actionable raw → final | Response time | Verified full-plan time | First-handback tokens |
+| --- | --- | --- | --- | --- | ---: |
+| Rails | 1 | — → — | 1m 02s | — | 41445 |
+| Rails | 2 | — → 2/23 | 7m 35s | — | — |
+| Rails | 3 | 3/23 → 3/23 | 7m 45s | 7m 45s | — |
+| Rails | 4 | — → 17/23 | 18m 52s | — | — |
+| Rails | 5 | 18/23 → 18/23 | 21m 43s | 21m 43s | 37328 |
+| Sidekiq | 1 | 1/2 → 0/2 | 7m 43s | — | 45557 |
+| Sidekiq | 2 | — → 2/2 | 7m 21s | — | 42407 |
+| Sidekiq | 3 | 2/2 → 2/2 | 13m 28s | 13m 28s | 177792 |
+| Sidekiq | 4 | — → 1/2 | 13m 25s | — | 42675 |
+| Sidekiq | 5 | — → 0/2 | 7m 04s | — | — |
+| Pagy | 1 | 2/2 → 1/2 | 7m 45s | — | — |
+| Pagy | 2 | 2/2 → 2/2 | 5m 59s | — | — |
+| Pagy | 3 | — → 0/2 | 1m 50s | — | — |
+| Pagy | 4 | 2/2 → 2/2 | 5m 37s | 5m 37s | — |
+| Pagy | 5 | 2/2 → 1/2 | 6m 36s | — | — |
+| Faraday | 1 | — → 0/2 | 2m 21s | — | — |
+| Faraday | 2 | 2/2 → 2/2 | 10m 01s | 10m 01s | — |
+| Faraday | 3 | 1/2 → 1/2 | 4m 19s | 4m 19s | 39704 |
+| Faraday | 4 | 2/2 → 2/2 | 12m 02s | 12m 02s | 36265 |
+| Faraday | 5 | — → 0/2 | 8m 57s | — | 39753 |
+
+The all-attempt response medians/ranges are Rails 7m 45s (1m 02s–21m 43s),
+Sidekiq 7m 43s (7m 04s–13m 28s), Pagy 5m 59s (1m 50s–7m 45s), and Faraday
+8m 57s (2m 21s–12m 02s). Sample SDs are 8.62, 3.33, 2.23 and 4.05 minutes.
+These include failures and are not successful-plan speed comparisons. Only seven
+of twenty attempts have verified full-plan time; keep that coverage visible.
+
+Rails1 ends at a choice gate without a plan. Rails2, Pagy3 and Faraday1 directly
+implemented the upgrade without invoking the planner; none of those changes was
+integrated. Rails3 and Rails5 recover via native invocations. Sidekiq3 recovers a
+full report, while Sidekiq1's last summary loses actionable detail. Four development
+audits remain unavailable after collection refusals, so useful final content does
+not prove native provenance. All raw/final finding grades and additional issues
+are in the [four Haiku assessments](results/20261012/assessments).
+
+Pagy retains 8/8 actionable raw memberships among four recovered complete native
+reports, but only 6/10 in last responses. Runs1/2/5 replace reports with summaries;
+run2 keeps recall counts without delivering the full report. Misidentified
+require-only masking, public-query drift and test-blindness claims remain logged.
+Faraday retains 5/6 raw memberships among three recovered complete reports and
+5/10 in final responses. Unsafe JSON3 acceptance, unsupported reverse-migration
+and mixed-fleet assurances remain separate from recall. Fully specified validation
+families remain zero under the unchanged rubric; partial probes and proposed
+checks are preserved, not treated as no testing.
+
+Native metadata is available for fourteen Haiku attempts, including two planner
+bypasses. Six audits are unavailable: Rails4, Sidekiq2/4/5 and Faraday1/5. Model
+and effort in recovered records are Haiku5.5/medium. The Pagy3 artifact leaves CLI
+version unknown, despite the worker's contrary summary. Recorded planner types
+overrule misleading authored fallback/self-analysis labels; they do not excuse
+missing handoffs or lossy delivery. Collection follow-ups are excluded from timing.
+
+Graders reconciled 300 Pagy and 303 Faraday quote memberships with zero mismatches.
+The coordinator independently reconciled all twenty Haiku export hashes, response
+times, final counts and 526 final quote memberships with zero mismatches. Earlier
+raw-layer reconciliation and alternate-report grades remain in their assessments.
 
 The [per-run failure ledger](planner-failures-20261012.json) records observed
 missing plans, planner bypass, unintended implementation, fallback delivery and
@@ -533,3 +599,19 @@ entered successful-plan aggregates. Entries retain quotes, export hashes,
 thread links and elapsed-time boundaries; late recoveries do not erase earlier
 events. Pending background work is not labeled a permanent failure, and requested
 model/effort remain distinct from audited native values.
+
+## Results and available evidence are retained in Git
+
+The [durable evidence index](results/20261012/README.md) covers all sixty requested
+slots and the ten Opus-high development references. It retains reviewed visible
+traces, per-family raw/final assessments, available native reports/model audits,
+source audits, quota/source-drift exclusions, early Haiku observations, collection
+refusals and available development research files. The CSV/JSON retain per-run
+timing, workflow status and 59 available first-handback token footers across 70
+slots. Descriptive statistics preserve sample size, median, range and sample SD.
+
+Private full exports, thinking/signature blocks and account/environment metadata
+are not published. Basic-auth literals are redacted consistently, with source
+hashes and transformations recorded. Nested experiment logs were not generally
+collected, so their claims remain attributed. This is a completed assessment of
+the requested attempt matrix, not complete end-to-end proof for every plan.

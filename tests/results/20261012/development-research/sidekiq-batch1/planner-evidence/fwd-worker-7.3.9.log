@@ -1,0 +1,43 @@
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/core_ext/object.rb:13: warning: bigdecimal was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add bigdecimal to your Gemfile or gemspec to silence this warning.
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/notifications.rb:4: warning: mutex_m was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add mutex_m to your Gemfile or gemspec to silence this warning.
+2026-10-12T15:39:49.144Z pid=50040 tid=14ao INFO: Booted Rails 7.0.8.7 application in development environment
+2026-10-12T15:39:49.145Z pid=50040 tid=14ao INFO: Running in ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+2026-10-12T15:39:49.145Z pid=50040 tid=14ao INFO: See LICENSE and the LGPL-3.0 for licensing details.
+2026-10-12T15:39:49.145Z pid=50040 tid=14ao INFO: Upgrade to Sidekiq Pro for more features and support: https://sidekiq.org
+2026-10-12T15:39:49.145Z pid=50040 tid=14ao INFO: Sidekiq 7.3.9 connecting to Redis with options {:size=>10, :pool_name=>"internal", :url=>"redis://127.0.0.1:6391/4"}
+2026-10-12T15:39:49.146Z pid=50040 tid=14ao INFO: Sidekiq 7.3.9 connecting to Redis with options {:size=>5, :pool_name=>"default", :url=>"redis://127.0.0.1:6391/4"}
+2026-10-12T15:39:49.196Z pid=50040 tid=1dbg class=ExportJob jid=cd30f02fc8ee4ddea28d6f4b INFO: start
+2026-10-12T15:39:49.196Z pid=50040 tid=1dao class=DigestJob jid=4084dabaa8cf03b88e446301 INFO: start
+2026-10-12T15:39:49.196Z pid=50040 tid=1dac class=ExportJob jid=6b0342ae2d97d707298b0f50 INFO: start
+2026-10-12T15:39:49.344Z pid=50040 tid=1dac class=ExportJob jid=6b0342ae2d97d707298b0f50 elapsed=0.148 INFO: fail
+2026-10-12T15:39:49.345Z pid=50040 tid=1dac WARN: {"context":"Job raised exception","job":{"retry":true,"queue":"default","args":[-1,{"format":"markdown"}],"class":"ExportJob","jid":"6b0342ae2d97d707298b0f50","created_at":1791819585.0695376,"enqueued_at":1791819585.069559}}
+2026-10-12T15:39:49.345Z pid=50040 tid=1dac WARN: ActiveRecord::RecordNotFound: Couldn't find Export with 'id'=-1
+2026-10-12T15:39:49.345Z pid=50040 tid=1dac WARN: app/jobs/export_job.rb:10:in `perform'
+2026-10-12T15:39:49.544Z pid=50040 tid=1dbg class=ExportJob jid=cd30f02fc8ee4ddea28d6f4b WARN: DEPRECATION WARNING: Rails 7.0 has deprecated Enumerable.sum in favor of Ruby's native implementation available since 2.4. Sum of non-numeric elements requires an initial argument. (called from generate at /tmp/sidekiq-upgrade-exp/upgraded-cp2/app/models/export.rb:42)
+2026-10-12T15:39:49.569Z pid=50040 tid=1dbg class=ExportJob jid=cd30f02fc8ee4ddea28d6f4b INFO: [36m  Disk Storage (0.5ms) [0m[32mUploaded file to key: 6sv7ka3l8t5ij87iozjmpwq8rhns (checksum: o7GRnTUHFARPj0Wjt0L4qA==)[0m
+2026-10-12T15:39:49.612Z pid=50040 tid=1dbg class=ExportJob jid=cd30f02fc8ee4ddea28d6f4b elapsed=0.416 INFO: done
+2026-10-12T15:39:49.678Z pid=50040 tid=1dao class=DigestJob jid=4084dabaa8cf03b88e446301 INFO: Performing DigestJob (Job ID: 0e1f9bcd-7b54-4e80-9670-2bbc72355151) from Sidekiq(default) enqueued at 2026-10-12T15:39:45Z with arguments: #<GlobalID:0x00007f560250b950 @uri=#<URI::GID gid://margin-notes/User/5>>, Mon, 12 Oct 2026 15:39:45.064809554 UTC +00:00, "1.0"
+2026-10-12T15:39:49.711Z pid=50040 tid=1dao class=DigestJob jid=4084dabaa8cf03b88e446301 INFO:   Rendered digest_mailer/daily_digest.text.erb within layouts/mailer (Duration: 7.4ms | Allocations: 4180)
+2026-10-12T15:39:49.712Z pid=50040 tid=1dao class=DigestJob jid=4084dabaa8cf03b88e446301 INFO:   Rendered layout layouts/mailer.text.erb (Duration: 7.9ms | Allocations: 4403)
+2026-10-12T15:39:49.718Z pid=50040 tid=1dao class=DigestJob jid=4084dabaa8cf03b88e446301 INFO: Delivered mail 6accff45aedb2_c3783ae81897b@e2b.local.mail (4.4ms)
+2026-10-12T15:39:49.718Z pid=50040 tid=1dao class=DigestJob jid=4084dabaa8cf03b88e446301 INFO: Performed DigestJob (Job ID: 0e1f9bcd-7b54-4e80-9670-2bbc72355151) from Sidekiq(default) in 407.4ms
+2026-10-12T15:39:49.718Z pid=50040 tid=1dao class=DigestJob jid=4084dabaa8cf03b88e446301 elapsed=0.522 INFO: done
+2026-10-12T15:40:00.631Z pid=50040 tid=1d24 class=NoteReminderJob jid=e3acf49d1c4124dedc95bc39 INFO: start
+2026-10-12T15:40:00.636Z pid=50040 tid=1d24 class=NoteReminderJob jid=e3acf49d1c4124dedc95bc39 INFO: Performing NoteReminderJob (Job ID: 078f3eb8-88e5-4cad-8c22-a3cff6adc0ce) from Sidekiq(default) enqueued at 2026-10-12T15:39:45Z with arguments: #<GlobalID:0x00007f5601f0ea20 @uri=#<URI::GID gid://margin-notes/Note/3>>
+2026-10-12T15:40:00.656Z pid=50040 tid=1d24 class=NoteReminderJob jid=e3acf49d1c4124dedc95bc39 INFO:   Rendered reminder_mailer/note_reminder.text.erb within layouts/mailer (Duration: 0.8ms | Allocations: 371)
+2026-10-12T15:40:00.656Z pid=50040 tid=1d24 class=NoteReminderJob jid=e3acf49d1c4124dedc95bc39 INFO:   Rendered layout layouts/mailer.text.erb (Duration: 1.3ms | Allocations: 573)
+2026-10-12T15:40:00.657Z pid=50040 tid=1d24 class=NoteReminderJob jid=e3acf49d1c4124dedc95bc39 INFO: Delivered mail 6accff50a06eb_c3783b24190ee@e2b.local.mail (0.7ms)
+2026-10-12T15:40:00.659Z pid=50040 tid=1d24 class=NoteReminderJob jid=e3acf49d1c4124dedc95bc39 INFO: Performed NoteReminderJob (Job ID: 078f3eb8-88e5-4cad-8c22-a3cff6adc0ce) from Sidekiq(default) in 24.75ms
+2026-10-12T15:40:00.659Z pid=50040 tid=1d24 class=NoteReminderJob jid=e3acf49d1c4124dedc95bc39 elapsed=0.028 INFO: done
+2026-10-12T15:40:09.028Z pid=50040 tid=1d2g class=ExportJob jid=6b0342ae2d97d707298b0f50 INFO: start
+2026-10-12T15:40:09.032Z pid=50040 tid=1d2g class=ExportJob jid=6b0342ae2d97d707298b0f50 elapsed=0.003 INFO: fail
+2026-10-12T15:40:09.032Z pid=50040 tid=1d2g WARN: {"context":"Job raised exception","job":{"retry":true,"queue":"default","args":[-1,{"format":"markdown"}],"class":"ExportJob","jid":"6b0342ae2d97d707298b0f50","created_at":1791819585.0695376,"enqueued_at":1791819609.028539,"error_message":"Couldn't find Export with 'id'=-1","error_class":"ActiveRecord::RecordNotFound","failed_at":1791819589.3432167,"retry_count":0}}
+2026-10-12T15:40:09.032Z pid=50040 tid=1d2g WARN: ActiveRecord::RecordNotFound: Couldn't find Export with 'id'=-1
+2026-10-12T15:40:09.032Z pid=50040 tid=1d2g WARN: app/jobs/export_job.rb:10:in `perform'
+2026-10-12T15:40:28.322Z pid=50040 tid=14ao INFO: Shutting down
+2026-10-12T15:40:28.323Z pid=50040 tid=14ao INFO: Terminating quiet threads for default capsule
+2026-10-12T15:40:28.323Z pid=50040 tid=1dbs INFO: Scheduler exiting...
+2026-10-12T15:40:28.823Z pid=50040 tid=pfo INFO: Pausing to allow jobs to finish...
+2026-10-12T15:40:30.324Z pid=50040 tid=14ao INFO: Bye!

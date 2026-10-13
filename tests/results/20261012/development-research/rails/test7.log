@@ -1,0 +1,64 @@
+
+Run options: --seed 46028
+
+# Running:
+
+......................2026-10-12T14:53:27.591Z pid=46219 tid=y8n WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+.2026-10-12T14:53:27.635Z pid=46219 tid=y8n WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+..2026-10-12T14:53:27.736Z pid=46219 tid=y8n WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+E
+
+Error:
+ExportsControllerTest#test_the_cached_availability_indicator_does_not_authorize_a_download:
+ActionView::Template::Error: Cache expiration time is invalid, cannot be negative: -60.0
+    app/views/exports/_export.html.erb:26
+    app/views/exports/index.html.erb:16
+    test/controllers/exports_controller_test.rb:77:in `block (2 levels) in <class:ExportsControllerTest>'
+    test/controllers/exports_controller_test.rb:69:in `block in <class:ExportsControllerTest>'
+
+bin/rails test test/controllers/exports_controller_test.rb:59
+
+............E
+
+Error:
+NotebooksControllerTest#test_settings_update_the_name_and_export_heading_but_keep_the_slug:
+ActiveRecord::ReadonlyAttributeError: slug
+    app/controllers/notebooks_controller.rb:26:in `update'
+    test/controllers/notebooks_controller_test.rb:29:in `block in <class:NotebooksControllerTest>'
+
+bin/rails test test/controllers/notebooks_controller_test.rb:22
+
+...E
+
+Error:
+ActivityReportsControllerTest#test_a_notebook's_notes_are_counted_by_UTC_creation_date,_newest_first:
+TypeError: no implicit conversion of Date into String
+    app/models/notebook.rb:40:in `iso8601'
+    app/models/notebook.rb:40:in `block in daily_note_counts'
+    app/models/notebook.rb:40:in `map'
+    app/models/notebook.rb:40:in `daily_note_counts'
+    app/controllers/activity_reports_controller.rb:4:in `show'
+    test/controllers/activity_reports_controller_test.rb:18:in `block in <class:ActivityReportsControllerTest>'
+
+bin/rails test test/controllers/activity_reports_controller_test.rb:8
+
+.Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/rails81-plan/app/app/models/user.rb:38:in `block in request_digest')
+Redis#srem will always return an Integer in Redis 5.0.0. Use Redis#srem? instead.(called from: /tmp/rails81-plan/app/app/models/user.rb:43:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/rails81-plan/app/app/models/user.rb:38:in `block in request_digest')
+.Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/rails81-plan/app/app/models/user.rb:38:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/rails81-plan/app/app/models/user.rb:38:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/rails81-plan/app/app/models/user.rb:38:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/rails81-plan/app/app/models/user.rb:38:in `block in request_digest')
+.
+
+Finished in 2.553696s, 18.0131 runs/s, 127.2665 assertions/s.
+46 runs, 325 assertions, 0 failures, 3 errors, 0 skips

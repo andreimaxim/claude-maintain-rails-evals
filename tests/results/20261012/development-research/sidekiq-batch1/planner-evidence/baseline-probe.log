@@ -1,0 +1,37 @@
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/core_ext/object/json.rb:5: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/bigdecimal.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add bigdecimal to your Gemfile or gemspec to silence this warning.
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/notifications/fanout.rb:3: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/mutex_m.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add mutex_m to your Gemfile or gemspec to silence this warning.
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/sidekiq-upgrade-exp/scripts/probe.rb:28:in `block (2 levels) in <main>')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/sidekiq-upgrade-exp/scripts/probe.rb:29:in `block (2 levels) in <main>')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/sidekiq-upgrade-exp/scripts/probe.rb:30:in `block (2 levels) in <main>')
+sidekiq=6.5.12 redis-gem=4.8.1 redis-client=n/a connection_pool=2.5.5 rails=7.0.8.7
+REDIS_URL=redis://127.0.0.1:6391/3 adapter=ActiveJob::QueueAdapters::SidekiqAdapter adapter_source=/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activejob-7.0.8.7/lib/active_job/queue_adapters/sidekiq_adapter.rb
+connection class yielded by Sidekiq.redis: Redis (Class)
+default concurrency: 10 (Integer)
+strict args mode: :warn (Symbol)
+sadd new member (current code shape): true (TrueClass)
+sadd duplicate member (current code shape): false (FalseClass)
+truthiness of duplicate sadd: false (FalseClass)
+sadd [member] array form, new: 1 (Integer)
+sadd [member] array form, duplicate: 0 (Integer)
+call('SADD') new: 1 (Integer)
+call('SADD') duplicate: 0 (Integer)
+srem with array of members: 2 (Integer)
+smembers after srem: ["3"] (Array)
+expire: true (TrueClass)
+2026-10-12T15:37:43.476Z pid=48399 tid=yxn WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+ExportJob.perform_async symbol-key hash: "3949ab9fef10a9fb2ddbd56e" (String)
+ExportJob.perform_async string-key hash: "fae6b66880ec12c1cd218881" (String)
+2026-10-12T15:37:43.844Z pid=48399 tid=yxn WARN: Job arguments to DigestJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+DigestJob.perform_later with BigDecimal completion: "8d499cba432f1f8df2fbefe3" (String)
+DigestJob.perform_later with completion.to_s: "dab265cba841d71ed93b0220" (String)
+BigDecimal#to_s under ActiveSupport: "0.6667" (String)
+JSON round trip of BigDecimal: "0.6667" (String)
+payload of last queued job: "{\"retry\":true,\"queue\":\"default\",\"class\":\"ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper\",\"wrapped\":\"DigestJob\",\"args\":[{\"job_class\":\"DigestJob\",\"job_id\":\"3ac20691-2e83-474f-bb0b-cfa871daf0ae\",\"provider_job_id\":null,\"queue_name\":\"default\",\"priority\":null,\"arguments\":[{\"_aj_globalid\":\"gid://margin-notes/User/3\"},{\"_aj_serialized\":\"ActiveJob::Serializers::TimeWithZoneSerializer\",\"value\":\"2026-10-12T15:37:43.845390654Z\"},\"0.6667\"],\"executions\":0,\"exception_executions\":{},\"locale\":\"en\",\"timezone\":\"UTC\",\"enqueued_at\":\"2026-10-12T15:37:43Z\"}],\"jid\":\"dab265cba841d71ed93b0220\",\"created_at\":1791819463.8455493,\"enqueued_at\":1791819463.8455985}" (String)

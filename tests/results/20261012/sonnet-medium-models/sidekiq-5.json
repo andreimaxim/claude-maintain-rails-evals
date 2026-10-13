@@ -1,0 +1,129 @@
+{
+  "sessionId": "fffa65ff-21c0-4bd1-a26c-3c0deafaf5ae",
+  "scope": "Original benchmark turn only (skill invocation and maintain-rails:gem-upgrade-planner delegation). The follow-up user turn (first row 2026-10-13T06:09:47.258Z, its queue-operation and attachment rows, and everything after) is excluded from counts and timestamps.",
+  "mainSession": {
+    "agentType": "main (not a planner)",
+    "spawnDepth": 0,
+    "requestedModel": "claude-sonnet-5-5",
+    "assistantMessageModel": "claude-sonnet-5-5",
+    "perTurnEffort": "medium",
+    "cliVersion": "2.1.296",
+    "firstTimestamp": "2026-10-13T05:31:25.442Z",
+    "finalTimestamp": "2026-10-13T05:37:05.048Z",
+    "firstTimestampNote": "First non-queue-operation row. The original turn also has two queue-operation rows at 2026-10-13T05:31:25.321Z and 05:31:25.367Z, excluded here.",
+    "assistantTurns": {
+      "rows": 5,
+      "distinctMessageIds": 4
+    },
+    "source": {
+      "path": "/home/user/.claude/projects/-home-user-workspace-repo/fffa65ff-21c0-4bd1-a26c-3c0deafaf5ae.jsonl",
+      "sha256OfOriginalRowsOnly": "a3f55f6b162d37656111ee02e315bdf1df9229d6f963d0504ac3b42ca61ed5e6",
+      "originalRowsOnlyDescription": "first 38 lines of the file (lines before the follow-up queue-operation at line 39), reproduced at audit time; the file continues to grow so the whole-file SHA256 changes",
+      "sha256WholeFileAtAuditTime": "93f14c06431f7f12f89975e88f7708f0564358ab63694c3827173ecd6f9fba04"
+    }
+  },
+  "instances": [
+    {
+      "agentId": "ae7ae560753e1175e",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 1,
+      "parentAgentId": null,
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:31:30.939Z",
+      "finalTimestamp": "2026-10-13T05:36:45.374Z",
+      "firstAssistantTimestamp": "2026-10-13T05:31:32.429Z",
+      "finalAssistantTimestamp": "2026-10-13T05:36:45.374Z",
+      "assistantTurns": {
+        "rows": 5,
+        "distinctMessageIds": 4
+      },
+      "toolUseId": "toolu_01EhsUmg1VbUGpsmFDEeDyZ8",
+      "requestShape": "foreground",
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/fffa65ff-21c0-4bd1-a26c-3c0deafaf5ae/subagents/agent-ae7ae560753e1175e.jsonl",
+        "sha256": "3d35e9f66fcd5ad43f0b74790b449628af57a1d94f1b102c336b05db156b398f"
+      }
+    },
+    {
+      "agentId": "ac518dddb89b8676f",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 2,
+      "parentAgentId": "ae7ae560753e1175e",
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:31:34.018Z",
+      "finalTimestamp": "2026-10-13T05:36:21.279Z",
+      "firstAssistantTimestamp": "2026-10-13T05:31:35.301Z",
+      "finalAssistantTimestamp": "2026-10-13T05:36:21.279Z",
+      "assistantTurns": {
+        "rows": 4,
+        "distinctMessageIds": 3
+      },
+      "toolUseId": "toolu_019ENmVcK4Zr8SnAareRUxuH",
+      "requestShape": "foreground",
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/fffa65ff-21c0-4bd1-a26c-3c0deafaf5ae/subagents/agent-ac518dddb89b8676f.jsonl",
+        "sha256": "84486a89bdb922cc34057fe25b1866df4e2ac88b917076b01496242d933b8ccb"
+      }
+    },
+    {
+      "agentId": "a8a7ecab049e01474",
+      "agentType": "maintain-rails:gem-upgrade-planner",
+      "spawnDepth": 3,
+      "parentAgentId": "ac518dddb89b8676f",
+      "requestedModel": "claude-sonnet-5-5",
+      "assistantMessageModel": "claude-sonnet-5-5",
+      "perTurnEffort": "medium",
+      "cliVersion": "2.1.296",
+      "firstTimestamp": "2026-10-13T05:31:36.825Z",
+      "finalTimestamp": "2026-10-13T05:35:58.800Z",
+      "firstAssistantTimestamp": "2026-10-13T05:31:38.363Z",
+      "finalAssistantTimestamp": "2026-10-13T05:35:58.800Z",
+      "assistantTurns": {
+        "rows": 52,
+        "distinctMessageIds": 28
+      },
+      "toolUseId": "toolu_01V9tYHG9aMAJV6Kcb2gwoPn",
+      "requestShape": "foreground",
+      "source": {
+        "path": "/home/user/.claude/projects/-home-user-workspace-repo/fffa65ff-21c0-4bd1-a26c-3c0deafaf5ae/subagents/agent-a8a7ecab049e01474.jsonl",
+        "sha256": "59613cd286385c5639a861e32d4ac1b5458d362d36e04703cb44ca97d0656d61"
+      }
+    }
+  ],
+  "spawnChainNote": "Main session spawned depth-1 planner ae7ae560753e1175e; that planner spawned depth-2 ac518dddb89b8676f; that spawned depth-3 a8a7ecab049e01474 (parent ids from each .meta.json). Only the depth-1 spawn was issued by the main session; the planner subagents recursively delegated to the same agent type.",
+  "resumedOriginalCalls": {
+    "count": 0,
+    "details": "No SendMessage or resume tool_use appears in the main session original rows or in any planner transcript. The only Agent calls are the three spawns above, each fresh and foreground (requestShape foreground, requestNonInteractive true). The main session made one ListAgents call, but it is in the follow-up turn, not original."
+  },
+  "environmentVariableStatus": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": {
+      "currentShellObservation": "unset",
+      "originalProcess": "unknown"
+    },
+    "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": {
+      "currentShellObservation": "unset",
+      "originalProcess": "unknown"
+    },
+    "CLAUDE_CODE_EFFORT_LEVEL": {
+      "currentShellObservation": "unset",
+      "originalProcess": "unknown"
+    },
+    "note": "Only set/unset status recorded, never values. Current observation made via a Bash tool call during the follow-up turn (after 2026-10-13T06:09Z); it is not evidence about the original process environment."
+  },
+  "limitations": [
+    "Environment variables of the original Claude Code process were not recorded in the transcript; originals are unknown. The current shell is a separate, later process.",
+    "requestedModel, message.model and perTurnEffort are read from assistant rows only; other row types carry no such fields. Per-turn effort is as recorded by Claude Code, not verified against API requests.",
+    "The serving model is the transcript message.model value; no API-level logs were consulted.",
+    "assistantTurns is given as both transcript assistant rows and distinct message ids, because one API message is split across several rows (thinking plus tool_use).",
+    "Subagent first/final timestamps cover all timestamped rows in that transcript; first/finalAssistantTimestamp cover assistant rows only. Subagent files were not modified by the follow-up (mtime 05:35-05:36Z).",
+    "The main session file was appended to by the follow-up turn; original-row figures come from the first 38 lines, reproduced at audit time, so the whole-file hash differs from any hash taken before the follow-up.",
+    "Trailing metadata rows (last-prompt, ai-title, atis-latch) have no timestamps and are not in timestamp ranges.",
+    "Only the main JSONL and the three subagent transcripts and meta files were inspected; the planner experiment logs under /tmp were not examined."
+  ]
+}

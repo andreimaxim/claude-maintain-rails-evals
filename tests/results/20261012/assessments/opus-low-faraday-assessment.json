@@ -1,0 +1,1259 @@
+{
+  "case": "Faraday 1.10.4 -> 2.12.2",
+  "configuration": "Frozen Opus 5.5 / low",
+  "application_pin": "9938031e54e1d7d074f1200a0da17e49390c86fa",
+  "plugin_pin": "11b074b79a35be55d5768ba3799b1dff768dfb94",
+  "source_pin_verification": "Accepted the coordinator's completed pin check; did not contact workers or inspect later metadata turns.",
+  "rubric": {
+    "sources": [
+      "tests/planner-held-out.md",
+      "tests/planner-development.md",
+      "tests/planner-development-batch2-20261012.md"
+    ],
+    "judgment_order": [
+      "impact",
+      "applicability",
+      "recommendation",
+      "validation"
+    ],
+    "statuses": [
+      "supported",
+      "partial",
+      "missing",
+      "incorrect"
+    ],
+    "actionable": "First three judgments supported, independently per layer; not an overall correctness pass.",
+    "fully_specified_validation": "Validation supported, independently of actionability and independently of whether proposed checks were executed.",
+    "normalization": "Extract only the native Agent result for maintain-rails:gem-upgrade-planner. Remove the Subagent hand-back frame, exactly its two-space line indentation, and trailing agentId/usage. Retain every authored introduction, handoff claim and reviewer-like note. Final is the captured final_response only, not the union of assistant_responses.",
+    "family_scope": "FD1 is missing/incompatible retry registration before HTTP I/O, masking FD2's removed basic_auth registration. Each must connect its failure to the application's citation job, including pending/fallback retries. JSON compatibility is a lane prerequisite, not a third family. Accept compatible alternate resolved bundles and app Bundler.require loading; faraday-retry 2.x cannot be an advance patch on Faraday 1.",
+    "quote_format": "quotes and reasons are ordered like judgments; each quotes entry is a list of exact short substrings of that layer's normalized report. Empty lists mean no authored evidence. Each nonsupported judgment has a reason."
+  },
+  "collection": {
+    "completed_runs": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "waited_for": [
+      3,
+      5
+    ],
+    "collector_final_status": {
+      "pending": [],
+      "incomplete": []
+    },
+    "limits": "Read saved scored captures only. No runs launched, experiments performed, captures overwritten, prompts tuned or workers messaged. The existing collector produced runs 5 and 3 while grading was in progress."
+  },
+  "runs": [
+    {
+      "run": 1,
+      "source_capture": "/tmp/planner-suite-20261012/opus-low-heldout-collected/faraday-1.json",
+      "source_capture_sha256": "c04abd94c9875159c4325b94aeef930201fcacfa69e9ddd6558823aebffe3899",
+      "export_sha256": "3f875bbc2d21e2e31fa4ccdfb691c3f3e7c66b6219f760ccfcb407971a287596",
+      "wall_time_ms": 117411,
+      "raw": {
+        "FD1": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "If it is missing, building the connection raises an \"unregistered middleware\" error.",
+              "The job falls through to Sidekiq's own retries and the citation stays **pending** with no error recorded."
+            ],
+            [
+              "request :retry, max: 1, retry_statuses: [503]",
+              "`faraday-retry` 1.x will not install alongside Faraday 2."
+            ],
+            [
+              "add `gem \"faraday-retry\", \"~> 2.2\"` to the Gemfile.",
+              "Required changes (same commit and deploy as the version bump)"
+            ],
+            [
+              "It covers the 503 retry, the request count of 6, the 401 case and the Authorization header",
+              "Run `bin/citation-provider` against a real Sidekiq worker in that copy and enrich one DOI end to end."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Names useful existing coverage and a real-worker smoke check, but does not specify raw-target zero HTTP requests/pending/retry state, independently isolate FD1 with FD2 repaired, or assert completion/failure and empty scheduled/retry/dead sets for the full 503->200, persistent-503 and 401 worker matrix."
+          ]
+        },
+        "FD2": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Replace the removed basic-auth middleware.",
+              "`CitationEnrichmentJob` uses `retry_on Unavailable` with 3 attempts."
+            ],
+            [
+              "request :basic_auth, @user, @password",
+              "Faraday 2.0 removed `request :basic_auth` (and `set_basic_auth`)."
+            ],
+            [
+              "use `faraday.request :authorization, :basic, @user, @password`",
+              "same commit and deploy as the version bump"
+            ],
+            [
+              "Validation: the existing header assertion.",
+              "add one test where the user or password is nil"
+            ]
+          ],
+          "reasons": [
+            "Identifies the application's auth call and job, but never explains that, after retry registration is repaired, removed basic_auth raises before I/O and leaves this job pending in fallback retries. The explicit pending explanation is scoped to missing retry middleware, not both failures.",
+            null,
+            null,
+            "Existing header coverage and nil-credential proposal are useful, but omit isolated FD2 zero-request failure after FD1 repair, fresh-process numeric/colon/hash string credentials, wrong-password 401, successful/failed refresh, owner/no-DOI denial and unsafe metadata controls."
+          ]
+        }
+      },
+      "final": {
+        "FD1": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "If it is missing, building the connection raises an \"unregistered middleware\" error.",
+              "The job falls through to Sidekiq's own retries and the citation stays **pending** with no error recorded."
+            ],
+            [
+              "request :retry, max: 1, retry_statuses: [503]",
+              "`faraday-retry` 1.x will not install alongside Faraday 2."
+            ],
+            [
+              "add `gem \"faraday-retry\", \"~> 2.2\"` to the Gemfile.",
+              "Required changes (same commit and deploy as the version bump)"
+            ],
+            [
+              "It covers the 503 retry, the request count of 6, the 401 case and the Authorization header",
+              "Run `bin/citation-provider` against a real Sidekiq worker in that copy and enrich one DOI end to end."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Final retains the proposed tests, not a fully specified worker matrix: no raw-target zero-request/pending/retry assertions, isolated FD1 with auth repaired, or terminal scheduled/retry/dead-set checks."
+          ]
+        },
+        "FD2": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Replace the removed basic-auth middleware.",
+              "`CitationEnrichmentJob` uses `retry_on Unavailable` with 3 attempts."
+            ],
+            [
+              "request :basic_auth, @user, @password",
+              "Faraday 2.0 removed `request :basic_auth` (and `set_basic_auth`)."
+            ],
+            [
+              "use `faraday.request :authorization, :basic, @user, @password`",
+              "same commit and deploy as the version bump"
+            ],
+            [
+              "Validation: the existing header assertion.",
+              "add one test where the user or password is nil"
+            ]
+          ],
+          "reasons": [
+            "Final retains raw's incomplete FD2 impact. Added parent commentary explains missing retry failure only, not the masked auth-registration failure and its pending/fallback job effect.",
+            null,
+            null,
+            "Header assertion and nil proposal do not specify isolated post-FD1 failure, real-header credential edge matrix, refresh, authorization/no-DOI and unsafe-metadata controls."
+          ]
+        }
+      },
+      "counts": {
+        "raw": {
+          "selected_families": 2,
+          "actionable_first_three_supported": 1,
+          "fully_specified_validation": 0
+        },
+        "final": {
+          "selected_families": 2,
+          "actionable_first_three_supported": 1,
+          "fully_specified_validation": 0
+        }
+      },
+      "lane_prerequisite": {
+        "status": "unresolved",
+        "detail": "No full target application bundle resolved or booted; no demonstrated JSON-compatible resolution. This is a separate prerequisite uncertainty, not a third family or an automatic FD1/FD2 penalty."
+      },
+      "delivery": {
+        "normalized_raw_contained_verbatim_in_final": true,
+        "detail": "Complete raw report delivered, with parent introduction and closing notes. Approval offer comes after delivery, not a plan-delivery gate."
+      },
+      "workflow_evidence": {
+        "skill_invoked": true,
+        "native_planner_invoked": true,
+        "visible_executed_output": "Main trace contains only skill launch and Gemfile/lockfile grep; no target installation, application tests or worker experiment.",
+        "model_reported": "Raw explicitly reports source-only review and no upstream documents fetched. Final acknowledges no verification. Preservation is claimed, not established by visible git status."
+      }
+    },
+    {
+      "run": 2,
+      "source_capture": "/tmp/planner-suite-20261012/opus-low-heldout-collected/faraday-2.json",
+      "source_capture_sha256": "9c5d52f88f11e7cd404739e3c99ffc26bffea5dc830958656163dd9bff5da214",
+      "export_sha256": "de204df42dba98eeb9d0f8ffd99c394d3c1a6feafa6e9ecdd1b6684c4e2a98c3",
+      "wall_time_ms": 184063,
+      "raw": {
+        "FD1": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Native planner returned a status handoff with no citation/retry impact finding.",
+            "No applicable retry-registration finding in the native result.",
+            "No repair in the native result; later assistant summaries cannot be attributed to this native discovery.",
+            "No proposed discriminating validation in the native result."
+          ]
+        },
+        "FD2": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Native planner returned a status handoff with no citation/auth impact finding.",
+            "No applicable basic_auth-registration finding in the native result.",
+            "No repair in the native result; later assistant summaries cannot be attributed to this native discovery.",
+            "No proposed discriminating validation in the native result."
+          ]
+        }
+      },
+      "final": {
+        "FD1": {
+          "judgments": [
+            "partial",
+            "partial",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "The new faraday error isn't one the app rescues, so the job's own retry logic never applies.",
+              "those citations would stay \"pending\" with no message."
+            ],
+            [
+              "With faraday-retry 2.4.0 on 2.12.2",
+              "Bump to faraday 2.12.2 and add `faraday-retry ~> 2.2`."
+            ],
+            [
+              "`require \"faraday/retry\" if Faraday::VERSION >= \"2\"`",
+              "Bump to faraday 2.12.2 and add `faraday-retry ~> 2.2`."
+            ],
+            [
+              "one retry on a single 503 and two requests on repeated 503s",
+              "Still not run:",
+              "an end-to-end job run on Sidekiq."
+            ]
+          ],
+          "reasons": [
+            "Connects a generic new Faraday error to pending citations and fallback retries, but does not identify missing retry registration as the pre-I/O failure or distinguish it from masked FD2.",
+            "Suggests a compatible retry gem without identifying the application's request :retry call, missing registration, or the dependency/loading reason for the failure. Earlier assistant reports are not final_response evidence.",
+            null,
+            "Reports HTTP-level retry outcomes and unrun worker coverage; does not specify six requests over three attempts, visible terminal failure, empty sets, raw zero-I/O state or independent FD1 isolation."
+          ]
+        },
+        "FD2": {
+          "judgments": [
+            "partial",
+            "partial",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "The new faraday error isn't one the app rescues, so the job's own retry logic never applies.",
+              "those citations would stay \"pending\" with no message."
+            ],
+            [
+              "Optionally switch to `request :authorization, :basic, …`."
+            ],
+            [
+              "faraday.headers[\"Authorization\"] = \"Basic #{[\"#{@user}:#{@password}\"].pack(\"m0\")}"
+            ],
+            [
+              "Setting the Authorization header by hand worked on both",
+              "I'd add one either way."
+            ]
+          ],
+          "reasons": [
+            "Generic error/job effect is retained, but final does not explain post-FD1 removed basic_auth registration before I/O. It cannot inherit the earlier assistant report's fuller applicability.",
+            "New auth form appears, but final never identifies the existing removed basic_auth call or its registration failure after retry is fixed.",
+            null,
+            "Cross-version header claim and vague provider-test proposal omit explicit exact fresh-process special-credential header, isolated FD2 failure, wrong-password 401, refresh, owner/no-DOI and unsafe-metadata controls."
+          ]
+        }
+      },
+      "counts": {
+        "raw": {
+          "selected_families": 2,
+          "actionable_first_three_supported": 0,
+          "fully_specified_validation": 0
+        },
+        "final": {
+          "selected_families": 2,
+          "actionable_first_three_supported": 0,
+          "fully_specified_validation": 0
+        }
+      },
+      "lane_prerequisite": {
+        "status": "unresolved",
+        "detail": "Standalone provider probes do not establish a compatible Rails application JSON bundle. Full upgraded suite remains explicitly unrun."
+      },
+      "delivery": {
+        "normalized_raw_contained_verbatim_in_final": false,
+        "detail": "Native result is an incomplete status report, not a plan. Parent resumes the agent with SendMessage, then publishes multiple asynchronous reports/summaries. Final is only the latest delta summary, not the full substantive earlier plan. Native missing findings are not credited from later reports."
+      },
+      "workflow_evidence": {
+        "skill_invoked": true,
+        "native_planner_invoked": true,
+        "visible_executed_output": "Main trace reads probe logs: baseline successful lookup/503/404/401/refused-connection results; target probe-v3a shows basic_auth registration errors; probe-v3b shows repaired successes and mapped failures. It also lists scratch files and emits no git-status entries. These are actually visible log excerpts, not just nested path names.",
+        "visible_output_limits": "No visible HTTP server counts/headers, full suite, actual worker/queue outcomes, complete resolved application bundle or independently established prerequisite configuration for probe-v3a. Do not call that basic_auth error the raw target: it is downstream of retry registration being available.",
+        "model_reported": "Latest summary claims a third report and cross-version header/count confirmation, but the native Agent result has no findings and those server logs are not in the main output. Two server PIDs are printed; final asks permission to stop leftovers rather than showing cleanup. Clean git status at one instant does not prove no earlier edits or service preservation."
+      }
+    },
+    {
+      "run": 3,
+      "source_capture": "/tmp/planner-suite-20261012/opus-low-heldout-collected/faraday-3.json",
+      "source_capture_sha256": "bd3bbee9466eeae453484381a2ba7314d8ad0916755b7f313f4d94a26faa9288",
+      "wall_time_ms": 471976,
+      "raw": {
+        "FD1": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "This isn't `ConnectionFailed` or `TimeoutError`, so the provider doesn't turn it into `Unavailable`, and the job's `retry_on` ignores it.",
+              "Sidekiq then retries the job on its own default schedule, and the citation stays `pending`."
+            ],
+            [
+              "request :retry, max: 1, retry_statuses: [503]",
+              "Faraday::Error: :retry is not registered on Faraday::Request"
+            ],
+            [
+              "add `gem \"faraday-retry\", \"~> 2.2\"` together with the bump",
+              "On 1.10.4, deploy R3 and `faraday-retry ~> 1.0`"
+            ],
+            [
+              "503: 2 attempts",
+              "a real Sidekiq worker against the private Redis."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Standalone probes and suite claims provide partial coverage only. Missing independent FD1 isolation with auth repaired, asserted zero-request/pending/fallback raw target, and the worker 2/6/1-request terminal-state and empty scheduled/retry/dead-set matrix."
+          ]
+        },
+        "FD2": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "R3. Replace `request :basic_auth`.",
+              "Faraday 2 removed the `basic_auth` middleware."
+            ],
+            [
+              "request :basic_auth, @user, @password",
+              "Faraday 2 removed the `basic_auth` middleware."
+            ],
+            [
+              "faraday.request :authorization, \"Basic\", Base64.strict_encode64(\"#{@user}:#{@password}\")",
+              "use a form that works on both versions"
+            ],
+            [
+              "The probes sent byte-identical headers on both",
+              "`00123` / `sample: value # keep` pair."
+            ]
+          ],
+          "reasons": [
+            "Finds the removed app auth call and a valid replacement, but only FD1 is connected to registration failure, fallback Sidekiq retries and pending citations. No independent post-FD1 auth failure effect is explained.",
+            null,
+            null,
+            "Useful cross-version/special-credential claims, but no independently isolated post-FD1 zero-I/O auth registration failure or complete real-header fresh-process, wrong-password, refresh, owner/no-DOI and unsafe-metadata matrix. Nested experiments are not collected proof."
+          ]
+        }
+      },
+      "final": {
+        "FD1": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "This isn't `ConnectionFailed` or `TimeoutError`, so the provider doesn't turn it into `Unavailable`, and the job's `retry_on` ignores it.",
+              "Sidekiq then retries the job on its own default schedule, and the citation stays `pending`."
+            ],
+            [
+              "request :retry, max: 1, retry_statuses: [503]",
+              "Faraday::Error: :retry is not registered on Faraday::Request"
+            ],
+            [
+              "add `gem \"faraday-retry\", \"~> 2.2\"` together with the bump",
+              "On 1.10.4, deploy R3 and `faraday-retry ~> 1.0`"
+            ],
+            [
+              "503: 2 attempts",
+              "a real Sidekiq worker against the private Redis."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Retains partial probes/suite claims, not isolated FD1 or complete raw/worker zero-I/O, terminal-state, 2/6/1 request and empty-set assertions."
+          ]
+        },
+        "FD2": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "R3. Replace `request :basic_auth`.",
+              "Faraday 2 removed the `basic_auth` middleware."
+            ],
+            [
+              "request :basic_auth, @user, @password",
+              "Faraday 2 removed the `basic_auth` middleware."
+            ],
+            [
+              "faraday.request :authorization, \"Basic\", Base64.strict_encode64(\"#{@user}:#{@password}\")",
+              "use a form that works on both versions"
+            ],
+            [
+              "The probes sent byte-identical headers on both",
+              "`00123` / `sample: value # keep` pair."
+            ]
+          ],
+          "reasons": [
+            "Final does not add the masked FD2 registration/job failure explanation absent from raw; pending/fallback impact remains explicitly FD1-only.",
+            null,
+            null,
+            "Retains header claims but lacks independent FD2 isolation and complete fresh-process credential, wrong-password, refresh, ownership/no-DOI and unsafe-metadata controls."
+          ]
+        }
+      },
+      "counts": {
+        "raw": {
+          "selected_families": 2,
+          "actionable_first_three_supported": 1,
+          "fully_specified_validation": 0
+        },
+        "final": {
+          "selected_families": 2,
+          "actionable_first_three_supported": 1,
+          "fully_specified_validation": 0
+        }
+      },
+      "lane_prerequisite": {
+        "status": "addressed_model_reported",
+        "detail": "Reports json 3.0.2 quirks_mode boot failure, pins compatible 2.7.2 with ~> 2.7 alternative, and reports passing baseline/repaired application suites. Compatible alternate resolution accepted; not a third family. No actual nested suite output in main trace."
+      },
+      "delivery": {
+        "normalized_raw_contained_verbatim_in_final": false,
+        "substantive_core_contained_verbatim_in_final": true,
+        "detail": "Core plan before authored closing separator retained exactly. Raw's authored handoff/Redis-warning notes are replaced by parent notes and an implementation offer. No selected-family loss or upgrade-approval gate before delivery."
+      },
+      "workflow_evidence": {
+        "skill_invoked": true,
+        "native_planner_invoked": true,
+        "visible_executed_output": "Main trace only launches skill/planner and greps Gemfile/lockfile. No suite, Redis, worker, cleanup or status output independently collected.",
+        "model_reported": "Reports full suites and HTTP probes in nested paths, a shared-Redis isolation breach, clean checkout and later private-Redis shutdown. These are authored claims, not independently observed experiments. Raw's reviewer-like notes remain part of raw grading."
+      }
+    },
+    {
+      "run": 4,
+      "source_capture": "/tmp/planner-suite-20261012/opus-low-heldout-collected/faraday-4.json",
+      "source_capture_sha256": "a6b5877e685a65ce8e654de4dc76266db02aa511eaace3a3f870336b1cffe135",
+      "export_sha256": "47bf93449216407a6e5bb9166a6375824efa6f0d25d0d75b917ba5797be2d96c",
+      "wall_time_ms": 215192,
+      "raw": {
+        "FD1": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "before it sends any request",
+              "Both failures above raise a plain `Faraday::Error`.",
+              "Sidekiq's own retries take over. The citation stays \"Pending\" instead of recording a failure"
+            ],
+            [
+              "`:retry` middleware (`max: 1, retry_statuses: [503]`)",
+              "Faraday::Error: :retry is not registered on Faraday::Request"
+            ],
+            [
+              "Add `gem \"faraday-retry\", \"~> 2.2\"` to the Gemfile.",
+              "Required changes (all in one deploy)"
+            ],
+            [
+              "503 then 200 makes two requests and returns the 200.",
+              "503 every time makes two requests and returns the 503 rather than raising.",
+              "Run one real lookup through Sidekiq in staging."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Useful standalone status/retry probes and proposed worker lookup, but no full worker persistent-503 six-request/three-attempt visible failure with empty sets, one-request 401, raw target pending/zero requests, or explicit FD1-only isolation with auth fixed."
+          ]
+        },
+        "FD2": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "before it sends any request",
+              "Both failures above raise a plain `Faraday::Error`.",
+              "Sidekiq's own retries take over. The citation stays \"Pending\" instead of recording a failure"
+            ],
+            [
+              "On 2.12.2, the old `:basic_auth` raises \"not registered\"."
+            ],
+            [
+              "faraday.request :authorization, :basic, @user, @password",
+              "Ship the Gemfile, the lockfile and `provider.rb` as one release."
+            ],
+            [
+              "The Basic auth header is byte-for-byte the same for the special-character username and password.",
+              "Run the suite again with only the gem bumped."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Explains both job failures and reports header equality, but does not specify FD2 isolation after retry repair, exact fresh-process numeric/colon/hash header and wrong-password response, successful/failed refresh, owner/no-DOI denial or unsafe metadata controls. Bump-only suite is masked by earlier prerequisites."
+          ]
+        }
+      },
+      "final": {
+        "FD1": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "before it sends any request",
+              "Both failures above raise a plain `Faraday::Error`.",
+              "Sidekiq's own retries take over. The citation stays \"Pending\" instead of recording a failure"
+            ],
+            [
+              "`:retry` middleware (`max: 1, retry_statuses: [503]`)",
+              "Faraday::Error: :retry is not registered on Faraday::Request"
+            ],
+            [
+              "Add `gem \"faraday-retry\", \"~> 2.2\"` to the Gemfile.",
+              "Required changes (all in one deploy)"
+            ],
+            [
+              "503 then 200 makes two requests and returns the 200.",
+              "503 every time makes two requests and returns the 503 rather than raising.",
+              "Run one real lookup through Sidekiq in staging."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Final retains partial standalone probes and worker smoke proposal; complete 2/6/1 worker/state/set assertions and independently isolated FD1/raw zero-I/O failure remain absent."
+          ]
+        },
+        "FD2": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "before it sends any request",
+              "Both failures above raise a plain `Faraday::Error`.",
+              "Sidekiq's own retries take over. The citation stays \"Pending\" instead of recording a failure"
+            ],
+            [
+              "On 2.12.2, the old `:basic_auth` raises \"not registered\"."
+            ],
+            [
+              "faraday.request :authorization, :basic, @user, @password",
+              "Ship the Gemfile, the lockfile and `provider.rb` as one release."
+            ],
+            [
+              "The Basic auth header is byte-for-byte the same for the special-character username and password.",
+              "Run the suite again with only the gem bumped."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Final preserves useful but incomplete header/auth checks. Missing explicit post-FD1 zero-request failure, complete fresh-process credential/header/401 matrix and refresh, ownership/no-DOI, unsafe-metadata controls."
+          ]
+        }
+      },
+      "counts": {
+        "raw": {
+          "selected_families": 2,
+          "actionable_first_three_supported": 2,
+          "fully_specified_validation": 0
+        },
+        "final": {
+          "selected_families": 2,
+          "actionable_first_three_supported": 2,
+          "fully_specified_validation": 0
+        }
+      },
+      "lane_prerequisite": {
+        "status": "unresolved",
+        "detail": "Standalone gem bundle resolves retry 2.4.0, an acceptable alternate retry version, but report explicitly has not checked actual application lockfile compatibility. No compatible application JSON resolution demonstrated; no automatic family penalty."
+      },
+      "delivery": {
+        "normalized_raw_contained_verbatim_in_final": true,
+        "detail": "Entire raw report delivered with parent attribution and a useful qualification of unchecked experiment claims. Implementation offer follows delivery."
+      },
+      "workflow_evidence": {
+        "skill_invoked": true,
+        "native_planner_invoked": true,
+        "visible_executed_output": "Main trace lists scratch folders/log filenames only, in addition to baseline Gemfile/lockfile grep. It does not display probe results.",
+        "model_reported": "Standalone HTTP/probe successes and separate gem bundles are reported by the planner. Final expressly says it did not read logs. Tool-call count alone cannot disprove nested work; file existence alone cannot verify outcomes. No actual git status output or application/real-worker proof."
+      }
+    },
+    {
+      "run": 5,
+      "source_capture": "/tmp/planner-suite-20261012/opus-low-heldout-collected/faraday-5.json",
+      "source_capture_sha256": "e9d6d82b9346d2fafd129921c6bb429431b46ccdaab58c8d8a60d11afb09de4f",
+      "export_sha256": "4373f6497162669d28fd1575e228ab8c46d643265638fe74b86adce1864dd70e",
+      "wall_time_ms": 408252,
+      "raw": {
+        "FD1": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Without the gem:",
+              "`:retry is not registered on Faraday::Request`.",
+              "So `CitationEnrichmentJob` still makes 3 attempts, each with at most one HTTP retry."
+            ],
+            [
+              "The `:retry` middleware has moved to a separate gem, `faraday-retry`."
+            ],
+            [
+              "gem \"faraday-retry\", \"~> 2.2\"",
+              "`Bundler.require` loads it automatically.",
+              "require \"faraday/retry\""
+            ],
+            [
+              "A 503 followed by a 200 makes 2 requests and returns 200.",
+              "The provider's log should show exactly 2 requests for each 503 case."
+            ]
+          ],
+          "reasons": [
+            "Registration failure and repaired retry counts are recognized, but report does not explain missing retry's pre-I/O failure leaving citations pending and escaping ActiveJob into Sidekiq fallback retries.",
+            null,
+            null,
+            "Useful suite/probe claims and proposed HTTP cases, but not full worker 2/6/1 request/terminal-state/empty-set matrix or raw zero-I/O and FD1-only isolation. Exactly two requests for persistent-503 enrichment is ambiguous/incorrect if intended as a complete job, which needs six over three attempts."
+          ]
+        },
+        "FD2": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Faraday::Error: :basic_auth is not registered on Faraday::Request",
+              "It is reached from `CitationEnrichmentJob` and `CitationEnrichmentsController`."
+            ],
+            [
+              "faraday.request :basic_auth, @user, @password",
+              "The `:basic_auth` request middleware no longer exists."
+            ],
+            [
+              "faraday.request :authorization, :basic, @user, @password",
+              "faraday.request :authorization, \"Basic\", Base64.strict_encode64(\"#{@user}:#{@password}\")"
+            ],
+            [
+              "It sends the same header as 1.x: `Basic [REDACTED-CREDENTIAL]` for `u`/`p:w`.",
+              "plus one with wrong credentials."
+            ]
+          ],
+          "reasons": [
+            "Finds the app's registration failure, but omits its post-FD1 zero-I/O pending/fallback job consequence. The separate rollback claim that jobs fail permanently without retry is incorrect, recorded as a material rollout error rather than silently credited as the target impact.",
+            null,
+            null,
+            "Reports headers/nil credentials and proposes wrong credentials, but lacks explicit FD1-repaired zero-request FD2 isolation, exact fresh-process environment-backed numeric/colon/hash header, refresh, owner/no-DOI and unsafe metadata controls."
+          ]
+        }
+      },
+      "final": {
+        "FD1": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Without the gem:",
+              "`:retry is not registered on Faraday::Request`.",
+              "So `CitationEnrichmentJob` still makes 3 attempts, each with at most one HTTP retry."
+            ],
+            [
+              "The `:retry` middleware has moved to a separate gem, `faraday-retry`."
+            ],
+            [
+              "gem \"faraday-retry\", \"~> 2.2\"",
+              "`Bundler.require` loads it automatically.",
+              "require \"faraday/retry\""
+            ],
+            [
+              "A 503 followed by a 200 makes 2 requests and returns 200.",
+              "The provider's log should show exactly 2 requests for each 503 case."
+            ]
+          ],
+          "reasons": [
+            "Retains registration and repaired counts without explaining pre-I/O pending citations and Sidekiq fallback retries caused by missing middleware.",
+            null,
+            null,
+            "No complete worker/raw/isolated FD1 state and set assertions. Persistent-503 whole-job request count remains ambiguous/incorrect and other controls incomplete."
+          ]
+        },
+        "FD2": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Faraday::Error: :basic_auth is not registered on Faraday::Request",
+              "It is reached from `CitationEnrichmentJob` and `CitationEnrichmentsController`."
+            ],
+            [
+              "faraday.request :basic_auth, @user, @password",
+              "The `:basic_auth` request middleware no longer exists."
+            ],
+            [
+              "faraday.request :authorization, :basic, @user, @password",
+              "faraday.request :authorization, \"Basic\", Base64.strict_encode64(\"#{@user}:#{@password}\")"
+            ],
+            [
+              "It sends the same header as 1.x: `Basic [REDACTED-CREDENTIAL]` for `u`/`p:w`.",
+              "plus one with wrong credentials."
+            ]
+          ],
+          "reasons": [
+            "Final preserves incomplete target impact and incorrect rollback no-retry claim; no masked FD2 pending/fallback explanation is added.",
+            null,
+            null,
+            "Retains useful headers and wrong-credential proposal, not isolated FD2 and complete fresh-process special-credential/refresh/ownership/no-DOI/unsafe-metadata validation."
+          ]
+        }
+      },
+      "counts": {
+        "raw": {
+          "selected_families": 2,
+          "actionable_first_three_supported": 0,
+          "fully_specified_validation": 0
+        },
+        "final": {
+          "selected_families": 2,
+          "actionable_first_three_supported": 0,
+          "fully_specified_validation": 0
+        }
+      },
+      "lane_prerequisite": {
+        "status": "addressed_model_reported",
+        "detail": "Reports JSON 3.0.2 secrets-ERB boot failure, json ~> 2.7 resolving 2.21.2 and passing repaired application suites. This is a valid lane prerequisite and not a third family. Application suite output is nested/model-reported, not in main trace. Its v2raw basic_auth failure already has retry registration available and must not be called independently raw FD1 proof."
+      },
+      "delivery": {
+        "normalized_raw_contained_verbatim_in_final": false,
+        "detail": "Final removes raw's authored 'Here is the planner's full plan' introduction, retains core from title through open questions, replaces authored My notes with parent notes, and corrects the claim that the parent had not checked git status. All selected-family judgments unchanged. Raw reviewer-like notes were retained for grading, not mistaken for harness metadata. Dependency approval request occurs after full plan delivery."
+      },
+      "workflow_evidence": {
+        "skill_invoked": true,
+        "native_planner_invoked": true,
+        "visible_executed_output": "Main trace launches skill/planner, greps baseline dependencies and runs git status --short plus git diff --stat, both producing no output. Clean end-state is visibly supported.",
+        "model_reported": "Reported accidental sed -i edit and git checkout reversal violate no-working-checkout-change workflow even if final state is clean. Nested suite/probe results, overwritten JSON failure log and service shutdown are not independently observed. Empty status cannot establish no transient edits or preservation of pre-existing local changes."
+      }
+    }
+  ],
+  "material_issues": [
+    {
+      "run": 1,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "extra_claim_error",
+      "quotes": [
+        "one test where the user or password is nil, because both versions encode that as `\":\"`"
+      ],
+      "reason": "Only both-nil credentials encode a bare colon. A single nil preserves the other credential, e.g. u:nil becomes u:. This is outside selected-family actionability."
+    },
+    {
+      "run": 1,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "extra_retry_claim_error",
+      "quotes": [
+        "A `Retry-After` value is not capped by `max_interval` (default `Float::INFINITY`)",
+        "Consider setting `max_interval:`"
+      ],
+      "reason": "faraday-retry 2.2.1 and 2.4.0 use Float::MAX, and skip a retry when Retry-After exceeds max_interval. This is not simply uncapped header sleep or a sleep clamp. Optional max_interval advice needs an explicit retry-behavior tradeoff; primary repair leaves existing retry options unchanged."
+    },
+    {
+      "run": 2,
+      "layers": [
+        "raw"
+      ],
+      "category": "workflow_incomplete_native_plan",
+      "quotes": [
+        "I don't have a faraday upgrade plan for you yet.",
+        "it contained no findings.",
+        "So far nothing has been checked"
+      ],
+      "reason": "Native result has no upgrade findings. Later asynchronous summaries are separate parent delivery, not independently discovered native findings."
+    },
+    {
+      "run": 2,
+      "layers": [
+        "final"
+      ],
+      "category": "delivery_and_evidence_limit",
+      "quotes": [
+        "A third planning report just arrived, from yet another agent run",
+        "server logs confirmed one retry on a single 503",
+        "My earlier question still stands: should I stop the leftover test servers and delete `/tmp/fx`?"
+      ],
+      "reason": "Final is a delta summary, not a complete plan. Visible main log excerpts support limited auth/provider results but not this claimed server-count/header confirmation. Scratch/server cleanup remains unresolved."
+    },
+    {
+      "run": 2,
+      "layers": [
+        "final"
+      ],
+      "category": "unresolved_conflicting_reports",
+      "quotes": [
+        "The third says no test makes a real HTTP call through the provider",
+        "Database setup",
+        "SQLite in one report and Postgres in another"
+      ],
+      "reason": "Final leaves test coverage and database isolation as conflicts. The held-out key establishes real local HTTP coverage and PostgreSQL; the latest report's contrary test-coverage claim is not reliable. Final qualifies rather than endorses it, so this is a delivery/evidence uncertainty, not a third selected finding."
+    },
+    {
+      "run": 3,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "workflow_isolation_breach_model_reported",
+      "quotes": [
+        "One test run on a disposable copy (`v2b`) used the shared Redis instead of a separate one.",
+        "They weren't deleted because they can't be told apart from data that was already there."
+      ],
+      "reason": "Reported mutation of shared Redis violates isolation. Later private-Redis use and clean checkout cannot erase earlier shared-state writes. No independent Redis inspection was performed during grading."
+    },
+    {
+      "run": 3,
+      "layers": [
+        "raw"
+      ],
+      "category": "unsafe_cleanup_advice",
+      "quotes": [
+        "If that Redis is one you care about, delete those keys now."
+      ],
+      "reason": "Deleting entire shared sets can destroy pre-existing legitimate reservations that the report itself says cannot be distinguished. Preservation-aware cleanup requires identifying only experiment-owned entries, or allowing expiry; do not blindly delete keys."
+    },
+    {
+      "run": 3,
+      "layers": [
+        "final"
+      ],
+      "category": "unsafe_cleanup_advice",
+      "quotes": [
+        "If that Redis matters to you, delete those keys now"
+      ],
+      "reason": "Final retains unsafe whole-key deletion advice for shared sets whose prior contents cannot be distinguished."
+    },
+    {
+      "run": 3,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "extra_application_claim_error",
+      "quotes": [
+        "Nothing reads this column back, so rollback is safe."
+      ],
+      "reason": "enrichment_error is user-visible failure state; the fixture contract explicitly records/displays failure. Lack of serialized Faraday objects supports rollback, but not a claim that error text is unread."
+    },
+    {
+      "run": 3,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "dependency_loading_attribution",
+      "quotes": [
+        "Faraday 2 loads it automatically, so no `require` is needed."
+      ],
+      "reason": "In this application Bundler.require loads the gem; Faraday alone does not automatically discover installed retry gems. The app recommendation is valid, so loading attribution is kept outside family repair counts."
+    },
+    {
+      "run": 3,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "prerequisite_overgeneralization",
+      "quotes": [
+        "**When it applies:** always. faraday 2.12.2 depends on `json` with no version limit"
+      ],
+      "reason": "Reported JSON 3.0.2 resolution requires repair, but JSON compatibility depends on actual resolved bundle. A compatible alternate resolution is allowed; an unconditional JSON 3 failure across all bundles is too broad. The reported 2.7.2 resolution is accepted."
+    },
+    {
+      "run": 3,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "unsafe_optional_rollback_sequence",
+      "quotes": [
+        "After the bump you could switch to `request :authorization, :basic, user, pass`.",
+        "**Rollback of the bump:** revert the Gemfile and lockfile only."
+      ],
+      "reason": "Gem-only rollback is valid for the recommended portable auth form, but not after taking the offered target-only auth switch. Revert that code too. Primary portable repair remains valid; this is a separate optional sequencing hazard."
+    },
+    {
+      "run": 3,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "optional_retry_tradeoff_omission",
+      "quotes": [
+        "Capping the wait with `max_interval` would bound this."
+      ],
+      "reason": "max_interval rejects a Retry-After above its threshold by skipping the retry, rather than sleeping at a capped value. Advice omits the change to the one-GET-retry behavior for those headers."
+    },
+    {
+      "run": 4,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "overbroad_compatibility_claim",
+      "quotes": [
+        "no single version of the code works on both"
+      ],
+      "reason": "Contradicted by its own optional direct-header preparatory deploy; portable auth code works on both with version-compatible bundles. Correct main coupled rollout remains actionable."
+    },
+    {
+      "run": 4,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "unsupported_rollback_outcome",
+      "quotes": [
+        "Jobs that hit `Faraday::Error` while code and gems were mismatched wait in Sidekiq's retry queue and succeed once they match again."
+      ],
+      "reason": "Matching code/gems restores request construction, not guaranteed provider success or recovery for exhausted/dead jobs. Requires checking pending citations and actual queue state; standalone probes do not establish universal recovery."
+    },
+    {
+      "run": 5,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "workflow_working_checkout_mutation_model_reported",
+      "quotes": [
+        "it accidentally ran a `sed -i` on the working checkout's `app/models/citation/provider.rb`, then reverted it with `git checkout`"
+      ],
+      "reason": "Transient editing violates the plan-only/disposable-copy workflow. git checkout can discard prior unrelated edits; clean final status proves end-state only, not preservation of initial bytes. Grader made no application changes."
+    },
+    {
+      "run": 5,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "incorrect_rollback_failure_effect",
+      "quotes": [
+        "the jobs are not retried and fail permanently."
+      ],
+      "reason": "An unhandled ArgumentError escapes ActiveJob's Unavailable handler into Sidekiq fallback retries; it is not immediate permanent failure without retries. Pending citation/retry/dead state must be inspected."
+    },
+    {
+      "run": 5,
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "category": "ambiguous_or_incorrect_validation_expectation",
+      "quotes": [
+        "The provider's log should show exactly 2 requests for each 503 case."
+      ],
+      "reason": "Two is correct per individual Faraday lookup and for 503->200, not persistent-503 whole-job enrichment, which requires six requests across three bounded attempts and a visible recorded failure. The proposed enrichment check does not distinguish these scopes."
+    }
+  ],
+  "extra_findings": [
+    {
+      "runs": [
+        1,
+        3
+      ],
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "kind": "baseline_tls_risk_not_new_family",
+      "detail": "Both distinguish uncaught Faraday::SSLError/TLS failure from a new upgrade defect; useful separate baseline risk, not FD3."
+    },
+    {
+      "runs": [
+        1,
+        3,
+        4,
+        5
+      ],
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "kind": "transport_and_dependency_controls",
+      "detail": "Timeout/error-message, relative-path/query and adapter or URI transitive-dependency checks are legitimate additional concerns. Outcomes are unverified nested claims except run 2's collected refused-connection/provider log excerpts. They do not increase selected-family recall."
+    },
+    {
+      "runs": [
+        3,
+        5
+      ],
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "kind": "json_lane_prerequisite",
+      "detail": "Correctly investigate JSON/secrets boot compatibility before application probes; accept their reported different compatible resolutions. Not a third selected family."
+    }
+  ],
+  "validation_and_delivery_summary": {
+    "raw_actionable_per_run": [
+      1,
+      0,
+      1,
+      2,
+      0
+    ],
+    "final_actionable_per_run": [
+      1,
+      0,
+      1,
+      2,
+      0
+    ],
+    "raw_fully_specified_validation_per_run": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "final_fully_specified_validation_per_run": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "omissions": "FD2 job impact incomplete in runs 1, 3 and 5; FD1 job impact incomplete in run 5. Run 2 native omits both entirely; its final supplies repairs but only generic impact and incomplete applicability. Only run 4 explicitly connects both registration failures before HTTP to pending/fallback citation jobs.",
+    "not_zero_testing": "Partial credit includes meaningful test proposals and nested suite/probe claims; run 2 has actual visible excerpts of provider logs. None specifies the complete strict worker/state/header/control matrix. No independently collected full application or real-worker execution proves these plans.",
+    "preparation": "No scored raw/final recommends installing faraday-retry 2.x in a Faraday-1 preparatory bundle. Runs 1/4 correctly couple it; run 2 final couples 2.x with bump; run 3 preparation is explicitly retry 1.x; run 5 preparation is portable auth. Optional hazards and loading misattribution are recorded separately.",
+    "handoff": "Do not treat raw's authored reviewer-like notes in runs 3/5 as independent parent verification. Runs 1/4 retain the complete normalized raw verbatim. Run 3 retains core but changes closing authored notes. Run 5 changes authored intro/closing notes while retaining core. Run 2 native is a status report; latest final is a delta summary, not full-plan delivery.",
+    "approval": "Plans are delivered before implementation offers or dependency-approval questions. No edit-approval gate prevented plan delivery; run 2's failure is incomplete/delta delivery, not a dependency-approval gate."
+  },
+  "case_totals": {
+    "completed": 5,
+    "incomplete": 0,
+    "selected_families_per_run": 2,
+    "raw": {
+      "family_instances": 10,
+      "actionable_first_three_supported": 4,
+      "fully_specified_validation": 0,
+      "actionable_by_family": {
+        "FD1": 3,
+        "FD2": 1
+      },
+      "judgment_histogram": {
+        "impact": {
+          "supported": 4,
+          "partial": 4,
+          "missing": 2,
+          "incorrect": 0
+        },
+        "applicability": {
+          "supported": 8,
+          "partial": 0,
+          "missing": 2,
+          "incorrect": 0
+        },
+        "recommendation": {
+          "supported": 8,
+          "partial": 0,
+          "missing": 2,
+          "incorrect": 0
+        },
+        "validation": {
+          "supported": 0,
+          "partial": 8,
+          "missing": 2,
+          "incorrect": 0
+        }
+      }
+    },
+    "final": {
+      "family_instances": 10,
+      "actionable_first_three_supported": 4,
+      "fully_specified_validation": 0,
+      "actionable_by_family": {
+        "FD1": 3,
+        "FD2": 1
+      },
+      "judgment_histogram": {
+        "impact": {
+          "supported": 4,
+          "partial": 6,
+          "missing": 0,
+          "incorrect": 0
+        },
+        "applicability": {
+          "supported": 8,
+          "partial": 2,
+          "missing": 0,
+          "incorrect": 0
+        },
+        "recommendation": {
+          "supported": 10,
+          "partial": 0,
+          "missing": 0,
+          "incorrect": 0
+        },
+        "validation": {
+          "supported": 0,
+          "partial": 10,
+          "missing": 0,
+          "incorrect": 0
+        }
+      }
+    },
+    "interpretation": "No weighted score or overall pass. Material errors, extra findings, prerequisite compatibility, workflow failures, proposed validation and independently visible evidence remain separate from the two selected-family counts. Five repetitions do not establish reliability or causality."
+  },
+  "static_adjudication_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/lostisland/faraday/v2.12.2/lib/faraday/request/authorization.rb",
+      "purpose": "Verified that the portable authorization Basic + single preencoded token form is valid: only Basic with two params invokes credential encoding. No runtime experiment."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/lostisland/faraday-retry/v2.2.1/lib/faraday/retry/middleware.rb",
+      "purpose": "Verified Float::MAX default and skipping retry when Retry-After exceeds max_interval; not an executed application check."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/lostisland/faraday-retry/v2.4.0/lib/faraday/retry/middleware.rb",
+      "purpose": "Confirmed identical max_interval/header-threshold behavior for the alternate retry version reported by planners."
+    }
+  ],
+  "unresolved_factual_questions": [
+    "What exact compatible application bundles would runs 1, 2 and 4 resolve? No full target Rails/JSON bundle proof is captured for them.",
+    "Do the claimed nested full suites, HTTP header/count probes and isolation/cleanup outcomes in runs 3 and 5 match actual logs? Those paths are model output, not independently inspected proof.",
+    "Which prerequisites were installed in run 2's collected probe-v3a basic_auth failure, and which exact auth variant produced probe-v3b? Main excerpts lack lock/config evidence and server counts/headers.",
+    "Are run 2's leftover HTTP servers stopped, run 3's shared Redis reservations recovered without deleting pre-existing data, and all reported scratch services actually shut down? No follow-up or later turns inspected.",
+    "Did run 5's git checkout restore exactly the initial provider bytes and preserve any prior local edits? Visible final clean status alone cannot prove this.",
+    "How do actual worker/queue outcomes behave for persistent 503, 401 and refresh/auth/metadata controls under the proposed bundles? Complete end-to-end discriminating validation remains uncollected.",
+    "Does the production provider send Retry-After, and what bounded-wait policy preserves the intended retry contract? Optional max_interval advice needs an explicit skipped-retry tradeoff."
+  ],
+  "integrity_checks": {
+    "quote_check": "Every nonempty family quote checked against its exact normalized raw or final report; every material issue quote checked against each named layer.",
+    "counts_check": "Per-run actionability and validation counts, per-family totals, layer histograms and case totals reconciled from judgment arrays.",
+    "write_scope": "Only /tmp/planner-suite-20261012/opus-low-faraday-assessment.json authored. Existing coordinator checkout modifications left untouched."
+  }
+}

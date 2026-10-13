@@ -1,0 +1,126 @@
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/core_ext/object.rb:13: warning: bigdecimal was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add bigdecimal to your Gemfile or gemspec to silence this warning.
+/home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/gems/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/notifications.rb:4: warning: mutex_m was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add mutex_m to your Gemfile or gemspec to silence this warning.
+2026-10-12T14:46:44.255Z pid=41076 tid=yrc INFO: Booted Rails 7.0.8.7 application in development environment
+2026-10-12T14:46:44.256Z pid=41076 tid=yrc INFO: Running in ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+2026-10-12T14:46:44.256Z pid=41076 tid=yrc INFO: See LICENSE and the LGPL-3.0 for licensing details.
+2026-10-12T14:46:44.256Z pid=41076 tid=yrc INFO: Upgrade to Sidekiq Pro for more features and support: https://sidekiq.org
+2026-10-12T14:46:44.256Z pid=41076 tid=yrc INFO: Sidekiq 7.3.9 connecting to Redis with options {:size=>10, :pool_name=>"internal", :url=>"redis://localhost:6399/1"}
+2026-10-12T14:46:44.257Z pid=41076 tid=yrc INFO: Sidekiq 7.3.9 connecting to Redis with options {:size=>5, :pool_name=>"default", :url=>"redis://localhost:6399/1"}
+2026-10-12T14:46:44.301Z pid=41076 tid=yrc DEBUG: Firing startup event
+2026-10-12T14:46:44.301Z pid=41076 tid=yrc DEBUG: Client Middleware: 
+2026-10-12T14:46:44.301Z pid=41076 tid=yrc DEBUG: Server Middleware: Sidekiq::Metrics::Middleware, Sidekiq::Job::InterruptHandler
+2026-10-12T14:46:44.301Z pid=41076 tid=yrc DEBUG: {:labels=>#<Set: {}>, :require=>".", :environment=>"development", :concurrency=>5, :timeout=>25, :poll_interval_average=>nil, :average_scheduled_poll_interval=>5, :on_complex_arguments=>:raise, :iteration=>{:max_job_runtime=>nil, :retry_backoff=>0}, :error_handlers=>[#<Proc:0x00007fd7cc179840 /tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/config.rb:43 (lambda)>], :death_handlers=>[], :lifecycle_events=>{:startup=>[], :quiet=>[], :shutdown=>[], :heartbeat=>[], :beat=>[#<Proc:0x00007fd7cd236c78 /tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/metrics/tracking.rb:145>]}, :dead_max_jobs=>10000, :dead_timeout_in_seconds=>15552000, :reloader=>#<Sidekiq::Rails::Reloader @app=MarginNotes::Application>, :backtrace_cleaner=>#<Proc:0x00007fd7cc18e178 /tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/rails.rb:60 (lambda)>, :verbose=>true, :queues=>["default"], :tag=>"app", :identity=>"e2b.local:41076:74dc37305953"}
+2026-10-12T14:46:44.304Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a INFO: start
+2026-10-12T14:46:44.304Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f INFO: start
+2026-10-12T14:46:44.305Z pid=41076 tid=uk4 DEBUG: Firing heartbeat event
+2026-10-12T14:46:44.305Z pid=41076 tid=ujk WARN: {"context":"scheduler"}
+2026-10-12T14:46:44.305Z pid=41076 tid=ujk WARN: ArgumentError: wrong number of arguments (given 1, expected 0)
+2026-10-12T14:46:44.306Z pid=41076 tid=ujk WARN: 
+#<Thread:0x00007fd7cad591f8@sidekiq.scheduler /tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/component.rb:17 run> terminated with exception (report_on_exception is true):
+/tmp/sidekiq-upgrade/gems/gems/connection_pool-3.0.2/lib/connection_pool/timed_stack.rb:62:in `pop': wrong number of arguments (given 1, expected 0) (ArgumentError)
+	from /tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/scheduled.rb:226:in `initial_wait'
+	from /tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/scheduled.rb:96:in `block in start'
+	from /tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/component.rb:10:in `watchdog'
+	from /tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/component.rb:19:in `block in safe_thread'
+2026-10-12T14:46:44.499Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mExport Load (4.2ms)[0m  [1m[34mSELECT "exports".* FROM "exports" WHERE "exports"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+2026-10-12T14:46:44.500Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/jobs/export_job.rb:10:in `perform'
+2026-10-12T14:46:44.519Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mNotebook Load (0.5ms)[0m  [1m[34mSELECT "notebooks".* FROM "notebooks" WHERE "notebooks"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+2026-10-12T14:46:44.519Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:33:in `generate'
+2026-10-12T14:46:44.535Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mNote Load (0.6ms)[0m  [1m[34mSELECT "notes".* FROM "notes" WHERE "notes"."notebook_id" = $1 ORDER BY "notes"."created_at" ASC, "notes"."id" ASC[0m  [["notebook_id", 1]]
+2026-10-12T14:46:44.535Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:33:in `generate'
+2026-10-12T14:46:44.611Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mActionText::RichText Load (0.5ms)[0m  [1m[34mSELECT "action_text_rich_texts".* FROM "action_text_rich_texts" WHERE "action_text_rich_texts"."record_type" = $1 AND "action_text_rich_texts"."name" = $2 AND "action_text_rich_texts"."record_id" = $3[0m  [["record_type", "Note"], ["name", "body"], ["record_id", 1]]
+2026-10-12T14:46:44.612Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:33:in `generate'
+2026-10-12T14:46:44.619Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+2026-10-12T14:46:44.619Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:53:in `start'
+2026-10-12T14:46:44.620Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mExport Load (1.0ms)[0m  [1m[37mSELECT "exports".* FROM "exports" WHERE "exports"."id" = $1 LIMIT $2 FOR UPDATE[0m  [["id", 1], ["LIMIT", 1]]
+2026-10-12T14:46:44.621Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:53:in `start'
+2026-10-12T14:46:44.622Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mNotebook Load (0.4ms)[0m  [1m[34mSELECT "notebooks".* FROM "notebooks" WHERE "notebooks"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+2026-10-12T14:46:44.622Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:54:in `block in start'
+2026-10-12T14:46:44.625Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mExport Update (1.2ms)[0m  [1m[33mUPDATE "exports" SET "status" = $1, "total_notes_count" = $2, "updated_at" = $3 WHERE "exports"."id" = $4[0m  [["status", 1], ["total_notes_count", 1], ["updated_at", "2026-10-12 14:46:44.623202"], ["id", 1]]
+2026-10-12T14:46:44.625Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:54:in `block in start'
+2026-10-12T14:46:44.627Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mTRANSACTION (1.3ms)[0m  [1m[35mCOMMIT[0m
+2026-10-12T14:46:44.627Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:53:in `start'
+2026-10-12T14:46:44.632Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+2026-10-12T14:46:44.632Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:59:in `record_progress'
+2026-10-12T14:46:44.633Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mExport Load (1.0ms)[0m  [1m[37mSELECT "exports".* FROM "exports" WHERE "exports"."id" = $1 LIMIT $2 FOR UPDATE[0m  [["id", 1], ["LIMIT", 1]]
+2026-10-12T14:46:44.634Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:59:in `record_progress'
+2026-10-12T14:46:44.635Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mNotebook Load (0.3ms)[0m  [1m[34mSELECT "notebooks".* FROM "notebooks" WHERE "notebooks"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+2026-10-12T14:46:44.635Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:60:in `block in record_progress'
+2026-10-12T14:46:44.636Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mExport Update (1.0ms)[0m  [1m[33mUPDATE "exports" SET "processed_notes_count" = $1, "updated_at" = $2 WHERE "exports"."id" = $3[0m  [["processed_notes_count", 1], ["updated_at", "2026-10-12 14:46:44.635655"], ["id", 1]]
+2026-10-12T14:46:44.637Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:60:in `block in record_progress'
+2026-10-12T14:46:44.638Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mTRANSACTION (1.1ms)[0m  [1m[35mCOMMIT[0m
+2026-10-12T14:46:44.639Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:59:in `record_progress'
+2026-10-12T14:46:44.639Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a WARN: DEPRECATION WARNING: Rails 7.0 has deprecated Enumerable.sum in favor of Ruby's native implementation available since 2.4. Sum of non-numeric elements requires an initial argument. (called from generate at /tmp/sidekiq-upgrade/app/app/models/export.rb:42)
+2026-10-12T14:46:44.664Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+2026-10-12T14:46:44.665Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:67:in `finish'
+2026-10-12T14:46:44.666Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mActiveStorage::Blob Create (1.3ms)[0m  [1m[32mINSERT INTO "active_storage_blobs" ("key", "filename", "content_type", "metadata", "service_name", "byte_size", "checksum", "created_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["key", "i1vlj4z3quuqzade0az2oads48kt"], ["filename", "reading-list.md"], ["content_type", "text/markdown"], ["metadata", "{\"identified\":true}"], ["service_name", "local"], ["byte_size", 98], ["checksum", "0FA5xNn9eXZdHR85r8RWPw=="], ["created_at", "2026-10-12 14:46:44.664407"]]
+2026-10-12T14:46:44.667Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:67:in `finish'
+2026-10-12T14:46:44.671Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mTRANSACTION (3.6ms)[0m  [1m[35mCOMMIT[0m
+2026-10-12T14:46:44.671Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:67:in `finish'
+2026-10-12T14:46:44.672Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a INFO: [36m  Disk Storage (0.8ms) [0m[32mUploaded file to key: i1vlj4z3quuqzade0az2oads48kt (checksum: 0FA5xNn9eXZdHR85r8RWPw==)[0m
+2026-10-12T14:46:44.673Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+2026-10-12T14:46:44.673Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:70:in `finish'
+2026-10-12T14:46:44.673Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mExport Load (0.4ms)[0m  [1m[37mSELECT "exports".* FROM "exports" WHERE "exports"."id" = $1 LIMIT $2 FOR UPDATE[0m  [["id", 1], ["LIMIT", 1]]
+2026-10-12T14:46:44.674Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:70:in `finish'
+2026-10-12T14:46:44.675Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mNotebook Load (0.5ms)[0m  [1m[34mSELECT "notebooks".* FROM "notebooks" WHERE "notebooks"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+2026-10-12T14:46:44.676Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:71:in `block in finish'
+2026-10-12T14:46:44.677Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mExport Update (0.5ms)[0m  [1m[33mUPDATE "exports" SET "status" = $1, "expires_at" = $2, "updated_at" = $3 WHERE "exports"."id" = $4[0m  [["status", 2], ["expires_at", "2026-10-13 14:46:44.674533"], ["updated_at", "2026-10-12 14:46:44.676707"], ["id", 1]]
+2026-10-12T14:46:44.677Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:71:in `block in finish'
+2026-10-12T14:46:44.689Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mActiveStorage::Blob Load (0.8ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" INNER JOIN "active_storage_attachments" ON "active_storage_blobs"."id" = "active_storage_attachments"."blob_id" WHERE "active_storage_attachments"."record_id" = $1 AND "active_storage_attachments"."record_type" = $2 AND "active_storage_attachments"."name" = $3 LIMIT $4[0m  [["record_id", 1], ["record_type", "Export"], ["name", "file"], ["LIMIT", 1]]
+2026-10-12T14:46:44.689Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:71:in `block in finish'
+2026-10-12T14:46:44.695Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mActiveStorage::Attachment Load (0.4ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = $1 AND "active_storage_attachments"."record_type" = $2 AND "active_storage_attachments"."name" = $3 LIMIT $4[0m  [["record_id", 1], ["record_type", "Export"], ["name", "file"], ["LIMIT", 1]]
+2026-10-12T14:46:44.696Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:71:in `block in finish'
+2026-10-12T14:46:44.697Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mActiveStorage::Attachment Create (0.6ms)[0m  [1m[32mINSERT INTO "active_storage_attachments" ("name", "record_type", "record_id", "blob_id", "created_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"[0m  [["name", "file"], ["record_type", "Export"], ["record_id", 1], ["blob_id", 1], ["created_at", "2026-10-12 14:46:44.696546"]]
+2026-10-12T14:46:44.697Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:71:in `block in finish'
+2026-10-12T14:46:44.699Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mExport Update (0.5ms)[0m  [1m[33mUPDATE "exports" SET "updated_at" = $1 WHERE "exports"."id" = $2[0m  [["updated_at", "2026-10-12 14:46:44.698175"], ["id", 1]]
+2026-10-12T14:46:44.699Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:70:in `finish'
+2026-10-12T14:46:44.700Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+2026-10-12T14:46:44.700Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:70:in `finish'
+2026-10-12T14:46:44.701Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+2026-10-12T14:46:44.702Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:70:in `finish'
+2026-10-12T14:46:44.702Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mActiveStorage::Blob Update (0.3ms)[0m  [1m[33mUPDATE "active_storage_blobs" SET "metadata" = $1 WHERE "active_storage_blobs"."id" = $2[0m  [["metadata", "{\"identified\":true,\"analyzed\":true}"], ["id", 1]]
+2026-10-12T14:46:44.703Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:70:in `finish'
+2026-10-12T14:46:44.704Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   [1m[36mTRANSACTION (1.3ms)[0m  [1m[35mCOMMIT[0m
+2026-10-12T14:46:44.704Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a DEBUG:   ↳ app/models/export.rb:70:in `finish'
+2026-10-12T14:46:44.705Z pid=41076 tid=ujg class=ExportJob jid=29dc5a196a80eb490b25eb2a elapsed=0.401 INFO: done
+2026-10-12T14:46:44.713Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f DEBUG:   [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+2026-10-12T14:46:44.716Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f INFO: Performing DigestJob (Job ID: 615cd3be-8147-4746-a54b-89c29c8fd93e) from Sidekiq(default) enqueued at 2026-10-12T14:46:37Z with arguments: #<GlobalID:0x00007fd7a368bf50 @uri=#<URI::GID gid://margin-notes/User/1>>, Mon, 12 Oct 2026 14:46:37.234964513 UTC +00:00, "0.0"
+2026-10-12T14:46:44.741Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f DEBUG:   Rendering layout layouts/mailer.text.erb
+2026-10-12T14:46:44.741Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f DEBUG:   Rendering digest_mailer/daily_digest.text.erb within layouts/mailer
+2026-10-12T14:46:44.742Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f DEBUG:   [1m[36mNote Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "notes" INNER JOIN "notebooks" ON "notes"."notebook_id" = "notebooks"."id" WHERE "notebooks"."user_id" = $1 AND "notes"."status" = $2 AND "notes"."updated_at" BETWEEN $3 AND $4 LIMIT $5[0m  [["user_id", 1], ["status", 1], ["updated_at", "2026-10-12 00:00:00"], ["updated_at", "2026-10-12 23:59:59.999999"], ["LIMIT", 1]]
+2026-10-12T14:46:44.743Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f DEBUG:   ↳ app/views/digest_mailer/daily_digest.text.erb:2
+2026-10-12T14:46:44.744Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f INFO:   Rendered digest_mailer/daily_digest.text.erb within layouts/mailer (Duration: 3.6ms | Allocations: 2226)
+2026-10-12T14:46:44.745Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f INFO:   Rendered layout layouts/mailer.text.erb (Duration: 4.0ms | Allocations: 2475)
+2026-10-12T14:46:44.746Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f DEBUG: DigestMailer#daily_digest: processed outbound mail in 17.6ms
+2026-10-12T14:46:44.750Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f INFO: Delivered mail 6accf2d4b6cc4_a0743b10-460@e2b.local.mail (4.0ms)
+2026-10-12T14:46:44.750Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f DEBUG: Date: Mon, 12 Oct 2026 14:46:44 +0000
+From: from@example.com
+To: reader@example.com
+Message-ID: <6accf2d4b6cc4_a0743b10-460@e2b.local.mail>
+Subject: Your reading digest for October 12, 2026
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Your reading digest for October 12, 2026
+
+No ready notes were updated that day.
+
+0% of your notes were ready when you asked for this digest.
+
+
+2026-10-12T14:46:44.750Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f INFO: Performed DigestJob (Job ID: 615cd3be-8147-4746-a54b-89c29c8fd93e) from Sidekiq(default) in 325.44ms
+2026-10-12T14:46:44.750Z pid=41076 tid=up0 class=DigestJob jid=b5467a84458f440756b4ac3f elapsed=0.446 INFO: done
+2026-10-12T14:46:54.307Z pid=41076 tid=uk4 DEBUG: Flushed 4 metrics
+2026-10-12T14:47:03.402Z pid=41076 tid=yrc DEBUG: Got TERM signal
+2026-10-12T14:47:03.402Z pid=41076 tid=yrc INFO: Shutting down
+2026-10-12T14:47:03.402Z pid=41076 tid=yrc INFO: Terminating quiet threads for default capsule
+wrong number of arguments (given 1, expected 0)
+/tmp/sidekiq-upgrade/gems/gems/connection_pool-3.0.2/lib/connection_pool/timed_stack.rb:62:in `pop'
+/tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/scheduled.rb:226:in `initial_wait'
+/tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/scheduled.rb:96:in `block in start'
+/tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/component.rb:10:in `watchdog'
+/tmp/sidekiq-upgrade/gems/gems/sidekiq-7.3.9/lib/sidekiq/component.rb:19:in `block in safe_thread'

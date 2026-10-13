@@ -1,0 +1,27 @@
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/core_ext/object/json.rb:5: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/bigdecimal.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add bigdecimal to your Gemfile or gemspec to silence this warning.
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/notifications/fanout.rb:3: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/mutex_m.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add mutex_m to your Gemfile or gemspec to silence this warning.
+sidekiq=7.3.9 redis-gem=4.8.1 redis-client=0.31.0 connection_pool=3.0.2 rails=7.0.8.7
+REDIS_URL=redis://127.0.0.1:6391/3 adapter=ActiveJob::QueueAdapters::SidekiqAdapter adapter_source=/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/sidekiq-7.3.9/lib/active_job/queue_adapters/sidekiq_adapter.rb
+2026-10-12T15:37:44.480Z pid=48407 tid=yyn INFO: Sidekiq 7.3.9 connecting to Redis with options {:size=>10, :pool_name=>"internal", :url=>"redis://127.0.0.1:6391/3"}
+connection class yielded by Sidekiq.redis: Sidekiq::RedisClientAdapter::CompatClient (Class)
+default concurrency: RAISED NameError: uninitialized constant Sidekiq::Capsule  ancestors=DidYouMean::Correctable<ErrorHighlight::CoreExt<NameError
+strict args mode: :raise (Symbol)
+sadd new member (current code shape): 1 (Integer)
+sadd duplicate member (current code shape): 0 (Integer)
+truthiness of duplicate sadd: true (TrueClass)
+sadd [member] array form, new: 1 (Integer)
+sadd [member] array form, duplicate: 0 (Integer)
+call('SADD') new: 1 (Integer)
+call('SADD') duplicate: 0 (Integer)
+srem with array of members: 2 (Integer)
+smembers after srem: ["3"] (Array)
+expire: 1 (Integer)
+ExportJob.perform_async symbol-key hash: RAISED ArgumentError: Job arguments to ExportJob must be native JSON types, but :format is a Symbol.  ancestors=ErrorHighlight::CoreExt<ArgumentError
+ExportJob.perform_async string-key hash: "ab07b81d01d4008e503f214c" (String)
+DigestJob.perform_later with BigDecimal completion: RAISED ArgumentError: Job arguments to DigestJob must be native JSON types, but 0.6667e0 is a BigDecimal.  ancestors=ErrorHighlight::CoreExt<ArgumentError
+DigestJob.perform_later with completion.to_s: "c1d7a8ab4a076b99b58107d1" (String)
+BigDecimal#to_s under ActiveSupport: "0.6667" (String)
+JSON round trip of BigDecimal: "0.6667" (String)
+payload of last queued job: "{\"retry\":true,\"queue\":\"default\",\"wrapped\":\"DigestJob\",\"args\":[{\"job_class\":\"DigestJob\",\"job_id\":\"30a70880-bb85-4bc8-b3d0-06f5646eebda\",\"provider_job_id\":null,\"queue_name\":\"default\",\"priority\":null,\"arguments\":[{\"_aj_globalid\":\"gid://margin-notes/User/3\"},{\"_aj_serialized\":\"ActiveJob::Serializers::TimeWithZoneSerializer\",\"value\":\"2026-10-12T15:37:44.619854900Z\"},\"0.6667\"],\"executions\":0,\"exception_executions\":{},\"locale\":\"en\",\"timezone\":\"UTC\",\"enqueued_at\":\"2026-10-12T15:37:44Z\"}],\"class\":\"ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper\",\"jid\":\"c1d7a8ab4a076b99b58107d1\",\"created_at\":1791819464.6201332,\"enqueued_at\":1791819464.6201658}" (String)

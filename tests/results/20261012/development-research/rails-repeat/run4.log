@@ -1,0 +1,129 @@
+Running 46 tests in a single process (parallelization threshold is 50)
+Run options: --seed 8133
+
+# Running:
+
+E
+
+Error:
+CitationEnrichmentsControllerTest#test_provider_credentials_from_the_environment_reach_the_server_unchanged:
+NoMethodError: undefined method `secrets' for #<MarginNotes::Application:0x00007fc44a2f3850>
+    test/controllers/citation_enrichments_controller_test.rb:117:in `with_provider'
+    test/controllers/citation_enrichments_controller_test.rb:43:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:40
+
+.E
+
+Error:
+CitationEnrichmentsControllerTest#test_a_provider_that_stays_unavailable_or_refuses_the_request_leaves_a_visible_failure:
+NoMethodError: undefined method `secrets' for #<MarginNotes::Application:0x00007fc44a2f3850>
+    test/controllers/citation_enrichments_controller_test.rb:117:in `with_provider'
+    test/controllers/citation_enrichments_controller_test.rb:64:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:60
+
+E
+
+Error:
+CitationEnrichmentsControllerTest#test_fetches_a_manually_entered_DOI's_title_and_source_URL,_retrying_one_unavailable_response:
+NoMethodError: undefined method `secrets' for #<MarginNotes::Application:0x00007fc44a2f3850>
+    test/controllers/citation_enrichments_controller_test.rb:117:in `with_provider'
+    test/controllers/citation_enrichments_controller_test.rb:12:in `block in <class:CitationEnrichmentsControllerTest>'
+
+bin/rails test test/controllers/citation_enrichments_controller_test.rb:7
+
+.F
+
+Failure:
+RemindersControllerTest#test_a_reader_schedules_a_reminder_in_their_time_zone_and_is_emailed_once_it_is_due [test/controllers/reminders_controller_test.rb:21]:
+Expected at least 1 element matching "#next_day_reminder time[datetime=\"2026-11-01T09:00:00-04:00\"]", found 0.
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/reminders_controller_test.rb:6
+
+.2026-10-12T15:05:36.094Z pid=43913 tid=z85 WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+.2026-10-12T15:05:36.166Z pid=43913 tid=z85 WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+.2026-10-12T15:05:36.266Z pid=43913 tid=z85 WARN: Job arguments to ExportJob do not serialize to JSON safely. This will raise an error in
+Sidekiq 7.0. See https://github.com/mperham/sidekiq/wiki/Best-Practices or raise an error today
+by calling `Sidekiq.strict_args!` during Sidekiq initialization.
+
+......Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+Redis#srem will always return an Integer in Redis 5.0.0. Use Redis#srem? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:43:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+.Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+Redis#sadd will always return an Integer in Redis 5.0.0. Use Redis#sadd? instead.(called from: /tmp/mn-rails81-plan/app/models/user.rb:38:in `block in request_digest')
+F
+
+Failure:
+DigestsControllerTest#test_a_reader_can_request_one_digest_per_UTC_day,_listing_ready_notes_updated_that_day [test/controllers/digests_controller_test.rb:33]:
+--- expected
++++ actual
+@@ -1 +1 @@
+-"Your reading digest for October 05, 2026"
++"Your reading digest for October 04, 2026"
+
+
+bin/rails test test/controllers/digests_controller_test.rb:5
+
+........./tmp/mn-rails81-plan/app/models/import.rb:1: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/csv.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add csv to your Gemfile or gemspec to silence this warning.
+F
+
+Failure:
+ImportsControllerTest#test_previews_a_CSV_without_saving,_then_imports_every_row_and_offers_a_receipt [test/controllers/imports_controller_test.rb:22]:
+Expected: "Read <b>twice</b> & reflect"
+  Actual: "10.1000/Essays.1".
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/imports_controller_test.rb:6
+
+..F
+
+Failure:
+ImportsControllerTest#test_invalid_rows_are_shown_with_their_errors,_and_applying_them_saves_nothing [test/controllers/imports_controller_test.rb:62]:
+Expected: "Second reading"
+  Actual: "not-a-doi".
+Expected 0 to be >= 1.
+
+bin/rails test test/controllers/imports_controller_test.rb:48
+
+...........E
+
+Error:
+NotesControllerTest#test_filters_by_notebook,_status,_and_title:
+ActiveRecord::StatementInvalid: PG::UndefinedColumn: ERROR:  column notes.notebooks does not exist
+LINE 1: ...ebooks"."id" WHERE "notebooks"."user_id" = $1 AND "notes"."n...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "notes.notebook_id".
+
+    app/controllers/notes_controller.rb:18:in `index'
+    test/controllers/notes_controller_test.rb:28:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:27
+
+E
+
+Error:
+NotesControllerTest#test_pages_through_filtered_notes_newest_first,_keeping_the_filters_and_page_size:
+ActiveRecord::StatementInvalid: PG::UndefinedColumn: ERROR:  column notes.notebooks does not exist
+LINE 1: ...ebooks"."id" WHERE "notebooks"."user_id" = $1 AND "notes"."n...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "notes.notebook_id".
+
+    app/controllers/notes_controller.rb:18:in `index'
+    test/controllers/notes_controller_test.rb:56:in `block in <class:NotesControllerTest>'
+
+bin/rails test test/controllers/notes_controller_test.rb:48
+
+...
+
+Finished in 2.043257s, 22.5131 runs/s, 125.7795 assertions/s.
+46 runs, 257 assertions, 4 failures, 5 errors, 0 skips

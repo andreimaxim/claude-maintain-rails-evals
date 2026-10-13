@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-13T06:41:08Z",
-  "scope": "Frozen Haiku-medium development workflow observations; assessment and native-model audit pending.",
+  "updated_at": "2026-10-13T08:00:00Z",
+  "scope": "All twenty frozen Haiku-medium outcomes. runs preserves initial development observations; resolutions records their assessed outcomes. heldout_summary links the ten held-out per-run records with quotes, hashes, raw/final grades and workflow history.",
   "requested_model": "claude-haiku-5-5",
   "requested_effort": "medium",
   "actual_model": null,
-  "actual_model_status": "Native audit pending; requested configuration is not proof of the served model.",
+  "actual_model_status": "Fourteen original native audits verify Haiku5.5/medium; six are unavailable after collection-only refusals. This includes two verified planner-bypass runs, not fourteen completed planner deliveries. Requested configuration alone does not prove the six unaudited served models.",
   "source_pins": {
     "plugin": "11b074b79a35be55d5768ba3799b1dff768dfb94",
     "application": "9938031e54e1d7d074f1200a0da17e49390c86fa",
-    "verification": "All ten initial application revisions, downloaded plugin HEADs and both prompt hashes match the freeze. No final preservation audit is implied."
+    "verification": "All twenty initial application revisions, downloaded plugin HEADs and both prompt hashes match the freeze. No final preservation audit is implied."
   },
   "interpretation": {
     "non_plan_idle_response": "An early idle response says the planner is still running. This is a timing warning, not proof of permanent failure; later spontaneous delivery can resolve it.",
@@ -256,5 +256,144 @@
       ],
       "limit": "Multiple fallback reports arrived spontaneously. Their source, disagreements and claimed checks remain separate from the designated planner's missing report."
     }
+  ],
+  "native_audit_coverage": {
+    "verified_runs": ["rails-1", "rails-2", "rails-3", "rails-5", "sidekiq-1", "sidekiq-3"],
+    "served_model": "claude-haiku-5-5",
+    "served_effort": "medium",
+    "cli_version": "2.1.296",
+    "unavailable_runs": ["rails-4", "sidekiq-2", "sidekiq-4", "sidekiq-5"],
+    "collection_failure": "These four workers declined the separate transcript-collection request because it came from their coordinator thread. No owner gate was answered, no model was substituted, and no audit was invented. This happened after the immutable evaluated turns and is not part of benchmark timing or content scores.",
+    "provenance_correction": "Native metadata identifies rails-3 and sidekiq-1 reporters as maintain-rails:gem-upgrade-planner despite their authored self-analysis/fallback labels. The labels and initial failed handoffs remain historical evidence, not authoritative agent identities.",
+    "environment_limit": "Unset variables in follow-up shells do not establish the original process environment. Some original background descendants were unfinished at the evaluated boundary."
+  },
+  "resolutions": [
+    {
+      "case": "rails", "run": 1,
+      "outcome": "no_plan_at_evaluated_choice_gate",
+      "raw_actionable": null, "final_actionable": null,
+      "selected_families": 23,
+      "response_wall_time_ms": 62365, "successful_plan_wall_time_ms": null,
+      "reported_first_handback_tokens": 41445,
+      "export_sha256": "81d5057733ab505a03547e8171e79a121524a7c7462a7252a18ce8045ae747f4",
+      "note": "Root responses contain no plan; unfinished descendants are recorded, not graded as completed or canceled. Null is not zero accuracy."
+    },
+    {
+      "case": "rails", "run": 2,
+      "outcome": "working_application_implementation_with_planner_bypass",
+      "raw_actionable": null, "final_actionable": 2,
+      "selected_families": 23,
+      "response_wall_time_ms": 454914, "successful_plan_wall_time_ms": null,
+      "reported_first_handback_tokens": null,
+      "export_sha256": "e4d64a93d00505ac193233d6b08da945031aed4c6d1424deb6a5f16c1ee4b317",
+      "note": "Two actionable findings in the delivered implementation summary do not imply only two repairs were implemented. No worker changes were integrated."
+    },
+    {
+      "case": "rails", "run": 3,
+      "outcome": "status_handoff_recovered_by_resumed_native_planner",
+      "raw_actionable": 3, "final_actionable": 3,
+      "selected_families": 23,
+      "response_wall_time_ms": 465229, "successful_plan_wall_time_ms": 465229,
+      "reported_first_handback_tokens": null,
+      "export_sha256": "995eeb77358385014212920babcb387b42f51da16b44b92f704e9aab4414fc17",
+      "note": "Original native completed report at 06:36:15.951Z establishes designated provenance despite the self-analysis label. Earlier waiting response remains logged."
+    },
+    {
+      "case": "rails", "run": 4,
+      "outcome": "later_plan_delivered_native_provenance_unavailable",
+      "raw_actionable": null, "final_actionable": 17,
+      "selected_families": 23,
+      "response_wall_time_ms": 1132145, "successful_plan_wall_time_ms": null,
+      "reported_first_handback_tokens": null,
+      "export_sha256": "ce29343105a6ead326bce7d74b612ab8b98e2873d64e979e4c97373a7613b3fa",
+      "note": "Grade delivered content; do not invent the uncollected native handback or served model."
+    },
+    {
+      "case": "rails", "run": 5,
+      "outcome": "self_delegation_loop_recovered_by_fresh_native_planner",
+      "raw_actionable": 18, "final_actionable": 18,
+      "selected_families": 23,
+      "response_wall_time_ms": 1302941, "successful_plan_wall_time_ms": 1302941,
+      "reported_first_handback_tokens": 37328,
+      "export_sha256": "fbf11343510d96bd9683f98d4ededd8efc54bb861cd4392cac3e3bcb8a953ec0",
+      "note": "The 38-second waiting response is not successful latency. Recovery includes the original parent's stops and fresh planner invocation."
+    },
+    {
+      "case": "sidekiq", "run": 1,
+      "outcome": "native_reports_recovered_but_last_delivery_is_lossy_summary",
+      "raw_actionable": 1, "final_actionable": 0,
+      "selected_families": 2,
+      "response_wall_time_ms": 463260, "successful_plan_wall_time_ms": null,
+      "reported_first_handback_tokens": 45557,
+      "export_sha256": "7413b4a8d8bc79fab3db7497faa18df6a6e02e314080c7711b442154dfdc3fb2",
+      "note": "Both supposed fallback reports are native planner instances. Keep their disagreement and the final summary's omissions separate from native completion."
+    },
+    {
+      "case": "sidekiq", "run": 2,
+      "outcome": "later_plan_delivered_native_provenance_unavailable",
+      "raw_actionable": null, "final_actionable": 2,
+      "selected_families": 2,
+      "response_wall_time_ms": 441422, "successful_plan_wall_time_ms": null,
+      "reported_first_handback_tokens": 42407,
+      "export_sha256": "7078ee4dc22f292a600a4a200b27f51af1659d5192115f854b9e5e116013c8a5",
+      "note": "Do not substitute the earlier 49-second waiting response for full delivery, or treat the parent's unchanged claim as a native comparison."
+    },
+    {
+      "case": "sidekiq", "run": 3,
+      "outcome": "initial_failed_handoffs_recovered_by_second_native_foreground_invocation",
+      "raw_actionable": 2, "final_actionable": 2,
+      "selected_families": 2,
+      "response_wall_time_ms": 808205, "successful_plan_wall_time_ms": 808205,
+      "reported_first_handback_tokens": 177792,
+      "export_sha256": "cb715d4be0c189d7f17aa4ab40be668394365e14aaa187e0fb11b12c0ff5f81b",
+      "note": "Initial launch/resume failures remain logged; the completed second native report is preserved verbatim before separate commentary."
+    },
+    {
+      "case": "sidekiq", "run": 4,
+      "outcome": "later_plan_delivered_native_provenance_unavailable",
+      "raw_actionable": null, "final_actionable": 1,
+      "selected_families": 2,
+      "response_wall_time_ms": 805081, "successful_plan_wall_time_ms": null,
+      "reported_first_handback_tokens": 42675,
+      "export_sha256": "4dbc16a5cd8a489a0aad4ec394d558ad0dc7bcd49c546708c4ffa9f33e218cbb",
+      "note": "Authored contradictory delegation notes are not sufficient to establish native identity. Keep useful final content and uncertainty."
+    },
+    {
+      "case": "sidekiq", "run": 5,
+      "outcome": "later_report_summaries_with_unavailable_native_provenance_and_delivery_loss",
+      "raw_actionable": null, "final_actionable": 0,
+      "selected_families": 2,
+      "response_wall_time_ms": 423733, "successful_plan_wall_time_ms": null,
+      "reported_first_handback_tokens": null,
+      "export_sha256": "e2ff15ba3ff1ff42869ca67fca39d975e1439f27b86d6aa69bf85729a4ee0fd6",
+      "note": "An earlier visible report retains one family; the last summary loses its concrete deduplication repair. Do not credit inaccessible report sections."
+    }
+  ],
+  "heldout_summary": {
+    "assessments": [
+      "results/20261012/assessments/haiku-medium-pagy-assessment.json",
+      "results/20261012/assessments/haiku-medium-faraday-assessment.json"
+    ],
+    "per_run_trace_and_outcome_index": "results/20261012/benchmark-outcomes.json",
+    "initial_status_observations": "results/20261012/early-observations/haiku-medium-heldout",
+    "unintended_implementations": ["pagy-3", "faraday-1"],
+    "lossy_last_summaries": ["pagy-1", "pagy-2", "pagy-5"],
+    "recovered_complete_native_deliveries": ["pagy-4", "faraday-2", "faraday-3", "faraday-4"],
+    "raw_actionable_by_run": {"pagy": [2, 2, null, 2, 2], "faraday": [null, 2, 1, 2, null]},
+    "final_actionable_by_run": {"pagy": [1, 2, 0, 2, 1], "faraday": [0, 2, 1, 2, 0]},
+    "selected_families_per_run": 2,
+    "successful_plan_wall_time_ms_by_run": {"pagy": [null, null, null, 337098, null], "faraday": [null, 600629, 258618, 721567, null]},
+    "verified_native_audits": ["pagy-1", "pagy-2", "pagy-3", "pagy-4", "pagy-5", "faraday-2", "faraday-3", "faraday-4"],
+    "unavailable_native_audits": ["faraday-1", "faraday-5"],
+    "collection_failure": "Two workers declined the post-evaluation evidence request because it came from another thread. Their final refusal texts and export hashes are retained separately; no audit was invented and these follow-ups are outside scores and timing.",
+    "cli_version_limit": "The pagy-3 native artifact records cliVersion null despite its sender summary naming 2.1.296. Preserve the artifact's uncertainty.",
+    "provenance_correction": "Recovered completed reports in pagy-1/2/4/5 and faraday-2/3/4 are designated planner outputs despite self-analysis/fallback labels. Raw provenance does not excuse lost final detail or make a summary a full-plan delivery.",
+    "reconciliation": "Graders checked 300 Pagy and 303 Faraday exact quote memberships, with zero mismatches. Coordinator independently checked original hashes/timings, final quote memberships and derived counts. Native experiment logs remain uncollected."
+  },
+  "assessment_limits": [
+    "Actionability is selected-finding recall, not overall correctness or a readiness pass. Every assessed validation family is partial or missing under the same complete scenario/control rubric, not zero testing.",
+    "Reported first-handback tokens are optional native footer values, sometimes from status responses. They are neither workflow totals nor billed usage, and nested values must not be summed.",
+    "Reviewed visible traces, report-specific assessments, recovered native audits/reports and available earlier research logs are committed under tests/results/20261012. Full exports/native thinking/account metadata are private and not published. Privacy transformations retain hashes and reasons in evidence-index.json.",
+    "Verified final-layer reconciliation covers ten export hashes/timings and 356 exact quote memberships/counts; raw-layer reconciliation covers 175 further quote memberships/counts. Nested experiment logs remain uncollected and claims remain attributed."
   ]
 }

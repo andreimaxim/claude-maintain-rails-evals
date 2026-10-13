@@ -87,10 +87,19 @@ memberships and Faraday 4/10 per raw/final layer; workflow and safety failures
 remain separate from recall. All twenty Sonnet-medium runs are assessed: final
 Rails recall ranges from 14–18/23, Sidekiq retains 1/2 in every run, Pagy retains
 6/10 family memberships and Faraday 3/10. These are selected-finding counts,
-not overall correctness pass rates. Haiku-medium development runs are collecting;
-early waiting messages do not count as successful plan delivery. The temporary
-project setting will be restored to its previous empty value after the suite;
-no planner tuning follows held-out exposure.
+not overall correctness pass rates. All twenty Haiku-medium outcomes are assessed,
+including missing plans, implementation instead of planning, lossy summaries and
+late recovery. Seven have verified full designated-plan delivery. Native model
+audits are unavailable for six Haiku runs after evidence-collection refusals.
+The temporary project setting has been restored to its previous empty value;
+no planner tuning followed held-out exposure.
+
+The [durable results](tests/results/20261012/README.md) retain all sixty requested
+benchmark slots plus ten Opus-high development references. They include visible
+traces, raw/final finding assessments, wall times, available token footers,
+descriptive variance, recovered native audits/reports and earlier failure evidence.
+Nested experiment logs were not generally collected, and token footers are not
+billed totals. Source and published-file hashes identify privacy transformations.
 
 The [per-run failure ledger](tests/planner-failures-20261012.json) keeps workflow
 failures and late recoveries separate from finding recall. It records quoted

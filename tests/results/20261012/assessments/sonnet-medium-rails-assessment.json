@@ -1,0 +1,6828 @@
+{
+  "assessment": "Five frozen Sonnet 5.5/medium Rails plans, not implementations.",
+  "encoding": {
+    "judgment_order": [
+      "application_impact",
+      "correct_applicability",
+      "valid_recommendation",
+      "discriminating_validation"
+    ],
+    "values": [
+      "supported",
+      "partial",
+      "missing",
+      "incorrect"
+    ],
+    "quotes": "Four lists of exact short substrings of the corresponding normalized layer; empty lists indicate absent relevant text.",
+    "reasons": "Four nullable strings in judgment order; every nonsupported judgment has a reason.",
+    "actionable": "First three judgments all supported. No weighted score.",
+    "fully_specified_validation": "Fourth judgment supported only for the whole scenario/control family. Neither suite success nor an isolated probe suffices; this is not a test-execution count.",
+    "raw_locator": "Native main_tool_trace Agent with subagent_type maintain-rails:gem-upgrade-planner, result.result. Remove only native prefix through The report follows:\n, exactly two leading harness spaces on each line, and trailing agentId/usage. Retain all authored introductions, commentary and apparent reviewer/parent checks.",
+    "final_locator": "final_response, without content normalization or removal of authored notes."
+  },
+  "freeze": {
+    "application": "9938031e54e1d7d074f1200a0da17e49390c86fa",
+    "plugin": "11b074b79a35be55d5768ba3799b1dff768dfb94",
+    "identity_basis": "User independently matched all ten application/plugin/prompt identities. No new identity inference from report prose."
+  },
+  "rubric": [
+    "tests/planner-development.md",
+    "tests/planner-development-batch2-20261012.md"
+  ],
+  "strict_scoring_reference": "/tmp/planner-suite-20261012/opus-low-rails-assessment.json",
+  "reference_use": "Prior assessment used only to calibrate strict impact/validation judgments, not as evidence of these outputs.",
+  "evidence_limits": [
+    "Only immutable completed captures are scored. Assessor waited on the existing collection-status file; no agents launched or messaged, application experiments run, prompts tuned, or other files written.",
+    "All visible parent traces invoke the skill, grep the current Rails version, and receive the native planner Agent. Nested delegation availability claims do not negate that actual invocation.",
+    "Nested experiments, dependency locks, browser checks, suites, cleanup, clean git status and report-authored parent checks remain model claims unless actual output appears in the main trace. Low top-level tool-use counts do not prove nested experiments impossible.",
+    "No collected main trace here independently executes suites, reads experiment logs, lists disposable artifacts or checks git status. Parent grep output establishes only the current dependency version.",
+    "Retained 7.0 defaults make R09/R20/R21/R23/R25 conditional; Sidekiq 7 is separate optional work. Mixed-version BigDecimal failure is specifically an 8.1 producer to a 7.0 worker, not an all-8.1 failure.",
+    "Equivalent repairs accepted: explicit JSON attribute type with preserved data, forwarding alias_method, citation.id as primary-key reader, row.annotation, fixed-offset getlocal, string sum with an explicit empty-string identity, and explicit rollback. No extra-family recall is added.",
+    "Source-based correctness is distinct from actually observed passing experiments. Production data, credentials, deployment, browser behavior, upstream patch claims and broad rollback guarantees remain limited by the supplied captures."
+  ],
+  "validation_criteria": {
+    "R01": "Persist unequal draft/ready notes, reload, filters and prefixed helpers/scopes.",
+    "R02": "Existing unequal JSON tags, comma-separated editing, stored JSON and array values after reload.",
+    "R03": "Edit/reload highlight color, preserve settings, form/error rendering.",
+    "R04": "Unequal notebook populations, another owner, inclusion/exclusion and foreign-notebook denial.",
+    "R05": "Real import with distinct DOIs; downloaded receipt against persisted citations.",
+    "R06": "Real apply request valid then invalid row, fresh PostgreSQL notes/citations/import counts zero; successful batch control.",
+    "R07": "Real worker, exact ordered Markdown bytes; unrepaired failure remains working without artifact.",
+    "R08": "Unequal annotations at lines 2 and 4, multiline CSV row, literal preview text and no persistence.",
+    "R09": "Before/after expiry, fresh/cached reads, authoritative download expiry/ownership; gate distinction.",
+    "R10": "Epoch, wall clock and offset across DST and non-boundary control.",
+    "R11": "Real JSON queue/worker, differing local/UTC dates, each midnight separately, reservations and delivered membership.",
+    "R12": "Real JSON both directions and same-version controls, exact delivered completion percentage.",
+    "R13": "Real scheduled payload/score and persisted time, replacement and ownership controls.",
+    "R14": "Persistent 503: six requests/three attempts and recorded failure, 503-to-200 and 401 controls, real worker.",
+    "R15": "Render/submit unbound GET form, names/method/resulting membership.",
+    "R16": "Route drawing, owner requests to /notes and /journal, identical authorized lists and helpers.",
+    "R17": "Raised request exception, missing-record policy, normal and CI eager-loading modes.",
+    "R18": "Boot, details/summary and attachment markup; exclude scripts, handlers and javascript URLs.",
+    "R19": "Fresh-process special-character environment credentials, actual Basic header, metadata and bounded failure behavior.",
+    "R20": "Gate off/on, create/edit/reload unequal YAML preferences and export heading.",
+    "R21": "Gate off/on, create, name/heading edits, attempted slug change and persisted slug.",
+    "R23": "Real PostgreSQL gate off/on, asymmetric UTC counts, populated/empty reports and ownership.",
+    "R25": "Explicit keep/adopt; matching ETag list both orders, conflicting/nonconflicting dates, expired302/foreign404."
+  },
+  "source_references": [
+    {
+      "base_url": "https://raw.githubusercontent.com/andreimaxim/claude-maintain-rails-sample/9938031e54e1d7d074f1200a0da17e49390c86fa/",
+      "files_read": [
+        "app/models/note.rb",
+        "app/models/notebook.rb",
+        "app/models/user.rb",
+        "app/models/import.rb",
+        "app/models/export.rb",
+        "app/models/citation.rb",
+        "app/models/citation/provider.rb",
+        "app/controllers/notes_controller.rb",
+        "app/controllers/notebooks_controller.rb",
+        "app/controllers/export_downloads_controller.rb",
+        "app/jobs/citation_enrichment_job.rb",
+        "app/jobs/digest_job.rb",
+        "app/jobs/export_job.rb",
+        "app/mailers/digest_mailer.rb",
+        "app/views/exports/_export.html.erb",
+        "app/views/imports/preview.html.erb",
+        "app/views/layouts/application.html.erb",
+        "config/importmap.rb",
+        "config/secrets.yml",
+        "config/application.rb",
+        "config/initializers/action_text.rb",
+        "Gemfile",
+        "test/controllers/exports_controller_test.rb"
+      ],
+      "findings": [
+        "Import::Row holds note and annotation; explicit row.note.save rollback and row.annotation are valid.",
+        "Notebook generates slug on creation, so globally removing permitted slug can preserve creation.",
+        "DigestMailer already accepts String or BigDecimal via BigDecimal(params[:completion]); UTC reservation and mail membership are distinct contracts.",
+        "Provider default settings are evaluated when Provider.new is called in Citation#enrich, not at application boot.",
+        "Export stale cached availability is explicitly tested; bypassing caching is not equivalent to preserving cache reads.",
+        "Vendored trix-1.3.5.js remains explicitly loaded; the baseline Trix1.3.4 comment explains that choice rather than claiming current runtime Trix2."
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/rails/rails/v8.1.0/activesupport/lib/active_support/time_with_zone.rb",
+      "quotes": [
+        "utc.getlocal(utc_offset)",
+        "alias_method :getlocal, :localtime"
+      ],
+      "purpose": "Accept run4 fixed-offset getlocal repair without running an experiment."
+    },
+    {
+      "urls": [
+        "https://raw.githubusercontent.com/rails/rails/v7.1.0/activejob/lib/active_job/exceptions.rb",
+        "https://raw.githubusercontent.com/rails/rails/v7.2.0/activejob/lib/active_job/exceptions.rb"
+      ],
+      "purpose": "Run1 removal onset7.2 is valid: 7.1 accepts/deprecates exponentially_longer, 7.2 removes it."
+    }
+  ],
+  "runs": [
+    {
+      "run": 1,
+      "source_capture_sha256": "0d2baf3bc3d8ab6d89ef1fd766766cc5d116e94f9f956fe68bd9eddd611875ac",
+      "export_sha256": "74ef8685064d83c8fbd5d08c566eb89056294b85354956897b5a6ff05dff8c8e",
+      "wall_time_ms": 1097774,
+      "counts": {
+        "raw": {
+          "actionable": 17,
+          "fully_specified_validation": 0,
+          "fully_omitted": 1
+        },
+        "final": {
+          "actionable": 17,
+          "fully_specified_validation": 0,
+          "fully_omitted": 1
+        }
+      },
+      "raw": {
+        "R01": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "fails at class load"
+            ],
+            [
+              "in `Note`"
+            ],
+            [
+              "enum :status, { draft: 0, ready: 1 }, prefix: true"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No persisted statuses/reload/filter/helper validation."
+          ]
+        },
+        "R02": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "no longer accepts a positional coder"
+            ],
+            [
+              "not a safe preparatory change"
+            ],
+            [
+              "attribute :tags, :json",
+              "as part of the cutover commit only"
+            ],
+            [
+              "identical column text",
+              "each version reads the others' rows"
+            ]
+          ],
+          "reasons": [
+            "Target API removal but no explicit target Note load/read failure; preparatory failure is a different condition.",
+            null,
+            null,
+            "Cross-read values omit comma editing and complete existing-row/array controls."
+          ]
+        },
+        "R03": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "raises"
+            ],
+            [
+              "not a column"
+            ],
+            [
+              "alias_method :highlight_color=, :color="
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No edit/reload/settings/form-error validation."
+          ]
+        },
+        "R04": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "notebook filter errors"
+            ],
+            [
+              "which does not exist"
+            ],
+            [
+              "where(notebook_id: @notebook.id)"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No unequal notebook/other-owner inclusion/exclusion controls."
+          ]
+        },
+        "R05": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "receipt CSV has blank DOIs"
+            ],
+            [
+              "primary key `doi`"
+            ],
+            [
+              "citation&.doi"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No distinct DOI import/download comparison specified."
+          ]
+        },
+        "R06": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "saved the Import and the earlier rows' notes"
+            ],
+            [
+              "non-local `return` commits the transaction"
+            ],
+            [
+              "raise `ActiveRecord::Rollback` and return `saved || false`"
+            ],
+            [
+              "An import with one invalid row"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Invalid row described but real apply/fresh all-table counts and successful batch control omitted."
+          ]
+        },
+        "R07": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "String can't be coerced into Integer"
+            ],
+            [
+              "`fragments.sum` of Strings"
+            ],
+            [
+              "fragments.join"
+            ],
+            [
+              "`ExportJob`, `DigestJob`, `CitationEnrichmentJob` and a scheduled `NoteReminderJob`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Worker execution claim lacks exact ordered bytes and unrepaired working/no-artifact control."
+          ]
+        },
+        "R08": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "annotations silently vanish from the preview"
+            ],
+            [
+              "they become Strings"
+            ],
+            [
+              "use `row.annotation`"
+            ],
+            [
+              "`/tmp/upg/hwia.rb`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Key-conversion probe, no unequal source2/4 multiline literal preview/no-save controls."
+          ]
+        },
+        "R09": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises on a negative expiry for expired exports"
+            ],
+            [
+              "`load_defaults 8.1`"
+            ],
+            [],
+            [
+              "tested in `/tmp/upg/r81d`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No clamp or equivalent cache-preserving repair.",
+            "Aggregate defaults trial lacks deadlines, cache hits/misses and authoritative expiry/ownership controls."
+          ]
+        },
+        "R10": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "only the \"24 hours later\" display text changes"
+            ],
+            [
+              "The scheduled instant is identical."
+            ],
+            [
+              "Time.at(reminder_epoch + 86_400, in: reminder_at.utc_offset)"
+            ],
+            [
+              "09:00 -04:00",
+              "08:00 -05:00"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "DST offset sample lacks full epoch/wall/offset assertions and non-boundary control."
+          ]
+        },
+        "R11": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "would decide the digest day"
+            ],
+            [
+              "keeps the documented \"UTC day\" rule"
+            ],
+            [
+              "requested_at = requested_at.utc"
+            ],
+            [
+              "23:30 Eastern on Oct 4",
+              "October 05"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One midnight/date probe, no two-midnight reservation and delivered-membership matrix."
+          ]
+        },
+        "R12": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "BigDecimalSerializer is not known"
+            ],
+            [
+              "old workers take new jobs"
+            ],
+            [
+              "pass `reading_completion.to_s`"
+            ],
+            [
+              "7.0 workers processed the 8.1-enqueued job"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-direction claims lack same-version controls and exact delivered percentage."
+          ]
+        },
+        "R13": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Reminders cannot be scheduled on 8.1."
+            ],
+            [
+              "passes an Integer"
+            ],
+            [
+              "Time.at(reminder_epoch)"
+            ],
+            [
+              "a scheduled `NoteReminderJob`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Scheduled worker claim omits payload/score, persisted time, replacement and ownership controls."
+          ]
+        },
+        "R14": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Couldn't determine a delay"
+            ],
+            [
+              "does not exist on 7.0"
+            ],
+            [
+              "wait: ->(executions) { executions**4 + 2 }"
+            ],
+            [
+              "`CitationEnrichmentJob` and a scheduled `NoteReminderJob`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Portable callable is valid with loss of jitter disclosed; worker claim lacks bounded503 and recovery/401 controls."
+          ]
+        },
+        "R15": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "the root page, returns 500"
+            ],
+            [
+              "form_with(model: nil, ...)"
+            ],
+            [
+              "drop `model: nil`"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No GET render/submit/names/membership scenario."
+          ]
+        },
+        "R16": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises at route load"
+            ],
+            [
+              "get \"/notes\", \"/journal\""
+            ],
+            [
+              "two `get` lines"
+            ],
+            [
+              "the route tables match on 7.0 and 8.1"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Route table comparison omits both authorized URL requests and list behavior."
+          ]
+        },
+        "R17": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "`assert_raises ActiveRecord::RecordNotFound` tests fail"
+            ],
+            [
+              "It must land in the cutover commit."
+            ],
+            [
+              "`:none`."
+            ],
+            [
+              "`assert_raises ActiveRecord::RecordNotFound` tests fail"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Missing-record probes omit raised generic request exception and normal/CI modes."
+          ]
+        },
+        "R18": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "crashes boot"
+            ],
+            [
+              "allowed_tags` is nil"
+            ],
+            [
+              "base + %w[ details summary ]",
+              "ActionText::Attachment.tag_name, \"figure\", \"figcaption\""
+            ],
+            [
+              "`<details>` renders identically",
+              "`<script>` is stripped on both"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Useful render checks omit full summary/attachment/handler/javascript-URL matrix."
+          ]
+        },
+        "R19": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "NoMethodError: secrets"
+            ],
+            [
+              "app/models/citation/provider.rb"
+            ],
+            [
+              "config.x.citation_provider = config_for(:citation_provider)"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No fresh-process special credentials, actual Basic header, metadata/bounded-failure checks."
+          ]
+        },
+        "R20": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "serialize :preferences` then needs `coder: YAML`"
+            ],
+            [
+              "`load_defaults 8.1`"
+            ],
+            [
+              "coder: YAML"
+            ],
+            [
+              "string-key rows read the same on both"
+            ]
+          ],
+          "reasons": [
+            "Needs-coder statement lacks explicit implicit-coder raise despite generic breaks heading.",
+            null,
+            null,
+            "Cross-read/defaults checks omit gate-isolated create/edit/reload unequal preferences/export-heading controls."
+          ]
+        },
+        "R21": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises `ReadonlyAttributeError` instead of ignoring it"
+            ],
+            [
+              "The settings form resubmits `slug`."
+            ],
+            [],
+            [
+              "tested in `/tmp/upg/r81d`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No remove-submission/permission repair.",
+            "Aggregate defaults trial omits create, editable fields, attempted slug and persistence controls."
+          ]
+        },
+        "R23": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Date.iso8601(day)` in `Notebook#daily_note_counts` raises"
+            ],
+            [
+              "This passes under 7.0 defaults."
+            ],
+            [],
+            [
+              "select_rows` returns `Date` objects"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No Date/String normalization repair.",
+            "Default-on comparison lacks asymmetric UTC, empty report and ownership controls."
+          ]
+        },
+        "R25": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Conflicting HTTP validators omitted.",
+            "No strict_freshness gate.",
+            "No keep/adopt decision.",
+            "No validator/expiry/ownership matrix."
+          ]
+        }
+      },
+      "final": {
+        "R01": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "fails at class load"
+            ],
+            [
+              "in `Note`"
+            ],
+            [
+              "enum :status, { draft: 0, ready: 1 }, prefix: true"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No persisted statuses/reload/filter/helper validation."
+          ]
+        },
+        "R02": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "no longer accepts a positional coder"
+            ],
+            [
+              "not a safe preparatory change"
+            ],
+            [
+              "attribute :tags, :json",
+              "as part of the cutover commit only"
+            ],
+            [
+              "identical column text",
+              "each version reads the others' rows"
+            ]
+          ],
+          "reasons": [
+            "Target API removal but no explicit target Note load/read failure; preparatory failure is a different condition.",
+            null,
+            null,
+            "Cross-read values omit comma editing and complete existing-row/array controls."
+          ]
+        },
+        "R03": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "raises"
+            ],
+            [
+              "not a column"
+            ],
+            [
+              "alias_method :highlight_color=, :color="
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No edit/reload/settings/form-error validation."
+          ]
+        },
+        "R04": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "notebook filter errors"
+            ],
+            [
+              "which does not exist"
+            ],
+            [
+              "where(notebook_id: @notebook.id)"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No unequal notebook/other-owner inclusion/exclusion controls."
+          ]
+        },
+        "R05": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "receipt CSV has blank DOIs"
+            ],
+            [
+              "primary key `doi`"
+            ],
+            [
+              "citation&.doi"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No distinct DOI import/download comparison specified."
+          ]
+        },
+        "R06": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "saved the Import and the earlier rows' notes"
+            ],
+            [
+              "non-local `return` commits the transaction"
+            ],
+            [
+              "raise `ActiveRecord::Rollback` and return `saved || false`"
+            ],
+            [
+              "An import with one invalid row"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Invalid row described but real apply/fresh all-table counts and successful batch control omitted."
+          ]
+        },
+        "R07": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "String can't be coerced into Integer"
+            ],
+            [
+              "`fragments.sum` of Strings"
+            ],
+            [
+              "fragments.join"
+            ],
+            [
+              "`ExportJob`, `DigestJob`, `CitationEnrichmentJob` and a scheduled `NoteReminderJob`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Worker execution claim lacks exact ordered bytes and unrepaired working/no-artifact control."
+          ]
+        },
+        "R08": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "annotations silently vanish from the preview"
+            ],
+            [
+              "they become Strings"
+            ],
+            [
+              "use `row.annotation`"
+            ],
+            [
+              "`/tmp/upg/hwia.rb`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Key-conversion probe, no unequal source2/4 multiline literal preview/no-save controls."
+          ]
+        },
+        "R09": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises on a negative expiry for expired exports"
+            ],
+            [
+              "`load_defaults 8.1`"
+            ],
+            [],
+            [
+              "tested in `/tmp/upg/r81d`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No clamp or equivalent cache-preserving repair.",
+            "Aggregate defaults trial lacks deadlines, cache hits/misses and authoritative expiry/ownership controls."
+          ]
+        },
+        "R10": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "only the \"24 hours later\" display text changes"
+            ],
+            [
+              "The scheduled instant is identical."
+            ],
+            [
+              "Time.at(reminder_epoch + 86_400, in: reminder_at.utc_offset)"
+            ],
+            [
+              "09:00 -04:00",
+              "08:00 -05:00"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "DST offset sample lacks full epoch/wall/offset assertions and non-boundary control."
+          ]
+        },
+        "R11": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "would decide the digest day"
+            ],
+            [
+              "keeps the documented \"UTC day\" rule"
+            ],
+            [
+              "requested_at = requested_at.utc"
+            ],
+            [
+              "23:30 Eastern on Oct 4",
+              "October 05"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One midnight/date probe, no two-midnight reservation and delivered-membership matrix."
+          ]
+        },
+        "R12": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "BigDecimalSerializer is not known"
+            ],
+            [
+              "old workers take new jobs"
+            ],
+            [
+              "pass `reading_completion.to_s`"
+            ],
+            [
+              "7.0 workers processed the 8.1-enqueued job"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-direction claims lack same-version controls and exact delivered percentage."
+          ]
+        },
+        "R13": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Reminders cannot be scheduled on 8.1."
+            ],
+            [
+              "passes an Integer"
+            ],
+            [
+              "Time.at(reminder_epoch)"
+            ],
+            [
+              "a scheduled `NoteReminderJob`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Scheduled worker claim omits payload/score, persisted time, replacement and ownership controls."
+          ]
+        },
+        "R14": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Couldn't determine a delay"
+            ],
+            [
+              "does not exist on 7.0"
+            ],
+            [
+              "wait: ->(executions) { executions**4 + 2 }"
+            ],
+            [
+              "`CitationEnrichmentJob` and a scheduled `NoteReminderJob`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Portable callable is valid with loss of jitter disclosed; worker claim lacks bounded503 and recovery/401 controls."
+          ]
+        },
+        "R15": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "the root page, returns 500"
+            ],
+            [
+              "form_with(model: nil, ...)"
+            ],
+            [
+              "drop `model: nil`"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No GET render/submit/names/membership scenario."
+          ]
+        },
+        "R16": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises at route load"
+            ],
+            [
+              "get \"/notes\", \"/journal\""
+            ],
+            [
+              "two `get` lines"
+            ],
+            [
+              "the route tables match on 7.0 and 8.1"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Route table comparison omits both authorized URL requests and list behavior."
+          ]
+        },
+        "R17": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "`assert_raises ActiveRecord::RecordNotFound` tests fail"
+            ],
+            [
+              "It must land in the cutover commit."
+            ],
+            [
+              "`:none`."
+            ],
+            [
+              "`assert_raises ActiveRecord::RecordNotFound` tests fail"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Missing-record probes omit raised generic request exception and normal/CI modes."
+          ]
+        },
+        "R18": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "crashes boot"
+            ],
+            [
+              "allowed_tags` is nil"
+            ],
+            [
+              "base + %w[ details summary ]",
+              "ActionText::Attachment.tag_name, \"figure\", \"figcaption\""
+            ],
+            [
+              "`<details>` renders identically",
+              "`<script>` is stripped on both"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Useful render checks omit full summary/attachment/handler/javascript-URL matrix."
+          ]
+        },
+        "R19": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "NoMethodError: secrets"
+            ],
+            [
+              "app/models/citation/provider.rb"
+            ],
+            [
+              "config.x.citation_provider = config_for(:citation_provider)"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No fresh-process special credentials, actual Basic header, metadata/bounded-failure checks."
+          ]
+        },
+        "R20": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "serialize :preferences` then needs `coder: YAML`"
+            ],
+            [
+              "`load_defaults 8.1`"
+            ],
+            [
+              "coder: YAML"
+            ],
+            [
+              "string-key rows read the same on both"
+            ]
+          ],
+          "reasons": [
+            "Needs-coder statement lacks explicit implicit-coder raise despite generic breaks heading.",
+            null,
+            null,
+            "Cross-read/defaults checks omit gate-isolated create/edit/reload unequal preferences/export-heading controls."
+          ]
+        },
+        "R21": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises `ReadonlyAttributeError` instead of ignoring it"
+            ],
+            [
+              "The settings form resubmits `slug`."
+            ],
+            [],
+            [
+              "tested in `/tmp/upg/r81d`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No remove-submission/permission repair.",
+            "Aggregate defaults trial omits create, editable fields, attempted slug and persistence controls."
+          ]
+        },
+        "R23": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Date.iso8601(day)` in `Notebook#daily_note_counts` raises"
+            ],
+            [
+              "This passes under 7.0 defaults."
+            ],
+            [],
+            [
+              "select_rows` returns `Date` objects"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No Date/String normalization repair.",
+            "Default-on comparison lacks asymmetric UTC, empty report and ownership controls."
+          ]
+        },
+        "R25": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Conflicting HTTP validators omitted.",
+            "No strict_freshness gate.",
+            "No keep/adopt decision.",
+            "No validator/expiry/ownership matrix."
+          ]
+        }
+      },
+      "delivery": {
+        "skill_invoked": true,
+        "native_planner_invoked": true,
+        "plan_delivered_without_edit_approval_gate": true,
+        "selected_family_actionability_loss": [],
+        "change": "Findings retained; final removes clean-status claim from central introduction and replaces authored framing/footer.",
+        "parent_collected_output": [
+          "Gemfile.lock:195:    rails (7.0.8.7)"
+        ],
+        "preservation": "Only grep collected; raw directory listing/clean status claims are authored within Agent, not parent checks.",
+        "validation": "0 full families; partial nested data, route, worker, browser and suite evidence claimed, not collected logs."
+      },
+      "material_issues": [
+        {
+          "layers": [
+            "raw"
+          ],
+          "quotes": [
+            "I only listed that directory",
+            "`git status` there is clean."
+          ],
+          "reason": "Apparent parent checks authored inside native Agent return; no corresponding main trace tools. Retained as authored, not independent evidence.",
+          "kind": "evidence_attribution"
+        },
+        {
+          "layers": [
+            "final"
+          ],
+          "quotes": [
+            "The `/tmp/upg/` artifacts exist"
+          ],
+          "reason": "Parent adopts artifact-existence claim without a collected directory read. This establishes neither experiments nor preservation.",
+          "kind": "unsupported_verification"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "so this would first fail in production"
+          ],
+          "reason": "Lazy loading does not prevent model loading in tests/controllers; Note enum failure is not confined to production-first discovery.",
+          "kind": "coverage_claim_error"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "wait until no pre-fix `DigestJob` is queued"
+          ],
+          "reason": "Old decimal-string/UTC jobs can be read by new workers; no need established to drain these after preparatory fixes. Correct rollback hazard concerns new BigDecimalSerializer jobs reaching old workers.",
+          "kind": "unnecessary_rollout_constraint"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "Dev and test generate different secrets, so cross-version cookie checks only work in production mode."
+          ],
+          "reason": "Matching an explicit secret also permits cross-version nonproduction probes; production-only assertion overstates a setup artifact.",
+          "kind": "overbroad_claim"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "Rolling back to 7.0.8.7 is safe for sessions and caches."
+          ],
+          "reason": "Only sampled model-reported probes support this broad guarantee; no logs collected and actual deployed secret/cache/data shapes unverified.",
+          "kind": "evidence_limit"
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "source_capture_sha256": "d09dd79ed829422c6c2f7a292cea9174683fa68b5da148b7c2fc2096b06d1750",
+      "export_sha256": "3a155acae07fbcba07ac60759dad5dc45a895d14f40b235215aab576cb501c2d",
+      "wall_time_ms": 1372388,
+      "counts": {
+        "raw": {
+          "actionable": 18,
+          "fully_specified_validation": 0,
+          "fully_omitted": 5
+        },
+        "final": {
+          "actionable": 18,
+          "fully_specified_validation": 0,
+          "fully_omitted": 5
+        }
+      },
+      "raw": {
+        "R01": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "`ArgumentError`."
+            ],
+            [
+              "app/models/note.rb:10"
+            ],
+            [
+              "enum :status, { draft: 0, ready: 1 }, prefix: true"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No unequal persisted/reloaded status/filter/helper scenarios."
+          ]
+        },
+        "R02": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "`ArgumentError`."
+            ],
+            [
+              "Land it with the framework bump"
+            ],
+            [
+              "serialize :tags, coder: JSON"
+            ],
+            [
+              "Raw column values match across versions"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-read/bytes omit editing comma input and unequal array-value controls."
+          ]
+        },
+        "R03": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "aliasing a non-attribute is rejected"
+            ],
+            [
+              "color` is a `store_accessor"
+            ],
+            [
+              "alias_method :highlight_color=, :color="
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No edit/reload settings/form-error preservation checks."
+          ]
+        },
+        "R04": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "PG::UndefinedColumn: notes.notebooks"
+            ],
+            [
+              "`NotesController#index`"
+            ],
+            [
+              "where(notebook: @notebook)"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No unequal notebook/other-owner selection/denial controls."
+          ]
+        },
+        "R05": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "empty `doi` column"
+            ],
+            [
+              "primary key `doi`"
+            ],
+            [
+              "citation&.doi"
+            ],
+            [
+              "On idleness,10.1000/Essays.1"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One receipt value, not distinct DOI real apply/download against persisted citations."
+          ]
+        },
+        "R06": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "now saves the `Import` row and the valid notes before it"
+            ],
+            [
+              "return false unless row.note.save"
+            ],
+            [
+              "raise ActiveRecord::Rollback unless row.note.save"
+            ],
+            [
+              "counts `[0,3,0,1]` to `[1,4,1,2]`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Failed-import count example lacks fresh all-table PostgreSQL verification and successful-batch control."
+          ]
+        },
+        "R07": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "`Export#generate` crashes"
+            ],
+            [
+              "finish(fragments.sum)"
+            ],
+            [
+              "fragments.join"
+            ],
+            [
+              "The queued digest, reminder and export jobs ran on an 8.1 worker"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Worker claim lacks exact ordered Markdown bytes and unrepaired working/no-artifact control."
+          ]
+        },
+        "R08": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "preview silently drops annotations"
+            ],
+            [
+              "lookup with an Integer misses"
+            ],
+            [
+              "drop `.stringify_keys`"
+            ],
+            [
+              "a preview that asserts the annotation appears"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Proposed annotation check lacks unequal source2/4 multiline literal text/no-save controls."
+          ]
+        },
+        "R09": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Export negative-expiration finding omitted.",
+            "No invalid-expiration gate.",
+            "No repair.",
+            "No cache/expiry/ownership validation."
+          ]
+        },
+        "R10": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "preview shows `2026-11-01T08:00:00-05:00`"
+            ],
+            [
+              "scheduled epoch, is unchanged"
+            ],
+            [
+              "Time.at(reminder_epoch + 86_400, in: reminder_at.utc_offset)"
+            ],
+            [
+              "09:00-04:00",
+              "2026-11-01T08:00:00-05:00"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "DST sample lacks epoch/wall/offset assertions and non-boundary control."
+          ]
+        },
+        "R11": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "reader's local day"
+            ],
+            [
+              "Daily digests follow the UTC day"
+            ],
+            [
+              "requested_at = params[:requested_at].utc"
+            ],
+            [
+              "assert the digest date is the UTC day for a reader in a zone far from UTC"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No full JSON queue/two-midnight/reservation/membership matrix."
+          ]
+        },
+        "R12": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "BigDecimalSerializer is not known"
+            ],
+            [
+              "a 7.0.8.7 worker given the 8.1 payload"
+            ],
+            [
+              "reading_completion.to_s(\"F\")"
+            ],
+            [
+              "a real 7.0.8.7 Sidekiq process ran a digest job enqueued by 8.1"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Both-direction claims omit same-version controls and exact delivered percentage."
+          ]
+        },
+        "R13": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "reminders cannot be scheduled"
+            ],
+            [
+              "undefined method 'utc' for Integer"
+            ],
+            [
+              "wait_until: Time.at(reminder_epoch)"
+            ],
+            [
+              "reminder scheduled for a future date"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Real scheduled execution claim lacks payload/score/persisted schedule and replacement/ownership controls."
+          ]
+        },
+        "R14": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "when the provider is unavailable and the job first retries"
+            ],
+            [
+              "Nothing fails at class load."
+            ],
+            [
+              ":polynomially_longer",
+              "wait: ->(executions) { executions**4 + 2 }"
+            ],
+            [
+              "drive the `retry_on` path in the citation job"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Specific retry-time error correct; validation omits persistent503 six/three recorded failure and503-to200/401 real-worker controls."
+          ]
+        },
+        "R15": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Passed nil to the :model argument"
+            ],
+            [
+              "app/views/notes/index.html.erb:12"
+            ],
+            [
+              "remove `model: nil`"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No render/submit GET names/membership scenario."
+          ]
+        },
+        "R16": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "no routes load"
+            ],
+            [
+              "Multi-path `match` raises"
+            ],
+            [
+              "Split into two `get` lines."
+            ],
+            [
+              "`bin/rails routes` output is identical, including route names"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Route drawing comparison omits both owner requests and authorized list equality."
+          ]
+        },
+        "R17": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "stop raising and get a 404 or 500 instead"
+            ],
+            [
+              "this belongs at 7.1 or later"
+            ],
+            [
+              "config.action_dispatch.show_exceptions = :none"
+            ],
+            [
+              "existing `assert_raises` tests are enough to catch B11"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Existing request assertions lack complete normal/CI and explicit exception/missing-record controls."
+          ]
+        },
+        "R18": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "app cannot boot"
+            ],
+            [
+              "allowed_tags` is `nil` by default"
+            ],
+            [
+              "sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\", \"details\", \"summary\"]"
+            ],
+            [
+              "Plain-text and rendered output were identical for my 12 samples"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Sample render claim lacks specified attachment/details/summary and script/handler/javascript-URL security controls."
+          ]
+        },
+        "R19": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "`NoMethodError`"
+            ],
+            [
+              "app/models/citation/provider.rb"
+            ],
+            [
+              "same ERB `.to_json` lines",
+              "config.x.citation_provider = config_for(:citation_provider)"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No fresh-process special-character credentials/header/metadata/bounded-failure matrix."
+          ]
+        },
+        "R20": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Implicit preferences coder failure omitted; stored-data discussion not gated finding.",
+            "No default_column_serializer gate.",
+            "No coder repair.",
+            "No gate off/on create/edit/export-heading controls."
+          ]
+        },
+        "R21": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Readonly slug update effect omitted.",
+            "No readonly gate.",
+            "No repair.",
+            "No creation/edit/slug controls."
+          ]
+        },
+        "R23": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "PostgreSQL report date change omitted.",
+            "No date decoding gate.",
+            "No repair.",
+            "No report controls."
+          ]
+        },
+        "R25": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Conflicting validator effect omitted.",
+            "No strict_freshness gate.",
+            "No keep/adopt decision.",
+            "No validator/expiry/ownership matrix."
+          ]
+        }
+      },
+      "final": {
+        "R01": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "`ArgumentError`."
+            ],
+            [
+              "app/models/note.rb:10"
+            ],
+            [
+              "enum :status, { draft: 0, ready: 1 }, prefix: true"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No unequal persisted/reloaded status/filter/helper scenarios."
+          ]
+        },
+        "R02": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "`ArgumentError`."
+            ],
+            [
+              "Land it with the framework bump"
+            ],
+            [
+              "serialize :tags, coder: JSON"
+            ],
+            [
+              "Raw column values match across versions"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-read/bytes omit editing comma input and unequal array-value controls."
+          ]
+        },
+        "R03": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "aliasing a non-attribute is rejected"
+            ],
+            [
+              "color` is a `store_accessor"
+            ],
+            [
+              "alias_method :highlight_color=, :color="
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No edit/reload settings/form-error preservation checks."
+          ]
+        },
+        "R04": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "PG::UndefinedColumn: notes.notebooks"
+            ],
+            [
+              "`NotesController#index`"
+            ],
+            [
+              "where(notebook: @notebook)"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No unequal notebook/other-owner selection/denial controls."
+          ]
+        },
+        "R05": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "empty `doi` column"
+            ],
+            [
+              "primary key `doi`"
+            ],
+            [
+              "citation&.doi"
+            ],
+            [
+              "On idleness,10.1000/Essays.1"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One receipt value, not distinct DOI real apply/download against persisted citations."
+          ]
+        },
+        "R06": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "now saves the `Import` row and the valid notes before it"
+            ],
+            [
+              "return false unless row.note.save"
+            ],
+            [
+              "raise ActiveRecord::Rollback unless row.note.save"
+            ],
+            [
+              "counts `[0,3,0,1]` to `[1,4,1,2]`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Failed-import count example lacks fresh all-table PostgreSQL verification and successful-batch control."
+          ]
+        },
+        "R07": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "`Export#generate` crashes"
+            ],
+            [
+              "finish(fragments.sum)"
+            ],
+            [
+              "fragments.join"
+            ],
+            [
+              "The queued digest, reminder and export jobs ran on an 8.1 worker"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Worker claim lacks exact ordered Markdown bytes and unrepaired working/no-artifact control."
+          ]
+        },
+        "R08": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "preview silently drops annotations"
+            ],
+            [
+              "lookup with an Integer misses"
+            ],
+            [
+              "drop `.stringify_keys`"
+            ],
+            [
+              "a preview that asserts the annotation appears"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Proposed annotation check lacks unequal source2/4 multiline literal text/no-save controls."
+          ]
+        },
+        "R09": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Export negative-expiration finding omitted.",
+            "No invalid-expiration gate.",
+            "No repair.",
+            "No cache/expiry/ownership validation."
+          ]
+        },
+        "R10": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "preview shows `2026-11-01T08:00:00-05:00`"
+            ],
+            [
+              "scheduled epoch, is unchanged"
+            ],
+            [
+              "Time.at(reminder_epoch + 86_400, in: reminder_at.utc_offset)"
+            ],
+            [
+              "09:00-04:00",
+              "2026-11-01T08:00:00-05:00"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "DST sample lacks epoch/wall/offset assertions and non-boundary control."
+          ]
+        },
+        "R11": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "reader's local day"
+            ],
+            [
+              "Daily digests follow the UTC day"
+            ],
+            [
+              "requested_at = params[:requested_at].utc"
+            ],
+            [
+              "assert the digest date is the UTC day for a reader in a zone far from UTC"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No full JSON queue/two-midnight/reservation/membership matrix."
+          ]
+        },
+        "R12": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "BigDecimalSerializer is not known"
+            ],
+            [
+              "a 7.0.8.7 worker given the 8.1 payload"
+            ],
+            [
+              "reading_completion.to_s(\"F\")"
+            ],
+            [
+              "a real 7.0.8.7 Sidekiq process ran a digest job enqueued by 8.1"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Both-direction claims omit same-version controls and exact delivered percentage."
+          ]
+        },
+        "R13": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "reminders cannot be scheduled"
+            ],
+            [
+              "undefined method 'utc' for Integer"
+            ],
+            [
+              "wait_until: Time.at(reminder_epoch)"
+            ],
+            [
+              "reminder scheduled for a future date"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Real scheduled execution claim lacks payload/score/persisted schedule and replacement/ownership controls."
+          ]
+        },
+        "R14": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "when the provider is unavailable and the job first retries"
+            ],
+            [
+              "Nothing fails at class load."
+            ],
+            [
+              ":polynomially_longer",
+              "wait: ->(executions) { executions**4 + 2 }"
+            ],
+            [
+              "drive the `retry_on` path in the citation job"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Specific retry-time error correct; validation omits persistent503 six/three recorded failure and503-to200/401 real-worker controls."
+          ]
+        },
+        "R15": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Passed nil to the :model argument"
+            ],
+            [
+              "app/views/notes/index.html.erb:12"
+            ],
+            [
+              "remove `model: nil`"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No render/submit GET names/membership scenario."
+          ]
+        },
+        "R16": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "no routes load"
+            ],
+            [
+              "Multi-path `match` raises"
+            ],
+            [
+              "Split into two `get` lines."
+            ],
+            [
+              "`bin/rails routes` output is identical, including route names"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Route drawing comparison omits both owner requests and authorized list equality."
+          ]
+        },
+        "R17": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "stop raising and get a 404 or 500 instead"
+            ],
+            [
+              "this belongs at 7.1 or later"
+            ],
+            [
+              "config.action_dispatch.show_exceptions = :none"
+            ],
+            [
+              "existing `assert_raises` tests are enough to catch B11"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Existing request assertions lack complete normal/CI and explicit exception/missing-record controls."
+          ]
+        },
+        "R18": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "app cannot boot"
+            ],
+            [
+              "allowed_tags` is `nil` by default"
+            ],
+            [
+              "sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\", \"details\", \"summary\"]"
+            ],
+            [
+              "Plain-text and rendered output were identical for my 12 samples"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Sample render claim lacks specified attachment/details/summary and script/handler/javascript-URL security controls."
+          ]
+        },
+        "R19": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "`NoMethodError`"
+            ],
+            [
+              "app/models/citation/provider.rb"
+            ],
+            [
+              "same ERB `.to_json` lines",
+              "config.x.citation_provider = config_for(:citation_provider)"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No fresh-process special-character credentials/header/metadata/bounded-failure matrix."
+          ]
+        },
+        "R20": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Implicit preferences coder failure omitted; stored-data discussion not gated finding.",
+            "No default_column_serializer gate.",
+            "No coder repair.",
+            "No gate off/on create/edit/export-heading controls."
+          ]
+        },
+        "R21": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Readonly slug update effect omitted.",
+            "No readonly gate.",
+            "No repair.",
+            "No creation/edit/slug controls."
+          ]
+        },
+        "R23": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "PostgreSQL report date change omitted.",
+            "No date decoding gate.",
+            "No repair.",
+            "No report controls."
+          ]
+        },
+        "R25": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Conflicting validator effect omitted.",
+            "No strict_freshness gate.",
+            "No keep/adopt decision.",
+            "No validator/expiry/ownership matrix."
+          ]
+        }
+      },
+      "delivery": {
+        "skill_invoked": true,
+        "native_planner_invoked": true,
+        "plan_delivered_without_edit_approval_gate": true,
+        "selected_family_actionability_loss": [],
+        "change": "Central plan intact; introductory framing and commentary changed, not literal whole-report identity.",
+        "parent_collected_output": [
+          "Gemfile.lock:195:    rails (7.0.8.7)"
+        ],
+        "preservation": "No independent git/resources check; no implementation visible.",
+        "validation": "0 full families; numerous nested source/experiment and test proposals provide partial coverage, not collected passing proof."
+      },
+      "extra_findings": [
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "8.1 adds the zone name `\"Asuncion\"`",
+            "fail the `User` inclusion validation on 7.0"
+          ],
+          "judgment": "supported",
+          "reason": "Genuine mixed-version data validation risk outside selected key. Frozen User validates against ActiveSupport::TimeZone.all names. Rails8.1 mapping includes Asuncion,7.0.8.7 does not. No extra recall count.",
+          "source_urls": [
+            "https://raw.githubusercontent.com/rails/rails/v7.0.8.7/activesupport/lib/active_support/values/time_zone.rb",
+            "https://raw.githubusercontent.com/rails/rails/v8.1.0/activesupport/lib/active_support/values/time_zone.rb"
+          ]
+        }
+      ],
+      "material_issues": [
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "7.2 deprecates that setting, and 8.0+ has none."
+          ],
+          "reason": "7.2 transaction source already commits nonlocal returns and removes the old guard; timing narration understates intermediate7.2 risk. Target8.1 impact/order/rollback repair remain valid.",
+          "kind": "onset_error"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "With 7.2+ defaults, `enqueue_after_transaction_commit` changes when jobs are queued."
+          ],
+          "reason": "Unqualified7.2+ claim is too broad for target8.1: current Rails configuration does not set this via load_defaults and default remains false. Explicit adoption is a valid separate risk.",
+          "kind": "default_gate_error"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "These are verified unless marked otherwise."
+          ],
+          "reason": "These are nested model-reported checks, not independently collected logs; production/session/browser matrix and latest-patch claims not reproduced by assessor.",
+          "kind": "evidence_limit"
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "source_capture_sha256": "9a67a0a1b0e45c0cecf307058320fa51599ad8e85e42d817bae4f796e7778700",
+      "export_sha256": "c44b34d1e71f6fbed048f760ff8f74864bb3eec76a93fa2637b757ac3da154bf",
+      "wall_time_ms": 811698,
+      "counts": {
+        "raw": {
+          "actionable": 14,
+          "fully_specified_validation": 0,
+          "fully_omitted": 4
+        },
+        "final": {
+          "actionable": 14,
+          "fully_specified_validation": 0,
+          "fully_omitted": 4
+        }
+      },
+      "raw": {
+        "R01": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "`enum status: {...}, _prefix: true` was removed."
+            ],
+            [
+              "`app/models/note.rb`"
+            ],
+            [
+              "enum :status, { draft: 0, ready: 1 }, prefix: true"
+            ],
+            [
+              "Model tests; `status_ready` scope."
+            ]
+          ],
+          "reasons": [
+            "Removal named without Note class-load failure.",
+            null,
+            null,
+            "Scope check omits unequal persisted/reloaded notes, filters and helpers."
+          ]
+        },
+        "R02": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Positional `serialize :tags, JSON` was removed."
+            ],
+            [
+              "this must land with the bump"
+            ],
+            [
+              "serialize :tags, coder: JSON"
+            ],
+            [
+              "the same raw `[\"a\",\"b\"]` text reads back in both versions"
+            ]
+          ],
+          "reasons": [
+            "No explicit application load/read failure; removal alone.",
+            null,
+            null,
+            "Cross-read sample omits unequal existing rows, comma editing and array-value controls."
+          ]
+        },
+        "R03": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "now raises"
+            ],
+            [
+              "`color` is a store accessor, not a column"
+            ],
+            [
+              "Define `highlight_color` and `highlight_color=` delegating to `color`."
+            ],
+            [
+              "The stored `settings` JSON stays"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One settings sample, no edit/reload preservation and form/error matrix."
+          ]
+        },
+        "R04": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "now generates `notes.notebooks`"
+            ],
+            [
+              "`NotesController#index`, notebook filter"
+            ],
+            [
+              "where(notebook: @notebook)"
+            ],
+            [
+              "Test \"filters by notebook, status, and title\"."
+            ]
+          ],
+          "reasons": [
+            "Changed SQL named but neither nonexistent column nor filter failure stated.",
+            null,
+            null,
+            "Test name alone does not specify asymmetric populations/authorization scenarios."
+          ]
+        },
+        "R05": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "receipt CSV's DOI column goes blank"
+            ],
+            [
+              "custom primary key `doi`"
+            ],
+            [
+              "citation&.doi"
+            ],
+            [
+              "`ImportsControllerTest` receipt assertion."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Named assertion alone, no distinct DOI real import/download comparison."
+          ]
+        },
+        "R06": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "A rejected CSV import now commits partial data"
+            ],
+            [
+              "`Import#apply` returns from inside the block when a row is invalid"
+            ],
+            [
+              "saved = rows.all? { |r| r.note.save }",
+              "raise ActiveRecord::Rollback unless saved"
+            ],
+            [
+              "a CSV with one valid row and one blank title"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Probe lacks real apply request/fresh PostgreSQL all-table counts and successful-batch control."
+          ]
+        },
+        "R07": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "`fragments.sum` on Strings raises `TypeError`."
+            ],
+            [
+              "`Export#generate`"
+            ],
+            [
+              "fragments.join"
+            ],
+            [
+              "Export tests."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Test name alone does not specify real export worker/ordered bytes/unrepaired working-no-artifact controls; digest/reminder worker paragraph is not export proof."
+          ]
+        },
+        "R08": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "preview drops every annotation"
+            ],
+            [
+              "Integer line keys to Strings"
+            ],
+            [
+              "Remove `.stringify_keys`; look up by Integer."
+            ],
+            [
+              "`#line_2 dd` assertions"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One line assertion, no unequal2/4 multiline preview/no-save controls."
+          ]
+        },
+        "R09": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Negative export-cache expiry family omitted.",
+            "No invalid-expiration gate discussed.",
+            "No repair.",
+            "No family validation."
+          ]
+        },
+        "R10": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "shows `2026-11-01T08:00:00-05:00` instead of `09:00-04:00`"
+            ],
+            [
+              "The scheduled instant is identical either way."
+            ],
+            [
+              "Time.at(reminder_epoch + 86_400, in: reminder_at.utc_offset)"
+            ],
+            [
+              "shows `2026-11-01T08:00:00-05:00` instead of `09:00-04:00`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "DST representation sample lacks explicit epoch/wall/offset comparison and non-boundary control."
+          ]
+        },
+        "R11": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "worker sees the reader's local time instead of UTC"
+            ],
+            [
+              "keep the UTC-day behavior"
+            ],
+            [
+              "call `.utc` on `requested_at`"
+            ],
+            [
+              "`/tmp/upg/enq2.rb` and `/tmp/upg/run.rb` in both directions."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Queue directions do not specify both midnights, reservation keys and delivered membership."
+          ]
+        },
+        "R12": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "BigDecimalSerializer is not known"
+            ],
+            [
+              "A 7.0 worker given an 8.1-queued `DigestJob`"
+            ],
+            [
+              "Pass `reading_completion.to_s`"
+            ],
+            [
+              "With `.to_s` on `completion`, both directions succeeded."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Both directions claimed but same-version controls and exact delivered percentage omitted."
+          ]
+        },
+        "R13": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "undefined method 'utc' for Integer"
+            ],
+            [
+              "`Note#schedule_reminder`"
+            ],
+            [
+              "wait_until: Time.at(reminder_epoch)"
+            ],
+            [
+              "`/tmp/upg/enq.rb` schedules one under Sidekiq"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Scheduling probe omits payload/score, persisted schedule, replacement and ownership controls."
+          ]
+        },
+        "R14": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Couldn't determine a delay"
+            ],
+            [
+              "It does not exist in 7.0, so it must land with the bump."
+            ],
+            [
+              ":polynomially_longer"
+            ],
+            [
+              "Citation enrichment failure test."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Specific retry failure stated, but test name does not specify six requests/three attempts, recorded failure and503-to200/401 real-worker controls."
+          ]
+        },
+        "R15": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Passed nil to the :model argument"
+            ],
+            [
+              "`app/views/notes/index.html.erb`"
+            ],
+            [
+              "Drop `model: nil`."
+            ],
+            [
+              "Any notes index request test."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Request test name does not specify render/submit GET names and note membership."
+          ]
+        },
+        "R16": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "multiple paths are no longer accepted"
+            ],
+            [
+              "`get \"/notes\", \"/journal\", to:` raises"
+            ],
+            [
+              "Two separate `get` lines."
+            ],
+            [
+              "`bin/rails routes` is identical"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Route diff alone omits owner requests to both paths and authorized list comparison."
+          ]
+        },
+        "R17": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "tests expecting a raised `RecordNotFound` silently got a 404"
+            ],
+            [
+              "7.0 does not know `:none`"
+            ],
+            [
+              "`:none`."
+            ],
+            [
+              "including with `CI=1` eager loading"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Suite/CI and missing-record checks omit an explicit raised request exception policy control."
+          ]
+        },
+        "R18": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises `NoMethodError` at boot"
+            ],
+            [
+              "is now `nil` by default"
+            ],
+            [
+              "Assign the full list",
+              "sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\"]"
+            ],
+            [
+              "Boot; the test \"rich text keeps collapsible excerpts and drops unsafe markup\"."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Boot named, but complete attachment/details/summary and script/handler/javascript-URL controls unspecified."
+          ]
+        },
+        "R19": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "`Rails.application.secrets` was removed."
+            ],
+            [
+              "`Citation::Provider#initialize`"
+            ],
+            [
+              "config.x.citation_provider = config_for(:citation_provider)"
+            ],
+            [
+              "`with_provider` tests, including the credentials one."
+            ]
+          ],
+          "reasons": [
+            "Removal named without provider initialization/request failure.",
+            null,
+            null,
+            "Test names alone omit fresh-process special credentials, actual Basic header and bounded failures."
+          ]
+        },
+        "R20": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Implicit Notebook coder gate/failure omitted; YAML cross-read is not this finding.",
+            "No default_column_serializer gate.",
+            "No repair.",
+            "No gate off/on family validation."
+          ]
+        },
+        "R21": {
+          "judgments": [
+            "partial",
+            "supported",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "relevant because `NotebooksController` resubmits `slug`"
+            ],
+            [
+              "Raising it changes behavior I did not test.",
+              "raise_on_assign_to_attr_readonly"
+            ],
+            [],
+            []
+          ],
+          "reasons": [
+            "Names affected readonly resubmission but not raised ordinary update.",
+            null,
+            "No slug-update repair.",
+            "No create/edit/attempted-slug controls."
+          ]
+        },
+        "R23": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "PostgreSQL report date decoding omitted.",
+            "No decoding gate.",
+            "No repair.",
+            "No report controls."
+          ]
+        },
+        "R25": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Export conflicting validator effect omitted.",
+            "No strict_freshness gate.",
+            "No explicit keep/adopt decision.",
+            "No validator/expiry/ownership matrix."
+          ]
+        }
+      },
+      "final": {
+        "R01": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "`enum status: {...}, _prefix: true` was removed."
+            ],
+            [
+              "`app/models/note.rb`"
+            ],
+            [
+              "enum :status, { draft: 0, ready: 1 }, prefix: true"
+            ],
+            [
+              "Model tests; `status_ready` scope."
+            ]
+          ],
+          "reasons": [
+            "Removal named without Note class-load failure.",
+            null,
+            null,
+            "Scope check omits unequal persisted/reloaded notes, filters and helpers."
+          ]
+        },
+        "R02": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Positional `serialize :tags, JSON` was removed."
+            ],
+            [
+              "this must land with the bump"
+            ],
+            [
+              "serialize :tags, coder: JSON"
+            ],
+            [
+              "the same raw `[\"a\",\"b\"]` text reads back in both versions"
+            ]
+          ],
+          "reasons": [
+            "No explicit application load/read failure; removal alone.",
+            null,
+            null,
+            "Cross-read sample omits unequal existing rows, comma editing and array-value controls."
+          ]
+        },
+        "R03": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "now raises"
+            ],
+            [
+              "`color` is a store accessor, not a column"
+            ],
+            [
+              "Define `highlight_color` and `highlight_color=` delegating to `color`."
+            ],
+            [
+              "The stored `settings` JSON stays"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One settings sample, no edit/reload preservation and form/error matrix."
+          ]
+        },
+        "R04": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "now generates `notes.notebooks`"
+            ],
+            [
+              "`NotesController#index`, notebook filter"
+            ],
+            [
+              "where(notebook: @notebook)"
+            ],
+            [
+              "Test \"filters by notebook, status, and title\"."
+            ]
+          ],
+          "reasons": [
+            "Changed SQL named but neither nonexistent column nor filter failure stated.",
+            null,
+            null,
+            "Test name alone does not specify asymmetric populations/authorization scenarios."
+          ]
+        },
+        "R05": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "receipt CSV's DOI column goes blank"
+            ],
+            [
+              "custom primary key `doi`"
+            ],
+            [
+              "citation&.doi"
+            ],
+            [
+              "`ImportsControllerTest` receipt assertion."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Named assertion alone, no distinct DOI real import/download comparison."
+          ]
+        },
+        "R06": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "A rejected CSV import now commits partial data"
+            ],
+            [
+              "`Import#apply` returns from inside the block when a row is invalid"
+            ],
+            [
+              "saved = rows.all? { |r| r.note.save }",
+              "raise ActiveRecord::Rollback unless saved"
+            ],
+            [
+              "a CSV with one valid row and one blank title"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Probe lacks real apply request/fresh PostgreSQL all-table counts and successful-batch control."
+          ]
+        },
+        "R07": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "`fragments.sum` on Strings raises `TypeError`."
+            ],
+            [
+              "`Export#generate`"
+            ],
+            [
+              "fragments.join"
+            ],
+            [
+              "Export tests."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Test name alone does not specify real export worker/ordered bytes/unrepaired working-no-artifact controls; digest/reminder worker paragraph is not export proof."
+          ]
+        },
+        "R08": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "preview drops every annotation"
+            ],
+            [
+              "Integer line keys to Strings"
+            ],
+            [
+              "Remove `.stringify_keys`; look up by Integer."
+            ],
+            [
+              "`#line_2 dd` assertions"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One line assertion, no unequal2/4 multiline preview/no-save controls."
+          ]
+        },
+        "R09": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Negative export-cache expiry family omitted.",
+            "No invalid-expiration gate discussed.",
+            "No repair.",
+            "No family validation."
+          ]
+        },
+        "R10": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "shows `2026-11-01T08:00:00-05:00` instead of `09:00-04:00`"
+            ],
+            [
+              "The scheduled instant is identical either way."
+            ],
+            [
+              "Time.at(reminder_epoch + 86_400, in: reminder_at.utc_offset)"
+            ],
+            [
+              "shows `2026-11-01T08:00:00-05:00` instead of `09:00-04:00`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "DST representation sample lacks explicit epoch/wall/offset comparison and non-boundary control."
+          ]
+        },
+        "R11": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "worker sees the reader's local time instead of UTC"
+            ],
+            [
+              "keep the UTC-day behavior"
+            ],
+            [
+              "call `.utc` on `requested_at`"
+            ],
+            [
+              "`/tmp/upg/enq2.rb` and `/tmp/upg/run.rb` in both directions."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Queue directions do not specify both midnights, reservation keys and delivered membership."
+          ]
+        },
+        "R12": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "BigDecimalSerializer is not known"
+            ],
+            [
+              "A 7.0 worker given an 8.1-queued `DigestJob`"
+            ],
+            [
+              "Pass `reading_completion.to_s`"
+            ],
+            [
+              "With `.to_s` on `completion`, both directions succeeded."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Both directions claimed but same-version controls and exact delivered percentage omitted."
+          ]
+        },
+        "R13": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "undefined method 'utc' for Integer"
+            ],
+            [
+              "`Note#schedule_reminder`"
+            ],
+            [
+              "wait_until: Time.at(reminder_epoch)"
+            ],
+            [
+              "`/tmp/upg/enq.rb` schedules one under Sidekiq"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Scheduling probe omits payload/score, persisted schedule, replacement and ownership controls."
+          ]
+        },
+        "R14": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Couldn't determine a delay"
+            ],
+            [
+              "It does not exist in 7.0, so it must land with the bump."
+            ],
+            [
+              ":polynomially_longer"
+            ],
+            [
+              "Citation enrichment failure test."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Specific retry failure stated, but test name does not specify six requests/three attempts, recorded failure and503-to200/401 real-worker controls."
+          ]
+        },
+        "R15": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Passed nil to the :model argument"
+            ],
+            [
+              "`app/views/notes/index.html.erb`"
+            ],
+            [
+              "Drop `model: nil`."
+            ],
+            [
+              "Any notes index request test."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Request test name does not specify render/submit GET names and note membership."
+          ]
+        },
+        "R16": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "multiple paths are no longer accepted"
+            ],
+            [
+              "`get \"/notes\", \"/journal\", to:` raises"
+            ],
+            [
+              "Two separate `get` lines."
+            ],
+            [
+              "`bin/rails routes` is identical"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Route diff alone omits owner requests to both paths and authorized list comparison."
+          ]
+        },
+        "R17": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "tests expecting a raised `RecordNotFound` silently got a 404"
+            ],
+            [
+              "7.0 does not know `:none`"
+            ],
+            [
+              "`:none`."
+            ],
+            [
+              "including with `CI=1` eager loading"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Suite/CI and missing-record checks omit an explicit raised request exception policy control."
+          ]
+        },
+        "R18": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises `NoMethodError` at boot"
+            ],
+            [
+              "is now `nil` by default"
+            ],
+            [
+              "Assign the full list",
+              "sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\"]"
+            ],
+            [
+              "Boot; the test \"rich text keeps collapsible excerpts and drops unsafe markup\"."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Boot named, but complete attachment/details/summary and script/handler/javascript-URL controls unspecified."
+          ]
+        },
+        "R19": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "`Rails.application.secrets` was removed."
+            ],
+            [
+              "`Citation::Provider#initialize`"
+            ],
+            [
+              "config.x.citation_provider = config_for(:citation_provider)"
+            ],
+            [
+              "`with_provider` tests, including the credentials one."
+            ]
+          ],
+          "reasons": [
+            "Removal named without provider initialization/request failure.",
+            null,
+            null,
+            "Test names alone omit fresh-process special credentials, actual Basic header and bounded failures."
+          ]
+        },
+        "R20": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Implicit Notebook coder gate/failure omitted; YAML cross-read is not this finding.",
+            "No default_column_serializer gate.",
+            "No repair.",
+            "No gate off/on family validation."
+          ]
+        },
+        "R21": {
+          "judgments": [
+            "partial",
+            "supported",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "relevant because `NotebooksController` resubmits `slug`"
+            ],
+            [
+              "Raising it changes behavior I did not test.",
+              "raise_on_assign_to_attr_readonly"
+            ],
+            [],
+            []
+          ],
+          "reasons": [
+            "Names affected readonly resubmission but not raised ordinary update.",
+            null,
+            "No slug-update repair.",
+            "No create/edit/attempted-slug controls."
+          ]
+        },
+        "R23": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "PostgreSQL report date decoding omitted.",
+            "No decoding gate.",
+            "No repair.",
+            "No report controls."
+          ]
+        },
+        "R25": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Export conflicting validator effect omitted.",
+            "No strict_freshness gate.",
+            "No explicit keep/adopt decision.",
+            "No validator/expiry/ownership matrix."
+          ]
+        }
+      },
+      "delivery": {
+        "skill_invoked": true,
+        "native_planner_invoked": true,
+        "plan_delivered_without_edit_approval_gate": true,
+        "selected_family_actionability_loss": [],
+        "change": "Central plan retained; final rewrites Commentary as planner notes and parent additions, rather than deleting authored notes from raw.",
+        "parent_collected_output": [
+          "195:    rails (7.0.8.7)"
+        ],
+        "preservation": "No independently collected git/artifact/service check. Clean status and isolation are report claims.",
+        "validation": "0 fully specified does not mean zero checks; reports suites, CI, routes, data probes, workers and browser smoke; nested output not collected."
+      },
+      "material_issues": [
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "`maintain-rails:gem-upgrade-planner` was not run, because no sub-agent tool was available to it."
+          ],
+          "reason": "Authored workflow identity conflates inability to delegate further with actual native planner invocation. Main trace explicitly invoked that agent type.",
+          "kind": "workflow_identity_error"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "Drain or let digest jobs expire."
+          ],
+          "reason": "Redis queued jobs have no stated expiry contract here. Preparatory decimal-string and UTC fixes make legacy jobs consumable; unexplained expiry/draining is not a necessary serialization repair.",
+          "kind": "rollout_ambiguity"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "Old and new jobs both ran"
+          ],
+          "reason": "Nested worker claim is not independently collected; it does not prove all job states or a broad rollback guarantee. Browser submit anomaly is explicitly left unresolved rather than scored as a proven defect.",
+          "kind": "evidence_limit"
+        }
+      ]
+    },
+    {
+      "run": 4,
+      "source_capture_sha256": "98a8ff7f68f1490ecd2aedd032a86dc02f3639e47af97ae2d3f41c96518596a1",
+      "export_sha256": "d1041979a22b16b3a8186c9197edd4a4cf16762ee11d077d14fb007ed44401b7",
+      "wall_time_ms": 1055102,
+      "counts": {
+        "raw": {
+          "actionable": 17,
+          "fully_specified_validation": 0,
+          "fully_omitted": 1
+        },
+        "final": {
+          "actionable": 17,
+          "fully_specified_validation": 0,
+          "fully_omitted": 1
+        }
+      },
+      "raw": {
+        "R01": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Boot failure: keyword `enum`"
+            ],
+            [
+              "app/models/note.rb"
+            ],
+            [
+              "enum :status, {...}, prefix: true"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No persisted unequal statuses/reload/filter/helper validation."
+          ]
+        },
+        "R02": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Boot failure: keyword `enum` and positional `serialize`"
+            ],
+            [
+              "apply it in the upgrade commit"
+            ],
+            [
+              "serialize :tags, coder: JSON"
+            ],
+            [
+              "Tags were written on one version and read on the other, in both directions."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-read sample omits comma editing and unequal array/bytes controls."
+          ]
+        },
+        "R03": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "now raises"
+            ],
+            [
+              "not a column"
+            ],
+            [
+              "alias_method :highlight_color=, :color="
+            ],
+            [
+              "The form and strong-params assignment still pass in the suite."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Form assertion lacks settings-preserving edit/reload and error rendering."
+          ]
+        },
+        "R04": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Runtime errors in Active Record and Active Job",
+              "generates `notes.notebooks`"
+            ],
+            [
+              "`NotesController#index`"
+            ],
+            [
+              "where(notebook: @notebook)"
+            ],
+            [
+              "the notebook, status, and title filter test"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Context explicitly calls this runtime error; named test alone omits asymmetric populations and owner denial."
+          ]
+        },
+        "R05": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "CSV receipt's `doi` column becomes blank"
+            ],
+            [
+              "primary key is `doi`"
+            ],
+            [
+              "citation&.doi"
+            ],
+            [
+              "On idleness,10.1000/Essays.1"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Single receipt comparison not distinct DOI real import/download against persisted rows."
+          ]
+        },
+        "R06": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "commits the Import and the earlier rows"
+            ],
+            [
+              "return false unless row.note.save"
+            ],
+            [
+              "transaction { save!; rows.all? { |row| row.note.save } || raise(ActiveRecord::Rollback) } || false"
+            ],
+            [
+              "`record_counts` going from `[0,3,0,1]` to `[1,4,1,2]`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Counts and failed-batch test lack explicit fresh PostgreSQL all-table check and successful-batch control."
+          ]
+        },
+        "R07": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises `TypeError`"
+            ],
+            [
+              "`Export#generate`"
+            ],
+            [
+              "fragments.sum(\"\")",
+              "join"
+            ],
+            [
+              "`ExportJob` (native Sidekiq), and `NoteReminderJob` all ran"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Valid empty-string identity alternative; worker claim lacks exact ordered bytes and unrepaired working/no-artifact control."
+          ]
+        },
+        "R08": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "every annotation silently disappears from the preview"
+            ],
+            [
+              "looks up by an integer line number"
+            ],
+            [
+              "dropping `.stringify_keys`"
+            ],
+            [
+              "`#line_3 dd` shows \"Second reading\""
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One literal annotation, not unequal source2/4 multiline/no-save matrix."
+          ]
+        },
+        "R09": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Cache expiration time is invalid, cannot be negative"
+            ],
+            [
+              "suite was run with `load_defaults 8.1`"
+            ],
+            [],
+            [
+              "four distinct breaks"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No clamp or equivalent cache-preserving repair.",
+            "Aggregate defaults check lacks deadlines/cache hits/misses and authoritative download ownership/expiry."
+          ]
+        },
+        "R10": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "preview became `2026-11-01T08:00:00-05:00`"
+            ],
+            [
+              "same instant, and the stored epoch is unchanged"
+            ],
+            [
+              "reminder_at.getlocal(reminder_at.utc_offset) + 86_400"
+            ],
+            [
+              "09:00:00-04:00",
+              "2026-11-01T08:00:00-05:00"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Fixed-offset getlocal valid; sample lacks epoch/wall/offset assertions and non-boundary control."
+          ]
+        },
+        "R11": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Digest content (ready notes updated that day) and subject would shift"
+            ],
+            [
+              "Redis reservation key are both the UTC day"
+            ],
+            [
+              "requested_at = requested_at.utc"
+            ],
+            [
+              "23:30 Eastern on 4 Oct",
+              "October 05"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One midnight sample lacks each-midnight reservation and actual note-membership matrix."
+          ]
+        },
+        "R12": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "BigDecimalSerializer is not known"
+            ],
+            [
+              "8.1 payloads on a 7.0 worker"
+            ],
+            [
+              "passing `reading_completion.to_s`"
+            ],
+            [
+              "The two versions were run side by side"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-worker claims omit same-version controls and exact delivered percentage."
+          ]
+        },
+        "R13": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "scheduling returns a 500"
+            ],
+            [
+              "with an Integer"
+            ],
+            [
+              "Time.at(reminder_epoch)"
+            ],
+            [
+              "test adapter still shows `at` as the epoch"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Test adapter and worker claims omit actual scheduled score/payload/persisted time and replacement/ownership."
+          ]
+        },
+        "R14": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "wait: :exponentially_longer` is removed"
+            ],
+            [
+              "Apply it in the upgrade commit."
+            ],
+            [
+              ":polynomially_longer"
+            ],
+            [
+              "`CitationEnrichmentJob`, `ExportJob` (native Sidekiq), and `NoteReminderJob` all ran"
+            ]
+          ],
+          "reasons": [
+            "Removal only; no application retry-time failure/bounded retry effect.",
+            null,
+            null,
+            "Worker processing claim lacks persistent503 six/three recorded failure, recovery and401 controls."
+          ]
+        },
+        "R15": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "form_with(model: nil, url:)` in `notes/index.html.erb` raises"
+            ],
+            [
+              "notes/index.html.erb"
+            ],
+            [
+              "Drop `model: nil`."
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No GET render/submit/names/membership matrix."
+          ]
+        },
+        "R16": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Multiple paths in one `get` raise."
+            ],
+            [
+              "config/routes.rb:18"
+            ],
+            [
+              "two `get` lines"
+            ],
+            [
+              "`notes_path` and `journal_path` both still resolve"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Helpers resolve but both owner requests/authorized list equality omitted."
+          ]
+        },
+        "R17": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "renders error pages instead of raising"
+            ],
+            [
+              "apply it in the upgrade commit"
+            ],
+            [
+              "`:none` to keep raising"
+            ],
+            [
+              "a stubbed Redis error rendered as a 500 instead of raising"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Request/missing-record checks lack normal and CI eager-loading mode matrix."
+          ]
+        },
+        "R18": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Boot failure",
+              "allowed_tags` is nil"
+            ],
+            [
+              "Applies on boot."
+            ],
+            [
+              "sanitizer.class.allowed_tags.to_a + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\", \"details\", \"summary\"]"
+            ],
+            [
+              "same stored body gave identical rendered HTML and plain text"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Rendering sample lacks full attachment/details/summary/script/handler/javascript-URL controls."
+          ]
+        },
+        "R19": {
+          "judgments": [
+            "partial",
+            "incorrect",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Boot failure: `Rails.application.secrets` is removed"
+            ],
+            [
+              "Boot failure: `Rails.application.secrets` is removed"
+            ],
+            [
+              "config.x.citation_provider = config_for(:secrets).citation_provider"
+            ],
+            []
+          ],
+          "reasons": [
+            "Real provider failure mislocated as boot, with no request-time explanation.",
+            "Frozen Provider accesses default settings on construction during Citation#enrich, not boot.",
+            null,
+            "No fresh-process credentials/Basic-header/metadata/bounded-failure matrix."
+          ]
+        },
+        "R20": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "serialize :preferences` without a coder raises"
+            ],
+            [
+              "load_defaults 8.1"
+            ],
+            [
+              "Use `coder: YAML`."
+            ],
+            [
+              "The stored text is unchanged."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Aggregate defaults/cross-read omit separate gate and create/edit/reload unequal preferences/export-heading controls."
+          ]
+        },
+        "R21": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "attr_readonly :slug` raises on assignment"
+            ],
+            [
+              "`NotebooksController` resubmits the slug"
+            ],
+            [],
+            [
+              "four distinct breaks"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No remove-submission/permission repair.",
+            "Aggregate defaults trial lacks create/name-heading/attempted-slug/persistence controls."
+          ]
+        },
+        "R23": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Notebook#daily_note_counts` fails"
+            ],
+            [
+              "date column is now a `Date`, not a string"
+            ],
+            [],
+            [
+              "four distinct breaks"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No Date/String normalization repair.",
+            "Aggregate defaults trial lacks gate-isolated asymmetric UTC counts/empty reports/ownership."
+          ]
+        },
+        "R25": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Identical header claim is not conflicting-validator effect.",
+            "No strict_freshness gate.",
+            "No keep/adopt decision.",
+            "No validator/expiry/ownership matrix."
+          ]
+        }
+      },
+      "final": {
+        "R01": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Boot failure: keyword `enum`"
+            ],
+            [
+              "app/models/note.rb"
+            ],
+            [
+              "enum :status, {...}, prefix: true"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No persisted unequal statuses/reload/filter/helper validation."
+          ]
+        },
+        "R02": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Boot failure: keyword `enum` and positional `serialize`"
+            ],
+            [
+              "apply it in the upgrade commit"
+            ],
+            [
+              "serialize :tags, coder: JSON"
+            ],
+            [
+              "Tags were written on one version and read on the other, in both directions."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-read sample omits comma editing and unequal array/bytes controls."
+          ]
+        },
+        "R03": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "now raises"
+            ],
+            [
+              "not a column"
+            ],
+            [
+              "alias_method :highlight_color=, :color="
+            ],
+            [
+              "The form and strong-params assignment still pass in the suite."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Form assertion lacks settings-preserving edit/reload and error rendering."
+          ]
+        },
+        "R04": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Runtime errors in Active Record and Active Job",
+              "generates `notes.notebooks`"
+            ],
+            [
+              "`NotesController#index`"
+            ],
+            [
+              "where(notebook: @notebook)"
+            ],
+            [
+              "the notebook, status, and title filter test"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Context explicitly calls this runtime error; named test alone omits asymmetric populations and owner denial."
+          ]
+        },
+        "R05": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "CSV receipt's `doi` column becomes blank"
+            ],
+            [
+              "primary key is `doi`"
+            ],
+            [
+              "citation&.doi"
+            ],
+            [
+              "On idleness,10.1000/Essays.1"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Single receipt comparison not distinct DOI real import/download against persisted rows."
+          ]
+        },
+        "R06": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "commits the Import and the earlier rows"
+            ],
+            [
+              "return false unless row.note.save"
+            ],
+            [
+              "transaction { save!; rows.all? { |row| row.note.save } || raise(ActiveRecord::Rollback) } || false"
+            ],
+            [
+              "`record_counts` going from `[0,3,0,1]` to `[1,4,1,2]`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Counts and failed-batch test lack explicit fresh PostgreSQL all-table check and successful-batch control."
+          ]
+        },
+        "R07": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises `TypeError`"
+            ],
+            [
+              "`Export#generate`"
+            ],
+            [
+              "fragments.sum(\"\")",
+              "join"
+            ],
+            [
+              "`ExportJob` (native Sidekiq), and `NoteReminderJob` all ran"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Valid empty-string identity alternative; worker claim lacks exact ordered bytes and unrepaired working/no-artifact control."
+          ]
+        },
+        "R08": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "every annotation silently disappears from the preview"
+            ],
+            [
+              "looks up by an integer line number"
+            ],
+            [
+              "dropping `.stringify_keys`"
+            ],
+            [
+              "`#line_3 dd` shows \"Second reading\""
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One literal annotation, not unequal source2/4 multiline/no-save matrix."
+          ]
+        },
+        "R09": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Cache expiration time is invalid, cannot be negative"
+            ],
+            [
+              "suite was run with `load_defaults 8.1`"
+            ],
+            [],
+            [
+              "four distinct breaks"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No clamp or equivalent cache-preserving repair.",
+            "Aggregate defaults check lacks deadlines/cache hits/misses and authoritative download ownership/expiry."
+          ]
+        },
+        "R10": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "preview became `2026-11-01T08:00:00-05:00`"
+            ],
+            [
+              "same instant, and the stored epoch is unchanged"
+            ],
+            [
+              "reminder_at.getlocal(reminder_at.utc_offset) + 86_400"
+            ],
+            [
+              "09:00:00-04:00",
+              "2026-11-01T08:00:00-05:00"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Fixed-offset getlocal valid; sample lacks epoch/wall/offset assertions and non-boundary control."
+          ]
+        },
+        "R11": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Digest content (ready notes updated that day) and subject would shift"
+            ],
+            [
+              "Redis reservation key are both the UTC day"
+            ],
+            [
+              "requested_at = requested_at.utc"
+            ],
+            [
+              "23:30 Eastern on 4 Oct",
+              "October 05"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "One midnight sample lacks each-midnight reservation and actual note-membership matrix."
+          ]
+        },
+        "R12": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "BigDecimalSerializer is not known"
+            ],
+            [
+              "8.1 payloads on a 7.0 worker"
+            ],
+            [
+              "passing `reading_completion.to_s`"
+            ],
+            [
+              "The two versions were run side by side"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-worker claims omit same-version controls and exact delivered percentage."
+          ]
+        },
+        "R13": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "scheduling returns a 500"
+            ],
+            [
+              "with an Integer"
+            ],
+            [
+              "Time.at(reminder_epoch)"
+            ],
+            [
+              "test adapter still shows `at` as the epoch"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Test adapter and worker claims omit actual scheduled score/payload/persisted time and replacement/ownership."
+          ]
+        },
+        "R14": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "wait: :exponentially_longer` is removed"
+            ],
+            [
+              "Apply it in the upgrade commit."
+            ],
+            [
+              ":polynomially_longer"
+            ],
+            [
+              "`CitationEnrichmentJob`, `ExportJob` (native Sidekiq), and `NoteReminderJob` all ran"
+            ]
+          ],
+          "reasons": [
+            "Removal only; no application retry-time failure/bounded retry effect.",
+            null,
+            null,
+            "Worker processing claim lacks persistent503 six/three recorded failure, recovery and401 controls."
+          ]
+        },
+        "R15": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "form_with(model: nil, url:)` in `notes/index.html.erb` raises"
+            ],
+            [
+              "notes/index.html.erb"
+            ],
+            [
+              "Drop `model: nil`."
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No GET render/submit/names/membership matrix."
+          ]
+        },
+        "R16": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Multiple paths in one `get` raise."
+            ],
+            [
+              "config/routes.rb:18"
+            ],
+            [
+              "two `get` lines"
+            ],
+            [
+              "`notes_path` and `journal_path` both still resolve"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Helpers resolve but both owner requests/authorized list equality omitted."
+          ]
+        },
+        "R17": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "renders error pages instead of raising"
+            ],
+            [
+              "apply it in the upgrade commit"
+            ],
+            [
+              "`:none` to keep raising"
+            ],
+            [
+              "a stubbed Redis error rendered as a 500 instead of raising"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Request/missing-record checks lack normal and CI eager-loading mode matrix."
+          ]
+        },
+        "R18": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Boot failure",
+              "allowed_tags` is nil"
+            ],
+            [
+              "Applies on boot."
+            ],
+            [
+              "sanitizer.class.allowed_tags.to_a + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\", \"details\", \"summary\"]"
+            ],
+            [
+              "same stored body gave identical rendered HTML and plain text"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Rendering sample lacks full attachment/details/summary/script/handler/javascript-URL controls."
+          ]
+        },
+        "R19": {
+          "judgments": [
+            "partial",
+            "incorrect",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Boot failure: `Rails.application.secrets` is removed"
+            ],
+            [
+              "Boot failure: `Rails.application.secrets` is removed"
+            ],
+            [
+              "config.x.citation_provider = config_for(:secrets).citation_provider"
+            ],
+            []
+          ],
+          "reasons": [
+            "Real provider failure mislocated as boot, with no request-time explanation.",
+            "Frozen Provider accesses default settings on construction during Citation#enrich, not boot.",
+            null,
+            "No fresh-process credentials/Basic-header/metadata/bounded-failure matrix."
+          ]
+        },
+        "R20": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "serialize :preferences` without a coder raises"
+            ],
+            [
+              "load_defaults 8.1"
+            ],
+            [
+              "Use `coder: YAML`."
+            ],
+            [
+              "The stored text is unchanged."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Aggregate defaults/cross-read omit separate gate and create/edit/reload unequal preferences/export-heading controls."
+          ]
+        },
+        "R21": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "attr_readonly :slug` raises on assignment"
+            ],
+            [
+              "`NotebooksController` resubmits the slug"
+            ],
+            [],
+            [
+              "four distinct breaks"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No remove-submission/permission repair.",
+            "Aggregate defaults trial lacks create/name-heading/attempted-slug/persistence controls."
+          ]
+        },
+        "R23": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Notebook#daily_note_counts` fails"
+            ],
+            [
+              "date column is now a `Date`, not a string"
+            ],
+            [],
+            [
+              "four distinct breaks"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "No Date/String normalization repair.",
+            "Aggregate defaults trial lacks gate-isolated asymmetric UTC counts/empty reports/ownership."
+          ]
+        },
+        "R25": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Identical header claim is not conflicting-validator effect.",
+            "No strict_freshness gate.",
+            "No keep/adopt decision.",
+            "No validator/expiry/ownership matrix."
+          ]
+        }
+      },
+      "delivery": {
+        "skill_invoked": true,
+        "native_planner_invoked": true,
+        "plan_delivered_without_edit_approval_gate": true,
+        "selected_family_actionability_loss": [],
+        "change": "All central finding text retained; final substitutes parent footer for authored Commentary. Introductory reviewer-like framing remains authored and scored.",
+        "parent_collected_output": [
+          "Gemfile.lock:195:    rails (7.0.8.7)"
+        ],
+        "preservation": "No working-tree or artifact check collected. Raw opening explicitly disclaims it; footer claims no changes without proof.",
+        "validation": "0 full families; aggregate defaults and worker/browser/data probes are partial model-reported evidence."
+      },
+      "material_issues": [
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "Boot failure: `Rails.application.secrets` is removed"
+          ],
+          "reason": "Mislocated trigger: frozen Provider's default argument evaluates on Provider.new during enrichment, not application boot.",
+          "kind": "applicability_error"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "Cause: Active Job 7.1 added a BigDecimal serializer"
+          ],
+          "reason": "Registration in7.1 does not establish unconditional producer use under7.0 defaults; actual serialization onset7.2. Correct target8.1-to7.0 hazard retained.",
+          "kind": "onset_imprecision"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "In production it is one value."
+          ],
+          "reason": "Production secret source/consistency is not established by frozen config or main output; cross-version compatibility requires confirming it, not assuming it.",
+          "kind": "unsupported_deployment_assumption"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "8.1.4 fixed it"
+          ],
+          "reason": "Reported upstream source conclusion not independently audited; accepted json<3 repair is scoped to the planner's claimed resolution, not a universal target requirement.",
+          "kind": "evidence_limit"
+        }
+      ]
+    },
+    {
+      "run": 5,
+      "source_capture_sha256": "04ca41968e5449e2b4c5960874fabdfd495dd872683d377ab442d315dfb683e8",
+      "export_sha256": "ccb59b0e90694192f87d541bfb214c864aefc4a858d29fa5785871222d3cdf7b",
+      "wall_time_ms": 889442,
+      "counts": {
+        "raw": {
+          "actionable": 17,
+          "fully_specified_validation": 0,
+          "fully_omitted": 1
+        },
+        "final": {
+          "actionable": 15,
+          "fully_specified_validation": 0,
+          "fully_omitted": 1
+        }
+      },
+      "raw": {
+        "R01": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises ArgumentError"
+            ],
+            [
+              "app/models/note.rb:10"
+            ],
+            [
+              "enum :status, {...}, prefix: true"
+            ],
+            [
+              "same `status_ready` and `status_draft?` methods"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Helper equivalence alone omits unequal persisted statuses/reload/filter controls."
+          ]
+        },
+        "R02": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "serialize :tags, JSON` raises"
+            ],
+            [
+              "do this at the 7.1 or 8.1 step"
+            ],
+            [
+              "serialize :tags, coder: JSON"
+            ],
+            [
+              "written by 7.0 read identically on 8.1"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-read claim omits comma edits and unequal stored JSON/array controls."
+          ]
+        },
+        "R03": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises because `color` is a store accessor"
+            ],
+            [
+              "not an attribute"
+            ],
+            [
+              "alias_method :highlight_color=, :color="
+            ],
+            [
+              "`notes.settings` (jsonb)"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "General cross-read and browser load claims omit color edit/reload/preservation/form-error matrix."
+          ]
+        },
+        "R04": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "queries a nonexistent `notes.notebooks` column"
+            ],
+            [
+              "where(notebooks: @notebook)"
+            ],
+            [
+              "where(notebook: @notebook)"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No unequal notebooks/other-owner membership/denial scenarios."
+          ]
+        },
+        "R05": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "receipt CSV loses its DOI column"
+            ],
+            [
+              "string primary key `doi`"
+            ],
+            [
+              "citation&.id"
+            ],
+            [
+              "Items 15 and 16 were caught by the existing import tests."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "id reader is valid actual primary-key reader; named tests do not specify distinct DOI apply/download comparison."
+          ]
+        },
+        "R06": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "leaves the Import and the earlier notes saved"
+            ],
+            [
+              "In 8.1 it commits"
+            ],
+            [
+              "rows.all? { ... }",
+              "raise(ActiveRecord::Rollback)",
+              "returning `!!applied`"
+            ],
+            [
+              "`[0,3,0,1]` to `[1,4,1,2]`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Equivalent explicit rollback accepted in existing row.note.save context; counts lack fresh all-table check/success control."
+          ]
+        },
+        "R07": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "fragments.sum` over strings raises `TypeError`"
+            ],
+            [
+              "app/models/export.rb:42"
+            ],
+            [
+              "fragments.join"
+            ],
+            [
+              "native `ExportJob` were enqueued under 7.0"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Worker round trip lacks exact ordered bytes/unrepaired working-no-artifact control."
+          ]
+        },
+        "R08": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "preview silently drops annotations"
+            ],
+            [
+              "Integer line keys into strings"
+            ],
+            [
+              "Use `@import.annotations` directly."
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No unequal2/4 multiline literal preview/no-save controls."
+          ]
+        },
+        "R09": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Negative export-cache expiry omitted.",
+            "No expiration gate.",
+            "No repair.",
+            "No cache/deadline/ownership matrix."
+          ]
+        },
+        "R10": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "08:00-05:00` instead of `09:00-04:00"
+            ],
+            [
+              "The instant is the same."
+            ],
+            [
+              "Time.at(reminder_epoch + 86_400).localtime(reminder_at.utc_offset)",
+              "accept the new display and update the test and the comment"
+            ],
+            [
+              "08:00-05:00",
+              "09:00-04:00"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Both keep/adopt options valid; missing epoch/wall/offset assertion and non-boundary control."
+          ]
+        },
+        "R11": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "covers the reader's local day instead of the UTC day"
+            ],
+            [
+              "`User#request_digest` both promise UTC"
+            ],
+            [
+              "requested_at = requested_at.utc"
+            ],
+            [
+              "23:30 US Eastern",
+              "October 05"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Real-worker/date claim lacks both midnights/reservation keys/exact note membership."
+          ]
+        },
+        "R12": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "BigDecimalSerializer is not known"
+            ],
+            [
+              "8.1 enqueue, 7.0 worker"
+            ],
+            [
+              "DigestJob.perform_later(self, requested_at.utc, reading_completion.to_s)"
+            ],
+            [
+              "completed on 7.0"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Direction/repaired payload checks lack same-version controls/exact delivered completion percentage."
+          ]
+        },
+        "R13": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "set(wait_until: <Integer>)` raises"
+            ],
+            [
+              "app/models/note.rb:61"
+            ],
+            [
+              "wait_until: Time.at(reminder_epoch)"
+            ],
+            [
+              "two scheduled `NoteReminderJob`s"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Scheduled worker claim lacks payload/score/persisted time/replacement/ownership controls."
+          ]
+        },
+        "R14": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises at retry time"
+            ],
+            [
+              "7.0 does not know the new name"
+            ],
+            [
+              ":polynomially_longer"
+            ],
+            [
+              "8.1 worker log (3 s, then 19 s)"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Retry delays claimed, not persistent503 six/three recorded failure and503-to200/401 real-worker family."
+          ]
+        },
+        "R15": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "Passed nil to the :model argument"
+            ],
+            [
+              "app/views/notes/index.html.erb:12"
+            ],
+            [
+              "Drop `model: nil`."
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No GET names/method/render-submit/membership controls."
+          ]
+        },
+        "R16": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises (multi-path form)"
+            ],
+            [
+              "config/routes.rb:18"
+            ],
+            [
+              "Two lines, `get \"/notes\"` and `get \"/journal\"`."
+            ],
+            [
+              "App routes and names are identical to before (diffed)."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Drawing/name diff lacks both owner URL requests and list equality."
+          ]
+        },
+        "R17": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Not-found errors render a 404 page"
+            ],
+            [
+              "On 7.0, `:none` is truthy"
+            ],
+            [
+              "`:none`."
+            ],
+            [
+              "`assert_raises(RecordNotFound)` tests fail"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Missing-record suite plus production boot omits generic request exception and normal/CI mode family."
+          ]
+        },
+        "R18": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises `NoMethodError` at boot"
+            ],
+            [
+              "allowed_tags` is `nil` by default"
+            ],
+            [
+              "sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\"]",
+              "add `details` and `summary`"
+            ],
+            [
+              "corpus covering lists, links, quotes, `<details>`, attachments and `<script>`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Useful corpus lacks handlers/javascript-URL and explicit summary/security controls."
+          ]
+        },
+        "R19": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Rails.application.secrets` no longer exists"
+            ],
+            [
+              "app/models/citation/provider.rb:13"
+            ],
+            [
+              "config.x.citation_provider = config_for(:citation_provider)"
+            ],
+            [
+              "first attempt nested the key and silently produced blank credentials"
+            ]
+          ],
+          "reasons": [
+            "Removal named without provider init/request failure.",
+            null,
+            null,
+            "Configuration-layout probe lacks fresh process/special-character Basic header/metadata/bounded failures."
+          ]
+        },
+        "R20": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "serialize :preferences` has no coder"
+            ],
+            [
+              "default_column_serializer = nil"
+            ],
+            [
+              "explicit `coder: YAML`"
+            ],
+            [
+              "notebooks.preferences` (YAML) written by 7.0 read identically on 8.1"
+            ]
+          ],
+          "reasons": [
+            "Needs-coder statement lacks explicit missing-coder raise.",
+            null,
+            null,
+            "Cross-read under retained defaults not gate-off/on create/edit/reload/export-heading scenario."
+          ]
+        },
+        "R21": {
+          "judgments": [
+            "partial",
+            "supported",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "matters for `Notebook` `attr_readonly :slug`"
+            ],
+            [
+              "raise_on_assign_to_attr_readonly"
+            ],
+            [],
+            []
+          ],
+          "reasons": [
+            "No ordinary slug-resubmission update/raised error explained.",
+            null,
+            "No slug submission/permission repair.",
+            "No gate/create/edit/attempted-slug controls."
+          ]
+        },
+        "R23": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "no implicit conversion of Date into String"
+            ],
+            [
+              "`load_defaults 7.2`"
+            ],
+            [
+              "Fix it before adopting."
+            ],
+            [
+              "Notebook#daily_note_counts` was verified to raise"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "Fix-it directive does not specify Date/String repair.",
+            "Probe lacks real PostgreSQL off/on asymmetric UTC counts/empty/ownership controls."
+          ]
+        },
+        "R25": {
+          "judgments": [
+            "partial",
+            "supported",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "affects the `stale?(etag:, last_modified:)` call"
+            ],
+            [
+              "load_defaults 8.0",
+              "strict_freshness"
+            ],
+            [],
+            []
+          ],
+          "reasons": [
+            "No concrete conflicting ETag/date200-to304 effect.",
+            null,
+            "No explicit keep/adopt decision.",
+            "No ETag-list orders/date conflicts/expired302/foreign404 matrix."
+          ]
+        }
+      },
+      "final": {
+        "R01": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "enum status: {...}, _prefix: true` raises"
+            ],
+            [
+              "app/models/note.rb:10"
+            ],
+            [
+              "enum :status, {...}, prefix: true"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Final drops helper detail; no persisted statuses/reload/filter/helper scenario."
+          ]
+        },
+        "R02": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "serialize :tags, JSON` raises"
+            ],
+            [
+              "Do it at the 8.1 step."
+            ],
+            [
+              "serialize :tags, coder: JSON"
+            ],
+            [
+              "Tags, settings and preferences written by 7.0 read identically on 8.1."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-read claim omits comma edits and unequal stored JSON/array controls."
+          ]
+        },
+        "R03": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises because `color` is a store accessor"
+            ],
+            [
+              "color` is a store accessor"
+            ],
+            [
+              "alias_method :highlight_color=, :color="
+            ],
+            [
+              "Tags, settings and preferences written by 7.0 read identically on 8.1."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "General cross-read/browser load omit color edit/reload/preservation/form-error matrix."
+          ]
+        },
+        "R04": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "relied on 7.0 singularising the key"
+            ],
+            [
+              "where(notebooks: @notebook)"
+            ],
+            [
+              "where(notebook: @notebook)"
+            ],
+            []
+          ],
+          "reasons": [
+            "Final removes nonexistent target column/filter-error explanation; old behavior alone insufficient.",
+            null,
+            null,
+            "No unequal notebooks/other-owner membership/denial scenarios."
+          ]
+        },
+        "R05": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "receipt CSV loses its DOI column"
+            ],
+            [
+              "string primary key `doi`"
+            ],
+            [
+              "citation&.id"
+            ],
+            [
+              "existing import tests caught"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Primary-key reader valid; test names omit distinct DOI apply/download comparison."
+          ]
+        },
+        "R06": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "leaves the Import and earlier notes saved"
+            ],
+            [
+              "return false` inside `transaction` now commits"
+            ],
+            [
+              "rows.all? { ... }",
+              "raise(ActiveRecord::Rollback)",
+              "returning `!!applied`"
+            ],
+            [
+              "An import with an invalid row"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Failed scenario retained but exact count example removed; no fresh all-table/success controls."
+          ]
+        },
+        "R07": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "fragments.sum` over strings raises `TypeError`"
+            ],
+            [
+              "app/models/export.rb:42"
+            ],
+            [
+              "fragments.join"
+            ],
+            [
+              "all job types processed cleanly"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Worker claim lacks exact ordered bytes/unrepaired working-no-artifact control."
+          ]
+        },
+        "R08": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "preview silently drops annotations"
+            ],
+            [
+              "Integer line keys into strings"
+            ],
+            [
+              "Use `@import.annotations` directly."
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No unequal2/4 multiline literal preview/no-save controls."
+          ]
+        },
+        "R09": {
+          "judgments": [
+            "missing",
+            "missing",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [],
+            [],
+            [],
+            []
+          ],
+          "reasons": [
+            "Negative export-cache expiry omitted.",
+            "No expiration gate.",
+            "No repair.",
+            "No cache/deadline/ownership matrix."
+          ]
+        },
+        "R10": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "08:00-05:00` instead of `09:00-04:00"
+            ],
+            [
+              "The instant is the same."
+            ],
+            [
+              "Time.at(reminder_epoch + 86_400).localtime(reminder_at.utc_offset)",
+              "accept the new display and update the test and the comment"
+            ],
+            [
+              "08:00-05:00",
+              "09:00-04:00"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Both keep/adopt options valid; missing epoch/wall/offset assertion and non-boundary control."
+          ]
+        },
+        "R11": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "covers the reader's local day instead of the UTC day"
+            ],
+            [
+              "`User#request_digest` both promise UTC"
+            ],
+            [
+              "requested_at = requested_at.utc"
+            ],
+            [
+              "23:30 US Eastern",
+              "October 05"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Real-worker/date claim lacks both midnights/reservation keys/exact note membership."
+          ]
+        },
+        "R12": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "BigDecimalSerializer is not known"
+            ],
+            [
+              "8.1 enqueue, 7.0 worker"
+            ],
+            [
+              "DigestJob.perform_later(self, requested_at.utc, reading_completion.to_s)"
+            ],
+            [
+              "7.0 enqueue, 8.1 worker"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Cross-direction claims lack repaired same-version controls/exact delivered percentage."
+          ]
+        },
+        "R13": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "set(wait_until: <Integer>)` raises"
+            ],
+            [
+              "app/models/note.rb:61"
+            ],
+            [
+              "wait_until: Time.at(reminder_epoch)"
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Final removes scheduled-job detail; all-job-types claim alone does not specify scheduling payload/score/time/replacement/ownership checks."
+          ]
+        },
+        "R14": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "wait: :exponentially_longer` was removed"
+            ],
+            [
+              "Do it at the 8.1 step."
+            ],
+            [
+              ":polynomially_longer"
+            ],
+            [
+              "Retry delays matched the old ones."
+            ]
+          ],
+          "reasons": [
+            "Final removes retry-time raised error; removal alone not application impact.",
+            null,
+            null,
+            "Delay equivalence omits persistent503 six/three recorded failure and503-to200/401 worker controls."
+          ]
+        },
+        "R15": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "form_with(model: nil, ...)` raises"
+            ],
+            [
+              "app/views/notes/index.html.erb:12"
+            ],
+            [
+              "Drop `model: nil`."
+            ],
+            []
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "No GET names/method/render-submit/membership controls."
+          ]
+        },
+        "R16": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "(multi-path form) raises"
+            ],
+            [
+              "config/routes.rb:18"
+            ],
+            [
+              "Two lines, `get \"/notes\"` and `get \"/journal\"`."
+            ],
+            [
+              "Routes and names are identical to before."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Route/name comparison lacks both owner URL requests and list equality."
+          ]
+        },
+        "R17": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "`assert_raises(RecordNotFound)` tests fail"
+            ],
+            [
+              "Do it at the 8.1 step."
+            ],
+            [
+              "`:none`"
+            ],
+            [
+              "`assert_raises(RecordNotFound)` tests fail"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Missing-record suite plus production boot omits generic request exception and normal/CI family."
+          ]
+        },
+        "R18": {
+          "judgments": [
+            "supported",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "raises at boot"
+            ],
+            [
+              "allowed_tags` is `nil` by default"
+            ],
+            [
+              "sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\"]",
+              "add `details` and `summary`"
+            ],
+            [
+              "Rich text rendering was byte-identical on both versions."
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            null,
+            "Final removes corpus cases; no full attachment/details/summary/script/handler/javascript-URL controls."
+          ]
+        },
+        "R19": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Rails.application.secrets` no longer exists"
+            ],
+            [
+              "app/models/citation/provider.rb:13"
+            ],
+            [
+              "config.x.citation_provider = config_for(:citation_provider)"
+            ],
+            [
+              "a nested key silently produced blank credentials"
+            ]
+          ],
+          "reasons": [
+            "Removal named without provider init/request failure.",
+            null,
+            null,
+            "Layout probe lacks fresh process/special-character Basic header/metadata/bounded failures."
+          ]
+        },
+        "R20": {
+          "judgments": [
+            "partial",
+            "supported",
+            "supported",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "serialize :preferences` needs an explicit `coder: YAML`"
+            ],
+            [
+              "default_column_serializer = nil"
+            ],
+            [
+              "coder: YAML"
+            ],
+            [
+              "Tags, settings and preferences written by 7.0 read identically on 8.1."
+            ]
+          ],
+          "reasons": [
+            "Needs-coder statement lacks explicit missing-coder raise.",
+            null,
+            null,
+            "Cross-read retained defaults not gate-off/on create/edit/reload/export-heading scenario."
+          ]
+        },
+        "R21": {
+          "judgments": [
+            "partial",
+            "supported",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "affects `attr_readonly :slug` on `Notebook`"
+            ],
+            [
+              "`load_defaults 7.1`"
+            ],
+            [],
+            []
+          ],
+          "reasons": [
+            "No ordinary slug-resubmission update/raised error explained.",
+            null,
+            "No slug submission/permission repair.",
+            "No gate/create/edit/attempted-slug controls."
+          ]
+        },
+        "R23": {
+          "judgments": [
+            "supported",
+            "supported",
+            "missing",
+            "partial"
+          ],
+          "quotes": [
+            [
+              "Notebook#daily_note_counts` raises `TypeError`"
+            ],
+            [
+              "`load_defaults 7.2`"
+            ],
+            [
+              "Fix it before adopting."
+            ],
+            [
+              "raises `TypeError` at `Date.iso8601(day)`"
+            ]
+          ],
+          "reasons": [
+            null,
+            null,
+            "Fix-it directive does not specify Date/String repair.",
+            "Probe lacks real PostgreSQL off/on asymmetric UTC counts/empty/ownership controls."
+          ]
+        },
+        "R25": {
+          "judgments": [
+            "partial",
+            "supported",
+            "missing",
+            "missing"
+          ],
+          "quotes": [
+            [
+              "affects `stale?(etag:, last_modified:)`"
+            ],
+            [
+              "load_defaults 8.0",
+              "strict_freshness"
+            ],
+            [],
+            []
+          ],
+          "reasons": [
+            "No concrete conflicting ETag/date200-to304 effect.",
+            null,
+            "No explicit keep/adopt decision.",
+            "No ETag-list orders/date conflicts/expired302/foreign404 matrix."
+          ]
+        }
+      },
+      "delivery": {
+        "skill_invoked": true,
+        "native_planner_invoked": true,
+        "plan_delivered_without_edit_approval_gate": true,
+        "selected_family_actionability_loss": [
+          "R04",
+          "R14"
+        ],
+        "change": "Final is a substantial compression, removes How it was tested and shortens findings/rollout, despite framing as a handoff. R04 nonexistent column and R14 raised retry-time error disappear. R01 helper and R13 scheduled-job validation details also disappear.",
+        "parent_collected_output": [
+          "Gemfile.lock:195:    rails (7.0.8.7)"
+        ],
+        "preservation": "No independent working-tree/resource check. Planner/parent disclaim re-running experiments.",
+        "validation": "0 full families; partial nested queue/data/browser checks claimed; final loses some partial details."
+      },
+      "material_issues": [
+        {
+          "layers": [
+            "raw"
+          ],
+          "quotes": [
+            "The Trix 1.3.4 comment in `app/views/layouts/application.html.erb` also no longer matches the bundled Trix 2.1.19."
+          ],
+          "reason": "Frozen comment describes Rails7.0 bundled1.3.4 and why vendored1.3.5 is explicitly loaded, not runtime Trix2. Updating it as if the editor switched to2 is misleading. Final calls it stale more generally.",
+          "kind": "front_end_claim_error"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "System tests (Selenium needs a display)."
+          ],
+          "reason": "Frozen suite has no system tests; display availability is not the coverage gap. Browser smoke is separate and model-reported.",
+          "kind": "coverage_imprecision"
+        },
+        {
+          "layers": [
+            "raw"
+          ],
+          "quotes": [
+            "7.0 treats the hash as the class argument"
+          ],
+          "reason": "Correct no-prepatch order, but exact Rails7.0 behavior is silent fallback to YAML, not selecting the options hash as a class. Does not invalidate gated coder repair.",
+          "kind": "mechanism_imprecision"
+        },
+        {
+          "layers": [
+            "raw",
+            "final"
+          ],
+          "quotes": [
+            "7.0 enqueue, 8.1 worker"
+          ],
+          "reason": "Broad worker compatibility is sampled/model-reported, not independent proof of every scheduling/retry/rollback state. Exact preparatory producer edit explicitly lacks full-suite run.",
+          "kind": "evidence_limit"
+        }
+      ]
+    }
+  ],
+  "collection": {
+    "status_file": "/tmp/planner-suite-20261012/sonnet-medium-collection-status.json",
+    "first_check_approximate_utc": "2026-10-13 around 05:38 UTC",
+    "wait_limit_minutes": 25,
+    "result": "All five immutable Rails captures arrived before the limit; final watcher status pending=[], incomplete=[].",
+    "incomplete_attempts": []
+  },
+  "common_extra_findings": [
+    {
+      "finding": "JSON dependency constraint",
+      "runs": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "quotes_by_run": {
+        "1": [
+          "gem \"json\", \"~> 2.21\""
+        ],
+        "2": [
+          "json \"< 3\""
+        ],
+        "3": [
+          "gem \"json\", \"< 3\""
+        ],
+        "4": [
+          "gem \"json\", \"< 3\""
+        ],
+        "5": [
+          "gem \"json\", \"< 3\""
+        ]
+      },
+      "judgment": "supported",
+      "reason": "Valid additional resolution-specific repair, not a selected family. Frozen app has JSON-serialized tags/settings and session/ActiveStorage consumers. Rails8.1.0 decoding source passes a positional options hash; established fixture proof required json<3. Accepted for each report's claimed json3 resolution, not treated as a universal dependency need or independent confirmation of those locks.",
+      "source_url": "https://raw.githubusercontent.com/rails/rails/v8.1.0/activesupport/lib/active_support/json/decoding.rb",
+      "source_quote": "data = ::JSON.parse(json, options)"
+    },
+    {
+      "finding": "Enqueue-after-commit adoption",
+      "runs": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "layers": [
+        "raw",
+        "final"
+      ],
+      "quotes_by_run": {
+        "1": [
+          "enqueue_after_transaction_commit"
+        ],
+        "2": [
+          "enqueue_after_transaction_commit"
+        ],
+        "3": [
+          "enqueue_after_transaction_commit"
+        ],
+        "4": [
+          "enqueue_after_transaction_commit"
+        ],
+        "5": [
+          "enqueue_after_transaction_commit"
+        ]
+      },
+      "judgment": "supported",
+      "reason": "Genuine separate opt-in design risk: frozen Note and Citation depend on enqueue under with_lock and rollback on failure. Do not confuse this with mandatory behavior under retained defaults; run2's overly broad7.2+ default condition is separately recorded as an error."
+    }
+  ],
+  "summary": {
+    "raw_actionable": [
+      17,
+      18,
+      14,
+      17,
+      17
+    ],
+    "final_actionable": [
+      17,
+      18,
+      14,
+      17,
+      15
+    ],
+    "raw_fully_specified_validation": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "final_fully_specified_validation": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "delivery": "Native skill and planner invoked in all five; plans delivered without implementation approval gates. Runs1-4 preserve selected-family actionability. Run5 compression loses R04 and R14 impact,17 to15.",
+    "selected_gaps": "R25 never actionable. Defaults-dependent repairs absent or incomplete except R20 in run4. Run3 additionally has removal-only enum/tags/secrets and insufficient filter impact.",
+    "genuine_extra": "Run2 Asuncion mixed-version user-zone risk source-confirmed outside key; no recall-count inflation.",
+    "uncertainty": "Nested experiments and cleanup were not independently collected; no application experiments performed. Production/session/cache/browser/patch claims remain limited. Correct portable alternatives accepted without requiring key wording."
+  }
+}

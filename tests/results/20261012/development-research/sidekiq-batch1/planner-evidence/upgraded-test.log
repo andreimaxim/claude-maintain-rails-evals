@@ -1,0 +1,73 @@
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/core_ext/object/json.rb:5: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/bigdecimal.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add bigdecimal to your Gemfile or gemspec to silence this warning.
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/notifications/fanout.rb:3: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/mutex_m.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add mutex_m to your Gemfile or gemspec to silence this warning.
+/tmp/sidekiq-upgrade-exp/upgraded-bundle/ruby/3.3.0/gems/activesupport-7.0.8.7/lib/active_support/testing/parallelization.rb:3: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/drb.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add drb to your Gemfile or gemspec to silence this warning.
+Also please contact the author of activesupport-7.0.8.7 to request adding drb into its gemspec.
+Run options: --seed 2162
+
+# Running:
+
+.............2026-10-12T15:36:53.493Z pid=48077 tid=zxl INFO: Sidekiq 7.3.9 connecting to Redis with options {:size=>10, :pool_name=>"internal", :url=>"redis://127.0.0.1:6391/2"}
+F
+
+Failure:
+DigestsControllerTest#test_a_reader_can_request_one_digest_per_UTC_day,_listing_ready_notes_updated_that_day [test/controllers/digests_controller_test.rb:21]:
+--- expected
++++ actual
+@@ -1 +1 @@
+-"You have already requested today's reading digest."
++"Today's reading digest is on its way."
+
+
+rails test test/controllers/digests_controller_test.rb:5
+
+...............E
+
+Error:
+ExportsControllerTest#test_cancelling_a_queued_export_means_the_worker_writes_no_file:
+ArgumentError: Job arguments to ExportJob must be native JSON types, but :format is a Symbol.
+See https://github.com/sidekiq/sidekiq/wiki/Best-Practices
+To disable this error, add `Sidekiq.strict_args!(false)` to your initializer.
+
+    app/models/notebook.rb:26:in `request_export'
+    app/controllers/exports_controller.rb:9:in `create'
+    test/controllers/exports_controller_test.rb:96:in `block in <class:ExportsControllerTest>'
+
+rails test test/controllers/exports_controller_test.rb:94
+
+E
+
+Error:
+ExportsControllerTest#test_the_cached_availability_indicator_does_not_authorize_a_download:
+ArgumentError: Job arguments to ExportJob must be native JSON types, but :format is a Symbol.
+See https://github.com/sidekiq/sidekiq/wiki/Best-Practices
+To disable this error, add `Sidekiq.strict_args!(false)` to your initializer.
+
+    app/models/notebook.rb:26:in `request_export'
+    test/controllers/exports_controller_test.rb:65:in `block in <class:ExportsControllerTest>'
+
+rails test test/controllers/exports_controller_test.rb:59
+
+DEPRECATION WARNING: Rails 7.0 has deprecated Enumerable.sum in favor of Ruby's native implementation available since 2.4. Sum of non-numeric elements requires an initial argument. (called from generate at /tmp/sidekiq-upgrade-exp/upgraded/app/models/export.rb:42)
+.E
+
+Error:
+ExportsControllerTest#test_a_reader_exports_a_notebook_as_Markdown_and_downloads_it_until_it_expires:
+ArgumentError: Job arguments to ExportJob must be native JSON types, but :format is a Symbol.
+See https://github.com/sidekiq/sidekiq/wiki/Best-Practices
+To disable this error, add `Sidekiq.strict_args!(false)` to your initializer.
+
+    app/models/notebook.rb:26:in `request_export'
+    app/controllers/exports_controller.rb:9:in `create'
+    test/controllers/exports_controller_test.rb:15:in `block in <class:ExportsControllerTest>'
+
+rails test test/controllers/exports_controller_test.rb:9
+
+........./tmp/sidekiq-upgrade-exp/upgraded/app/models/import.rb:1: warning: /home/user/.local/share/mise/installs/ruby/3.3.6/lib/ruby/3.3.0/csv.rb was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.4.0.
+You can add csv to your Gemfile or gemspec to silence this warning.
+....
+
+Finished in 2.991238s, 15.3783 runs/s, 91.6009 assertions/s.
+46 runs, 274 assertions, 1 failures, 3 errors, 0 skips

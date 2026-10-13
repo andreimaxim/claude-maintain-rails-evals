@@ -1,0 +1,3505 @@
+{
+  "assessment": "All five immutable Haiku-medium Rails original turns assessed; prior final grades1-3 preserved. Native recovery corrects run3 attribution. Missing plan1 and uncollected native handback4 retain null raw correctness, not zero accuracy. Report quality, workflow and experiment proof remain separate.",
+  "request": "Upgrade the rails gem to 8.1.0",
+  "requested_configuration": {
+    "model": "claude-haiku-5-5",
+    "effort": "medium"
+  },
+  "actual_model_audit": {
+    "status": "native metadata confirmed for Rails1-3 and5; Rails4 collection refused",
+    "basis": "haiku-medium-models/rails-{1,2,3}.json records12 instances (7,1,4). Subsequently recovered rails-5.json records main plus4 native planners. All recorded assistant models are claude-haiku-5-5 at medium effort; CLI2.1.296. Run2 requestedModel is null. Export configuration alone is not native proof for4. Native attribution is independent of authored self-analysis labels. Audit prose is not experiment execution proof.",
+    "actual_parent_models": [
+      "claude-haiku-5-5"
+    ],
+    "actual_planner_models": [
+      "claude-haiku-5-5"
+    ],
+    "actual_efforts": [
+      "medium"
+    ],
+    "audited_rails_runs": [
+      1,
+      2,
+      3,
+      5
+    ],
+    "unaudited_rails_runs": [
+      4
+    ],
+    "limitations": "Transcript metadata is not server-side routing proof. Original process overrides are unavailable. Rails4 declined the collection-only follow-up; no audit or raw report is invented."
+  },
+  "subsequent_native_artifact_hashes": {
+    "haiku-medium-models/rails-5.json": "31b46976275e91907721064d83851d7f7d45d4d76d57852dd5ce1ce3262d8c25",
+    "haiku-medium-reports/rails-5.json": "3eea51c15e9977ae06d2d66fc74f5fabd06d2518d9bd623e950f23698ce64cda"
+  },
+  "recovered_audit_crosscheck": {
+    "files": [
+      "rails-1.json",
+      "rails-2.json",
+      "rails-3.json",
+      "sidekiq-1.json",
+      "sidekiq-3.json"
+    ],
+    "directory": "/tmp/planner-suite-20261012/haiku-medium-models",
+    "instances": 23,
+    "recorded_models": [
+      "claude-haiku-5-5"
+    ],
+    "recorded_efforts": [
+      "medium"
+    ],
+    "scope": "Independently inspected only model/effort/type metadata in all five recovered audits. Sidekiq metadata does not supply Rails4/5 provenance or experiment results."
+  },
+  "native_artifact_hashes": {
+    "haiku-medium-models/rails-1.json": "ee4972fef381691242cea2b497ed92866875206a4109ee4037b14e5db3f2281b",
+    "haiku-medium-models/rails-2.json": "654f6e0428cd5e0a855a20dbbe62868d922eaefd7ad03838676ea1dedae780dd",
+    "haiku-medium-models/rails-3.json": "c3485af3259ca9bf18af26b24f5d776f4475f0673d480c68a5011af45457be4e",
+    "haiku-medium-reports/rails-1.json": "b1cca2240fbad0a458874a98d63dccae49d0f62406d237845f5b56614d1dee3c",
+    "haiku-medium-reports/rails-2.json": "776aafc7ca628e1854b3ab1d72814fe766efc59bcf13645bf053ebf14390915e",
+    "haiku-medium-reports/rails-3.json": "2d7a98d9081c138204b8d28a422256cd4f9966601e789fe8867758fa9a124573"
+  },
+  "source_adjudications": [
+    {
+      "family": "R02",
+      "run": 4,
+      "conclusion": "attribute :tags, :json is a valid equivalent when replacing serialize, on the frozen text tags column default[]; both7.0 and8.1 Json types decode String via ActiveSupportJSON and encode values. tag_list reads join and writer assigns arrays. Encoding escape differences do not turn compatible JSON data into YAML or a String-valued tag contract.",
+      "sources": [
+        "https://raw.githubusercontent.com/rails/rails/v7.0.8.7/activerecord/lib/active_record/type/json.rb",
+        "https://raw.githubusercontent.com/rails/rails/v8.1.0/activerecord/lib/active_record/type/json.rb",
+        "https://raw.githubusercontent.com/andreimaxim/claude-maintain-rails-sample/9938031e54e1d7d074f1200a0da17e49390c86fa/app/models/note.rb",
+        "https://raw.githubusercontent.com/andreimaxim/claude-maintain-rails-sample/9938031e54e1d7d074f1200a0da17e49390c86fa/db/schema.rb"
+      ],
+      "evidence_kind": "Public source inspection, no runtime experiment"
+    },
+    {
+      "family": "R07",
+      "run": 4,
+      "conclusion": "sum with initial empty String concatenates only String fragments in order; valid exact-byte equivalent to join here. Ruby documentation explicitly permits nonnumeric + compatible initial values. Faster join is not required rubric wording.",
+      "sources": [
+        "https://docs.ruby-lang.org/en/3.3/Array.html#method-i-sum",
+        "https://raw.githubusercontent.com/andreimaxim/claude-maintain-rails-sample/9938031e54e1d7d074f1200a0da17e49390c86fa/app/models/export.rb"
+      ],
+      "evidence_kind": "Public source/documentation inspection, no runtime experiment"
+    },
+    {
+      "family": "R08",
+      "run": 4,
+      "conclusion": "Changing annotations creation to String keys leaves both frozen Integer lookup sites wrong. Removing stringify_keys alone is valid; normalize both creation and lookup if using String keys.",
+      "sources": [
+        "https://raw.githubusercontent.com/andreimaxim/claude-maintain-rails-sample/9938031e54e1d7d074f1200a0da17e49390c86fa/app/models/import.rb",
+        "https://raw.githubusercontent.com/andreimaxim/claude-maintain-rails-sample/9938031e54e1d7d074f1200a0da17e49390c86fa/app/views/imports/preview.html.erb"
+      ],
+      "evidence_kind": "Public frozen-source inspection"
+    },
+    {
+      "family": "R18",
+      "runs": [
+        4,
+        5
+      ],
+      "conclusion": "Rails sanitizer DEFAULT_ALLOWED_TAGS omits details/summary/figure/figcaption/action-text-attachment. ActionText sanitizer_allowed_tags adds attachment/figure/figcaption only when allowed_tags is nil. Run4 names attachment additions but not excerpts; run5 names excerpts but not attachment additions. Both proposed allowlists are incomplete, not unsafe allow-everything repairs.",
+      "sources": [
+        "https://raw.githubusercontent.com/rails/rails-html-sanitizer/v1.6.2/lib/rails/html/sanitizer.rb",
+        "https://raw.githubusercontent.com/rails/rails/v8.1.0/actiontext/app/helpers/action_text/content_helper.rb"
+      ],
+      "evidence_kind": "Public source inspection; broader Loofah SafeList is not the Rails default sanitizer subset"
+    },
+    {
+      "family": "R21",
+      "run": 5,
+      "conclusion": "Dropping permitted slug preserves actual creation behavior because frozen assign_slug unconditionally derives it from name on create. Do not reject equivalent repair merely because it drops slug for creation too.",
+      "sources": [
+        "https://raw.githubusercontent.com/andreimaxim/claude-maintain-rails-sample/9938031e54e1d7d074f1200a0da17e49390c86fa/app/models/notebook.rb",
+        "https://raw.githubusercontent.com/andreimaxim/claude-maintain-rails-sample/9938031e54e1d7d074f1200a0da17e49390c86fa/app/controllers/notebooks_controller.rb"
+      ],
+      "evidence_kind": "Public frozen-source inspection"
+    }
+  ],
+  "freeze": {
+    "plugin": "11b074b79a35be55d5768ba3799b1dff768dfb94",
+    "application": "9938031e54e1d7d074f1200a0da17e49390c86fa",
+    "basis": "Coordinator-provided provenance: all ten source audits match these bytes. Audit prose is not execution evidence."
+  },
+  "rubric": [
+    "tests/planner-development.md",
+    "tests/planner-development-batch2-20261012.md"
+  ],
+  "strict_scoring_reference": "/tmp/planner-suite-20261012/sonnet-medium-rails-assessment.json",
+  "reference_use": "Schema and strictness only; no Sonnet execution evidence used for Haiku.",
+  "encoding": {
+    "judgments": "Independent named fields impact, applicability, recommendation, validation; supported/partial/missing/incorrect.",
+    "quotes": "Named quote-list fields contain exact short substrings of the evaluated report, not reasoning blocks or audit prose.",
+    "reasons": "Named nullable reasons. Every nonsupported judgment has a reason.",
+    "actionable": "All of impact, applicability and recommendation supported; validation counted separately. No weighted score.",
+    "raw": "Only a completed substantive designated-planner report with observed native return or native audit attribution qualifies. Launch acknowledgments, waiting notes and parent fallback/implementation reports do not. Authored self-analysis labels cannot override agentType; parent claims alone cannot establish a missing native handback. A report assessment_ref resolves to independently checked family judgments when the selected quotes and judgments are identical across raw and final; boundaries and hashes remain independent.",
+    "final": "Family assessment of the substantive delivered parent report. Null for absent/pending report. Returned_reports independently identifies its provenance and refers to this same assessment, avoiding duplicate evidence.",
+    "report_preservation": "Original immutable message locators retain the complete authored report, including introductions, evidence claims, open questions and reviewer notes. No authored text is elided in defining the evaluated boundary. Only harness envelope, exactly two harness indentation spaces and trailing agentId/usage would be excluded from native report comparison. No original full private export is republished.",
+    "timing": "Observed wall_time_ms = first natural request createdAt to frozen lastKnownAgentState idle updatedAt. Successful_plan_wall_time_ms requires an attributed designated report delivered without visible working-app edits. Native completion latency is separate from parent delivery latency; both start at the original request. Audit collection times do not extend scored-turn timing.",
+    "validation": "Full support requires the entire scenario/control family. Global green suites alone do not specify a family test. Missing report validation is not a claim that no tests ran; observed partial tests are retained separately."
+  },
+  "family_categories": {
+    "direct": [
+      "R01",
+      "R02",
+      "R03",
+      "R04",
+      "R05",
+      "R06",
+      "R07",
+      "R08",
+      "R10",
+      "R11",
+      "R13",
+      "R14",
+      "R15",
+      "R16",
+      "R17",
+      "R18",
+      "R19"
+    ],
+    "defaults_dependent": [
+      "R09",
+      "R20",
+      "R21",
+      "R23",
+      "R25"
+    ],
+    "mixed_version": [
+      "R12"
+    ]
+  },
+  "validation_criteria": {
+    "R01": "Unequal persisted draft/ready notes, reload, filters and prefixed helpers/scopes.",
+    "R02": "Existing unequal JSON tags, comma editing, stored JSON and array values after reload; coder shipped with >=7.1, not a 7.0 advance patch.",
+    "R03": "Highlight-color edit/reload, settings preservation, form and error rendering.",
+    "R04": "Unequal notebook populations and another owner; inclusion/exclusion and foreign-notebook denial.",
+    "R05": "Real import of distinct DOIs; downloaded receipt compared to persisted citations.",
+    "R06": "Real apply valid then invalid row, fresh PostgreSQL notes/citations/import counts unchanged; successful batch.",
+    "R07": "Real export worker, exact ordered Markdown bytes; unrepaired working/no-artifact control.",
+    "R08": "Unequal source-line2/4 annotations, multiline CSV, literal preview and no saving.",
+    "R09": "Invalid-expiry gate distinction; before/after deadline, fresh/cache-hit reads and authoritative download expiry/ownership.",
+    "R10": "DST epoch/wall/offset comparison plus non-boundary control; display shift is not an instant shift.",
+    "R11": "Real JSON queue/worker, each local/UTC midnight separately, reservation keys and delivered note membership.",
+    "R12": "Real JSON producer/consumer both directions and same-version controls, exact delivered percentage; specifically 8.1 producer to7.0 worker.",
+    "R13": "Actual scheduled payload/score and persisted time, replacement and ownership.",
+    "R14": "Real worker persistent503 six requests/three attempts and recorded failure, 503-to200 and401 controls; polynomially_longer not prepatched on7.0.",
+    "R15": "Render/submit unbound GET form, names/method and note membership.",
+    "R16": "Draw routes, both owner URLs, identical authorized lists and helpers.",
+    "R17": "Raised request exception, missing-record policy, normal and CI eager-loading; :none not prepatched on7.0.",
+    "R18": "Boot; details/summary and attachments; exclude scripts, handlers and javascript URLs.",
+    "R19": "Fresh process, special-character environment credentials, actual Basic header, successful metadata and bounded failures without exposing secrets.",
+    "R20": "Default-column-serializer gate off/on; create/edit/reload unequal YAML preferences and export heading.",
+    "R21": "Readonly-assignment gate off/on; create, name/heading edit, attempted slug change and persisted slug.",
+    "R23": "Real PostgreSQL date-decoding gate off/on; asymmetric UTC counts, populated/empty reports and ownership.",
+    "R25": "Explicit keep/adopt; matching ETag list both orders, conflicting/nonconflicting date validators, expired302 and foreign404."
+  },
+  "runs": [
+    {
+      "run": 1,
+      "status": "settled_missing_plan",
+      "source_export": "/tmp/planner-suite-20261012/haiku-medium-settled/rails-1.json",
+      "source_export_sha256": "81d5057733ab505a03547e8171e79a121524a7c7462a7252a18ce8045ae747f4",
+      "evaluated_message_boundary": {
+        "request_index": 0,
+        "end_index_inclusive": 11,
+        "end_message_id": "12",
+        "end_created_at": "2026-10-13T06:29:54.025Z",
+        "native_result_indices": [
+          6,
+          9
+        ],
+        "substantive_report_indices": []
+      },
+      "request_timestamp": "2026-10-13T06:28:51.746Z",
+      "idle_timestamp": "2026-10-13T06:29:54.111Z",
+      "wall_time_ms": 62365,
+      "successful_plan_wall_time_ms": null,
+      "raw": null,
+      "final": null,
+      "returned_reports": [],
+      "counts": {
+        "raw": null,
+        "final": null,
+        "returned_reports": []
+      },
+      "final_status_quotes": [
+        "The planner agent has now reported back a third time without a plan.",
+        "I'll wait for your choice before going further."
+      ],
+      "workflow": {
+        "correct_skill_invoked": true,
+        "native_agent_invocations": 2,
+        "native_planner_invoked": true,
+        "completed_designated_report_visible": false,
+        "plan_delivered": false,
+        "plan_only_success": false,
+        "working_application_edits_visible": false,
+        "user_choice_gate": "Retry or self-plan",
+        "unsupported_native_results": "Parent describes three planless reports; export contains two native Agent invocations and only one waiting hand-back. Do not infer a third invocation from that statement."
+      },
+      "delivery": {
+        "failure": "No plan delivered; status/choice request instead of completing the requested planning workflow.",
+        "selected_family_actionability_loss": null,
+        "preservation": "No visible Edit/Write tools. Nothing changed is also a parent claim, not an independent collected final git/resource audit."
+      },
+      "material_issues": [
+        {
+          "kind": "missing_plan",
+          "quotes": [
+            "none contains the plan"
+          ],
+          "reason": "Completed turn contains no substantive designated or fallback report. Null correctness, not 0/23."
+        },
+        {
+          "kind": "delivery_gate",
+          "quotes": [
+            "do you want me to plan the upgrade myself",
+            "I'll wait for your choice before going further."
+          ],
+          "reason": "Asks for permission to perform planning after delegated delivery failed. This is separate from correctness and from an implementation approval gate."
+        }
+      ],
+      "native_audit": {
+        "model_source": "/tmp/planner-suite-20261012/haiku-medium-models/rails-1.json",
+        "report_source": "/tmp/planner-suite-20261012/haiku-medium-reports/rails-1.json",
+        "collection_boundary": "2026-10-13T06:45:58.280Z",
+        "instances": 7,
+        "max_spawn_depth": 3,
+        "unfinished_descendants": [
+          "a9fecf70080f7621a",
+          "aa04bcd2ed69a5a66"
+        ],
+        "conclusion": "Main and depth1/2 agents return status only; depth3 agents have null completionTimestamp and in-progress narration. Do not treat these as completed reports or narration as independently observed passing experiments."
+      },
+      "limitations": [
+        "Native launch and waiting hand-back are not raw reports.",
+        "Native audits confirm seven Haiku5.5/medium instances. Both depth3 descendants remained unfinished at collection; missing final plan retains null correctness."
+      ]
+    },
+    {
+      "run": 2,
+      "status": "settled_implemented_without_planner",
+      "source_export": "/tmp/planner-suite-20261012/haiku-medium-settled/rails-2.json",
+      "source_export_sha256": "e4d64a93d00505ac193233d6b08da945031aed4c6d1424deb6a5f16c1ee4b317",
+      "evaluated_message_boundary": {
+        "request_index": 0,
+        "end_index_inclusive": 196,
+        "end_message_id": "197",
+        "end_created_at": "2026-10-13T06:36:28.601Z",
+        "native_result_indices": [],
+        "substantive_report_indices": [
+          196
+        ]
+      },
+      "request_timestamp": "2026-10-13T06:28:53.845Z",
+      "idle_timestamp": "2026-10-13T06:36:28.759Z",
+      "wall_time_ms": 454914,
+      "successful_plan_wall_time_ms": null,
+      "raw": null,
+      "final": {
+        "R01": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "partial",
+            "validation": "missing"
+          },
+          "impact": [
+            "`Note` enum and serialize use the new keyword forms."
+          ],
+          "applicability": [
+            "`Note` enum"
+          ],
+          "recommendation": [
+            "new keyword forms"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "No enum load error described.",
+            "applicability": null,
+            "recommendation": "Enum repair is not a new keyword declaration; final omits positional declaration, preserved values and prefix. Actual trace repair is correct, assessed separately.",
+            "validation": "Global suite result does not specify persist/reload/filter/helper controls."
+          }
+        },
+        "R02": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "partial",
+            "validation": "missing"
+          },
+          "impact": [
+            "`Note` enum and serialize use the new keyword forms."
+          ],
+          "applicability": [
+            "`Note` enum and serialize"
+          ],
+          "recommendation": [
+            "new keyword forms"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "No removed positional-coder error explained.",
+            "applicability": null,
+            "recommendation": "No explicit JSON coder or preserved representation in delivered summary; correct with-bump trace patch does not supply omitted report detail.",
+            "validation": "No unequal tags, comma editing or stored JSON/reload scenario."
+          }
+        },
+        "R03": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`highlight_color` aliases the getter and setter with `alias_method`."
+          ],
+          "applicability": [
+            "`highlight_color`"
+          ],
+          "recommendation": [
+            "aliases the getter and setter with `alias_method`"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "No target rejection of store-accessor alias_attribute or form failure stated.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No settings-preserving color edit/reload/form-error controls."
+          }
+        },
+        "R04": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Notebook query error omitted from final despite actual trace diagnosis.",
+            "applicability": "Authorized joined-relation predicate omitted.",
+            "recommendation": "Singular association repair omitted from final.",
+            "validation": "No asymmetric notebook/owner denial scenarios."
+          }
+        },
+        "R05": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`Import#receipt` reads `citation.doi`, because the primary key is `doi`."
+          ],
+          "applicability": [
+            "primary key is `doi`"
+          ],
+          "recommendation": [
+            "reads `citation.doi`"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "Correct affected receipt/key but no blank/lost DOI effect stated.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No real distinct-DOI receipt/persisted-citation comparison specified."
+          }
+        },
+        "R06": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "committed a partial batch under 8.1"
+          ],
+          "applicability": [
+            "Its old `return` inside the transaction"
+          ],
+          "recommendation": [
+            "`Import#apply` uses `ActiveRecord::Rollback`."
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Final has global suite only; no fresh PostgreSQL all-table valid-then-invalid/success matrix. Trace contains partial real checks retained below."
+          }
+        },
+        "R07": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`Export` joins strings instead of `sum`."
+          ],
+          "applicability": [
+            "`Export`"
+          ],
+          "recommendation": [
+            "joins strings instead of `sum`"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "No TypeError or real worker failure described in final.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No ordered Markdown real worker/unrepaired working-no-artifact matrix."
+          }
+        },
+        "R08": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "turned integer line keys into strings"
+          ],
+          "applicability": [
+            "Import preview"
+          ],
+          "recommendation": [
+            "drops `stringify_keys`"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "Key conversion described, not integer lookup/annotation loss.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No unequal2/4 multiline preview/no-save controls in final."
+          }
+        },
+        "R09": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Negative cache expiry omitted.",
+            "applicability": "Invalid-expiration gate omitted; retaining7.0 is not the finding.",
+            "recommendation": "No cache-preserving clamp.",
+            "validation": "No fresh/cache-hit deadline/download ownership matrix."
+          }
+        },
+        "R10": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "keeps the fixed UTC offset explicitly, since `to_time` no longer does"
+          ],
+          "applicability": [
+            "`next_day_reminder_at`"
+          ],
+          "recommendation": [
+            "keeps the fixed UTC offset explicitly"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "Correct changed conversion, but no DST display/offset effect versus unchanged instant explained.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No epoch/wall/offset DST and non-boundary controls specified."
+          }
+        },
+        "R11": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "so the digest covers the UTC day as its comment says"
+          ],
+          "applicability": [
+            "`DigestMailer` converts the request time to UTC explicitly"
+          ],
+          "recommendation": [
+            "converts the request time to UTC explicitly"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "Desired UTC contract given, but no restored-zone near-midnight content/reservation mismatch described in final.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No JSON worker, each-midnight reservation and delivered-membership matrix."
+          }
+        },
+        "R12": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Unknown BigDecimalSerializer failure omitted.",
+            "applicability": "8.1 producer to7.0 worker condition omitted.",
+            "recommendation": "No deliberate decimal-string producer or compatible rollout contract.",
+            "validation": "No real both-direction/same-version/exact-percentage matrix."
+          }
+        },
+        "R13": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "The reminder job gets a `Time` for `wait_until`."
+          ],
+          "applicability": [
+            "reminder job",
+            "`wait_until`"
+          ],
+          "recommendation": [
+            "gets a `Time` for `wait_until`"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "No Integer.utc/before-enqueue scheduling failure in final.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No actual schedule payload/score/persisted time/replacement/ownership controls."
+          }
+        },
+        "R14": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`:exponentially_longer` is renamed `:polynomially_longer`"
+          ],
+          "applicability": [
+            "**Job:**"
+          ],
+          "recommendation": [
+            "`:polynomially_longer`"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "Renamed algorithm is not raised retry-time error/broken bounded retries.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No six/three recorded failure, recovery and401 real-worker controls."
+          }
+        },
+        "R15": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "Notes index drops `model: nil` from `form_with`."
+          ],
+          "applicability": [
+            "Notes index"
+          ],
+          "recommendation": [
+            "drops `model: nil` from `form_with`"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "No rendering error from explicit nil explained.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No GET render/submit/names/membership matrix."
+          }
+        },
+        "R16": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`get` takes one path"
+          ],
+          "applicability": [
+            "`/notes` and `/journal`"
+          ],
+          "recommendation": [
+            "now two lines with the same helper names"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "One-path API limitation given, but target route-drawing failure not stated in delivered summary.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No both-owner-URL authorized-list/route drawing checks in final."
+          }
+        },
+        "R17": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`show_exceptions = false` is now `:none`."
+          ],
+          "applicability": [
+            "**Test env:**"
+          ],
+          "recommendation": [
+            "`:none`"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "No changed rendered-error-versus-raised-exception policy explained.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No raised request exception/missing-record/normal-and-CI family specified."
+          }
+        },
+        "R18": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`allowed_tags` is nil by default in 8.1, so `+=` failed"
+          ],
+          "applicability": [
+            "Action Text initializer"
+          ],
+          "recommendation": [
+            "builds the same list explicitly and still adds `details` and `summary`"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No complete boot/attachments/details/summary/script/handler/javascript-URL controls in final."
+          }
+        },
+        "R19": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`Rails.application.secrets` is removed."
+          ],
+          "applicability": [
+            "`config/initializers/citation_provider.rb`"
+          ],
+          "recommendation": [
+            "via `config_for(:secrets)` into `config.x.citation_provider`"
+          ],
+          "validation": [
+            "The test that overrides the provider URL was updated to match."
+          ],
+          "reasons": {
+            "impact": "Removal stated without provider initialization/request failure.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Updating override test is not a fresh-process special-credentials/actual Basic-header/metadata/bounded-failure scenario."
+          }
+        },
+        "R20": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Implicit preference coder failure omitted.",
+            "applicability": "default_column_serializer=nil gate omitted.",
+            "recommendation": "No explicit YAML repair.",
+            "validation": "No gate-off/on unequal-preference/export-heading controls."
+          }
+        },
+        "R21": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Readonly slug resubmission failure omitted.",
+            "applicability": "raise_on_assign_to_attr_readonly gate omitted.",
+            "recommendation": "No update slug-submission/permission repair.",
+            "validation": "No creation/edit/attempted-slug controls."
+          }
+        },
+        "R23": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Date decoding report failure omitted.",
+            "applicability": "PostgreSQL decode-dates gate omitted.",
+            "recommendation": "No Date/String normalization.",
+            "validation": "No real PostgreSQL gate/report/owner matrix."
+          }
+        },
+        "R25": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Conflicting validator200-to304 effect omitted.",
+            "applicability": "strict_freshness gate omitted.",
+            "recommendation": "No explicit keep/adopt decision.",
+            "validation": "No ETag-list/date-conflict/expiry/ownership controls."
+          }
+        }
+      },
+      "returned_reports": [
+        {
+          "report_id": "rails2-parent-implementation-summary",
+          "provenance": "Parent-authored implementation summary, not a designated planner report or plan-only success.",
+          "source_locator": "messages[196].content[type=text].text; entire text including Left as they were and closing skill explanation",
+          "assessment_ref": "#/runs/1/final",
+          "raw_eligible": false,
+          "framing_quotes": [
+            "Rails is upgraded to 8.1.0",
+            "Each of these changes is the minimal equivalent of the old behavior:",
+            "Left as they were, for you to decide:",
+            "The `maint-rails:upgrade-gem` skill from the instructions isn't registered under that name in this session"
+          ],
+          "notes_preserved": true
+        }
+      ],
+      "counts": {
+        "raw": null,
+        "final": {
+          "families": 23,
+          "actionable": 2,
+          "fully_specified_validation": 0,
+          "partial_validation": 0,
+          "fully_omitted": 7,
+          "actionable_ids": [
+            "R06",
+            "R18"
+          ],
+          "correctness": "Delivered summary only; do not infer missing report impact from implementation tools."
+        },
+        "returned_reports": [
+          {
+            "report_id": "rails2-parent-implementation-summary",
+            "actionable": 2,
+            "fully_specified_validation": 0,
+            "fully_omitted": 7
+          }
+        ]
+      },
+      "derived_judgment_counts": {
+        "impact": {
+          "supported": 2,
+          "partial": 14,
+          "missing": 7,
+          "incorrect": 0
+        },
+        "applicability": {
+          "supported": 16,
+          "partial": 0,
+          "missing": 7,
+          "incorrect": 0
+        },
+        "recommendation": {
+          "supported": 14,
+          "partial": 2,
+          "missing": 7,
+          "incorrect": 0
+        },
+        "validation": {
+          "supported": 0,
+          "partial": 0,
+          "missing": 23,
+          "incorrect": 0
+        }
+      },
+      "derived_category_counts": {
+        "direct": {
+          "families": 17,
+          "actionable": 2,
+          "fully_specified_validation": 0
+        },
+        "defaults_dependent": {
+          "families": 5,
+          "actionable": 0,
+          "fully_specified_validation": 0
+        },
+        "mixed_version": {
+          "families": 1,
+          "actionable": 0,
+          "fully_specified_validation": 0
+        }
+      },
+      "workflow": {
+        "correct_skill_invoked": false,
+        "attempted_skill": "maint-rails:upgrade-gem",
+        "skill_result": "Empty visible result; parent concludes name unavailable. Actual frozen skill is maintain-rails:upgrade-gem.",
+        "native_agent_invocations": 0,
+        "native_planner_invoked": false,
+        "completed_designated_report_visible": false,
+        "plan_delivered": false,
+        "implementation_summary_delivered": true,
+        "plan_only_success": false,
+        "working_application_edits_visible": true,
+        "edit_invocations": 25,
+        "write_invocations": 1,
+        "edit_approval_gate": false
+      },
+      "delivery": {
+        "failure": "Bypassed required planning workflow and modified working application. Natural request did not coach this bypass; do not classify as successful plan-only run.",
+        "selected_family_actionability_loss": null,
+        "concrete_content_loss": [
+          "Final omits R04 entirely although trace diagnoses notes.notebooks and edits the singular association predicate.",
+          "Final compresses actual errors and concrete syntax into terse repair labels. Distinguish low delivered impact recall from substantial correct implementation work."
+        ],
+        "preservation": "Visible final git status reports 18 modified tracked files plus untracked config/initializers/citation_provider.rb. Nothing committed is a claim; no clean-state restoration shown."
+      },
+      "observed_execution": {
+        "basis": "Original visible Bash inputs/results, not nested audit prose or experiments run by this assessor.",
+        "baseline": {
+          "message_index": 9,
+          "quotes": [
+            "prep=0",
+            "test=0",
+            "46 runs, 325 assertions, 0 failures, 0 errors, 0 skips"
+          ]
+        },
+        "after": {
+          "message_index": 183,
+          "quotes": [
+            "test=0",
+            "46 runs, 340 assertions, 0 failures, 0 errors, 0 skips"
+          ]
+        },
+        "zeitwerk_and_system": {
+          "message_index": 185,
+          "quotes": [
+            "All is good!",
+            "system=0",
+            "0 runs, 0 assertions, 0 failures, 0 errors, 0 skips"
+          ],
+          "reason": "Zeitwerk and suite success visible; system suite has zero cases, not browser proof. CI eager-loading run and actual Redis worker matrix not visible."
+        },
+        "partial_family_validation": [
+          {
+            "family": "R05",
+            "message_index": 174,
+            "quotes": [
+              "+On idleness,",
+              "+Of experience,"
+            ],
+            "reason": "Actual receipt regression compared to expected DOI, then green suite. Reuses same DOI; not strict distinct-DOI matrix."
+          },
+          {
+            "family": "R06",
+            "message_indices": [
+              174,
+              183
+            ],
+            "quotes": [
+              "invalid rows are shown with their errors, and applying them saves nothing",
+              "46 runs, 340 assertions, 0 failures, 0 errors, 0 skips"
+            ],
+            "reason": "Valid-then-invalid apply/count test and successful import visible in test source and rerun. No independently fresh PostgreSQL all-table state collection. Partial, not no testing."
+          }
+        ],
+        "implementation_repairs_not_delivered_as_full_findings": [
+          "Positional enum with prefix:true",
+          "serialize :tags, coder: JSON with framework bump",
+          "highlight_color reader and writer forwarding",
+          "singular notebook predicate",
+          "Time.zone.at(reminder_epoch), same scheduling instant",
+          "fixed-offset getlocal before adding86400",
+          "polynomially_longer and :none after bump",
+          "full safe ActionText base plus attachment/figure/figcaption/details/summary",
+          "explicit rollback and citation.doi"
+        ],
+        "lane_prerequisites": "Ruby3.3.6 sufficient; retains load_defaults7.0 and Sidekiq6. Resolves Rails8.1.0 first, discovers boot/API failures serially, then adds json~>2.7 after resolving json3.0.2. No invalid R02/R14/R17 7.0 advance patch observed."
+      },
+      "material_issues": [
+        {
+          "kind": "workflow_bypass",
+          "quotes": [
+            "I followed the repo's own guidance and ran the upgrade directly."
+          ],
+          "reason": "Zero native Agent calls; misspelled skill invocation does not establish frozen plugin unavailable."
+        },
+        {
+          "kind": "working_state_mutation",
+          "visible_tool_quote": "bin/rails db:prepare",
+          "reason": "Upgrade and tests run on working app/database, not a disposable isolated variant; edits remain. Several commands truncate log/test.log. No service killing, Redis flush or worker-start commands found; do not invent those failures."
+        },
+        {
+          "kind": "delivery_loss",
+          "quotes": [
+            "`Note` enum and serialize use the new keyword forms."
+          ],
+          "reason": "Actual enum is positional and tags require coder:JSON. Final wording loses precise repairs and load errors; R04 is not reported at all."
+        },
+        {
+          "kind": "recall_vs_implementation",
+          "reason": "2/23 actionable is strict delivered-summary recall, not a claim that only two repairs were implemented. Trace visibly performs many valid repairs and green tests. It still leaves mixed-version and defaults-dependent plan risks unexplained."
+        },
+        {
+          "kind": "supported_extra_dependency_repair",
+          "quotes": [
+            "`json` pinned below 3 (`~> 2.7`).",
+            "rejects the positional options hash ActiveSupport passes to `JSON.parse`"
+          ],
+          "reason": "Resolution-specific json3.0.2/ActiveSupport8.1.0 incompatibility supported by visible source inspection and successful rerun. Valid extra; no selected-family inflation or universal json-pin requirement."
+        },
+        {
+          "kind": "unverified_future_fix",
+          "quotes": [
+            "it can go once ActiveSupport accepts keywords"
+          ],
+          "reason": "Future removal of pin requires verified compatible resolution; no later version audited here."
+        }
+      ],
+      "limitations": [
+        "Final is an implementation summary, not a full application-specific plan.",
+        "Native model/report audits confirm one main Haiku5.5/medium instance, no nested agents and no resumed calls. Prior family grades are unchanged.",
+        "Observed suite and Zeitwerk results do not prove browser, worker, rollout/rollback or all conditional-default scenarios."
+      ]
+    },
+    {
+      "run": 3,
+      "status": "settled_recovered_designated_plan_after_status_only_response",
+      "source_export": "/tmp/planner-suite-20261012/haiku-medium-settled/rails-3.json",
+      "source_export_sha256": "995eeb77358385014212920babcb387b42f51da16b44b92f704e9aab4414fc17",
+      "evaluated_message_boundary": {
+        "request_index": 0,
+        "end_index_inclusive": 13,
+        "end_message_id": "14",
+        "end_created_at": "2026-10-13T06:36:41.093Z",
+        "native_result_indices": [
+          6
+        ],
+        "substantive_report_indices": [
+          13
+        ]
+      },
+      "request_timestamp": "2026-10-13T06:28:56.018Z",
+      "idle_timestamp": "2026-10-13T06:36:41.247Z",
+      "wall_time_ms": 465229,
+      "successful_plan_wall_time_ms": 465229,
+      "fallback_report_wall_time_ms": null,
+      "native_completed_report_timestamp": "2026-10-13T06:36:15.951Z",
+      "native_completed_report_wall_time_ms": 439933,
+      "raw": {
+        "assessment_ref": "#/runs/2/final",
+        "independent_assessment": "Read entire native finalText, not parent provenance prose. All 23 field judgments and selected family quotations agree with retained final assessment; every quote was separately checked against native finalText. Identical judgments are referenced rather than duplicated. Authored opening, source/runtime claims, optional decisions and closing questions remain in the complete native boundary.",
+        "source_locator": "haiku-medium-reports/rails-3.json#/planAndFallbackAgents/1/finalText",
+        "agentType": "maintain-rails:gem-upgrade-planner",
+        "completionTimestamp": "2026-10-13T06:36:15.951Z"
+      },
+      "final": {
+        "R01": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "This is a boot-time failure on the `Note` class."
+          ],
+          "applicability": [
+            "enum status: { draft: 0, ready: 1 }, _prefix: true"
+          ],
+          "recommendation": [
+            "enum :status, { draft: 0, ready: 1 }, prefix: true"
+          ],
+          "validation": [
+            "bin/rails runner 'Note.statuses'",
+            "existing note tests, which use `status: \"ready\"`"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Runner/status mapping and ready test subset do not specify unequal persisted draft/ready reload/filter/helper controls."
+          }
+        },
+        "R02": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Removed positional tags coder boot error omitted.",
+            "applicability": "Note serialize coder omitted.",
+            "recommendation": "No with-bump coder:JSON repair.",
+            "validation": "No existing/edited unequal tags and stored JSON/reload controls."
+          }
+        },
+        "R03": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Store-accessor alias rejection omitted.",
+            "applicability": "highlight_color alias omitted.",
+            "recommendation": "No explicit reader/writer forwarding.",
+            "validation": "No color/settings/form-error controls."
+          }
+        },
+        "R04": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Invalid notes.notebooks predicate omitted.",
+            "applicability": "Authorized notebook filter omitted.",
+            "recommendation": "No singular association/foreign-key repair.",
+            "validation": "No unequal notebook/other-owner denial scenarios."
+          }
+        },
+        "R05": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Blank receipt DOI omitted.",
+            "applicability": "Custom primary-key attribute read omitted.",
+            "recommendation": "No citation.doi/primary-key repair.",
+            "validation": "No distinct-DOI import/download controls."
+          }
+        },
+        "R06": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Partial import transaction commits omitted.",
+            "applicability": "Listing commit_transaction_on_non_local_return as unused does not identify the app's nonlocal return.",
+            "recommendation": "No explicit import rollback.",
+            "validation": "No real failed apply/fresh all-table counts/success control."
+          }
+        },
+        "R07": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "String-sum TypeError omitted.",
+            "applicability": "ExportJob mention is queue discussion, not Export#generate defect.",
+            "recommendation": "No fragments.join repair.",
+            "validation": "No real worker ordered bytes/unrepaired no-artifact control."
+          }
+        },
+        "R08": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Annotation disappearance omitted.",
+            "applicability": "Integer/string preview key mismatch omitted.",
+            "recommendation": "No key normalization repair.",
+            "validation": "No unequal2/4 multiline literal preview/no-save controls."
+          }
+        },
+        "R09": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "a negative value raises `ArgumentError`"
+          ],
+          "applicability": [
+            "Under 8.1 with the 7.1+ default `raise_on_invalid_cache_expiration_time: true`"
+          ],
+          "recommendation": [
+            "Clamping with `[..., 0].max`"
+          ],
+          "validation": [
+            "render an expired export on 7.0 before and after the change",
+            "true and false, with and without P1"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Gate and expired render variants useful; no predeadline/cache-hit/fresh/authoritative download expiry/ownership matrix."
+          }
+        },
+        "R10": {
+          "judgments": {
+            "impact": "incorrect",
+            "applicability": "incorrect",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [
+            "Likely a no-op because the app already has `load_defaults 7.0`."
+          ],
+          "applicability": [
+            "Whether `to_time` behavior changes under 7.0 defaults (believed to be a no-op)."
+          ],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Target conversion changes DST offset/display even with7.0 defaults; instant remains identical. Tentative no-op prediction contradicts direct effect.",
+            "applicability": "Misclassifies direct conversion change as default adoption/no-op under7.0.",
+            "recommendation": "No explicit fixed-offset keep or named-zone adoption/contract update.",
+            "validation": "Open question is not epoch/wall/offset DST/non-boundary scenario."
+          }
+        },
+        "R11": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Queued-zone digest UTC-day mismatch omitted.",
+            "applicability": "DigestJob queue tests do not identify zone serialization/content-versus-reservation condition.",
+            "recommendation": "No UTC or consistently changed content/reservation policy.",
+            "validation": "Queue directions alone do not specify each midnight, reservation keys and delivered membership."
+          }
+        },
+        "R12": {
+          "judgments": {
+            "impact": "incorrect",
+            "applicability": "incorrect",
+            "recommendation": "missing",
+            "validation": "partial"
+          },
+          "impact": [
+            "ActiveJob payload compatibility between Rails 7.0 and 8.1 (in both directions) is probably fine"
+          ],
+          "applicability": [
+            "in both directions"
+          ],
+          "recommendation": [],
+          "validation": [
+            "enqueue `DigestJob` on 7.0, drain on 8.1, and the reverse for rollback"
+          ],
+          "reasons": {
+            "impact": "Unverified probability of compatibility misses concrete BigDecimalSerializer failure in8.1-to7.0 direction.",
+            "applicability": "No asymmetry or unknown serializer explained; issue is not all-8.1 or the separate Sidekiq-wrapper change.",
+            "recommendation": "No decimal-string producer contract or strategy tied to this actual Rails mixed-version hazard.",
+            "validation": "Proposes both directions but no same-version controls, serialized decimal distinction or exact delivered percentage."
+          }
+        },
+        "R13": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial"
+          },
+          "impact": [],
+          "applicability": [
+            "`NoteReminderJob` is enqueued with `wait_until` (app/models/note.rb:61)."
+          ],
+          "recommendation": [],
+          "validation": [
+            "enqueue `DigestJob` and `NoteReminderJob` on 7.0 with Sidekiq 6.5.12",
+            "Repeat in reverse for rollback."
+          ],
+          "reasons": {
+            "impact": "No numeric wait_until before-enqueue error.",
+            "applicability": "Correct scheduling location but no Integer target condition; scheduled entries surviving deploy is a different concern.",
+            "recommendation": "Drain rule does not repair numeric scheduling.",
+            "validation": "Real scheduling/cross-worker proposal partial; no payload/score/persisted time/replacement/ownership."
+          }
+        },
+        "R14": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Removed delay's retry failure omitted.",
+            "applicability": "CitationEnrichmentJob retry API omitted.",
+            "recommendation": "No with-bump polynomially_longer repair.",
+            "validation": "No real worker six/three/bounded failure/recovery/401 controls."
+          }
+        },
+        "R15": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Explicit nil form model error omitted.",
+            "applicability": "Notes index GET form omitted.",
+            "recommendation": "No remove-nil-model repair.",
+            "validation": "No render/submit/names/method/membership controls."
+          }
+        },
+        "R16": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Multi-path route-drawing failure omitted.",
+            "applicability": "Query-parsing/routes tests mention is not this route declaration finding.",
+            "recommendation": "No separate path declarations.",
+            "validation": "No both-owner-URL authorized-list matrix."
+          }
+        },
+        "R17": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Test exception policy change omitted.",
+            "applicability": "Boolean show_exceptions target condition omitted.",
+            "recommendation": "No with-bump :none repair.",
+            "validation": "No raised exception/missing-record/normal-and-CI family."
+          }
+        },
+        "R18": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial"
+          },
+          "impact": [],
+          "applicability": [
+            "Whether Rails 8.1 changes Action Text's `allowed_tags` handling for `details` and `summary`."
+          ],
+          "recommendation": [],
+          "validation": [
+            "a rendering check of pre-upgrade stored HTML through `ActionText::Content`",
+            "a note with a link, `details`/`summary`, and an attachment"
+          ],
+          "reasons": {
+            "impact": "Nil inherited allowlist and initializer boot failure omitted; Trix editor speculation is separate.",
+            "applicability": "Correct initializer/tag area but direct nil/+= condition absent.",
+            "recommendation": "No complete safe allowlist assignment.",
+            "validation": "Useful stored HTML rendering and editor cases, not boot plus script/handler/javascript-URL exclusion family."
+          }
+        },
+        "R19": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`Citation::Provider`'s default argument raises `NoMethodError`"
+          ],
+          "applicability": [
+            "app/models/citation/provider.rb:13",
+            "tests that assign `Rails.application.secrets.citation_provider` fail"
+          ],
+          "recommendation": [
+            "read the same YAML through `Rails.application.config_for(:secrets)`",
+            "Still needs a check that nested `citation_provider` keys come back as expected on both versions."
+          ],
+          "validation": [
+            "citation enrichment tests on 8.1",
+            "a boot with `RAILS_ENV=production` and the three `CITATION_PROVIDER_*` variables set"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Settings/production boot and existing tests proposed, but no fresh-process request special credentials, actual Basic header, metadata and bounded failure controls. Boot alone does not exercise Provider default argument."
+          }
+        },
+        "R20": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Implicit preference missing-coder failure omitted.",
+            "applicability": "default_column_serializer=nil gate omitted.",
+            "recommendation": "No explicit YAML preserving data.",
+            "validation": "No off/on unequal preference create/edit/reload/export heading."
+          }
+        },
+        "R21": {
+          "judgments": {
+            "impact": "incorrect",
+            "applicability": "incorrect",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [
+            "there is no assignment on update"
+          ],
+          "applicability": [
+            "7.1 `raise_on_assign_to_attr_readonly: true`",
+            "`assign_slug` only runs on create"
+          ],
+          "recommendation": [],
+          "validation": [
+            "Confirm with a grep for `slug =`."
+          ],
+          "reasons": {
+            "impact": "Ordinary update resubmits readonly slug from form/strong params; callback-only analysis falsely dismisses failure.",
+            "applicability": "Gate named correctly but incorrectly concludes update cannot assign slug. Mass assignment is not found by grep for slug=.",
+            "recommendation": "No remove-update-submission/permission repair preserving creation.",
+            "validation": "Grep is not creation/edit/attempted-slug persistence control."
+          }
+        },
+        "R23": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "missing",
+            "validation": "partial"
+          },
+          "impact": [
+            "`Date.iso8601` raises `TypeError`"
+          ],
+          "applicability": [
+            "7.2 `active_record.postgresql_adapter_decode_dates: true`",
+            "`Notebook#daily_note_counts`"
+          ],
+          "recommendation": [
+            "Verify. A high-priority check."
+          ],
+          "validation": [
+            "Run the activity report tests with this flag on.",
+            "under `load_defaults 7.2`"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Verify directive gives no String/Date normalization repair.",
+            "validation": "Gate-on report proposal lacks isolated off/on real PostgreSQL asymmetric UTC counts, empty report and owner controls."
+          }
+        },
+        "R25": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [
+            "Only conditional-GET responses change, so the 304 cases in tests may need updating."
+          ],
+          "applicability": [
+            "8.0 `action_dispatch.strict_freshness: true`",
+            "`ExportDownloadsController#show` uses `stale?(etag:, last_modified:)`"
+          ],
+          "recommendation": [],
+          "validation": [
+            "304 cases in tests may need updating"
+          ],
+          "reasons": {
+            "impact": "No matching ETag-list plus older date200-to304 precedence effect explained.",
+            "applicability": null,
+            "recommendation": "Staged generic adoption is not an explicit keep/adopt decision for this HTTP contract.",
+            "validation": "No concrete ETag-list both orders/date conflicts/expired302/foreign404 scenarios."
+          }
+        }
+      },
+      "returned_reports": [
+        {
+          "report_id": "rails3-native-completed-plan",
+          "provenance": "Native audit identifies depth1 a6d11ae0adcb01cf7 as maintain-rails:gem-upgrade-planner. Completed original report at06:36:15.951Z, after its06:29:36.994Z status-only response and coordinator resend. Self-analysis prose describes its failed nested delegation, not parent authorship.",
+          "source_locator": "/tmp/planner-suite-20261012/haiku-medium-reports/rails-3.json#/planAndFallbackAgents/1/finalText",
+          "source_message_id": "msg_011CfymkWi5ivqdNirbMn6yJ",
+          "assessment_ref": "#/runs/2/raw",
+          "raw_eligible": true,
+          "text_sha256": "c3a186e67078a5703e9a3c2320378069c772fca0e5779f941cb608626fdaf644",
+          "boundary": "Entire finalText, title through final Propshaft question; no elisions",
+          "framing_quotes": [
+            "this plan is my own",
+            "Nothing has been run against an 8.1 bundle yet"
+          ],
+          "notes_preserved": true
+        },
+        {
+          "report_id": "rails3-parent-delivered-plan",
+          "provenance": "Parent delivers native plan verbatim plus contradictory attribution commentary. Not an independently authored fallback.",
+          "source_locator": "messages[13].content[type=text].text; whole text including closing reviewer notes",
+          "assessment_ref": "#/runs/2/final",
+          "raw_eligible": false,
+          "text_sha256": "aeab893e16c5cbfa066d3186dff9f4a08b6206061e9e63d57aedd579e715ef98",
+          "framing_quotes": [
+            "**Executed, runtime:** None. No bundle resolution, boot, or test run has been done.",
+            "Notes on this plan (my commentary, not part of the planner's output):"
+          ],
+          "reviewer_notes_quotes": [
+            "That contradicts the subagent having produced this plan, so treat the attribution as unreliable.",
+            "No bundle resolution, boot, or test run has happened, so none of the R-items is confirmed."
+          ],
+          "notes_preserved": true
+        }
+      ],
+      "counts": {
+        "raw": {
+          "families": 23,
+          "actionable": 3,
+          "fully_specified_validation": 0,
+          "partial_validation": 7,
+          "fully_omitted": 13,
+          "actionable_ids": [
+            "R01",
+            "R09",
+            "R19"
+          ],
+          "incorrect_family_ids": [
+            "R10",
+            "R12",
+            "R21"
+          ]
+        },
+        "final": {
+          "families": 23,
+          "actionable": 3,
+          "fully_specified_validation": 0,
+          "partial_validation": 7,
+          "fully_omitted": 13,
+          "actionable_ids": [
+            "R01",
+            "R09",
+            "R19"
+          ],
+          "incorrect_family_ids": [
+            "R10",
+            "R12",
+            "R21"
+          ]
+        },
+        "returned_reports": [
+          {
+            "report_id": "rails3-native-completed-plan",
+            "actionable": 3,
+            "fully_specified_validation": 0,
+            "fully_omitted": 13
+          },
+          {
+            "report_id": "rails3-parent-delivered-plan",
+            "actionable": 3,
+            "fully_specified_validation": 0,
+            "fully_omitted": 13
+          }
+        ]
+      },
+      "derived_judgment_counts": {
+        "impact": {
+          "supported": 4,
+          "partial": 1,
+          "missing": 15,
+          "incorrect": 3
+        },
+        "applicability": {
+          "supported": 5,
+          "partial": 2,
+          "missing": 13,
+          "incorrect": 3
+        },
+        "recommendation": {
+          "supported": 3,
+          "partial": 0,
+          "missing": 20,
+          "incorrect": 0
+        },
+        "validation": {
+          "supported": 0,
+          "partial": 7,
+          "missing": 16,
+          "incorrect": 0
+        }
+      },
+      "derived_category_counts": {
+        "direct": {
+          "families": 17,
+          "actionable": 2,
+          "fully_specified_validation": 0
+        },
+        "defaults_dependent": {
+          "families": 5,
+          "actionable": 1,
+          "fully_specified_validation": 0
+        },
+        "mixed_version": {
+          "families": 1,
+          "actionable": 0,
+          "fully_specified_validation": 0
+        }
+      },
+      "workflow": {
+        "correct_skill_invoked": true,
+        "native_agent_invocations": 1,
+        "native_planner_invoked": true,
+        "completed_designated_report_visible": false,
+        "completed_designated_report_audit_attributed": true,
+        "plan_delivered": true,
+        "plan_provenance": "designated depth1 planner, recovered original native finalText",
+        "plan_only_success": true,
+        "designated_plan_only_success": true,
+        "working_application_edits_visible": false,
+        "retry_message_invocations": 1,
+        "recovery": "First response was status-only. SendMessage06:29:40.423Z continued the still-running root; native final completed06:36:15.951Z. Depth2 returned status; depth3 remained unfinished at06:45:58.467Z audit boundary. No general-purpose fallback exists.",
+        "audit_limitation": "No completed native return appears in settled export; attribution comes from original report/model artifacts, not final's labels."
+      },
+      "delivery": {
+        "failure": null,
+        "earlier_failure": "Initial designated handback was status-only; recovery does not erase that failure.",
+        "selected_family_actionability_loss": 0,
+        "preservation": "No visible working-app Edit/Write calls; claimed preservation not an independent final resource audit.",
+        "authored_attribution_contradiction": "Native agent calls its own failed child delegation self-analysis; parent disputes that provenance. Actual agentType settles identity but leaves authored contradictions intact.",
+        "approval_gate": "Optional Sidekiq8/Propshaft decisions follow a delivered plan; neither is a required Rails-lane dependency or plan-delivery gate."
+      },
+      "lane_prerequisites": {
+        "correct": [
+          "Ruby3.3.6 sufficient",
+          "Retains7.0 defaults; newer defaults treated separately",
+          "Sidekiq8 and Propshaft optional separate scope",
+          "Disposable PostgreSQL, Redis, cache/storage and BUNDLE_GEMFILE isolation proposed"
+        ],
+        "missing": [
+          "R02 positional JSON coder, R18 initializer and R16 route prerequisites to a viable target boot are not repaired",
+          "No observed bundle resolution; target dependency compatibility, including any resolved json3 issue, remains unknown"
+        ],
+        "advance_patch_audit": "Positional enum, secrets replacement, cache clamp can be preparatory. No invalid coder:JSON/polynomially_longer/:none 7.0 advance patch recommended because those needed repairs are omitted, not because the plan solved their order."
+      },
+      "material_issues": [
+        {
+          "kind": "initial_status_only_then_native_recovery",
+          "quotes": [
+            "The `maintain-rails:gem-upgrade-planner` subagent finished without returning a plan"
+          ],
+          "reason": "Authored statement refers to failed child delegation. Root depth1 planner actually completed a source-based plan; retain initial status-only failure but correct earlier parent-fallback attribution."
+        },
+        {
+          "kind": "authored_attribution_conflict",
+          "quotes": [
+            "this plan is my own",
+            "The planner's text includes a provenance line",
+            "That contradicts the subagent having produced this plan"
+          ],
+          "reason": "Native metadata identifies the completed report as designated planner output. Both authored attribution claims remain preserved; neither proves parent fallback."
+        },
+        {
+          "kind": "unsupported_source_execution_claims",
+          "quotes": [
+            "Read the repo's Gemfile, Gemfile.lock, `config/`, `app/`, `lib/`, `test/`, and `db/schema.rb`.",
+            "Ran `gem fetch`",
+            "WebFetched the 8.0 and 8.1 release notes"
+          ],
+          "reason": "These are authored evidence-base claims. Visible parent trace contains only skill launch, version grep, Agent and resend request, not source fetching/reads. Do not call them independently observed; they may reflect uncollected nested activity."
+        },
+        {
+          "kind": "wrong_direct_default_gate",
+          "family": "R10",
+          "quotes": [
+            "Likely a no-op because the app already has `load_defaults 7.0`."
+          ],
+          "reason": "Time conversion shift is direct under retained defaults; concrete DST representation risk dismissed."
+        },
+        {
+          "kind": "wrong_readonly_applicability",
+          "family": "R21",
+          "quotes": [
+            "there is no assignment on update"
+          ],
+          "reason": "Frozen form/controller resubmits slug; callback grep misses mass assignment."
+        },
+        {
+          "kind": "unsupported_mixed_version_assurance",
+          "family": "R12",
+          "quotes": [
+            "in both directions) is probably fine"
+          ],
+          "reason": "8.1-produced decimal payload fails on7.0 consumer. Tentative framing and proposed tests retained, but the prediction is wrong; no decimal-string strategy supplied."
+        },
+        {
+          "kind": "front_end_claim_error",
+          "quotes": [
+            "`<trix-editor>` is not defined unless Trix 2 is loaded."
+          ],
+          "reason": "Frozen layout explicitly loads vendored Trix1.3.5, which defines trix-editor. Source may motivate testing optional Trix2/CSS compatibility, but not this absent-editor premise. Side-by-side duplicate-definition risk only arises if Trix2 is additionally loaded."
+        },
+        {
+          "kind": "unsupported_default_enqueue_gate",
+          "quotes": [
+            "any intermediate `load_defaults` (7.2 through 8.0), where `enqueue_after_transaction_commit` defaults to a deferred value"
+          ],
+          "reason": "Overbroad automatic-default claim. Transaction-coupled enqueue rollback is a genuine separate opt-in/adoption risk, not inevitable under retained7.0; report itself admits intermediate source not read. Keep its proposed rollback test without endorsing the gate."
+        },
+        {
+          "kind": "unsupported_sidekiq_wrapper_prediction",
+          "quotes": [
+            "removes the old constant",
+            "would likely fail with `NameError` on a Sidekiq 8 worker"
+          ],
+          "reason": "Separate optional Sidekiq8 claim is unverified in the visible trace; adapter rename alone does not prove absence of compatibility aliases. Do not conflate this with mandatory Rails BigDecimal risk or credit a tested rollout."
+        },
+        {
+          "kind": "rollout_state_ambiguity",
+          "quotes": [
+            "drain or pause ActiveJob queues",
+            "Scheduled entries in Redis survive the deploy, so drain them with the same rule."
+          ],
+          "reason": "Pausing is not draining incompatible retained payloads. Future scheduled jobs need an explicit compatibility/preservation policy; blanket drain language does not establish safe handling of future due times or retries. No destructive command is observed."
+        },
+        {
+          "kind": "bundle_or_boot_claim_imprecision",
+          "quotes": [
+            "Four application-level items break on 8.1 (one is a boot failure)."
+          ],
+          "reason": "Only enum and provider removal concretely described among required application findings; optional Trix/Sidekiq concerns are not verified breakages. Multiple direct boot/runtime prerequisites remain omitted."
+        },
+        {
+          "kind": "coverage_limit",
+          "quotes": [
+            "a system test (`bin/rails test:system`) that creates a note"
+          ],
+          "reason": "Proposed new browser scenario, not an existing executed test. Frozen system suite has zero tests; report honestly says runtime none."
+        },
+        {
+          "kind": "defaults_and_cache_precision",
+          "quotes": [
+            "With the gem default of `false`, the 8.1 code logs and drops `expires_in`, so the entry is stored without expiry."
+          ],
+          "reason": "R09 clamp and invalid-expiry gate are credited, but retained-default behavior must preserve existing cached Expired/stale indicator contract. This report gives no authoritative deadline/cache-hit/download ownership demonstration; no observed state-loss proof."
+        }
+      ],
+      "limitations": [
+        "Raw and final say runtime none; native audit describes unfinished descendant experiments and hence an authored contradiction. Nested logs are uncollected: no experiment outcome imported from audit prose.",
+        "Model/report audits confirm four Haiku5.5/medium instances; raw native identity recovered despite missing completed handback in settled export. All earlier final family grades preserved.",
+        "Source correctness is not runtime proof; seven partial validation proposals remain useful, none completes a strict family."
+      ]
+    },
+    {
+      "run": 4,
+      "status": "settled_delivered_plan_native_handback_uncollected",
+      "source_export": "/tmp/planner-suite-20261012/haiku-medium-settled/rails-4.json",
+      "source_export_sha256": "ce29343105a6ead326bce7d74b612ab8b98e2873d64e979e4c97373a7613b3fa",
+      "evaluated_message_boundary": {
+        "request_index": 0,
+        "end_index_inclusive": 13,
+        "end_message_id": "14",
+        "end_created_at": "2026-10-13T06:47:51.122Z",
+        "native_result_indices": [
+          6,
+          9
+        ],
+        "substantive_report_indices": [
+          13
+        ]
+      },
+      "request_timestamp": "2026-10-13T06:28:59.125Z",
+      "idle_timestamp": "2026-10-13T06:47:51.270Z",
+      "wall_time_ms": 1132145,
+      "successful_plan_wall_time_ms": null,
+      "raw": null,
+      "final": {
+        "R01": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "Zeitwerk fails on `enum` and `serialize` syntax"
+          ],
+          "applicability": [
+            "`enum status: {...}, _prefix: true` keyword form is rejected in 8.1."
+          ],
+          "recommendation": [
+            "enum :status, { draft: 0, ready: 1 }, prefix: true"
+          ],
+          "validation": [
+            "boot and Zeitwerk on all three variants"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Load check useful; unequal persisted statuses/reload/filter/prefixed helper controls unspecified."
+          }
+        },
+        "R02": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`serialize :tags, JSON` positional form is rejected in 8.1."
+          ],
+          "applicability": [
+            "`serialize ..., coder: ::JSON` loads an Array on 8.1 but a String on 7.0."
+          ],
+          "recommendation": [
+            "attribute :tags, :json"
+          ],
+          "validation": [
+            "Loads and dumps identically on both (`[\"a\",\"b\"]`)."
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Accepted equivalent, not the unsafe coder-keyword advance patch. Both Rails type implementations decode JSON strings and encode values; frozen text column default[] and tag_list reader/writer preserve arrays and JSON representation. Correctness is source-based, not proof that this claimed probe ran.",
+            "validation": "One array serialization probe lacks unequal existing tags, comma edit and persisted reload controls."
+          }
+        },
+        "R03": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "raises because `color` is a store accessor, not a column"
+          ],
+          "applicability": [
+            "alias_attribute :highlight_color, :color"
+          ],
+          "recommendation": [
+            "alias_method :highlight_color, :color",
+            "alias_method :highlight_color=, :color="
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Green general suites do not specify color edit/reload/settings/form/error controls."
+          }
+        },
+        "R04": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "Invalid authorized notebook predicate omitted.",
+            "applicability": "No joined-relation object-valued where diagnosis.",
+            "recommendation": "No singular association or authorized FK repair.",
+            "validation": "No unequal notebooks or another-owner denial."
+          }
+        },
+        "R05": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`citation[:id]` is nil on 8.1 for the DOI primary key."
+          ],
+          "applicability": [
+            "`app/models/import.rb:68` (`receipt`)"
+          ],
+          "recommendation": [
+            "citation&.doi"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "Nil DOI read in receipt is concrete data loss, not merely a generic API removal.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No distinct DOI import and downloaded receipt comparison."
+          }
+        },
+        "R06": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`return false` inside `transaction` committed partial rows on 8.1"
+          ],
+          "applicability": [
+            "`app/models/import.rb:50-61` (`apply`)"
+          ],
+          "recommendation": [
+            "saved = transaction do ... raise ActiveRecord::Rollback unless row.note.save ... true end; saved || false"
+          ],
+          "validation": [
+            "record counts `[1,4,1,2]` instead of `[0,3,0,1]`"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Count probe is partial: no complete real valid-then-invalid request, fresh PostgreSQL all-table counts and successful batch specified."
+          }
+        },
+        "R07": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`fragments.sum` on Strings works on 7.0 only because ActiveSupport 7.0 special-cases `Enumerable#sum`; 8.1 raises."
+          ],
+          "applicability": [
+            "app/models/export.rb:42"
+          ],
+          "recommendation": [
+            "fragments.sum(\"\")"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Valid string-only equivalent: Ruby3.3 Array#sum adds in array order from the explicit empty String; frozen generate builds only Markdown Strings. Empty list returns empty String. Numeric sums untouched. join is faster, not mandatory.",
+            "validation": "No real worker, exact ordered Markdown and unrepaired working/no-artifact control."
+          }
+        },
+        "R08": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "incorrect",
+            "validation": "missing"
+          },
+          "impact": [
+            "`annotations[row.line]` misses and annotations disappear from the preview"
+          ],
+          "applicability": [
+            "`HashWithIndifferentAccess#stringify_keys` now stringifies integer keys"
+          ],
+          "recommendation": [
+            "Key annotations by `row.line.to_s`; drop `.stringify_keys` in the view."
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Changing key creation to String while removing stringify_keys still leaves both frozen integer annotations[row.line] lookups unchanged. HWiA normalizes Symbols, not Integers. No instruction updates both lookups; drop conversion alone would have been valid.",
+            "validation": "No unequal2/4 multiline preview/no-save controls."
+          }
+        },
+        "R09": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "Negative `expires_in` raises on 7.1+ defaults."
+          ],
+          "applicability": [
+            "The app is on `load_defaults 7.0`."
+          ],
+          "recommendation": [
+            "expires_in: [export.expires_at - Time.current, 0].max"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "General suite/adopted-default run does not specify deadline, cache hit/miss, authoritative expired download and owner controls."
+          }
+        },
+        "R10": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "The scheduled epoch is identical; only the displayed offset and wall-clock time change."
+          ],
+          "applicability": [
+            "8.1 `to_time` is DST-aware"
+          ],
+          "recommendation": [
+            "Time.at(reminder_at.to_i + 86_400).getlocal(reminder_at.utc_offset)",
+            "Decide whether to keep the documented display or accept the new one."
+          ],
+          "validation": [
+            "2026-11-01T08:00-05:00",
+            "09:00-04:00",
+            "a DST check of reminders across a real offset change in the browser"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Concrete DST representation comparison useful; no non-boundary epoch/wall/offset control."
+          }
+        },
+        "R11": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "the digest day becomes the reader's day, not UTC"
+          ],
+          "applicability": [
+            "ActiveJob 8.1 deserializes the TimeWithZone in the reader's zone"
+          ],
+          "recommendation": [
+            "requested_at = requested_at.utc"
+          ],
+          "validation": [
+            "cross-version reads of payloads and tokens"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Payload reads alone lack real JSON worker, each midnight, reservations and delivered membership."
+          }
+        },
+        "R12": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "7.0 workers cannot read it"
+          ],
+          "applicability": [
+            "8.1 writes `DigestJob`'s BigDecimal argument as a `BigDecimalSerializer` hash"
+          ],
+          "recommendation": [
+            "reading_completion.to_s",
+            "deploy batch 5 on 7.0 before the bump and let the queue drain"
+          ],
+          "validation": [
+            "Both versions queue `\"0.5\"`",
+            "cross-version reads of payloads and tokens"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": "Directional serializer failure specified; mentioning probes on8.1 defaults does not explicitly deny the same direct effect under retained7.0 defaults. No string-only consumer fabricated.",
+            "recommendation": null,
+            "validation": "Serializer probes lack real JSON worker both directions/same-version controls/exact delivered percentage."
+          }
+        },
+        "R13": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "an Integer fails in serialization (`Integer#utc`)"
+          ],
+          "applicability": [
+            "8.1 `set(wait_until:)` requires a Time"
+          ],
+          "recommendation": [
+            "wait_until: Time.at(reminder_epoch)"
+          ],
+          "validation": [
+            "real Sidekiq enqueue into an isolated Redis db",
+            "Scheduled jobs are in Sidekiq's `schedule` set with the time as the score."
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Enqueue/score discussion partial, no actual persisted time/score comparison plus replacement/ownership controls."
+          }
+        },
+        "R14": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`wait: :exponentially_longer` is replaced by `:polynomially_longer` in 8.1"
+          ],
+          "applicability": [
+            "app/jobs/citation_enrichment_job.rb:5",
+            "7.0 rejects the new name"
+          ],
+          "recommendation": [
+            "Change the value at the bump."
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "API replacement alone omits retry failure/bounded-attempt loss and fallback retries.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No persistent503 six requests/three attempts/failure, recovery and401 real-worker controls."
+          }
+        },
+        "R15": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`form_with(model: nil, ...)` raises."
+          ],
+          "applicability": [
+            "app/views/notes/index.html.erb:12"
+          ],
+          "recommendation": [
+            "form_with(url: notes_path, ...)"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Remove only nil model; ellipsis leaves existing GET/names intact.",
+            "validation": "No render/submit GET/names/membership scenario."
+          }
+        },
+        "R16": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`get \"/notes\", \"/journal\", to:` multi-path route is removed."
+          ],
+          "applicability": [
+            "config/routes.rb:18"
+          ],
+          "recommendation": [
+            "Two routes with explicit `as:` (`:notes`, `:journal`)."
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": "Removal attached to actual route declaration identifies route loading failure.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No both owner URLs/identical authorized membership/helpers."
+          }
+        },
+        "R17": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`assert_raises` tests see 404s"
+          ],
+          "applicability": [
+            "`show_exceptions = false` is treated as rescuable"
+          ],
+          "recommendation": [
+            "config.action_dispatch.show_exceptions = :none",
+            "at the bump"
+          ],
+          "validation": [
+            "`assert_raises` tests see 404s",
+            "full unit and controller suite on each"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Exception regression partial, lacks raised request/missing-record plus normal and CI eager-loading policy matrix."
+          }
+        },
+        "R18": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "partial",
+            "validation": "partial"
+          },
+          "impact": [
+            "`+=` raises and boot fails"
+          ],
+          "applicability": [
+            "`ActionText::ContentHelper.allowed_tags` is nil in 8.1"
+          ],
+          "recommendation": [
+            "Set the allowlist from `sanitizer.class.allowed_tags`",
+            "including the attachment tag, figure and figcaption"
+          ],
+          "validation": [
+            "boot and Zeitwerk on all three variants",
+            "a production-data corpus check for rich text"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Safe base and attachment markup specified, but no explicit preservation of required details/summary excerpt tags. Base sanitizer list does not establish these additions.",
+            "validation": "Boot/corpus check partial; no explicit excerpts/attachments and script/handler/javascript exclusion matrix."
+          }
+        },
+        "R19": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "partial",
+            "validation": "partial"
+          },
+          "impact": [
+            "`Rails.application.secrets` is gone in 8.1 (NoMethodError)."
+          ],
+          "applicability": [
+            "app/models/citation/provider.rb:13"
+          ],
+          "recommendation": [
+            "Move provider settings to `config.x` or credentials.",
+            "The replacement is untested; the probe used a shim."
+          ],
+          "validation": [
+            "the R7 secrets replacement"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Migration location is valid direction, but no loading mechanism or retention of environment-backed string values specified; shim is not deployed repair.",
+            "validation": "Acknowledges replacement still needs checking; no fresh request/special credentials/actual Basic header/metadata/bounded failure controls."
+          }
+        },
+        "R20": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "Class-less `serialize :preferences` needs a coder under 8.1 defaults."
+          ],
+          "applicability": [
+            "app/models/notebook.rb:7",
+            "The app is on `load_defaults 7.0`."
+          ],
+          "recommendation": [
+            "serialize :preferences, coder: YAML"
+          ],
+          "validation": [
+            "Loads the same stored YAML on 7.0 (checked)"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Rails7.0 ignores coder keyword and selects existing default YAML, so explicit YAML preparatory form preserves this contract, unlike JSON coder keyword.",
+            "validation": "One stored-YAML probe lacks gate off/on create/edit/reload unequal preferences/export heading."
+          }
+        },
+        "R21": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "Assigning `slug` (readonly) on update raises"
+          ],
+          "applicability": [
+            "under `raise_on_assign_to_attr_readonly`"
+          ],
+          "recommendation": [
+            "`notebook_params.except(:slug)` on update"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No gate off/on creation/name/heading/attempted slug/persisted slug matrix."
+          }
+        },
+        "R23": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "missing"
+          },
+          "impact": [
+            "`Date.iso8601(day)` raises TypeError"
+          ],
+          "applicability": [
+            "Under 8.x defaults, `select_rows` returns Date objects",
+            "7.2 `postgresql_adapter_decode_dates`"
+          ],
+          "recommendation": [
+            "Date.iso8601(day.to_s)"
+          ],
+          "validation": [],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Accepts ISO String and Date.to_s while preserving dates.",
+            "validation": "No real PostgreSQL independent gate off/on asymmetry/UTC/empty/ownership controls."
+          }
+        },
+        "R25": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "supported",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [
+            "Strict freshness affects `stale?` in `ExportDownloadsController`."
+          ],
+          "recommendation": [],
+          "validation": [],
+          "reasons": {
+            "impact": "No conflicting ETag/date200-to304 precedence effect.",
+            "applicability": null,
+            "recommendation": "No explicit keep/adopt HTTP contract decision.",
+            "validation": "No matching ETag list both orders/conflicting date/expired302/foreign404."
+          }
+        }
+      },
+      "returned_reports": [
+        {
+          "report_id": "rails4-parent-delivered-plan",
+          "source_locator": "messages[13].content[type=text].text; entire preamble, embedded plan and Notes on this plan",
+          "provenance": "Parent claims resumed planner completed. Visible Agent return is only async launch; SendMessage result is only resume receipt. No original completed native report artifact for4 exists at inspection. Do not promote embedded self-analysis or parent claim to raw.",
+          "assessment_ref": "#/runs/3/final",
+          "raw_eligible": false,
+          "text_sha256": "5dd87afdbfcfd9205c87f90ca6c90dd87b54cff0d7d9eb45efe8364801e3d238",
+          "notes_preserved": true,
+          "framing_quotes": [
+            "The planner returned it as a completed result",
+            "this plan comes from my own analysis",
+            "I haven't inspected those logs myself"
+          ]
+        }
+      ],
+      "counts": {
+        "raw": null,
+        "final": {
+          "families": 23,
+          "actionable": 17,
+          "fully_specified_validation": 0,
+          "partial_validation": 11,
+          "fully_omitted": 1,
+          "actionable_ids": [
+            "R01",
+            "R02",
+            "R03",
+            "R05",
+            "R06",
+            "R07",
+            "R09",
+            "R10",
+            "R11",
+            "R12",
+            "R13",
+            "R15",
+            "R16",
+            "R17",
+            "R20",
+            "R21",
+            "R23"
+          ],
+          "incorrect_family_ids": [
+            "R08"
+          ]
+        },
+        "returned_reports": [
+          {
+            "report_id": "rails4-parent-delivered-plan",
+            "actionable": 17,
+            "fully_specified_validation": 0,
+            "fully_omitted": 1
+          }
+        ]
+      },
+      "workflow": {
+        "correct_skill_invoked": true,
+        "native_agent_invocations": 1,
+        "native_planner_invoked": true,
+        "retry_message_invocations": 1,
+        "completed_designated_report_visible": false,
+        "completed_designated_report_audit_attributed": false,
+        "plan_delivered": true,
+        "plan_only_success": true,
+        "designated_plan_only_success": null,
+        "working_application_edits_visible": false,
+        "edit_approval_gate": false,
+        "recovery": "Initial progress note followed by resume receipt; substantive plan delivered later. Native identity of completed handback remains uncollected, not disproved by its self-analysis label."
+      },
+      "delivery": {
+        "selected_family_actionability_loss": null,
+        "preservation": "Visible messages[12] git status --short is empty; Gemfile and lock still7.0.8.7. This proves tracked working tree at that check, not nested resource cleanup.",
+        "authored_attribution_contradiction": "Parent doubts own-analysis preamble but says completed planner returned it; neither replaces native provenance.",
+        "gate": "No plan-delivery gate. Future implementation/system checks follow substantive plan."
+      },
+      "material_issues": [
+        {
+          "kind": "accepted_alternative_repairs",
+          "quotes": [
+            "attribute :tags, :json",
+            "fragments.sum(\"\")"
+          ],
+          "reason": "Both valid by source-based contract analysis. Model-reported probe success remains uncollected."
+        },
+        {
+          "kind": "incomplete_annotation_repair",
+          "family": "R08",
+          "quotes": [
+            "Key annotations by `row.line.to_s`; drop `.stringify_keys` in the view."
+          ],
+          "reason": "Frozen view still reads Integer keys twice; plan does not normalize lookup."
+        },
+        {
+          "kind": "impact_omission",
+          "family": "R14",
+          "quotes": [
+            "is replaced by `:polynomially_longer`"
+          ],
+          "reason": "Correct with-bump repair, but failure when retrying/bounded-retry impact omitted."
+        },
+        {
+          "kind": "incomplete_repairs",
+          "quotes": [
+            "including the attachment tag, figure and figcaption",
+            "Move provider settings to `config.x` or credentials."
+          ],
+          "reason": "R18 omits excerpt additions; R19 omits concrete environment-backed configuration loading."
+        },
+        {
+          "kind": "not_independently_observed_experiments",
+          "quotes": [
+            "Each row was confirmed by running the code on 8.1.",
+            "I haven't inspected those logs myself"
+          ],
+          "reason": "Final includes paths and test counts, not actual nested execution logs. Claims are not proof. Partial proposed and reported probes are retained, not scored as zero testing or full validation."
+        },
+        {
+          "kind": "unsupported_retry_jitter_claim",
+          "quotes": [
+            "8.1 does not apply the jitter in the same way"
+          ],
+          "reason": "Polynomially_longer is the supported successor; jitter difference is not established by collected source/log evidence and is separate from valid rename."
+        },
+        {
+          "kind": "rollout_precision",
+          "quotes": [
+            "8.1 defaults write queued `DigestJob` arguments",
+            "drain the queue"
+          ],
+          "reason": "BigDecimal onset is gem-level, not gated by newer defaults. Body B4 supplies correct directional serializer repair, so do not turn contextual8.1-default probe wording into an explicit false gate. Drain language still lacks detailed scheduled/retry/in-flight preservation."
+        },
+        {
+          "kind": "missing_HTTP_contract",
+          "family": "R25",
+          "quotes": [
+            "Strict freshness affects `stale?`"
+          ],
+          "reason": "Applicability alone is not impact or keep/adopt decision."
+        }
+      ],
+      "limitations": [
+        "Raw accuracy is null because completed native handback is uncollected, not because the delivered plan is absent. Final fully graded.",
+        "No native model/report artifacts for4 at inspection. Working-tree check observed; nested experiment logs and cleanup not collected."
+      ]
+    },
+    {
+      "run": 5,
+      "status": "settled_fresh_designated_plan_after_recursive_status_failure",
+      "source_export": "/tmp/planner-suite-20261012/haiku-medium-settled/rails-5.json",
+      "source_export_sha256": "fbf11343510d96bd9683f98d4ededd8efc54bb861cd4392cac3e3bcb8a953ec0",
+      "evaluated_message_boundary": {
+        "request_index": 0,
+        "end_index_inclusive": 25,
+        "end_message_id": "26",
+        "end_created_at": "2026-10-13T06:50:43.885Z",
+        "native_result_indices": [
+          6,
+          24
+        ],
+        "substantive_report_indices": [
+          24,
+          25
+        ]
+      },
+      "request_timestamp": "2026-10-13T06:29:01.090Z",
+      "idle_timestamp": "2026-10-13T06:50:44.031Z",
+      "wall_time_ms": 1302941,
+      "successful_plan_wall_time_ms": 1302941,
+      "native_completed_report_timestamp": "2026-10-13T06:50:18.238Z",
+      "native_completed_report_wall_time_ms": 1277148,
+      "raw": {
+        "assessment_ref": "#/runs/4/final",
+        "independent_assessment": "Read full completed actual Agent return at messages[24], not first status return messages[6]. All23 family judgments and selected quotes match independently assessed final; parent removes native concluding self-analysis note and adds its own commentary, neither changes selected judgments. Full native boundary retains removed commentary for provenance.",
+        "source_locator": "messages[24].content[type=tool_result].run.result; report body only",
+        "agentType": "maintain-rails:gem-upgrade-planner",
+        "agentType_basis": "messages[23] Agent input subagent_type, matched to messages[24] toolUseID and trailing agentId a6ebf87d41decad9f",
+        "native_audit_limitation": "No rails5 model/report artifact present; visible completed Agent return establishes report identity, not actual per-instance model/effort."
+      },
+      "final": {
+        "R01": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "raises at load; keyword form removed in 8.0"
+          ],
+          "applicability": [
+            "enum status: {…}, _prefix: true"
+          ],
+          "recommendation": [
+            "enum :status, {…}, prefix: true"
+          ],
+          "validation": [
+            "`notes_controller_test` status filter and edit"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Ellipsis refers to existing values, preserves prefix.",
+            "validation": "Named filter/edit tests partial; no unequal persisted draft/ready reload/helper controls."
+          }
+        },
+        "R02": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`serialize :tags, JSON` raises on 8.1"
+          ],
+          "applicability": [
+            "`coder: JSON` is silently ignored on 7.0 and breaks `tags`"
+          ],
+          "recommendation": [
+            "Use `coder: JSON` at the 7.1 step only"
+          ],
+          "validation": [
+            "note tags rendering"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No unequal existing tags, comma edit, stored representation and array reload."
+          }
+        },
+        "R03": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`alias_attribute` on a store accessor raises on 8.1",
+            "A reader-only alias also fails form assignment"
+          ],
+          "applicability": [
+            "app/models/note.rb:14"
+          ],
+          "recommendation": [
+            "Explicit `highlight_color` and `highlight_color=` methods"
+          ],
+          "validation": [
+            "`notes_controller_test` edit, highlight radio"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Edit probe lacks preserved JSON settings/reload/form and error rendering controls."
+          }
+        },
+        "R04": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`where(notebooks: @notebook)` produces `notes.notebooks`"
+          ],
+          "applicability": [
+            "app/controllers/notes_controller.rb:12"
+          ],
+          "recommendation": [
+            "where(notebook: @notebook)"
+          ],
+          "validation": [
+            "notes filter and pagination tests"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Changes only predicate on existing authorized relation.",
+            "validation": "No unequal populations/another owner/inclusion/exclusion/foreign denial matrix."
+          }
+        },
+        "R05": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`citation[:id]` is nil for a DOI primary key on 8.1 gem"
+          ],
+          "applicability": [
+            "app/models/import.rb:68"
+          ],
+          "recommendation": [
+            "citation&.doi"
+          ],
+          "validation": [
+            "`imports_controller_test` receipt CSV"
+          ],
+          "reasons": {
+            "impact": "Nil DOI read tied to receipt CSV is concrete lost receipt data.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Named receipt test does not specify distinct persisted DOIs versus downloaded fields."
+          }
+        },
+        "R06": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "an invalid import persists partial rows"
+          ],
+          "applicability": [
+            "A non-local `return` from `transaction` now commits"
+          ],
+          "recommendation": [
+            "(save! && rows.all? { … }) or raise ActiveRecord::Rollback"
+          ],
+          "validation": [
+            "`imports_controller_test` \"invalid rows … saves nothing\""
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Explicit rollback after saving import and row checks is valid without nonlocal return.",
+            "validation": "Existing invalid-row test partial; no full valid-then-invalid real request/fresh all-table counts/successful batch specification."
+          }
+        },
+        "R07": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`fragments.sum` on strings uses a 7.0 deprecated `Enumerable#sum` that now raises `TypeError`"
+          ],
+          "applicability": [
+            "app/models/export.rb:42"
+          ],
+          "recommendation": [
+            "fragments.join"
+          ],
+          "validation": [
+            "`exports_controller_test` (3 tests)"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Controller suite is not real worker exact ordered Markdown plus unrepaired working/no-artifact control."
+          }
+        },
+        "R08": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`stringify_keys` makes integer-keyed annotations miss on 8.1"
+          ],
+          "applicability": [
+            "app/views/imports/preview.html.erb:22"
+          ],
+          "recommendation": [
+            "Use `@import.annotations` directly"
+          ],
+          "validation": [
+            "`imports_controller_test` preview annotations"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No unequal literal annotations2/4, multiline CSV and no-saving control."
+          }
+        },
+        "R09": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`expires_in` goes negative after the deadline. 8.1 defaults reject it on cache miss"
+          ],
+          "applicability": [
+            "R19 (negative cache expiry)",
+            "The specific setting is not isolated for R18 and R19."
+          ],
+          "recommendation": [
+            "[export.expires_at - Time.current, 0].max"
+          ],
+          "validation": [
+            "`exports_controller_test` cached indicator"
+          ],
+          "reasons": {
+            "impact": "Cache-miss error is real but incomplete scope; target also validates expiry on cache hits.",
+            "applicability": "Explicitly conditional on adopting8.1 defaults, not inevitable under retained7.0; exact independent flag not isolated.",
+            "recommendation": null,
+            "validation": "No before/after fresh/hit and authoritative download expiry/ownership controls or independently isolated exact gate."
+          }
+        },
+        "R10": {
+          "judgments": {
+            "impact": "incorrect",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`reminder_at.to_time` drops the reader's offset on 8.1 gem; the instant is unchanged"
+          ],
+          "applicability": [
+            "R22 (to_time)",
+            "Gem-level, not gated by `load_defaults`"
+          ],
+          "recommendation": [
+            "Time.at(reminder_epoch + 86_400).getlocal(reminder_at.utc_offset)"
+          ],
+          "validation": [
+            "`reminders_controller_test` preview `datetime`"
+          ],
+          "reasons": {
+            "impact": "Correct unchanged instant but wrong mechanism/direction: target retains named zone, shifting DST offset/wall display, not simply dropping reader offset. Valid fixed-offset repair cannot replace incorrect impact explanation.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No DST plus non-boundary epoch/wall/offset comparisons."
+          }
+        },
+        "R11": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "the digest covers the reader's local day instead of UTC"
+          ],
+          "applicability": [
+            "8.1 restores the zone in `TimeWithZone` payloads"
+          ],
+          "recommendation": [
+            "requested_at = requested_at.utc"
+          ],
+          "validation": [
+            "`digests_controller_test` subject line"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Subject-line probe lacks real JSON worker, separate midnights, reservation keys and membership."
+          }
+        },
+        "R12": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "partial",
+            "recommendation": "incorrect",
+            "validation": "partial"
+          },
+          "impact": [],
+          "applicability": [
+            "Queued and in-flight Active Job payloads"
+          ],
+          "recommendation": [
+            "Sidekiq 7 queues a rollback-compatible payload for the 6.5 worker"
+          ],
+          "validation": [
+            "Enqueue on Sidekiq 6.5 and process on 7.3 (and the reverse), then check the job effect."
+          ],
+          "reasons": {
+            "impact": "Unknown BigDecimalSerializer failure8.1 producer->7.0 worker omitted; no decimal argument mention.",
+            "applicability": "Correct general queue boundary, but wrapper compatibility is not decimal serializer compatibility.",
+            "recommendation": "Broad rollback-compatible assurance and wrapper reasoning omit decimal-string prerequisite; all-8.1 Sidekiq7 also needs JSON-native digest decimal producer. No viable selected hazard rollout strategy.",
+            "validation": "Generic mixed-Sidekiq proposal useful but no actual Rails/decimal JSON directions, same-version controls or exact percentage."
+          }
+        },
+        "R13": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`set(wait_until: Integer)` raises `undefined method 'utc'` on 8.1"
+          ],
+          "applicability": [
+            "app/models/note.rb:61"
+          ],
+          "recommendation": [
+            "Time.at(reminder_epoch)"
+          ],
+          "validation": [
+            "`reminders_controller_test` (2 tests)"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Controller tests unspecified; no real schedule payload/score/persisted timestamp/replacement/ownership."
+          }
+        },
+        "R14": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "Raises only when a retry is needed"
+          ],
+          "applicability": [
+            "`wait: :exponentially_longer` removed in 8.1",
+            "7.0 has no `:polynomially_longer`"
+          ],
+          "recommendation": [
+            "wait: ->(executions) { executions**4 + 2 }",
+            "This drops jitter"
+          ],
+          "validation": [
+            "503-path citation tests"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Callable preserves polynomial bounded-attempt schedule across versions; deliberate disclosed jitter removal is acceptable alternative, not invalid7.0 advance rename.",
+            "validation": "503 path partial; no persistent six requests/three attempts/recorded failure,503->200 and401 real worker matrix."
+          }
+        },
+        "R15": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`form_with(model: nil)` removed in 8.0",
+            "ActionView error"
+          ],
+          "applicability": [
+            "app/views/notes/index.html.erb:12"
+          ],
+          "recommendation": [
+            "Drop `model: nil`"
+          ],
+          "validation": [
+            "notes index and search tests"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No explicit render/submit names/GET/membership controls."
+          }
+        },
+        "R16": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "Multi-path `get \"/notes\", \"/journal\"` raises on 8.1"
+          ],
+          "applicability": [
+            "config/routes.rb:18"
+          ],
+          "recommendation": [
+            "Two `get` lines"
+          ],
+          "validation": [
+            "`notes_controller_test` list paths"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Split existing declarations preserves paths/helpers; no alternate mapping proposed.",
+            "validation": "No explicit both owner requests/authorized identical lists/helpers."
+          }
+        },
+        "R17": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "Under 8.1, `false` stops raising",
+            "On 7.0, `:none` is truthy and also stops raising"
+          ],
+          "applicability": [
+            "config/environments/test.rb:31"
+          ],
+          "recommendation": [
+            "`:none` at the 7.1 step only"
+          ],
+          "validation": [
+            "\"another reader's … cannot be reached\" tests",
+            "CI=1"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Access-denial and CI suite partial; no explicit raised-request/missing-record normal-and-CI policy matrix."
+          }
+        },
+        "R18": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "partial",
+            "validation": "partial"
+          },
+          "impact": [
+            "8.1 leaves `allowed_tags` nil; `+=` aborts boot"
+          ],
+          "applicability": [
+            "config/initializers/action_text.rb:3"
+          ],
+          "recommendation": [
+            "Start from the sanitizer list when nil, then add `details`/`summary`"
+          ],
+          "validation": [
+            "`notes_controller_test` \"rich text keeps collapsible excerpts\""
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Plain sanitizer base + excerpts omits ActionText attachment tag/figure/figcaption extension. Explicit allowed_tags overrides fallback extension; unspecified attachment preservation is incomplete.",
+            "validation": "Excerpt test and boot partial; no attachment markup plus scripts/handlers/javascript URL exclusion."
+          }
+        },
+        "R19": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`Rails.application.secrets` removed"
+          ],
+          "applicability": [
+            "app/models/citation/provider.rb:13"
+          ],
+          "recommendation": [
+            "Rails.application.config_for(:secrets)",
+            "the test helper sets `ENV[\"CITATION_PROVIDER_URL\"]` instead of assigning secrets"
+          ],
+          "validation": [
+            "`citation_enrichments_controller_test` (3 tests)",
+            "Production boot"
+          ],
+          "reasons": {
+            "impact": "Actual provider call to removed API implies request failure, not changelog-only claim.",
+            "applicability": null,
+            "recommendation": "Reuse same secrets YAML config_for retains environment-backed strings; valid equivalent, no forced new file name.",
+            "validation": "Named tests/production boot lack fresh special-character credential request/actual Basic header/metadata and bounded failures."
+          }
+        },
+        "R20": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "Bare `serialize :preferences` raises under `load_defaults 8.1` (no default coder)"
+          ],
+          "applicability": [
+            "app/models/notebook.rb:7"
+          ],
+          "recommendation": [
+            "serialize :preferences, coder: YAML",
+            "ignored on 7.0 with the same result"
+          ],
+          "validation": [
+            "`exports_controller_test` (export heading)",
+            "Cross-version reads of existing YAML rows are not executed"
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": null,
+            "validation": "Export-heading subset not gate-off/on unequal create/edit/reload; report explicitly admits existing YAML cross-read not run."
+          }
+        },
+        "R21": {
+          "judgments": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "Permitting `slug` raises `ReadonlyAttributeError` under `load_defaults 8.1`"
+          ],
+          "applicability": [
+            "not under 7.0",
+            "app/controllers/notebooks_controller.rb:40"
+          ],
+          "recommendation": [
+            "Permit only `name` and `export_heading`"
+          ],
+          "validation": [
+            "`notebooks_controller_test` \"keep the slug\""
+          ],
+          "reasons": {
+            "impact": null,
+            "applicability": null,
+            "recommendation": "Frozen before_validation assign_slug runs on create and always generates slug from name; removing permitted slug preserves actual creation behavior. Unlike an attr_readonly removal, this retains persisted slug protection.",
+            "validation": "Named slug test lacks full gate off/on creation/name/heading/attempted changes/persisted slug matrix."
+          }
+        },
+        "R23": {
+          "judgments": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial"
+          },
+          "impact": [
+            "`select_rows` returns `Date` objects under `postgresql_adapter_decode_dates`"
+          ],
+          "applicability": [
+            "7.2 default",
+            "app/models/notebook.rb:40"
+          ],
+          "recommendation": [
+            "Date.iso8601(day.to_s)"
+          ],
+          "validation": [
+            "activity_reports_controller_test"
+          ],
+          "reasons": {
+            "impact": "Describes changed return type and repair but never states Date.iso8601 raises/why populated activity reports fail. Do not infer delivered application impact solely from a correct fix.",
+            "applicability": null,
+            "recommendation": null,
+            "validation": "No isolated gate off/on real PostgreSQL asymmetric UTC counts/empty/ownership matrix."
+          }
+        },
+        "R25": {
+          "judgments": {
+            "impact": "missing",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "missing"
+          },
+          "impact": [],
+          "applicability": [
+            "`strict_freshness` (8.0 step)",
+            "Each needs a targeted test if adopted."
+          ],
+          "recommendation": [],
+          "validation": [
+            "Not executed."
+          ],
+          "reasons": {
+            "impact": "Conflicting validator200-to304 application effect omitted.",
+            "applicability": "Gate listed but no ExportDownloadsController connection or ETag/date condition.",
+            "recommendation": "No keep/adopt HTTP decision.",
+            "validation": "Targeted-test instruction lacks ETag list both orders/conflicts/expired302/foreign404."
+          }
+        }
+      },
+      "returned_reports": [
+        {
+          "report_id": "rails5-native-completed-plan",
+          "source_locator": "messages[24].content[type=tool_result].run.result; starts ## Plan and ends direct-analysis commentary before trailing agentId/usage",
+          "provenance": "Completed synchronous native Agent return matched to fresh maintain-rails:gem-upgrade-planner invocation messages[23]. Self-analysis note is that designated agent's own output, not general-purpose fallback.",
+          "assessment_ref": "#/runs/4/raw",
+          "raw_eligible": true,
+          "text_sha256": "12a8fc18b7bacf33297f75d1375a6e078019f81575281d16b914a4b8d32a66e5",
+          "boundary": "Strip harness envelope and exactly two line-leading spaces only, plus trailing agentId/usage; preserve entire report and closing Commentary",
+          "notes_preserved": true,
+          "framing_quotes": [
+            "I did not delegate, because this task says not to spawn further agents.",
+            "This plan is my direct analysis, not the planner's output."
+          ]
+        },
+        {
+          "report_id": "rails5-parent-delivered-plan",
+          "source_locator": "messages[25].content[type=text].text; entire preamble, plan and Commentary",
+          "provenance": "Parent preserves substantive plan but removes native closing self-analysis commentary and adds its own caveat/open implementation decisions.",
+          "assessment_ref": "#/runs/4/final",
+          "raw_eligible": false,
+          "text_sha256": "68541e97298295fa05447fdf4ac9466084b19216e6d05d537e36e46433ac4bb1",
+          "notes_preserved": true,
+          "framing_quotes": [
+            "Two earlier planner runs stalled.",
+            "Provenance caveat.",
+            "Open decisions for you:"
+          ]
+        }
+      ],
+      "counts": {
+        "raw": {
+          "families": 23,
+          "actionable": 18,
+          "fully_specified_validation": 0,
+          "partial_validation": 22,
+          "fully_omitted": 0,
+          "actionable_ids": [
+            "R01",
+            "R02",
+            "R03",
+            "R04",
+            "R05",
+            "R06",
+            "R07",
+            "R08",
+            "R09",
+            "R11",
+            "R13",
+            "R14",
+            "R15",
+            "R16",
+            "R17",
+            "R19",
+            "R20",
+            "R21"
+          ],
+          "incorrect_family_ids": [
+            "R10",
+            "R12"
+          ]
+        },
+        "final": {
+          "families": 23,
+          "actionable": 18,
+          "fully_specified_validation": 0,
+          "partial_validation": 22,
+          "fully_omitted": 0,
+          "actionable_ids": [
+            "R01",
+            "R02",
+            "R03",
+            "R04",
+            "R05",
+            "R06",
+            "R07",
+            "R08",
+            "R09",
+            "R11",
+            "R13",
+            "R14",
+            "R15",
+            "R16",
+            "R17",
+            "R19",
+            "R20",
+            "R21"
+          ],
+          "incorrect_family_ids": [
+            "R10",
+            "R12"
+          ]
+        },
+        "returned_reports": [
+          {
+            "report_id": "rails5-native-completed-plan",
+            "actionable": 18,
+            "fully_specified_validation": 0,
+            "fully_omitted": 0
+          },
+          {
+            "report_id": "rails5-parent-delivered-plan",
+            "actionable": 18,
+            "fully_specified_validation": 0,
+            "fully_omitted": 0
+          }
+        ]
+      },
+      "workflow": {
+        "correct_skill_invoked": true,
+        "native_agent_invocations": 2,
+        "native_planner_invoked": true,
+        "completed_designated_report_visible": true,
+        "plan_delivered": true,
+        "plan_only_success": true,
+        "designated_plan_only_success": true,
+        "working_application_edits_visible": false,
+        "edit_approval_gate": false,
+        "retry_message_invocations": 1,
+        "recovery": "First recursive branch returned status only; stop attempts on two completed status agents failed, third descendant actually stopped. Fresh synchronous designated Agent with explicit no-further-agents instruction delivered full plan. Parent's claim it stopped them is overbroad.",
+        "native_model_audit": "Unavailable for5; exported configuration is not actual per-instance model proof."
+      },
+      "delivery": {
+        "selected_family_actionability_loss": 0,
+        "preservation": "No working-app Edit/Write in original parent trace; clean-state and isolated experiments are model claims, no parent final git check.",
+        "authored_attribution_contradiction": "Native agent says direct analysis/not planner output despite recorded designated invocation. Parent caveat does not negate native identity.",
+        "report_preservation": "Sections1-8 preserved exactly; native closing self-analysis Commentary omitted from final but kept as returned_reports boundary. Parent own Commentary retained independently.",
+        "gate": "Implementation/Sidekiq/Trix choices follow delivered plan; not a gate withholding plan. Parent preparatory wording qualifies items that pass7.0; explicit coder/:none exceptions retained."
+      },
+      "material_issues": [
+        {
+          "kind": "wrong_time_change_explanation",
+          "family": "R10",
+          "quotes": [
+            "drops the reader's offset on 8.1 gem"
+          ],
+          "reason": "Correct fixed-offset repair and unchanged instant coexist with wrong description of named-zone retention/DST display shift."
+        },
+        {
+          "kind": "missing_decimal_prerequisite_and_mixed_version_hazard",
+          "family": "R12",
+          "quotes": [
+            "Sidekiq 7 queues a rollback-compatible payload for the 6.5 worker"
+          ],
+          "reason": "Wrapper class compatibility does not establish BigDecimal argument compatibility. No decimal-string producer repair; Sidekiq7 JSON validation rejects decimal before enqueue, and Rails8.1 producer->7.0 worker cannot deserialize new serializer."
+        },
+        {
+          "kind": "incomplete_allowlist",
+          "family": "R18",
+          "quotes": [
+            "Start from the sanitizer list when nil, then add `details`/`summary`"
+          ],
+          "reason": "Does not preserve custom ActionText attachment tag/figure/figcaption needed when setting allowed_tags explicitly."
+        },
+        {
+          "kind": "missing_activity_report_impact",
+          "family": "R23",
+          "quotes": [
+            "`select_rows` returns `Date` objects"
+          ],
+          "reason": "Valid Date.iso8601(day.to_s) repair, no explicit populated-report failure. Impact omission distinct from invalid repair."
+        },
+        {
+          "kind": "default_gate_contradictions",
+          "quotes": [
+            "R8's `:none` path",
+            "Gem-level, not gated by `load_defaults`",
+            "the signed-message change in section 5"
+          ],
+          "reason": "show_exceptions boolean policy changes directly with framework, not load_defaults. Signed-message section correctly says newer-default-gated, contradicting gem-level list. Selected R17 row correctly explains direct false/:none behavior, so preserve its credit; record contradictory prose separately."
+        },
+        {
+          "kind": "unnecessary_dependency_coupling",
+          "quotes": [
+            "`sidekiq` 7.3.x (7.3.9 executed)"
+          ],
+          "reason": "Rails8.1 can retain Sidekiq6 deprecated adapter. Optional separate move discussed, but included as required R27 and in green target matrix; introduces SK args/SADD/error prerequisites plus missing decimal and scheduler dependency coverage. No automatic Rails-lane Sidekiq upgrade required."
+        },
+        {
+          "kind": "unsafe_method_wide_cleanup",
+          "quotes": [
+            "`rescue StandardError` (cleanup then re-raise)"
+          ],
+          "reason": "Frozen Notebook#request_export includes job-id update after successful enqueue. Method-wide cleanup can destroy row after enqueue succeeded if persistence raises, stranding job. Narrow enqueue rescue needed; proposed Redis-down test does not discriminate post-enqueue failure."
+        },
+        {
+          "kind": "valid_portable_alternatives",
+          "quotes": [
+            "sadd(key, [id]).positive?",
+            "wait: ->(executions) { executions**4 + 2 }"
+          ],
+          "reason": "Array-form Redis SADD yields integer on6/7; explicit polynomial callable is portable and disclosed jitter tradeoff. These correct alternatives are not invalidated by extra unsafe cleanup or missing decimal prerequisite."
+        },
+        {
+          "kind": "unverified_execution_and_release_claims",
+          "quotes": [
+            "With all the preparatory changes applied, the existing 46-test suite passes",
+            "8.1.4 reverted it"
+          ],
+          "reason": "Experiment paths/counts are native report claims; actual nested logs uncollected. Later-patch claims not independently established. No fully specified validation, but22 partial family proposals/named tests are retained."
+        },
+        {
+          "kind": "overstated_stop_recovery",
+          "quotes": [
+            "so I stopped them"
+          ],
+          "reason": "Original visible TaskStop results: first two not running(status completed), only depth3 task successfully stopped. Do not claim all agents killed or that stopped child finished a report."
+        }
+      ],
+      "limitations": [
+        "Raw native identity observed, actual model/effort4/5 unavailable. No further collection/live-worker messages performed.",
+        "Nested experiment logs, application resource cleanup, mixed-fleet worker and browser proof remain uncollected. Native closing direct-analysis label does not change report identity."
+      ]
+    }
+  ],
+  "summary": {
+    "raw_actionable": [
+      null,
+      null,
+      3,
+      null,
+      18
+    ],
+    "final_actionable": [
+      null,
+      2,
+      3,
+      17,
+      18
+    ],
+    "raw_fully_specified_validation": [
+      null,
+      null,
+      0,
+      null,
+      0
+    ],
+    "final_fully_specified_validation": [
+      null,
+      0,
+      0,
+      0,
+      0
+    ],
+    "final_partial_validation": [
+      null,
+      0,
+      7,
+      11,
+      22
+    ],
+    "final_fully_omitted": [
+      null,
+      7,
+      13,
+      1,
+      0
+    ],
+    "designated_planner_successes": 2,
+    "designated_planner_success_unresolved_runs": [
+      4
+    ],
+    "substantive_reports_assessed": 6,
+    "pending_runs": [],
+    "workflow": "Run1 status-only roots and unfinished depth3 children, no plan, choice gate. Run2 misspelled skill, zero Agent calls, implementation violates plan-only despite green visible suite. Run3 actual depth1 designated planner recovers after status-only response, native completed plan delivered with authored contradictions. Run4 final plan delivered after resume but completed native handback uncollected. Run5 initial recursive status branch; two stop attempts fail on completed agents, one descendant stopped; fresh synchronous designated call completes. Self-analysis labels do not override actual type.",
+    "consequential_errors": "Run3 direct DST effect dismissed, readonly update missed and mixed-decimal compatibility falsely predicted. Run4 omitted notebook filter, wrong annotation key repair, incomplete allowlist/provider migration and missing retry impact/HTTP decision; valid json attribute and sum-empty repairs accepted. Run5 wrong DST explanation, absent decimal prerequisite/serializer hazard, incomplete attachments allowlist, missing populated-report impact and HTTP contract; unsafe broad cleanup and unnecessary Sidekiq coupling recorded separately.",
+    "wall_time_ms": [
+      62365,
+      454914,
+      465229,
+      1132145,
+      1302941
+    ],
+    "remaining_facts": [
+      "Completed original native report and actual per-instance model/effort for Rails4",
+      "Actual per-instance model/effort for Rails5",
+      "Nested experiment logs and isolated-resource cleanup remain uncollected; model audit prose is not execution proof",
+      "Real worker/browser/mixed-fleet/default gate scenario matrices absent or incomplete; no new experiments authorized"
+    ]
+  },
+  "verification": {
+    "quote_check": "Every family quote checked as exact substring of its specific final text and, for raw3/5, independently against original native report after harness-only normalization. Framing/reviewer/material quotes checked separately.",
+    "hash_check": "All five settled export SHA256 values recomputed; native3 and native5 normalized report hashes and all new final hashes independently computed; native artifact hashes retained.",
+    "timing_check": "Original request-to-idle and request-to-native-completion millisecond arithmetic independently recomputed. Original native completion3 precedes parent final by25.142s; native5 observed tool result precedes parent final by25.647s. Collection boundaries do not extend scored original timing.",
+    "prior_grades": "Final23-family judgments/quotes for runs2/3 retained unchanged, run1 remains null; earlier workflow failure retained alongside corrected native recovery attribution.",
+    "scope": "Only this assessment JSON edited. No experiments, delegation or live-worker messages; tracked files unchanged."
+  },
+  "limitations": [
+    "Only original visible text, visible tool inputs/results and safe native model/report fields assessed; no thinking, signatures, account data or secrets used as evidence.",
+    "No agents launched, live workers polled/messaged, tracked files changed or application experiments performed by this assessor.",
+    "Collection/audit prose is not execution proof. Strict23-family rubric unchanged.",
+    "Correct portable repairs accepted without key wording. Generic suites and partial probes remain distinct from full scenario/control coverage.",
+    "Missing plan/native handback retain null correctness. No weighted accuracy or pass rate invented. Raw3/5 references resolve to independently checked identical family judgments, not parent-discovery credit."
+  ]
+}
