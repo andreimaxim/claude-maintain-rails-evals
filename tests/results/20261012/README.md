@@ -14,12 +14,13 @@ Start with [per-run outcomes](benchmark-outcomes.csv), their
 and prior failed attempts. The [failure ledger](../../planner-failures-20261012.json)
 keeps early failures separate from later recovery.
 
-![Final finding recall versus response time for all 80 runs](accuracy-time.png)
+![Accuracy versus response time for all 80 runs](accuracy-time.png)
 
-![Recorded-request API list-price estimates for all 80 runs](api-cost.png)
+![Recorded-request API price versus accuracy for all 80 runs](api-cost.png)
 
-The graph uses final finding recall and request-to-last-response time, including
-failed workflows. Filled circles indicate full designated-plan delivery, crosses
+The first graph compares accuracy with request-to-last-response time, including
+failed workflows; the second compares API price with accuracy. Filled circles
+in the first graph indicate full designated-plan delivery, crosses
 indicate missing/incomplete plans or implementation, and hollow circles indicate
 unverified native delivery. The generated interactive graph views let readers
 select every run, including overlapping points, and inspect native token
@@ -30,9 +31,9 @@ bounds, and crosses are unavailable usage, never zero cost.
 
 - `raw_actionable` and `final_actionable` count selected findings with supported
   application impact, applicability and repair. The denominator is 23 for Rails
-  and two for each other case. This is finding recall, not an overall accuracy,
-  safety, validation or readiness score. Errors and unsafe recommendations are
-  assessed separately. A missing plan has null recall, not zero.
+  and two for each other case. The graphs call this fraction accuracy; it measures
+  expected findings, not overall safety, validation or readiness. Errors and unsafe
+  recommendations are assessed separately. A missing plan has N/A accuracy, not zero.
 - `response_wall_time_ms` measures initial request to last evaluated idle state,
   including startup and the parent's retries. It includes missing-plan responses,
   summaries and implementation outcomes. Do not call every response a success.

@@ -72,7 +72,7 @@ def generate(root, views):
                                                          for r in selected_costs),
                        "cost_unavailable_runs": sum(r["lower_bound_usd"] is None for r in selected_costs)})
     save(root / "benchmark-statistics.json", {
-        "definition": "Descriptive statistics by case/configuration. Nulls excluded by n; sample_sd uses n-1. Response time includes workflow failures; recall is not overall correctness. Cost statistics include complete recorded-request list-price estimates only, excluding lower-bound-only runs, unlogged helpers and billing adjustments. Token footers are not workflow totals.",
+        "definition": "Descriptive statistics by case/configuration. Nulls excluded by n; sample_sd uses n-1. Response time includes workflow failures; finding accuracy is not overall correctness. Cost statistics include complete recorded-request list-price estimates only, excluding lower-bound-only runs, unlogged helpers and billing adjustments. Token footers are not workflow totals.",
         "groups": groups,
     })
     excluded = root / "quota-interrupted" / "opus-high-heldout"
