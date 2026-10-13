@@ -258,6 +258,19 @@ or with truncated ones (Faraday) get little from the script. The
 keeps each run's plan, receipt and grade; `scripts/record-batch.ts` now extracts,
 grades and records a downloaded batch.
 
+**The summary plus required experiments is the best variant so far.**
+[Variant v4](tests/planner-variants/v4-summary-plus-experiments) rewords v3's one
+instruction: treat the summary as an index of changes to check, not as the list
+of findings, and still upgrade, boot and exercise a disposable copy. Five runs
+scored 19, 20, 18, 18 and 17 (mean 18.4; baseline 16.6, v2 17.0) at a median of
+11.5 minutes and $2.73 (baseline 13.0 minutes and $2.90). Every planner ran 27 to
+36 experiment commands. R02, R20 and R23 were actionable in all five runs; R14
+(1/5), R19 (2/5), R21 (0/5) and R25 (0/5) remain weak, and no plan fully specified
+any validation. Output tokens are 38% of the cost, cache reads 37% (5.4M tokens
+over about 70 turns) and cache writes 26%. The
+[v4 record](tests/results/20261013-headless/v4-summary-plus-experiments-rails/summary.json)
+keeps each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:
