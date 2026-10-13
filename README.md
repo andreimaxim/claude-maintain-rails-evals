@@ -92,6 +92,11 @@ early waiting messages do not count as successful plan delivery. The temporary
 project setting will be restored to its previous empty value after the suite;
 no planner tuning follows held-out exposure.
 
+The [per-run failure ledger](tests/planner-failures-20261012.json) keeps workflow
+failures and late recoveries separate from finding recall. It records quoted
+evidence, thread links, export hashes and timing boundaries; a progress response
+or fallback plan does not silently become a successful designated-planner run.
+
 To retain a completed run's visible tool trace and planner response without
 thinking blocks or account/environment metadata, keep the full export in a
 private temporary directory:

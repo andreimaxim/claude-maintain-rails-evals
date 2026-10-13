@@ -524,3 +524,12 @@ early exports, but do not count them as fast successful plans. Assess completed
 reports and workflow failures before launching held-out cases. No coordinator
 coaching or planner tuning follows these results. The temporary project pin
 remains active; restore its previous empty value after the suite.
+
+The [per-run failure ledger](planner-failures-20261012.json) records observed
+missing plans, planner bypass, unintended implementation, fallback delivery and
+self-delegation loops separately from content scores. It also records the
+collector's four early acceptances of waiting responses. None of those captures
+entered successful-plan aggregates. Entries retain quotes, export hashes,
+thread links and elapsed-time boundaries; late recoveries do not erase earlier
+events. Pending background work is not labeled a permanent failure, and requested
+model/effort remain distinct from audited native values.

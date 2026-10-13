@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-10-13T06:41:08Z",
+  "scope": "Frozen Haiku-medium development workflow observations; assessment and native-model audit pending.",
+  "requested_model": "claude-haiku-5-5",
+  "requested_effort": "medium",
+  "actual_model": null,
+  "actual_model_status": "Native audit pending; requested configuration is not proof of the served model.",
+  "source_pins": {
+    "plugin": "11b074b79a35be55d5768ba3799b1dff768dfb94",
+    "application": "9938031e54e1d7d074f1200a0da17e49390c86fa",
+    "verification": "All ten initial application revisions, downloaded plugin HEADs and both prompt hashes match the freeze. No final preservation audit is implied."
+  },
+  "interpretation": {
+    "non_plan_idle_response": "An early idle response says the planner is still running. This is a timing warning, not proof of permanent failure; later spontaneous delivery can resolve it.",
+    "no_plan_delivered": "The saved evaluated response explicitly contains no plan and asks for a new decision. Do not score it as a fast successful plan.",
+    "planner_bypass": "The original visible main trace has no native gem-upgrade-planner invocation. Assess returned content separately from workflow compliance.",
+    "unintended_implementation": "The plan-only benchmark altered the working application. Passing tests do not repair the workflow violation.",
+    "fallback_delivery": "A later response attributes its plan to itself or another agent rather than the designated planner. Retain content assessment, provenance and the earlier failed handoff separately.",
+    "self_delegation_loop": "The parent reports repeated planner-to-planner delegation without a plan. Native nesting and model attribution still require audit.",
+    "early_collector_acceptance_without_plan": "The collector accepted a done tool envelope and final text containing only a waiting message. That capture is retained but must not enter successful-plan timing or correctness aggregates.",
+    "null_scores": "Null means no completed designated-planner plan has been assessed, not zero correctness. Failure flags are independent of later selected-finding recall.",
+    "timing": "observed_elapsed_ms ends at the quoted response's recorded idle timestamp. successful_plan_wall_time_ms stays null until completed delivery and provenance are established.",
+    "updates": "Preserve early evidence and append recoveries. Never replace a failed response with a later plan or silently retry it as a fresh success."
+  },
+  "runs": [
+    {
+      "case": "rails", "run": 1,
+      "thread": "https://ampcode.com/threads/T-01a133f3-12d4-72d2-bcde-7870beb203a6",
+      "status": "blocked_without_plan",
+      "requested_at": "2026-10-13T06:28:51.746Z",
+      "observed_at": "2026-10-13T06:29:54.111Z",
+      "observed_elapsed_ms": 62365,
+      "successful_plan_wall_time_ms": null,
+      "raw_actionable": null, "final_actionable": null,
+      "events": [
+        {
+          "kind": "no_plan_delivered",
+          "quote": "The planner agent has now reported back a third time without a plan. Each report says it is still working, and none contains the plan. I've stopped re-delegating to avoid spinning on it.",
+          "export_sha256": "81d5057733ab505a03547e8171e79a121524a7c7462a7252a18ce8045ae747f4"
+        }
+      ],
+      "limit": "The worker asks whether to retry or self-plan. The coordinator has not answered or coached it; background-agent completion is not established."
+    },
+    {
+      "case": "rails", "run": 2,
+      "thread": "https://ampcode.com/threads/T-01a133f3-1b18-76fa-a684-bfdaf69d9144",
+      "status": "implemented_instead_of_planning",
+      "requested_at": "2026-10-13T06:28:53.845Z",
+      "observed_at": "2026-10-13T06:36:28.759Z",
+      "observed_elapsed_ms": 454914,
+      "successful_plan_wall_time_ms": null,
+      "raw_actionable": null, "final_actionable": null,
+      "events": [
+        {
+          "kind": "planner_bypass",
+          "evidence": "Zero Agent tool invocations in the saved original main trace.",
+          "export_sha256": "e4d64a93d00505ac193233d6b08da945031aed4c6d1424deb6a5f16c1ee4b317"
+        },
+        {
+          "kind": "unintended_implementation",
+          "quote": "Rails is upgraded to 8.1.0 and the full suite passes: 46 runs, 340 assertions, 0 failures. Zeitwerk is clean. Nothing is committed.",
+          "export_sha256": "e4d64a93d00505ac193233d6b08da945031aed4c6d1424deb6a5f16c1ee4b317"
+        }
+      ],
+      "limit": "Implementation and checks are visible in the main trace; the quoted test summary is the worker's report. No changes from this worker were integrated."
+    },
+    {
+      "case": "rails", "run": 3,
+      "thread": "https://ampcode.com/threads/T-01a133f3-2358-7668-9410-e481d38ac0e0",
+      "status": "fallback_content_awaiting_assessment",
+      "requested_at": "2026-10-13T06:28:56.018Z",
+      "observed_at": "2026-10-13T06:36:41.247Z",
+      "observed_elapsed_ms": 465229,
+      "successful_plan_wall_time_ms": null,
+      "raw_actionable": null, "final_actionable": null,
+      "events": [
+        {
+          "kind": "non_plan_idle_response",
+          "observed_at": "2026-10-13T06:29:30.027Z",
+          "quote": "The planner is running in the background. I'll return its plan verbatim when it finishes.",
+          "export_sha256": "2c69b800d93e21068736654c4b9b01fb0eebaaad8b860c512d42cdc4c37e335f"
+        },
+        {
+          "kind": "fallback_delivery",
+          "quote": "The `maintain-rails:gem-upgrade-planner` subagent finished without returning a plan, so this plan is my own.",
+          "export_sha256": "995eeb77358385014212920babcb387b42f51da16b44b92f704e9aab4414fc17"
+        }
+      ]
+    },
+    {
+      "case": "rails", "run": 4,
+      "thread": "https://ampcode.com/threads/T-01a133f3-2eca-7037-bad9-57a5c7d79bdb",
+      "status": "awaiting_background_delivery",
+      "requested_at": "2026-10-13T06:28:59.125Z",
+      "observed_at": "2026-10-13T06:29:40.285Z",
+      "observed_elapsed_ms": 41160,
+      "successful_plan_wall_time_ms": null,
+      "raw_actionable": null, "final_actionable": null,
+      "events": [
+        {
+          "kind": "non_plan_idle_response",
+          "quote": "The planner's last report was a progress note, not a plan, so I've asked it to resend the full plan.",
+          "export_sha256": "fdf2419d120d53ce6f3817104aa6deb49332f7e5cea4ecf0802f88a594e8ce5e"
+        }
+      ],
+      "limit": "An idle parent is not proof that its background planner has finished."
+    },
+    {
+      "case": "rails", "run": 5,
+      "thread": "https://ampcode.com/threads/T-01a133f3-379f-7133-8751-66407a1cd304",
+      "status": "running_after_failed_handoffs",
+      "requested_at": "2026-10-13T06:29:01.090Z",
+      "observed_at": "2026-10-13T06:29:39.071Z",
+      "observed_elapsed_ms": 37981,
+      "successful_plan_wall_time_ms": null,
+      "raw_actionable": null, "final_actionable": null,
+      "events": [
+        {
+          "kind": "non_plan_idle_response",
+          "quote": "The planner is still running, so I don't have the plan yet.",
+          "export_sha256": "48d94d9f4e6d9c1e1c1c9e73607cfcf99c8111f32841176db6cfbaa82c653683"
+        },
+        {
+          "kind": "early_collector_acceptance_without_plan",
+          "evidence": "The initial collector emitted a trace with wall_time_ms=37981 and the waiting response above. It is not a completed-plan result.",
+          "export_sha256": "48d94d9f4e6d9c1e1c1c9e73607cfcf99c8111f32841176db6cfbaa82c653683"
+        },
+        {
+          "kind": "self_delegation_loop",
+          "observed_at": "2026-10-13T06:29:59.096Z",
+          "quote": "The two planner agents are passing the same request back and forth without producing a plan. I'll stop them rather than wait on the loop.",
+          "evidence": "The later main trace invokes TaskStop and starts a foreground planner. No successful finish is established yet."
+        }
+      ]
+    },
+    {
+      "case": "sidekiq", "run": 1,
+      "thread": "https://ampcode.com/threads/T-01a133f3-3f4c-709f-bc20-b6c582c659e4",
+      "status": "fallback_content_awaiting_assessment",
+      "requested_at": "2026-10-13T06:29:03.282Z",
+      "observed_at": "2026-10-13T06:36:46.542Z",
+      "observed_elapsed_ms": 463260,
+      "successful_plan_wall_time_ms": null,
+      "raw_actionable": null, "final_actionable": null,
+      "events": [
+        {
+          "kind": "non_plan_idle_response",
+          "observed_at": "2026-10-13T06:30:04.218Z",
+          "quote": "The Sidekiq 6.5.12 → 7.3.9 plan isn't ready yet, so I don't have it to return.",
+          "export_sha256": "e98aa9e588f3d441fc8c7e3ad6737361f888a37d6422fb87766c19a7e37a16ce"
+        },
+        {
+          "kind": "early_collector_acceptance_without_plan",
+          "evidence": "The initial collector accepted the waiting response at 60936 ms. Exclude that time from successful-plan results.",
+          "export_sha256": "e98aa9e588f3d441fc8c7e3ad6737361f888a37d6422fb87766c19a7e37a16ce"
+        },
+        {
+          "kind": "fallback_delivery",
+          "quote": "Neither plan came from `maintain-rails:gem-upgrade-planner`. Both are fallback agents' write-ups, so the skill's verbatim-planner requirement still isn't met.",
+          "export_sha256": "7413b4a8d8bc79fab3db7497faa18df6a6e02e314080c7711b442154dfdc3fb2"
+        }
+      ],
+      "limit": "The two fallback reports disagree about the BigDecimal prerequisite. Content and native provenance remain to be assessed."
+    },
+    {
+      "case": "sidekiq", "run": 2,
+      "thread": "https://ampcode.com/threads/T-01a133f3-4aa0-773b-a7eb-1a673944e84d",
+      "status": "later_content_awaiting_provenance_and_assessment",
+      "requested_at": "2026-10-13T06:29:06.106Z",
+      "observed_at": "2026-10-13T06:36:27.528Z",
+      "observed_elapsed_ms": 441422,
+      "successful_plan_wall_time_ms": null,
+      "raw_actionable": null, "final_actionable": null,
+      "events": [
+        {
+          "kind": "non_plan_idle_response",
+          "observed_at": "2026-10-13T06:29:54.933Z",
+          "quote": "The planner still hasn't returned a plan.",
+          "export_sha256": "ab6c69cb3c5b276b5bc51fe429bb10b9ac80182f2840e45403d28344df752d36"
+        },
+        {
+          "kind": "early_collector_acceptance_without_plan",
+          "evidence": "The initial collector accepted the waiting response at 48827 ms. Exclude that time from successful-plan results.",
+          "export_sha256": "ab6c69cb3c5b276b5bc51fe429bb10b9ac80182f2840e45403d28344df752d36"
+        },
+        {
+          "kind": "later_delivery",
+          "quote": "The planner finished. Its full plan is below, unchanged.",
+          "export_sha256": "7078ee4dc22f292a600a4a200b27f51af1659d5192115f854b9e5e116013c8a5"
+        }
+      ],
+      "limit": "The parent's attribution and verbatim claim require native-report comparison; they are not assumed correct."
+    },
+    {
+      "case": "sidekiq", "run": 3,
+      "thread": "https://ampcode.com/threads/T-01a133f3-52d8-759a-af44-9d31af83e202",
+      "status": "running_after_failed_handoffs",
+      "requested_at": "2026-10-13T06:29:09.757Z",
+      "observed_at": "2026-10-13T06:30:05.292Z",
+      "observed_elapsed_ms": null,
+      "successful_plan_wall_time_ms": null,
+      "raw_actionable": null, "final_actionable": null,
+      "events": [
+        {
+          "kind": "non_plan_handoff",
+          "quote": "The resumed planner has again returned a progress note instead of the plan. I'll start a fresh planner in the foreground so I get its result directly.",
+          "evidence": "The later main trace has a foreground Agent invocation still pending; no successful finish is established."
+        }
+      ]
+    },
+    {
+      "case": "sidekiq", "run": 4,
+      "thread": "https://ampcode.com/threads/T-01a133f3-6415-7669-aab4-bcdb2000c50f",
+      "status": "awaiting_background_delivery",
+      "requested_at": "2026-10-13T06:29:13.045Z",
+      "observed_at": "2026-10-13T06:30:12.438Z",
+      "observed_elapsed_ms": 59393,
+      "successful_plan_wall_time_ms": null,
+      "raw_actionable": null, "final_actionable": null,
+      "events": [
+        {
+          "kind": "non_plan_idle_response",
+          "quote": "The sidekiq 7.3.9 plan is still not back.",
+          "export_sha256": "9d699b8cef6e38071ccf0ac976242b99587fadff4b8ac9d21271a9d2c839d894"
+        },
+        {
+          "kind": "early_collector_acceptance_without_plan",
+          "evidence": "The initial collector accepted the waiting response at 59393 ms. Exclude that time from successful-plan results.",
+          "export_sha256": "9d699b8cef6e38071ccf0ac976242b99587fadff4b8ac9d21271a9d2c839d894"
+        }
+      ],
+      "limit": "An idle parent is not proof that its background planner has finished."
+    },
+    {
+      "case": "sidekiq", "run": 5,
+      "thread": "https://ampcode.com/threads/T-01a133f3-6df6-732f-8a20-df6ee6952d64",
+      "status": "fallback_content_awaiting_assessment",
+      "requested_at": "2026-10-13T06:29:15.113Z",
+      "observed_at": "2026-10-13T06:36:18.846Z",
+      "observed_elapsed_ms": 423733,
+      "successful_plan_wall_time_ms": null,
+      "raw_actionable": null, "final_actionable": null,
+      "events": [
+        {
+          "kind": "non_plan_idle_response",
+          "observed_at": "2026-10-13T06:30:03.807Z",
+          "quote": "Its earlier completion notice said it was still running and contained no plan, so I'm waiting for the resumed run to report back.",
+          "export_sha256": "2267808813d73454a018cfdb7b29a93703b13e04a636d17aabb6c7b1cc8c3fe3"
+        },
+        {
+          "kind": "fallback_delivery",
+          "quote": "The planner subagent the skill names never returned a plan.",
+          "export_sha256": "e2ff15ba3ff1ff42869ca67fca39d975e1439f27b86d6aa69bf85729a4ee0fd6"
+        }
+      ],
+      "limit": "Multiple fallback reports arrived spontaneously. Their source, disagreements and claimed checks remain separate from the designated planner's missing report."
+    }
+  ]
+}
