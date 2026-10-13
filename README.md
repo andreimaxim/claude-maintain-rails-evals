@@ -216,6 +216,19 @@ same pattern. The [baseline record](tests/results/20261013-headless/baseline-opu
 keeps each run's plan, receipt and grade; archives with thinking blocks are not
 committed.
 
+**Removing self-delegation made runs cheaper but lost about one finding.**
+[Variant v1](tests/planner-variants/v1-no-self-delegation) gives the planner a tool
+allowlist without `Skill` and `Agent`; nothing else changes. Its five Opus-low
+Rails runs scored 15, 15, 15, 15 and 17, with a median of 11.1 minutes and $1.84
+per run, against the baseline's 16, 16, 16, 18 and 17 at 13.0 minutes and $2.90.
+R20 fell from 4/5 actionable to 0/5 and R09 went unmentioned in four runs, while
+R02 rose from 0/5 to 4/5. The baseline's extra planner levels had passed the working
+planner a 690 to 1,090 character handoff restating the planner instructions, with
+intermediate versions and optional default adoption spelled out. Without them,
+the main agent's handoff is 130 to 160 characters. The
+[v1 record](tests/results/20261013-headless/v1-no-self-delegation-rails/summary.json)
+keeps each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

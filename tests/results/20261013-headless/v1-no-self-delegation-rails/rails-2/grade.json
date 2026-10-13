@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`app/models/note.rb:10` | Keyword-style `enum status:` is gone | `enum :status, {...}, prefix: true` (same method names)",
+      "reasons": "Impact: the plan says the syntax is gone but not that the Note model fails to load. Validation: the only check is the test suite, with no persisted draft/ready filter and helper checks after reload.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, JSON` becomes `serialize :tags, coder: JSON`. The old form raises an argument error.",
+      "reasons": "Validation: a probe that existing tags read back is given, but there is no check of comma-separated edits with both the stored representation and the array values verified.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`alias_attribute` pointing at the `color` store accessor (not a column) raises | Two `alias_method` lines (reader and writer)",
+      "reasons": "Validation: only test results are given; there is no edit/reload of JSON settings or check of form/error rendering.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`where(notebooks: @notebook)` now produces SQL for a nonexistent column `notes.notebooks` | `where(notebook: @notebook)`",
+      "reasons": "Validation: tests only; there is no scenario with unequal notebook populations, another owner, or foreign-notebook denial.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`citation[:id]` returns nil because the primary key is `doi`, so the receipt's DOI column is blank | `citation&.doi` | Probe confirmed",
+      "reasons": "Validation: a probe is mentioned, but there is no apply with distinct DOIs and no comparison of the downloaded receipt to persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`return false` inside `transaction` now commits, so the import and earlier rows are saved when a later row fails | `saved = rows.all? { ... }; raise ActiveRecord::Rollback unless saved`",
+      "reasons": "Validation: counts are reported, but there is no explicit real apply request with fresh PostgreSQL counts and no successful-batch control.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`app/models/export.rb` (`fragments.sum`) | Rails no longer sums strings, so it raises `TypeError` | `fragments.join` | Source only",
+      "reasons": "Validation: the finding comes from source only, and running real ExportJob jobs is proposed without checking exact ordered Markdown bytes or the failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`stringify_keys` on the annotations hash now turns line numbers into strings, so annotations disappear from the preview | Remove `.stringify_keys`",
+      "reasons": "Validation: tests only; there is no scenario with unequal annotations at lines 2 and 4, a multiline CSV row, or a no-save check.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`next_day_reminder_at` shows `2026-11-01T08:00-05:00` instead of the documented `09:00-04:00`. The stored time is the same instant ... `Time.at(reminder_epoch + 86_400, in: reminder_at.formatted_offset)`",
+      "reasons": "Validation: the reminders test covers the DST case, but there is no non-boundary control and no explicit epoch/wall-clock/offset comparison.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "8.1 restores the reader's time zone when the job runs ... while the reservation key stays on the UTC day ... add `requested_at = requested_at.utc` in `DigestMailer#daily_digest`",
+      "reasons": "Validation: a test plus a proposed real DigestJob run; there is no crossing of each midnight separately with reservation keys and delivered note membership inspected.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "An integer `wait_until` can't be serialized (`Integer#utc`) | `wait_until: Time.at(reminder_epoch)` | Source only",
+      "reasons": "Validation: a scheduled NoteReminderJob run is proposed, but there is no inspection of the scheduled payload/score and persisted schedule time, and no replacement or ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`wait: :exponentially_longer` becomes `:polynomially_longer`. It's the same formula under a new name; source shows the old name is gone.",
+      "reasons": "Impact: the plan names the removed symbol but not that bounded ActiveJob retry breaks and falls through to Sidekiq retries. Validation: a forced 503 is proposed, but there is no six-request/three-attempt count and no 503->200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`app/views/notes/index.html.erb:12` | `form_with(model: nil, …)` raises | Drop `model: nil`",
+      "reasons": "Validation: tests only; there is no check of submitted names, method, or resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`get \"/notes\", \"/journal\"` (two paths in one route) raises | Two routes with `as: :notes` and `as: :journal`; names checked against 7.0 `rails routes`",
+      "reasons": "Validation: route names are checked, but there is no request to both URLs as an owner comparing list behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`show_exceptions = false` becomes `:none`. On 8.1, `false` silently means \"show all\", so the existing `assert_raises(ActiveRecord::RecordNotFound)` tests would get error pages",
+      "reasons": "Validation: existing tests are relied on; there is no explicit check of raised-exception and missing-record policy, or of CI eager-loading mode.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`allowed_tags` starts as nil, so `+=` crashes at boot | Set the full list inside `config.after_initialize`: sanitizer tags + attachment tag, `figure`, `figcaption`, `details`, `summary`",
+      "reasons": "Validation: the probe checks details/summary and script stripping, but not attachment markup, event handlers, or javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Rails.application.secrets` was removed (7.2) | Use `config_for` with the same ERB `.to_json` quoting (keeps values like `\"00123\"` ... as strings)",
+      "reasons": "Impact: the plan names the removed API but not that provider requests fail. Validation: tests stub the provider; there is no fresh-process check of the actual Basic header with special-character credentials.",
+      "actionable": false
+    },
+    "R09": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss the negative cache-expiry gate or the export partial.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "**7.1** sets `default_column_serializer = nil`. `serialize :preferences` would then need `coder: YAML`.",
+      "reasons": "Impact: the plan says a coder would be needed but not that the model raises. Validation: there is no create/edit/reload check with the gate off and on.",
+      "actionable": false
+    },
+    "R21": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss the readonly slug resubmission.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "missing",
+      "validation": "partial",
+      "quote": "**7.2** sets `postgresql_adapter_decode_dates = true` ... `Date.iso8601(day)` in `Notebook#daily_note_counts` would raise. With 7.0 defaults it still returns a String (probe).",
+      "reasons": "Recommendation: no repair, such as accepting both String and Date, is given. Validation: only a probe under retained defaults, with no on/off comparison, asymmetric counts, empty-report, or ownership tests.",
+      "actionable": false
+    },
+    "R25": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss the strict_freshness or ETag precedence change.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Loading an 8.1 payload on 7.0 fails with `DeserializationError: Serializer ActiveJob::Serializers::BigDecimalSerializer is not known` ... Fix: pass `reading_completion.to_s` from `User#request_digest` and deploy that on 7.0 first. Payloads from 7.0 load fine on 8.1.",
+      "reasons": "Validation: payloads were exchanged in both directions, but there are no explicit same-version controls and no check of the exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 15,
+  "cost_usd": 0.28423960000000004,
+  "duration_ms": 71476
+}
