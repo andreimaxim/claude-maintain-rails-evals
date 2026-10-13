@@ -6,8 +6,9 @@ this batch. The revised comparison retains ten Opus-high development results
 and runs twenty repetitions each on Opus low, Sonnet medium, and Haiku medium.
 The first ten development repetitions exposed plan-summary loss and are
 superseded by ten fresh repetitions of a delivery correction. The original
-80-slot comparison is replaced by 70 slots; no Opus-high held-out batch is added
-before switching to Opus low. Extra tuning or failed-run retries remain visible
+80-slot comparison was initially replaced by 70 slots; no Opus-high held-out batch
+was added before switching to Opus low. The October 13 supplement below completes
+that coverage afterward. Extra tuning or failed-run retries remain visible
 rather than being counted as fast successful benchmarks.
 
 The delivery-correction batch hit Claude Code's session quota. All ten attempts
@@ -34,7 +35,8 @@ Each new configuration runs five fresh repetitions of each of the four exact
 cases. Use the same frozen plugin and application for all configurations. Do not
 tune the plugin after this freeze, including in response to development feedback.
 Complete each configuration before starting the next. Opus high has no held-out
-results and is not a four-case matched comparison with the new configurations.
+results at this stage; its later supplement uses the same frozen prompt bytes,
+with the different date and setup route recorded separately.
 
 Keep the concurrency schedule the same: ten Rails/Sidekiq workers, then ten
 Pagy/Faraday workers per new configuration. The Opus-high reference used ten
@@ -615,3 +617,63 @@ are not published. Basic-auth literals are redacted consistently, with source
 hashes and transformations recorded. Nested experiment logs were not generally
 collected, so their claims remain attributed. This is a completed assessment of
 the requested attempt matrix, not complete end-to-end proof for every plan.
+
+## October 13 supplement completes Opus-high held-out coverage
+
+The user requested five Pagy and five Faraday Opus 5.5/high runs after the earlier
+comparison. The eval-owned runtime bundle preserves the frozen skill and planner
+bytes; the approved `andrei/planner-eval-workers` project contains only the sample
+app, without the plugin checkout or evaluation answer keys. All seventeen setup
+receipts (ten initial, seven replacements) match the application pin and all four
+runtime-file hashes. The setup validator and real skill/Agent invocations establish
+discovery without changing authentication or the harness.
+
+Initial Pagy1/2/4 delivered. The other seven attempts hit the provider session
+limit, remain unscored exclusions and retain their recorded-request spend separately.
+Seven fresh replacements started after the 10:00 UTC reset, without resuming the
+interrupted evaluations. All delivered. Faraday4 initially returned a background
+launch acknowledgment; the original background report arrived spontaneously before
+any collection message. Its initial waiting response, final native provenance and
+later full response are retained. Its elapsed time ends at the later delivery,
+not the launch acknowledgment. No waiting response enters successful-plan statistics.
+
+Pagy retains 10/10 actionable selected-family memberships in both layers across
+the [three initial](results/20261012/assessments/opus-high-pagy-initial-assessment.json)
+and [two replacement](results/20261012/assessments/opus-high-pagy-replacements-assessment.json)
+assessments. Faraday retains 9/10 in both layers in its
+[five-run assessment](results/20261012/assessments/opus-high-faraday-assessment.json).
+Faraday2 recommends an incompatible retry-2.4.0 preparation for the old Faraday
+line, so FD1 is not actionable. Both cases have zero fully specified validation
+families. Incorrect staging, rollback hazards, preservation claims and admitted
+shared-Redis cleanup remain separate from finding recall. Model-authored experiment
+and verification claims remain attributed; grading ran no new application trials.
+The assessments checked 669 quote occurrences with no mismatches.
+
+The benchmark table now has 80 slots. The original seventy grades and times are
+unchanged. Opus-high development and October 13 held-out timings are not a
+same-date/setup controlled comparison. Prompt and rubric bytes remain unchanged.
+
+## Original usage recovery excludes collection turns
+
+Authorized recovery restored workers only to read original transcripts, then
+rearchived them. Native final usage is deduplicated by message ID within the exact
+scored start/end boundaries, including nested planners. Only counters, IDs, hashes
+and allowlisted metadata are retained; no thinking, signatures or credentials.
+The growing main transcript's whole-file hash is not an original-prefix hash.
+
+Of 80 benchmark slots, 73 have native usage: 68 recorded-request list-price
+estimates and five lower bounds. Missing final usage prevents pricing streamed
+output placeholders in Opus-high Rails1/Sidekiq1/3 and Sonnet Pagy1/Faraday2.
+Seven Haiku workers refused usage recovery (Rails4, Sidekiq2/3/4/5, Faraday1/5),
+so those costs remain unavailable. This recovery does not retroactively change
+grades, original timing, or earlier audit artifacts. Wider earlier audit windows
+and late queue-operation rows account for documented noncomparable hashes.
+
+Costs use the retained October 13 public API price snapshot, including cache-write
+TTLs and the per-request Haiku long-context threshold. Thinking is already in
+output; it is never billed twice. Unlogged helpers, billing adjustments, collection
+turns and orb charges are excluded, so these are not invoices. The seven new
+quota interruptions have their own spend bounds, outside scored replacement costs.
+CSV/JSON preserve all token categories, pricing/evidence hashes, unknowns and
+sample sizes. Two interactive graphs compare recall/time and recorded cost/time;
+every overlapping run remains selectable.

@@ -7,11 +7,35 @@ account/environment metadata are excluded, but tool inputs/results are retained.
 """
 
 import argparse
+import base64
+import binascii
 from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
 import re
+
+
+def redact_basic_auth(value, omissions, location=""):
+    if isinstance(value, str):
+        def replace(match):
+            try:
+                credentials = base64.b64decode(match[1], validate=True)
+            except binascii.Error:
+                return match[0]
+            return "Basic [REDACTED]" if b":" in credentials else match[0]
+
+        clean = re.sub(r"\bBasic[ \t]+([A-Za-z0-9+/]+={0,2})(?![A-Za-z0-9+/=])",
+                       replace, value, flags=re.IGNORECASE)
+        if clean != value:
+            omissions.append({"location": location, "source_sha256": hashlib.sha256(value.encode()).hexdigest(),
+                             "reason": "Literal Basic-auth value redacted; symbolic descriptions retained."})
+        return clean
+    if isinstance(value, list):
+        return [redact_basic_auth(v, omissions, f"{location}/{i}") for i, v in enumerate(value)]
+    if isinstance(value, dict):
+        return {k: redact_basic_auth(v, omissions, f"{location}/{k}") for k, v in value.items()}
+    return value
 
 
 def collect(thread, background_transcript=None):
@@ -107,7 +131,7 @@ def collect(thread, background_transcript=None):
             - datetime.fromisoformat(started_at.replace("Z", "+00:00"))
         ).total_seconds() * 1000)
 
-    return {
+    trace = {
         "thread": f'https://ampcode.com/threads/{thread["id"]}',
         "state": state,
         "request_sent_at": started_at,
@@ -131,6 +155,11 @@ def collect(thread, background_transcript=None):
             "Idle state and completed planner do not establish file or service-state preservation.",
         ],
     }
+    omissions = []
+    trace = redact_basic_auth(trace, omissions)
+    if omissions:
+        trace["privacy_omissions"] = omissions
+    return trace
 
 
 if __name__ == "__main__":

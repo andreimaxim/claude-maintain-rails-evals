@@ -23,8 +23,9 @@ inspection; workers must not receive the answer keys.
 
 **Each run happens in a dedicated app orb.** For future runs, use an isolated
 worker project with `andreimaxim/claude-maintain-rails-sample` as its only
-repository and the generated eval-owned pre-setup script. No worker project has
-yet been activated with this setup; changing project settings requires approval.
+repository and the generated eval-owned pre-setup script. The approved project
+`andrei/planner-eval-workers` is active with no additional repositories; the
+existing sample project's settings are unchanged.
 The [bundle instructions](tests/planner-inputs/README.md) describe generation,
 hash checks and installation before Claude Code starts. Each worker receives:
 
@@ -36,7 +37,9 @@ hash checks and installation before Claude Code starts. Each worker receives:
 The October 12 runs used `andrei/claude-maintain-rails-sample` and a plugin
 checkout. That historical route remains recorded below. The eval-owned bundle
 preserves the frozen prompt bytes and namespace without fetching the actively
-used plugin repository.
+used plugin repository. The isolated worker's runtime hashes, application pin
+and Rails services were checked before evaluation. The first actual SDK run
+invoked both `maintain-rails:upgrade-gem` and `maintain-rails:gem-upgrade-planner`.
 
 The coordinator selects cases, starts run threads, waits for their results,
 collects the planner invocations and returned plans, and assesses them here. A
@@ -77,9 +80,9 @@ selected-family actionability loss during delivery, with remaining omissions
 and unsafe claims. The user requested freezing that revision without more tuning.
 The [evaluation-cycle record](tests/planner-suite-20261012.md) tracks the frozen
 correctness/time comparison: Opus 5.5 low, Sonnet 5.5 medium, then Haiku 5.5 medium.
-The completed Opus-high batch remains a development-only reference. Each new
+The original Opus-high batch was a development-only reference. Each new
 configuration runs five repetitions of all four cases and assesses every plan;
-no Opus-high held-out batch is added before switching models. Opus-low Rails and
+Opus-high held-out coverage was added afterward without tuning. Opus-low Rails and
 Sidekiq are assessed, with per-run timing, reported planner tokens and observed
 variation recorded. The resumed Pagy/Faraday attempts are excluded because the
 plugin remote no longer contains `maintain-rails`; all ten workers acknowledged
@@ -96,8 +99,14 @@ audits are unavailable for six Haiku runs after evidence-collection refusals.
 The temporary project setting has been restored to its previous empty value;
 no planner tuning followed held-out exposure.
 
-The [durable results](tests/results/20261012/README.md) retain all sixty requested
-benchmark slots plus ten Opus-high development references. They include visible
+The October 13 Opus-high supplement completes five Pagy and five Faraday results
+using the eval-owned bundle in the isolated worker project. Pagy retains 10/10
+actionable finding memberships and Faraday 9/10 in both raw and final plans;
+none fully specifies the rubric's validation matrix. Seven quota-interrupted
+attempts remain separate, with their recorded spend retained.
+
+The [durable results](tests/results/20261012/README.md) retain 80 benchmark slots:
+four configurations, four cases and five repetitions. They include visible
 traces, raw/final finding assessments, wall times, available token footers,
 descriptive variance, recovered native audits/reports and earlier failure evidence.
 Nested experiment logs were not generally collected, and token footers are not
@@ -105,7 +114,9 @@ billed totals. Source and published-file hashes identify privacy transformations
 
 The [usage-accounting notes](tests/planner-inputs/README.md#costs-need-a-separate-source)
 distinguish retained token totals, partial cache counters and the whole-tree SDK
-usage needed for API-cost graphs. Complete per-run API costs are not yet available.
+usage needed for API-cost graphs. Recovered native usage provides 68 recorded-request
+list-price estimates, five lower bounds and seven unavailable costs. These are
+not invoices or complete bills; unlogged helpers and billing adjustments are excluded.
 
 The [per-run failure ledger](tests/planner-failures-20261012.json) keeps workflow
 failures and late recoveries separate from finding recall. It records quoted

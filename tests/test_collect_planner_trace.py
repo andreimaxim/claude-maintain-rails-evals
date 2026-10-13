@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -65,6 +66,24 @@ class CollectPlannerTraceTest(unittest.TestCase):
         self.assertEqual(trace["completed_at"], "2026-10-12T10:02:03.750Z")
         self.assertEqual(trace["wall_time_ms"], 123500)
         self.assertNotIn("excluded", json.dumps(trace))
+
+    def test_redacts_short_empty_and_long_basic_auth_but_preserves_descriptions(self):
+        thread = copy.deepcopy(self.thread)
+        report = ("Basic dTpw, Basic Og==, Basic dXNlcjpwYXNz, basic dTpw, BASIC Og==, "
+                  "Basic\tdTpw, bAsIc  Og==. Basic auth and Basic #{encoded} remain symbolic.")
+        thread["messages"][2]["content"][0]["run"]["result"] = report
+        thread["messages"][-1]["content"][0]["text"] = report
+        result, trace = self.collect(thread)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        expected = ("Basic [REDACTED], Basic [REDACTED], Basic [REDACTED], Basic [REDACTED], "
+                    "Basic [REDACTED], Basic [REDACTED], Basic [REDACTED]. "
+                    "Basic auth and Basic #{encoded} remain symbolic.")
+        self.assertEqual(trace["main_tool_trace"][1]["result"]["result"], expected)
+        self.assertEqual(trace["final_response"], expected)
+        self.assertEqual(trace["assistant_responses"][-1], expected)
+        self.assertEqual(len(trace["privacy_omissions"]), 3)
+        for omission in trace["privacy_omissions"]:
+            self.assertEqual(omission["source_sha256"], hashlib.sha256(report.encode()).hexdigest())
 
     def test_rejects_incomplete_runs_without_writing_a_trace(self):
         working = copy.deepcopy(self.thread)

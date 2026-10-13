@@ -1,5 +1,5 @@
 {
-  "definition": "Descriptive statistics by case/configuration. Null values excluded explicitly by n. Response times include failures; final content includes implementation summaries. Recall is not overall correctness. First-handback tokens are not total/billed usage. sample_sd uses n-1 and is null for n<2.",
+  "definition": "Descriptive statistics by case/configuration. Nulls excluded by n; sample_sd uses n-1. Response time includes workflow failures; recall is not overall correctness. Cost statistics include complete recorded-request list-price estimates only, excluding lower-bound-only runs, unlogged helpers and billing adjustments. Token footers are not workflow totals.",
   "groups": [
     {
       "configuration": "opus-5.5-high",
@@ -44,7 +44,17 @@
         "max": 58436,
         "mean": 56157,
         "sample_sd": 2328.8724739667477
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 4,
+        "median": 9.637052399999998,
+        "min": 8.404040600000002,
+        "max": 11.437012600000001,
+        "mean": 9.7787895,
+        "sample_sd": 1.2750834189782303
+      },
+      "cost_lower_bound_only_runs": 1,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "opus-5.5-high",
@@ -89,7 +99,17 @@
         "max": 55802,
         "mean": 51363.4,
         "sample_sd": 3671.703868778091
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 3,
+        "median": 3.9824972000000005,
+        "min": 3.8966520000000004,
+        "max": 4.987650400000001,
+        "mean": 4.288933200000001,
+        "sample_sd": 0.606627269229335
+      },
+      "cost_lower_bound_only_runs": 2,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "opus-5.5-low",
@@ -134,7 +154,17 @@
         "max": 48659,
         "mean": 46624.6,
         "sample_sd": 1228.0982452556473
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 5,
+        "median": 2.8480402000000002,
+        "min": 2.712310600000001,
+        "max": 3.4399209999999996,
+        "mean": 2.96958052,
+        "sample_sd": 0.30643042576851237
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "opus-5.5-low",
@@ -179,7 +209,17 @@
         "max": 44705,
         "mean": 43160,
         "sample_sd": 1245.5850031210234
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 5,
+        "median": 1.400954,
+        "min": 0.5159604,
+        "max": 1.5035194,
+        "mean": 1.23802608,
+        "sample_sd": 0.4133660895148174
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "opus-5.5-low",
@@ -224,7 +264,17 @@
         "max": 45572,
         "mean": 44309,
         "sample_sd": 1015.7393858662763
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 5,
+        "median": 1.2676352000000002,
+        "min": 1.037363,
+        "max": 1.5578656,
+        "mean": 1.28687692,
+        "sample_sd": 0.23134773301883033
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "opus-5.5-low",
@@ -269,7 +319,17 @@
         "max": 46108,
         "mean": 43541.6,
         "sample_sd": 2511.993988846311
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 5,
+        "median": 1.4019278000000002,
+        "min": 0.4796563999999999,
+        "max": 1.672128,
+        "mean": 1.1838596000000001,
+        "sample_sd": 0.492154124432154
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "sonnet-5.5-medium",
@@ -314,7 +374,17 @@
         "max": 54851,
         "mean": 51025,
         "sample_sd": 2322.0137811821874
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 5,
+        "median": 2.9401251000000004,
+        "min": 2.3442176,
+        "max": 3.3724969,
+        "mean": 2.87633026,
+        "sample_sd": 0.4669780664642107
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "sonnet-5.5-medium",
@@ -359,7 +429,17 @@
         "max": 48417,
         "mean": 47064.4,
         "sample_sd": 1007.1193077287318
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 5,
+        "median": 0.9711426000000001,
+        "min": 0.5987577000000001,
+        "max": 0.9989976,
+        "mean": 0.8738030200000001,
+        "sample_sd": 0.16878267683289364
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "sonnet-5.5-medium",
@@ -404,7 +484,17 @@
         "max": 46982,
         "mean": 44931.2,
         "sample_sd": 1315.152918865331
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 4,
+        "median": 0.67187145,
+        "min": 0.6306752,
+        "max": 0.7214435000000001,
+        "mean": 0.6739654,
+        "sample_sd": 0.04521787231858665
+      },
+      "cost_lower_bound_only_runs": 1,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "sonnet-5.5-medium",
@@ -449,7 +539,17 @@
         "max": 46354,
         "mean": 44637.8,
         "sample_sd": 1316.8128948335827
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 4,
+        "median": 0.58737765,
+        "min": 0.5085698,
+        "max": 0.8322688,
+        "mean": 0.628898475,
+        "sample_sd": 0.15420808902244992
+      },
+      "cost_lower_bound_only_runs": 1,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "haiku-5.5-medium",
@@ -494,7 +594,17 @@
         "max": 41445,
         "mean": 39386.5,
         "sample_sd": 2911.158618145016
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 4,
+        "median": 0.7173841825,
+        "min": 0.043225875,
+        "max": 1.7308921600000002,
+        "mean": 0.8022216000000001,
+        "sample_sd": 0.7061993832272024
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 1
     },
     {
       "configuration": "haiku-5.5-medium",
@@ -539,7 +649,17 @@
         "max": 177792,
         "mean": 77107.75,
         "sample_sd": 67137.97819106064
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 1,
+        "median": 0.38281174500000004,
+        "min": 0.38281174500000004,
+        "max": 0.38281174500000004,
+        "mean": 0.38281174500000004,
+        "sample_sd": null
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 4
     },
     {
       "configuration": "haiku-5.5-medium",
@@ -584,7 +704,17 @@
         "max": null,
         "mean": null,
         "sample_sd": null
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 5,
+        "median": 0.15852757,
+        "min": 0.023198609999999998,
+        "max": 0.33445133,
+        "mean": 0.174607073,
+        "sample_sd": 0.12847829245447934
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 0
     },
     {
       "configuration": "haiku-5.5-medium",
@@ -629,7 +759,127 @@
         "max": 39753,
         "mean": 38574,
         "sample_sd": 1999.80274027215
-      }
+      },
+      "recorded_request_cost_usd": {
+        "n": 3,
+        "median": 0.10156145500000001,
+        "min": 0.047630605,
+        "max": 0.308686725,
+        "mean": 0.15262626166666668,
+        "sample_sd": 0.13781612861813972
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 2
+    },
+    {
+      "configuration": "opus-5.5-high",
+      "case": "pagy",
+      "attempts": 5,
+      "raw_actionable": {
+        "n": 5,
+        "median": 2,
+        "min": 2,
+        "max": 2,
+        "mean": 2,
+        "sample_sd": 0.0
+      },
+      "final_actionable": {
+        "n": 5,
+        "median": 2,
+        "min": 2,
+        "max": 2,
+        "mean": 2,
+        "sample_sd": 0.0
+      },
+      "response_wall_time_ms": {
+        "n": 5,
+        "median": 558045,
+        "min": 507728,
+        "max": 639681,
+        "mean": 563325.4,
+        "sample_sd": 49182.97456742526
+      },
+      "successful_plan_wall_time_ms": {
+        "n": 5,
+        "median": 558045,
+        "min": 507728,
+        "max": 639681,
+        "mean": 563325.4,
+        "sample_sd": 49182.97456742526
+      },
+      "reported_first_handback_tokens": {
+        "n": 5,
+        "median": 54037,
+        "min": 52011,
+        "max": 111187,
+        "mean": 64984,
+        "sample_sd": 25850.35740565302
+      },
+      "recorded_request_cost_usd": {
+        "n": 5,
+        "median": 2.3518315999999997,
+        "min": 1.9091043999999997,
+        "max": 3.545915000000001,
+        "mean": 2.56445976,
+        "sample_sd": 0.6155201197080308
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 0
+    },
+    {
+      "configuration": "opus-5.5-high",
+      "case": "faraday",
+      "attempts": 5,
+      "raw_actionable": {
+        "n": 5,
+        "median": 2,
+        "min": 1,
+        "max": 2,
+        "mean": 1.8,
+        "sample_sd": 0.4472135954999579
+      },
+      "final_actionable": {
+        "n": 5,
+        "median": 2,
+        "min": 1,
+        "max": 2,
+        "mean": 1.8,
+        "sample_sd": 0.4472135954999579
+      },
+      "response_wall_time_ms": {
+        "n": 5,
+        "median": 1163576,
+        "min": 776347,
+        "max": 1266855,
+        "mean": 1095163,
+        "sample_sd": 193709.99772211036
+      },
+      "successful_plan_wall_time_ms": {
+        "n": 5,
+        "median": 1163576,
+        "min": 776347,
+        "max": 1266855,
+        "mean": 1095163,
+        "sample_sd": 193709.99772211036
+      },
+      "reported_first_handback_tokens": {
+        "n": 4,
+        "median": 55397.0,
+        "min": 50766,
+        "max": 56242,
+        "mean": 54450.5,
+        "sample_sd": 2493.6683152870723
+      },
+      "recorded_request_cost_usd": {
+        "n": 5,
+        "median": 4.0676098,
+        "min": 2.6964282000000006,
+        "max": 4.7090162,
+        "mean": 3.98806148,
+        "sample_sd": 0.82669584952826
+      },
+      "cost_lower_bound_only_runs": 0,
+      "cost_unavailable_runs": 0
     }
   ]
 }
