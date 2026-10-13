@@ -241,6 +241,23 @@ the baseline's 13.0 minutes and $2.90. No plan fully specified any validation. T
 [v2 record](tests/results/20261013-headless/v2-intermediate-releases-rails/summary.json)
 keeps each run's plan, receipt and grade.
 
+**A change summary made planners skip experiments, and recall fell.**
+[Variant v3](tests/planner-variants/v3-change-summary) adds `bin/gem-changes` to v2.
+The script reads the changelogs of every intermediate release of the gem and its
+lockstep components, lists new framework defaults with the application's current
+settings, and matches changelog entries to the application code that uses them.
+The planner prompt says to run it first and use it as a checklist "rather than
+rediscovering" changes. Five runs scored 13, 13, 10, 7 and 13 at a median of 5.6
+minutes and $1.71. Three planners never upgraded a disposable copy; they made 8
+to 37 tool calls, against 61 to 83 in v2. Their plans name removed APIs without
+the application's observed failure (partial impact for R01, R02, R14, R16 and
+R17) and omit findings that no changelog entry names (R04, R07, R08). Defaults
+improved: R20 rose to 4/5 and R23 to 5/5. Gems without packaged changelogs (Pagy)
+or with truncated ones (Faraday) get little from the script. The
+[v3 record](tests/results/20261013-headless/v3-change-summary-rails/summary.json)
+keeps each run's plan, receipt and grade; `scripts/record-batch.ts` now extracts,
+grades and records a downloaded batch.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

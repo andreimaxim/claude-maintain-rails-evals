@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum status: {...}, _prefix: true` in `note.rb` was deprecated in 7.2 and removed in 8.0. Fix: `enum :status, {...}, prefix: true`",
+      "reasons": "Impact: the plan says only that the syntax was removed and never says that the Note model fails to load. Validation: the only relevant check is the generic per-step `bin/rails test`; the plan has no persisted draft/ready status filter or helper checks.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, JSON` becomes `serialize :tags, coder: JSON`. The positional coder was removed in 7.2.",
+      "reasons": "Impact: the plan names the removed positional coder but not the consequence for loading or storing tags. Validation: there is only the generic test suite, with no reload of existing JSON tags or edit round-trip.",
+      "actionable": false
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "7.1 deprecates this and 7.2 raises `ArgumentError` because `color` is not an attribute. Fix: write explicit `highlight_color` and `highlight_color=` methods that delegate to `color`.",
+      "reasons": "Validation: there is only the generic suite run, with no edit/reload or form-rendering check for highlight color.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss the object-valued `where(notebooks: notebook)` predicate in NotesController.",
+      "actionable": false
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Import#receipt` uses `citation[:id]`, and `citations` uses `doi` as its primary key... the DOI column becomes empty. Fix: use `citation&.doi`.",
+      "reasons": "Validation: the plan relies on an existing receipt assertion and a named targeted test, without a check that compares distinct DOIs in the downloaded receipt against persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Rails 7.2 removed that behaviour, so the `return` commits... Tests only reach this if a note fails to save after its validation passed, for example because of a race. Fix: `raise ActiveRecord::Rollback`",
+      "reasons": "Applicability: the plan identifies the right code and version but wrongly narrows the trigger to a race, when an ordinary invalid later row triggers it. Validation: it stubs `save` in a unit test instead of making a real apply request with a valid row then an invalid row, and it has no successful-batch control.",
+      "actionable": false
+    },
+    "R07": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss string `fragments.sum` in the export worker.",
+      "actionable": false
+    },
+    "R08": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss the stringified annotation keys in the import preview.",
+      "actionable": false
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`Note#next_day_reminder_at` keeps the same epoch, so scheduling is unchanged... now shows the zone's offset after a DST change instead of the original offset. Update the method comment and confirm the wording is acceptable.",
+      "reasons": "Validation: the plan proposes no comparison of epoch, wall clock and offset across a DST boundary with a non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Since 7.1 the serializer keeps `ActiveSupport::TimeWithZone` arguments in the reader's zone... To keep UTC, add `requested_at = requested_at.utc` in the mailer",
+      "reasons": "Validation: the plan proposes a near-midnight digest test and a cross-version check, but it does not cross each midnight separately or inspect reservation keys and delivered membership through a real queue.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "From 7.2 on, `serialize` calls `scheduled_at.utc` on the Integer, raises `NoMethodError`... Fix: `wait_until: Time.at(reminder_epoch)`.",
+      "reasons": "Validation: the plan names a controller test and a targeted test, but it does not inspect the real scheduled payload/score or the persisted schedule time.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`retry_on ... wait: :exponentially_longer` was removed in 7.2... use `wait: ->(executions) { executions**4 + 2 }`... Alternatively, switch to `:polynomially_longer` in the 7.1 commit.",
+      "reasons": "Impact: the plan names the removed option but does not say that bounded ActiveJob retry breaks and falls into Sidekiq retries. Validation: there are no persistent-503, 503->200 or 401 retry scenarios.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss `form_with(model: nil)` in the notes index.",
+      "actionable": false
+    },
+    "R16": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Multiple paths on one route... were deprecated in 8.0 and removed in 8.1. Fix: split into two `get` lines, keeping `as: :notes` on the first.",
+      "reasons": "Impact: the plan states the removal but does not say that routes fail to draw. Validation: there is only the generic suite, with no requests to both /notes and /journal.",
+      "actionable": false
+    },
+    "R17": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`config.action_dispatch.show_exceptions = false` becomes `:none`... The boolean form was removed in 7.2, and `:none` is truthy on 7.0, so it can't go in early.",
+      "reasons": "Impact: the plan names the removed boolean form without stating the effect on exception policy. Validation: there is only the generic suite, with no raised-exception or missing-record policy checks.",
+      "actionable": false
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "From 7.1, `allowed_tags` defaults to `nil`... so `nil + Array` raises `NoMethodError`. Fix: ... set it to `(sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\"]) + %w[details summary]`.",
+      "reasons": "Validation: the plan has no rendering check of details/summary and attachments that also excludes scripts, handlers and javascript URLs; it covers this only through the boot and suite runs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`Rails.application.secrets` was removed in 7.2... Fix: move the settings to `config/citation_provider.yml` read with `Rails.application.config_for(:citation_provider)`",
+      "reasons": "Impact: the plan names the removed API without saying that provider requests fail. Validation: there is no fresh-process provider request with a Basic-header check.",
+      "actionable": false
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Exports page can 500 if the 7.1 cache default is adopted... Fix: pass `expires_at: export.expires_at`, or skip the expiry when it's already past.",
+      "reasons": "Validation: the plan tests only an expired export with a real cache store; it lacks before/after-deadline, cached-versus-fresh and download expiry/ownership checks.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`serialize :preferences` becomes `serialize :preferences, coder: YAML` (before adopting `default_column_serializer = nil`).",
+      "reasons": "Validation: there is no create/edit/reload check of preferences with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "With `raise_on_assign_to_attr_readonly`, `write_attribute` raises `ReadonlyAttributeError`... Fix: stop permitting `:slug` and remove the hidden field.",
+      "reasons": "Recommendation: removing `:slug` from the permitted params entirely does not explicitly preserve setting the slug at creation. Validation: it only updates existing controller-test assertions and does not cover creation, an attempted slug change and the persisted slug.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "With `postgresql_adapter_decode_dates`... `select_rows` returns `Date` objects and raises `TypeError`. Fix: `day.is_a?(Date) ? day : Date.iso8601(day)`.",
+      "reasons": "Validation: the plan proposes an activity-report test with decode-dates, but it lacks off/on comparison, asymmetric UTC counts, empty-report and ownership controls.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`strict_freshness` | `ExportDownloadsController` `stale?` with ETag and last-modified: only `If-None-Match` counts when both are sent; harmless since the ETag is the checksum",
+      "reasons": "Impact: the plan describes the precedence rule but dismisses it as harmless instead of identifying the 200-with-bytes to 304 change. Recommendation: it makes no explicit keep/adopt decision. Validation: there are no conditional-request scenarios.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "From 7.2 (or 7.1 with that default) it uses `BigDecimalSerializer`, which 7.0 workers can't read during a rolling deploy or rollback. Fix: pass `reading_completion.to_s`. The mailer already calls `BigDecimal(...)` on it.",
+      "reasons": "Validation: the cross-version Sidekiq check runs both directions, but it lacks same-version controls and an exact check of the delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 10,
+  "cost_usd": 0.235476,
+  "duration_ms": 73603
+}

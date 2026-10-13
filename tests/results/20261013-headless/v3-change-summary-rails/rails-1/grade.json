@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum status:` with `_prefix:` (removed in 8.0).** Confirmed in `app/models/note.rb`. Fix: `enum :status, {...}, prefix: true`. Works on 7.0.",
+      "reasons": "Impact: the plan says the syntax was removed but not that the Note model no longer loads. Validation: only the general suite result is given, with no status filter or helper check after reload.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `serialize :tags, coder: JSON`, which only exists from 7.1, so it can't ship on 7.0. The stored format doesn't change.",
+      "reasons": "Impact: the plan names the removal without saying what breaks in the app. Validation: only the suite result is given, with no check that existing tags reload or that edited input is stored correctly.",
+      "actionable": false
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`color` comes from `store_accessor`, not a real attribute, so 7.2 raises. Fix: `alias_method` for both the reader and the writer.",
+      "reasons": "Validation: only the suite result is given, with no check of editing, reloading or form rendering.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the plural name for a singular association breaks note filtering in `app/controllers/notes_controller.rb:11`. Fix: `where(notebook: @notebook)`.",
+      "reasons": "Validation: there is no scenario with unequal notebook populations or a foreign-owner denial check.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`citation[:id]` in `Import#receipt` returns nil from 7.2 because `doi` is the primary key, so the CSV's doi column comes out blank without any error. Fix: `citation&.doi`.",
+      "reasons": "Validation: the plan marks this as found only by reading the source, with no test exercising it, and proposes no check.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The test saw `[0,3,0,1]` become `[1,4,1,2]`, meaning a failing import saved the import record plus its valid rows. Fix: `raise ActiveRecord::Rollback unless ...`",
+      "reasons": "Validation: the plan cites a count comparison but has no successful-batch control and does not describe the full mixed valid/invalid apply scenario.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`app/models/export.rb` raises a TypeError because Active Support no longer sums strings. Fix: `fragments.join`.",
+      "reasons": "Validation: the real worker processed an export, but the plan does not compare exact output bytes or include a failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "In 8.0 that turns the keys into strings, so `annotations[row.line]` finds nothing. Fix: drop `.stringify_keys`.",
+      "reasons": "Validation: there is no scenario with unequal annotations on lines 2 and 4 or a multiline row.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The stored epoch (`to_i`) is unchanged; only the time shown in `notes/_reminder.html.erb` changes.",
+      "reasons": "Validation: only one expected DST value is checked, with no comparison of epoch, wall-clock time and offset and no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "That no longer matches the UTC reservation key in `User#request_digest`... Fix: `requested_at = requested_at.in_time_zone(\"UTC\")` in the mailer.",
+      "reasons": "Validation: only a subject-line test is cited, with no real-queue scenario crossing each midnight that checks reservation keys and delivered notes.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Note#schedule_reminder` raises `undefined method 'utc' for Integer`. Fix: `set(wait_until: Time.at(reminder_epoch))`.",
+      "reasons": "Validation: the reminder ran in the worker, but the plan does not inspect the scheduled payload, score or persisted schedule time.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 8.1, use `:polynomially_longer`. On 7.0, use the lambda `->(executions) { executions**4 + 2 }`",
+      "reasons": "Impact: the plan does not say that bounded retry is lost and failures fall through to Sidekiq retries. Validation: there is no persistent-503 scenario and no 503->200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`form_with(model: nil, ...)` (removed in 8.0).** Confirmed in `app/views/notes/index.html.erb:12`. Fix: leave out `model:`",
+      "reasons": "Impact: the plan names the removal but does not say the render raises. Validation: only the suite result is given, with no check of form submission or the resulting note membership.",
+      "actionable": false
+    },
+    "R16": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Route to two paths (removed in 8.1).** Confirmed: `config/routes.rb:18`... `bin/rails routes` shows the same names.",
+      "reasons": "Impact: the plan does not say this stops the routes from drawing. Validation: it checks route names but does not request both URLs.",
+      "actionable": false
+    },
+    "R17": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "change `show_exceptions = false` to `:none`. This is 7.1+ only: on 7.0 the symbol counts as true.",
+      "reasons": "Impact: the plan does not state what happens to the exception policy. Validation: there is no raised-exception, missing-record or eager-loading check.",
+      "actionable": false
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "stops boot with `undefined method '+' for nil`... starting from `allowed_tags ||` the default sanitizer list plus attachment, `figure` and `figcaption`, then add `details` and `summary`.",
+      "reasons": "Validation: the excerpt test checks that tags survive, but nothing checks that scripts, event handlers and javascript URLs are excluded.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "move `config/secrets.yml` to `config/citation_provider.yml` and load it with `config.x.citation_provider = config_for(:citation_provider)`",
+      "reasons": "Impact: the plan names the removed API without stating the failure before provider requests. Validation: the credentials test covers special characters, but there is no fresh-process run or bounded-failure check.",
+      "actionable": false
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "incorrect",
+      "validation": "missing",
+      "quote": "`exports/_export.html.erb:26` raises for an expired export... Use `cache_if export.downloadable?, ...`",
+      "reasons": "Recommendation: the key says the `cache_if` alternative breaks the stale-link contract, so this repair is invalid. Validation: there are no deadline, cache-hit or download checks.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :preferences` in `app/models/notebook.rb` raises. Add `coder: YAML` first (7.1+); the stored YAML is readable unchanged.",
+      "reasons": "Validation: only the defaults-on suite run is cited, with no create/edit/reload of unequal preferences.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`notebooks/_form.html.erb` resubmits `slug` and `NotebooksController#notebook_params` permits it. Stop permitting `:slug`",
+      "reasons": "Recommendation: dropping slug from the permitted params entirely does not address keeping slug on creation. Validation: the plan proposes no creation, update or slug-persistence checks.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Notebook#daily_note_counts` raises because `Date.iso8601` now receives a `Date`. Accept both types",
+      "reasons": "Validation: there is no decoding off/on test with asymmetric counts, an empty report or ownership.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "Only `If-None-Match` will be checked; both values are stable, so effect is minimal.",
+      "reasons": "Impact: the plan calls the effect minimal instead of identifying the 200-to-304 change. Recommendation: it makes no explicit keep/adopt decision. Validation: no validators are tested.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "**8.1 `DigestJob` on 7.0:** fails with `DeserializationError: BigDecimalSerializer is not known`... enqueue `reading_completion.to_s`.",
+      "reasons": "Validation: payloads were swapped in both directions, but there are no explicit same-version controls and the exact delivered completion percentage is not checked.",
+      "actionable": true
+    }
+  },
+  "actionable": 13,
+  "cost_usd": 0.190276,
+  "duration_ms": 51275
+}
