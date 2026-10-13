@@ -271,6 +271,17 @@ over about 70 turns) and cache writes 26%. The
 [v4 record](tests/results/20261013-headless/v4-summary-plus-experiments-rails/summary.json)
 keeps each run's plan, receipt and grade.
 
+**Keeping long output in files cut cost by a quarter and recall by three.**
+[Variant v5](tests/planner-variants/v5-compact-output) adds one instruction to v4:
+write the change summary, bundle output and test logs to files and read only the
+needed lines. Five runs scored 15, 15, 14, 16 and 17 (mean 15.4) at a median of
+10.5 minutes and $2.09. The losses are almost all partial impact: plans named the
+change without the application's consequence for R01, R02, R14, R16 and R19. The
+planner prompt asks for affected code, applicability, recommendation and
+validation, but never for the consequence. The
+[v5 record](tests/results/20261013-headless/v5-compact-output-rails/summary.json)
+keeps each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:
