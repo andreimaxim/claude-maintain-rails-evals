@@ -78,8 +78,13 @@ added to fresh replacement costs. These figures do not establish subscription bi
 Regenerate costs, statistics and the two self-contained interactive graph views:
 
 ```sh
-python3 tests/summarize-planner-results.py tests/results/20261012 --views /tmp/planner-views
+node scripts/summarize-results.ts tests/results/20261012 --views /tmp/planner-views
 ```
+
+A Python generator wrote the published files. The TypeScript port produces the same
+keys, CSV and cost values, but writes `0` for `0.0` and computes 21 means and
+standard deviations that differ from Python's exact arithmetic in the last digits.
+Regenerating therefore changes file hashes recorded in the evidence index.
 
 ## Find the evidence for a run
 

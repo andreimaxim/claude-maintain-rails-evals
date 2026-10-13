@@ -21,33 +21,54 @@ hashes, test cases, evidence and grading. A plugin checkout is no longer needed
 to prepare worker inputs. The coordinator can retain an application checkout for
 inspection; workers must not receive the answer keys.
 
-**Each run happens in a dedicated app orb.** For future runs, use an isolated
-worker project with `andreimaxim/claude-maintain-rails-sample` as its only
-repository and the generated eval-owned pre-setup script. The approved project
-`andrei/planner-eval-workers` is active with no additional repositories; the
-existing sample project's settings are unchanged.
-The [bundle instructions](tests/planner-inputs/README.md) describe generation,
-hash checks and installation before Claude Code starts. Each worker receives:
+**Each run happens in a dedicated app orb.** Workers use the
+`andrei/claude-maintain-rails-sample` project with no additional repositories and
+no pre-setup script. The app's setup prepares Ruby, PostgreSQL and Redis; it no
+longer links a plugin. Sample commit
+[`ab732f5`](https://github.com/andreimaxim/claude-maintain-rails-sample/commit/ab732f534dce525ae70f1d31aac6908a1ab3d8f7)
+made that change; its application files are identical to the frozen fixture
+[`468e970`](https://github.com/andreimaxim/claude-maintain-rails-sample/commit/468e97084e809f8613523d0ac1bee6bf69794b4a).
 
-- `/home/user/workspace/repo`: the application and the model's working directory.
-- `/home/user/workspace/repos/claude-plugins/plugins/maintain-rails`: four embedded
-  runtime files at the path expected by the frozen app's setup. This is a
-  filesystem compatibility path, not a checkout of `claude-plugins`.
+Each run loads the skill variant under test for one headless session with
+`claude -p --plugin-dir`; see the [bundle instructions](tests/planner-inputs/README.md).
+For each run:
 
-The October 12 runs used `andrei/claude-maintain-rails-sample` and a plugin
-checkout. That historical route remains recorded below. The eval-owned bundle
-preserves the frozen prompt bytes and namespace without fetching the actively
-used plugin repository. The isolated worker's runtime hashes, application pin
-and Rails services were checked before evaluation. The first actual SDK run
-invoked both `maintain-rails:upgrade-gem` and `maintain-rails:gem-upgrade-planner`.
+1. `node scripts/prepare-run.ts <payload> --request "<request>" --model <model> --effort <effort> --run-id <id> [--plugin-dir <variant>]`
+   writes a payload and prints the worker prompt, the upload path and the result path.
+2. Create the worker thread in `andrei/claude-maintain-rails-sample` with
+   `executor: orb`, `agent_mode: external-agent:claude-code` and a cheap worker
+   model, such as features `model:claude-haiku-5-5` and `effort:low`. Send the
+   printed prompt, then upload the payload to the printed path with `upload_thread_file`.
+3. When the worker replies `STATUS done`, download the result archive with
+   `download_thread_file` and check its SHA-256 against the reply.
+
+The worker agent only checks the payload hash, starts the runner and waits. The
+runner refuses a moved or dirty checkout, a changed plugin or missing services.
+It runs the session with a private `CLAUDE_CONFIG_DIR`, so the worker's own session
+and any installed plugins stay out of it. The archive holds the stream output,
+the native main and subagent transcripts, and `receipt.json`: plugin hashes,
+application state before and after, service checks, wall time, every result
+record and the session's `total_cost_usd`. A background planner makes `claude -p`
+emit two results; the last one carries the delivered plan and the session total.
+Archives contain thinking blocks; keep them under `.amp/in/` and do not commit them.
+
+Two Haiku/low no-op trials (`Upgrade the rack gem to 2.2.24`) completed through this
+route with unchanged checkouts. The [first](https://ampcode.com/threads/T-01a13670-8a9b-7759-bb3d-0508cdbd0085),
+with an earlier Python runner, invoked the skill and planner in 16 seconds for $0.006.
+The [second](https://ampcode.com/threads/T-01a13681-c483-757c-b030-6a66eaed9413), with
+the TypeScript runner, invoked the skill but answered without the planner, in 9 seconds
+for $0.0015. Results from this route need their own baseline: earlier runs used Amp's
+Claude Code mode with an installed plugin.
 
 The coordinator selects cases, starts run threads, waits for their results,
 collects the planner invocations and returned plans, and assesses them here. A
-batch with ten concurrent runs uses ten separate app orbs, not ten
-agents sharing the coordinator's application checkout. Start runs with
-`executor: orb`, `agent_mode: external-agent:claude-code`, and features
-`model:claude-opus-5-5` and `effort:high`. This runs Claude Code through the Agent
-SDK.
+batch with ten concurrent runs uses ten separate app orbs, not ten agents sharing
+the coordinator's application checkout.
+
+The October 12 runs used the sample project with a `claude-plugins` checkout. The
+October 13 supplement used a separate worker project whose pre-setup installed the
+frozen bundle; that project is deleted, and its threads remain readable. Both
+routes ran Claude Code through Amp's `external-agent:claude-code` mode.
 
 The coordinator does not need the application's Ruby toolchain or database
 services. This repo does not pin Ruby or provision Rails dependencies; the app's
@@ -130,7 +151,7 @@ private temporary directory:
 ```sh
 private_dir=$(mktemp -d)
 amp threads export <thread-id> > "$private_dir/thread.json"
-python3 tests/collect-planner-trace.py "$private_dir/thread.json" /tmp/planner-trace.json
+node scripts/collect-trace.ts "$private_dir/thread.json" /tmp/planner-trace.json
 rm -r "$private_dir"
 ```
 
@@ -151,8 +172,9 @@ Keep that trace unchanged: later collection messages are not benchmark input or
 part of its elapsed time. `wall_time_ms` uses the initial request and recorded
 idle-state timestamp, not the start timestamp of a streamed final message.
 
-Check the collector with
-`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_*.py' -v`.
+The evaluation scripts are TypeScript in `scripts/` and run directly on Node 26 or
+later, with no build step. Run their tests with `npm test`. `npm install` adds the
+TypeScript compiler for `npm run typecheck`; the scripts themselves need no packages.
 
 ## Fixture construction established runtime ground truth
 
@@ -211,6 +233,8 @@ The setup change is published in sample commit
 [`9938031`](https://github.com/andreimaxim/claude-maintain-rails-sample/commit/9938031e54e1d7d074f1200a0da17e49390c86fa).
 It changes only `.agents/setup` relative to frozen application commit
 [`468e970`](https://github.com/andreimaxim/claude-maintain-rails-sample/commit/468e97084e809f8613523d0ac1bee6bf69794b4a).
+Sample commit `ab732f5` removes this step again, because runs now load the
+plugin per session.
 
 ## The integrated smoke reached an approval gate
 

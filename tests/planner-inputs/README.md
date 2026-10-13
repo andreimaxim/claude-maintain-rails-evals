@@ -7,40 +7,24 @@ byte for byte. That link records provenance; running the bundle does not fetch o
 clone the plugin repository. Keep `maintain-rails:gem-upgrade-planner` unchanged so
 the existing trace collector recognizes native invocations.
 
-## Pass the bundle before Claude Code starts
+## Load the bundle per session
 
-Generate a self-contained project pre-setup script from this checkout:
+`maintain-rails/` is a complete plugin directory. Claude Code 2.1.296 loads it for
+one headless session without installing it:
 
 ```sh
-python3 tests/prepare-planner-orb.py > /tmp/planner-eval-pre-setup.sh
-bash -n /tmp/planner-eval-pre-setup.sh
+claude -p "<upgrade request>" --plugin-dir <path>/maintain-rails \
+  --model <model> --effort <effort> --output-format stream-json --verbose
 ```
 
-The coordinator embeds only the four files in `manifest.json`, not this README,
-answer keys, prior results or grading instructions. The script verifies hashes,
-pins the application and writes `.amp/planner-source.json` in each worker.
-It refuses tracked application changes, an existing plugin Git checkout,
-unexpected input files, symlinks and modified installed inputs. Repeating it with
-the same inputs preserves the application and installs identical bytes.
+A probe in the coordinator orb registered `maintain-rails:upgrade-gem` and
+`maintain-rails:gem-upgrade-planner` under their benchmark names. Its final result
+reported `total_cost_usd` and per-model `modelUsage`. Skill variants for hill
+climbing use the same layout and namespace.
 
-The frozen application's `.agents/setup` expects
-`../repos/claude-plugins/plugins/maintain-rails`. The bundle uses that path solely
-as a filesystem bridge for unchanged setup and plugin discovery; it is not a Git
-repository. Future worker projects must have **no additional repositories** and
-receive the generated pre-setup script before startup. This requires an approved
-project-settings change. Generating the script alone does not activate it.
-
-The approved `andrei/planner-eval-workers` project now uses this setup with the
-sample application as its only repository. The installed application and runtime
-hashes were checked in a fresh worker, and a real Claude Code SDK run invoked both
-the skill and designated planner. The compatibility directory is not a Git
-checkout. The existing sample project's settings were not changed.
-
-Keep the normal Claude Code external-agent mode, exact model/effort and natural
-upgrade request. Run each repetition in a separate app orb. Record the bundle
-hashes, application commit, launch/idle timestamps, thread link and delivery
-status here. Collect the original scored turn before any recovery messages.
-Do not tune these prompts based on the held-out cases.
+The October 13 supplement passed the bundle through a project pre-setup script in
+a separate worker project. That project is deleted; its threads remain readable.
+The [cycle record](../planner-suite-20261012.md) retains the route's history.
 
 ## Costs need a separate source
 
@@ -69,7 +53,7 @@ placeholder, so prefer result-level or final-streaming output counts. Keep cache
 write TTLs and request fees when available; they also affect estimated cost.
 
 The approved recovery now retains original native usage with
-`tests/collect-planner-usage.py`. It excludes everything after each scored boundary,
+`scripts/collect-usage.ts`. It excludes everything after each scored boundary,
 includes nested native transcripts, deduplicates `message.id`, and retains only
 usage and allowlisted metadata. Final native records have a stop reason and output
 details; a request with only a streaming placeholder has unknown output. Prefix
@@ -80,7 +64,7 @@ five lower bounds. Seven Haiku workers refused collection, leaving unavailable
 costs. Seven quota-interrupted Opus-high attempts retain separate usage and spend
 bounds. No collection turn is counted as an evaluation or added to scored costs.
 
-`tests/price-planner-usage.py` applies the retained October 13 API list prices,
+`scripts/price-usage.ts` applies the retained October 13 API list prices,
 including cache-write TTLs and Haiku's per-request long-context threshold. It prices
 output once, including thinking already counted there. Missing final output,
 unknown prices or missing TTLs produce a null estimate and a stated lower bound.
