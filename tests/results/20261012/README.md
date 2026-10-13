@@ -16,10 +16,11 @@ keeps early failures separate from later recovery.
 
 ![Accuracy versus response time for all 80 runs](accuracy-time.png)
 
-![Recorded-request API price versus accuracy for all 80 runs](api-cost.png)
+![Accuracy on the vertical axis versus recorded-request API price on the horizontal axis for all 80 runs](api-cost.png)
 
 The first graph compares accuracy with request-to-last-response time, including
-failed workflows; the second compares API price with accuracy. Filled circles
+failed workflows; the second plots accuracy vertically and API price horizontally.
+Filled circles
 in the first graph indicate full designated-plan delivery, crosses
 indicate missing/incomplete plans or implementation, and hollow circles indicate
 unverified native delivery. The generated interactive graph views let readers

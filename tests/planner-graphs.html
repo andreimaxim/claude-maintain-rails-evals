@@ -23,7 +23,7 @@ select{font:12px var(--font-sans);color:var(--foreground);background:var(--backg
  const cases=['Rails','Sidekiq','Pagy','Faraday'],models=['Opus high','Opus low','Sonnet medium','Haiku medium'];
  const colors=['var(--chart-4)','var(--chart-1)','var(--chart-2)','var(--chart-3)'];
  const host=document.getElementById('plots'),detail=document.getElementById('detail'),picker=document.getElementById('run');
- document.getElementById('title').textContent=costMode?'API price versus accuracy':'Accuracy versus response time';
+ document.getElementById('title').textContent=costMode?'Accuracy versus API price':'Accuracy versus response time';
  document.getElementById('subtitle').textContent=`${data.length} runs · five repetitions per case and configuration · October 12–13, 2026`;
  document.getElementById('marks').textContent=costMode?'● Recorded usage complete   △ Lower bound only   × Usage unavailable':'● Full plan delivered   × Missing / incomplete / implementation   ○ Delivery unverified';
  document.getElementById('caption').textContent='Accuracy = actionable findings / expected findings. Safety and validation scored separately. No plan = N/A, not 0%. '+(costMode?'October 13 API list prices for recorded main + subagent requests; not invoices. Excludes unlogged calls and billing adjustments. Log price scale.':'Log time scale. Rails/Sidekiq Opus-high are earlier development references.')+' Overlapping runs remain individually selectable.';
@@ -36,22 +36,22 @@ select{font:12px var(--font-sans);color:var(--foreground);background:var(--backg
  picker.addEventListener('change',()=>{if(picker.value!=='')show(data[Number(picker.value)])});
  for(let c=0;c<4;c++){
   const section=document.createElement('section');section.innerHTML=`<p class="plot-title">${cases[c]} <span>${c===0?23:2} expected findings${costMode?' · USD':''}</span></p>`;
-  const svg=node('svg',{'aria-label':`${cases[c]} per-run ${costMode?'price versus accuracy':'accuracy versus response time'}`,role:'group'});section.append(svg);host.append(section);
+  const svg=node('svg',{'aria-label':`${cases[c]} per-run ${costMode?'accuracy versus price':'accuracy versus response time'}`,role:'group'});section.append(svg);host.append(section);
   const draw=()=>{
-   const w=svg.getBoundingClientRect().width,h=174,L=costMode?70:40,R=w-12,T=18,B=124;
+   const w=svg.getBoundingClientRect().width,h=174,L=costMode?80:40,R=w-12,T=costMode?32:18,B=124;
    svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.replaceChildren();
-   const x=v=>costMode?L+(R-L)*v/100:L+(R-L)*Math.log(Math.max(.5,v/60000)/.5)/Math.log(128);
-   const y=a=>costMode?B-(B-T)*Math.log(Math.max(.001,a)/.001)/Math.log(20000):B-(B-T)*a/100;
-   for(const a of costMode?[.001,.01,.1,1,10]:[0,50,100]){svg.append(node('line',{x1:L,x2:R,y1:y(a),y2:y(a),stroke:a===0?'var(--border)':'var(--grid)'}));svg.append(node('text',{x:0,y:y(a)-4},costMode?`$${a}`:`${a}%`))}
-   for(const tick of costMode?[0,50,100]:[1,4,16,64])svg.append(node('text',{x:x(costMode?tick:tick*60000),y:B+16,'text-anchor':tick===(costMode?100:64)?'end':'middle'},costMode?`${tick}%`:String(tick)));
+   const x=v=>costMode?L+(R-L)*Math.log(Math.max(.001,v)/.001)/Math.log(20000):L+(R-L)*Math.log(Math.max(.5,v/60000)/.5)/Math.log(128);
+   const y=a=>B-(B-T)*a/100;
+   for(const a of [0,50,100]){svg.append(node('line',{x1:L,x2:R,y1:y(a),y2:y(a),stroke:a===0?'var(--border)':'var(--grid)'}));svg.append(node('text',{x:0,y:y(a)-4},`${a}%`))}
+   for(const tick of costMode?[.001,.01,.1,1,10]:[1,4,16,64])svg.append(node('text',{x:x(costMode?tick:tick*60000),y:B+16,'text-anchor':tick===(costMode?10:64)?'end':'middle'},costMode?`$${tick}`:String(tick)));
    svg.append(node('text',{x:0,y:B+30},'N/A'));
-   if(costMode)svg.append(node('text',{x:44,y:B+16,'text-anchor':'middle'},'N/A'));
-   svg.append(node('text',{x:L,y:172},costMode?'Accuracy':'Response time (min, log scale)'));
+   if(costMode){svg.append(node('text',{x:44,y:B+16,'text-anchor':'middle'},'N/A'));svg.append(node('text',{x:0,y:14},'Accuracy'))}
+   svg.append(node('text',{x:L,y:172},costMode?'API price (USD, log scale)':'Response time (min, log scale)'));
    const points=data.filter(row=>row[0]===c);
    if(costMode)points.sort((a,b)=>Number(a[6]===null&&a[7]!==null)-Number(b[6]===null&&b[7]!==null));
    for(const d of points){
-    const [ci,m,r,a,t,f,estimate,bound]=d,accuracy=a===null?null:100*a/(c===0?23:2),v=costMode?(estimate??bound):accuracy;
-    const px=costMode?(accuracy===null?44:x(accuracy)):x(t),py=v===null?B+26:y(v),mark=costMode?(estimate!==null?'F':bound!==null?'B':'X'):f;
+    const [ci,m,r,a,t,f,estimate,bound]=d,accuracy=a===null?null:100*a/(c===0?23:2),price=estimate??bound;
+    const px=costMode?(price===null?44:x(price)):x(t),py=accuracy===null?B+26:y(accuracy),mark=costMode?(estimate!==null?'F':bound!==null?'B':'X'):f;
     const g=node('g',{class:'point',tabindex:0,role:'button','data-run':`${ci}-${m}-${r}`,'aria-label':describe(d)});
     g.append(node('title',{},describe(d)));g.append(node('circle',{class:'ring',cx:px,cy:py,r:8,fill:'none',stroke:colors[m],'stroke-width':1}));
     if(mark==='X')g.append(node('path',{d:`M${px-4},${py-4}l8,8m-8,0l8,-8`,stroke:colors[m],'stroke-width':1.8,fill:'none'}));
