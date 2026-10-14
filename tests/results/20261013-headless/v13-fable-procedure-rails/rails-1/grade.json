@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "+  enum :status, { draft: 0, ready: 1 }, prefix: true ... Without it, every model load fails. Validation: eager-load and production-boot turned ok by check 04.",
+      "reasons": "Validation: the plan only checks eager-load and boot. It does not persist draft and ready notes and then exercise the status filters and prefixed helpers after a reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `serialize :tags, coder: JSON` - Works on the current version: **no**. backport-7: `undefined method 'any?' for an instance of String`. Requires the upgrade.",
+      "reasons": "Validation: the plan only asserts that tags are an Array in one test. It does not reload existing JSON tags or check the stored representation.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `alias_method :highlight_color, :color` plus `alias_method :highlight_color=, :color=`",
+      "reasons": "Validation: the plan relies on one edit test. It does not reload the JSON settings, check form or error rendering, or confirm that existing settings are preserved.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`PG::UndefinedColumn: ERROR: column notes.notebooks does not exist`. Filtering by notebook returns 500. ... Repair: `@notes.where(notebook: @notebook)`",
+      "reasons": "Validation: the plan names tests only. It has no unequal notebook populations, no other-owner case and no check that a foreign notebook is denied.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The import receipt CSV lost its DOIs. ... Repair: `csv << [ note.title, citation&.id ]`",
+      "reasons": "Validation: the plan cites one receipt assertion. It does not apply an import with distinct DOI values and compare the downloaded receipt fields to the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A CSV import with an invalid row saved partial data. ... Repair: replace `return false unless row.note.save` with `raise ActiveRecord::Rollback unless row.note.save`",
+      "reasons": "Validation: the plan has a test and a valid-import control. It does not state the scenario of a valid row followed by an invalid row, checked with fresh PostgreSQL counts.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: String can't be coerced into Integer`. Export generation fails. ... Repair: `finish(fragments.join)`",
+      "reasons": "Validation: the plan cites only the 3 controller tests. It does not run the real worker and check the exact ordered Markdown bytes or a failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Annotations were missing from the import preview. ... Repair: `<% annotations = @import.annotations %>`. The lookup at lines 42/44 uses `row.line`, an Integer.",
+      "reasons": "Validation: the plan names one preview test. It does not specify unequal annotations at source lines 2 and 4 or a multiline CSV row.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "D4 (`app/views/exports/_export.html.erb:26`): `Cache expiration time is invalid, cannot be negative: -60.0` ... Final repair: `expires_in: [export.expires_at - Time.current, 1.second].max`",
+      "reasons": "Validation: the plan cites only a passing check and one test that broke. It does not test before and after the deadline with cached and fresh reads, or check download expiry and ownership.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A reminder postponed across a DST change shows a different offset. ... Repair: `Time.at(reminder_epoch + 86_400, in: reminder_at.formatted_offset)`",
+      "reasons": "Validation: the plan uses one DST test. It does not compare epoch, wall-clock time and offset, and it has no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: add `requested_at = requested_at.in_time_zone` before `@date = …`. This restores the documented behavior of using the worker's zone.",
+      "reasons": "Validation: the plan names one test. It does not use a real JSON queue and worker, cross each midnight separately, or inspect reservation keys and delivered note membership.",
+      "actionable": true
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "jobs queued by 8.1 with a BigDecimal can't be read by 7.0 workers (`BigDecimalSerializer is not known`). Jobs queued by 7.0 are read fine by 8.1. With R19, `DigestJob` passes a string",
+      "reasons": "Validation: the plan relies on the suite and a single matrix failure log. It does not re-run the full producer/consumer matrix in both directions with same-version controls, or check the exact delivered completion percentage for the repaired payload.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Scheduling a reminder returns 500. ... Repair: `NoteReminderJob.set(wait_until: Time.at(reminder_epoch))`",
+      "reasons": "Validation: the plan names a test that includes replacement. It does not inspect the real scheduled payload or score, or the persisted schedule time.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The first unavailable provider response crashes the job instead of retrying. ... Repair: `wait: :polynomially_longer` - Works on the current version: **no**.",
+      "reasons": "Validation: the plan's probe checks only the first retry delay. It does not show that a persistent 503 gives six requests over three attempts and a recorded failure, and it has no 503->200 or 401 controls.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The notes list returned 500. ... Repair: drop `model: nil,`. ... Validation: `test_renders_an_unbound_search_form` and `test_filters_by_notebook,_status,_and_title`.",
+      "reasons": "Validation: the plan names tests only. It does not explicitly confirm the field names, the form method and the resulting note membership when the form is submitted.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "replace `get \"/notes\", \"/journal\", to: \"notes#index\"` with two `get` lines. This keeps the route names `notes` and `journal`. ... `test_lists_the_reader's_notes_newest_first_at_both_list_paths` passes. Control: the route names match base.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `config.action_dispatch.show_exceptions = :none` - Works on the current version: **no**. backport-12: 8 failures. Requires the upgrade.",
+      "reasons": "Validation: the plan covers raised-exception and missing-record tests. It does not mention checking the normal test mode and the CI eager-loading mode.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "defaults = helper.allowed_tags || (helper.sanitizer.class.allowed_tags + [ ActionText::Attachment.tag_name, \"figure\", \"figcaption\" ]) ... Validation: boot passes, and `NotesControllerTest#test_rich_text_keeps_collapsible_excerpts_and_drops_unsafe_markup` passes.",
+      "reasons": "Validation: the plan does not render attachment markup, and it does not explicitly exclude event handlers and javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`config/application.rb`: `config.x.citation_provider = config_for(:secrets)[:citation_provider]` ... probe-3 printed `[\"http://127.0.0.1:9393\", \"00123\", \"sample: value # keep\"]` on both base and upgraded.",
+      "reasons": "Validation: the plan only shows that the config values are read. It makes no fresh-process request that checks the actual Basic header, successful metadata and bounded failure, and the citation tests still error.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "D1 (`app/models/notebook.rb:7`): `missing keyword: :coder ...` Repair: `serialize :preferences, coder: YAML`. probe-4 shows the stored form is YAML",
+      "reasons": "Validation: the plan only inspects the stored form. It does not create, edit and reload unequal preferences and the export heading with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "D2 (`app/controllers/notebooks_controller.rb:40`): `ActiveRecord::ReadonlyAttributeError: slug` (checks/defaults/02). Repair: remove `:slug` from `permit`. The slug stays read-only on create because `assign_slug` sets it.",
+      "reasons": "Recommendation: the plan removes slug from permit for creation as well as updates, and it does not verify that creation behavior is preserved. Validation: the plan relies on the suite only, with no specific tests for creation, editable fields, an attempted slug change or the persisted slug.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "D3 (`app/models/notebook.rb:40`): `TypeError: no implicit conversion of Date into String` (checks/defaults/02). Repair: `[day.to_date, count]`.",
+      "reasons": "Validation: the plan relies on the suite passing. It does not test with decoding off and on, with asymmetric UTC date counts, with empty reports, or for ownership.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "8.0 `strict_freshness`: `export_downloads_controller.rb:11` uses `stale?(etag:, last_modified:)`. A request carrying both headers now only checks If-None-Match. Not probed.",
+      "reasons": "Impact: the plan describes the precedence change but does not say that a matching ETag with an older If-Modified-Since turns 200-with-bytes into 304. Recommendation: the plan makes no keep or adopt decision. Validation: the plan explicitly says this was not probed.",
+      "actionable": false
+    }
+  },
+  "actionable": 21,
+  "cost_usd": 0.332172,
+  "duration_ms": 68519
+}

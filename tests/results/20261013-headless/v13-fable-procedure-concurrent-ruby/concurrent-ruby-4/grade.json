@@ -1,0 +1,28 @@
+{
+  "case": "concurrent-ruby",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "CR1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Note that the Gemfile pins it exactly (`Gemfile:8 gem \"concurrent-ruby\", \"1.3.4\"`), so the Gemfile line has to change too. ... Change the pin in `Gemfile:8` to `1.3.8`. Run `bundle update concurrent-ruby --conservative`.",
+      "reasons": "Validation: the plan shows a lock diff where only concurrent-ruby changes, but it never says the new version is 1.3.8 or that `bundle check` passes.",
+      "actionable": true
+    },
+    "CR2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fails without the repair: the boot check (check 01 FAIL). Passes with it: check 03 is `ok` at every step, with 46 runs, 325 assertions",
+      "reasons": "Validation: the plan shows boot failing without the fix and passing with it, plus a separate eager-load check, but it runs the test suite only once, not in both normal and eager-loading CI modes.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.077468,
+  "duration_ms": 16101
+}

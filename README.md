@@ -389,6 +389,23 @@ patch-bump run; and 1 of 1 in every no-op run. Its records are under
 [`tests/results/20261013-headless/`](tests/results/20261013-headless/), one
 directory per case.
 
+**A distilled step-by-step procedure kept the small gems and lost Rails
+recall.** [Variant v13](tests/planner-variants/v13-fable-procedure) is Claude
+Fable 5.1's redesign from the
+[optimizer brief](tests/results/20261014-optimizers/brief.md), which gave it run
+traces, plans and scores but not the answer key. Its planner follows eleven
+numbered steps around a new `bin/upgrade-lab` script that builds base and
+upgraded copies with private PostgreSQL and Redis, bumps the gem, runs boot,
+eager-load, routes and test checks, and reports the first error with application
+frames; a capped repair loop, probes, a new-defaults copy and a rollout matrix
+follow. Five runs per case scored 21, 17, 14, 18 and 19 on Rails (mean 17.8; v12
+21.0) at a median of $2.97 and 14.6 minutes; 2 of 2 in every Pagy run (v12 1.8);
+2, 2, 2, 2 and 1 on Faraday (mean 1.8); 1, 2, 1, 2 and 1 on the patch bump (mean
+1.4; v12 1.0); and 1 of 1 in every no-op run. On Rails it misses findings that
+v12 found in every run, mostly ones reached by reading rather than by a failing
+check. Its records are under
+[`tests/results/20261013-headless/`](tests/results/20261013-headless/).
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

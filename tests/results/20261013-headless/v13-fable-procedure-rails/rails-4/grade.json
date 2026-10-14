@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `enum :status, { draft: 0, ready: 1 }, prefix: true`. ... Validation: eager-load gets past line 10 in check 3.",
+      "reasons": "Validation: the plan only shows that eager-load gets past line 10 and that other enums were positional; it does not save draft/ready notes and exercise the filters and prefixed helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `serialize :tags, coder: JSON`. Works on current version: no. On 7.0 tags become the string",
+      "reasons": "Validation: the checks are an eager-load and one identical matrix cell; they do not edit comma-separated input or verify both the stored form and the array values for different tags.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`color` is a `store_accessor`, not a column. Repair: `alias_method :highlight_color, :color` and `alias_method :highlight_color=, :color=`.",
+      "reasons": "Validation: the plan relies on one named edit test; it does not explicitly reload the JSON settings, check form/error rendering, or check that existing settings are kept.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`PG::UndefinedColumn: ERROR: column notes.notebooks does not exist` ... Repair: `where(notebook: @notebook)`.",
+      "reasons": "Validation: the evidence is a probe log run count; it does not use notebooks of different sizes, another owner, or a foreign-notebook denial check.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Receipt CSVs lose their DOI column. ... Repair: `csv << [ note.title, citation&.doi ]`.",
+      "reasons": "Validation: it says only 'same test file as R13'; it does not compare downloaded receipt fields against persisted citations with distinct DOIs.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "When one row is invalid, the import and the earlier rows are saved anyway. ... raise ActiveRecord::Rollback unless saved",
+      "reasons": "Validation: one named test checks the record counts, but there is no successful-batch control and no explicit fresh PostgreSQL count after a real apply request.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Markdown exports fail in the Sidekiq job. ... Repair: `finish(fragments.join)`.",
+      "reasons": "Validation: it cites only '3 tests newly passing'; there is no real-worker check of the exact Markdown bytes and no failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The import preview silently drops annotations. ... Repair: `<% annotations = @import.annotations %>` (drop `.stringify_keys`).",
+      "reasons": "Validation: it cites only the imports tests passing; it does not specify different annotations on source lines 2 and 4, a multiline CSV row, or a no-save check.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "incorrect",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The postpone preview and the postponed reminder move by one hour across the daylight-saving change.",
+      "reasons": "Impact: the plan says the reminder moves by one hour, but its own probe values are the same instant with a different offset, so this wrongly claims a changed scheduling time. Validation: probe 2 compares only one printed value; it does not compare epoch, wall-clock time and offset, and has no non-boundary control.",
+      "actionable": false
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The digest covers the wrong day near midnight. ... Active Job keeps the `TimeWithZone` zone ... Repair: `requested_at = requested_at.in_time_zone`.",
+      "reasons": "Validation: it cites only digests_controller_test 2/2; there is no real JSON queue/worker run crossing each midnight that inspects reservation keys and which notes are delivered.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Scheduling a reminder returns 500. ... Repair: `NoteReminderJob.set(wait_until: Time.at(reminder_epoch))`.",
+      "reasons": "Validation: it cites only controller test counts; it does not inspect the real scheduled payload/score or the persisted schedule time.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`RuntimeError: Couldn't determine a delay based on :exponentially_longer` ... Repair: `wait: :polynomially_longer`. Works on current version: no",
+      "reasons": "Impact: the plan names the error but not the consequence that bounded ActiveJob retry falls through to Sidekiq retries. Validation: it gives only a full-suite count; there is no persistent-503 attempt count and no 503->200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The notes list returns 500. ... Repair: drop `model: nil`, leaving `form_with(url: notes_path, method: :get, ...)`.",
+      "reasons": "Validation: named tests pass, but submitting the form and checking field names, method and resulting note membership is not specified.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "split into `get \"/notes\", to: \"notes#index\"` and `get \"/journal\", to: \"notes#index\"`. ... `test_lists_the_reader's_notes_newest_first_at_both_list_paths` passes.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`ActiveRecord::RecordNotFound expected but nothing was raised` ... Repair: `config.action_dispatch.show_exceptions = :none`. Works on current version: no",
+      "reasons": "Validation: it cites only test counts; there is no explicit check of a raised-exception request, the missing-record policy, or the CI eager-loading mode.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "ActionText::ContentHelper.sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\", \"details\", \"summary\"]",
+      "reasons": "Validation: boot plus one test of excerpts and unsafe markup; attachment rendering, event handlers and javascript URLs are not each checked.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`config.x.citation_provider = config_for(:secrets).fetch(:citation_provider, {})` ... Effect if not fixed: citation lookups raise.",
+      "reasons": "Validation: the probe prints the settings, including the password, instead of testing special-character credentials, the actual Basic header, and bounded failure behavior in a fresh process.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`raise_on_invalid_cache_expiration_time`: today logged; becomes a raise. This is D2. ... `expires_in: [export.expires_at - Time.current, 1.second].max`",
+      "reasons": "Impact: the plan names the error but not that the exports page raises, including on a cache hit. Validation: one test only; it does not cover before/after the deadline, cached vs fresh reads, or download expiry/ownership.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "missing keyword: :coder ... (46 tests). Repair: `serialize :preferences, coder: YAML`.",
+      "reasons": "Validation: one identical matrix cell only; it does not create, edit and reload different preferences or check the export heading with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`ActiveRecord::ReadonlyAttributeError: slug`. Repair: `@notebook.update(notebook_params.except(:slug))`.",
+      "reasons": "Validation: a single named test; it does not explicitly cover creation, name/heading edits, an attempted slug change, and the persisted slug.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: no implicit conversion of Date into String`. Repair: `Date.iso8601(day.to_s)`.",
+      "reasons": "Impact: the plan names the error but not that populated daily-count reports fail. Validation: one test only; there is no decoding off/on comparison, uneven UTC date counts, empty-report check, or ownership check.",
+      "actionable": false
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "`strict_freshness`: `export_downloads_controller.rb:11` passes both an etag and `last_modified`. Not probed.",
+      "reasons": "Impact: the plan names the gate and code but not the change from 200-with-bytes to 304. Applicability: it omits the matching ETag list plus older If-Modified-Since condition. Recommendation: no keep/adopt decision is given. Validation: none ('Not probed').",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "a digest queued by 8.1 fails on a 7.0 worker during the rollout or after a rollback. Repair: `DigestJob.perform_later(self, requested_at, reading_completion.to_s)`. ... matrix 121554 has the same job cell in all 9 combinations.",
+      "reasons": "",
+      "actionable": true
+    }
+  },
+  "actionable": 18,
+  "cost_usd": 0.322736,
+  "duration_ms": 63635
+}

@@ -1,0 +1,28 @@
+{
+  "case": "concurrent-ruby",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "CR1": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "pinned explicitly at `Gemfile:8`. ... change the version in `Gemfile` to 1.3.8, run `bundle update concurrent-ruby`",
+      "reasons": "Impact: the plan mentions the explicit pin but never says that the exact 1.3.4 requirement stops 1.3.8 from resolving. Applicability: it names Gemfile:8 but does not give the condition that the pin excludes the target release. Validation: it reports a lock diff where only concurrent-ruby changes, but `bundle check` is never mentioned.",
+      "actionable": false
+    },
+    "CR2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fails without the repair: the boot step of `upgraded` check 01 fails with the error above. Passes with it: check 02 boots and runs all 46 tests.",
+      "reasons": "Validation: the plan shows boot failing without the fix and passing with it, then a normal suite run, but it never runs or proposes eager-loading or CI eager-load mode.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.09985219999999999,
+  "duration_ms": 20701
+}

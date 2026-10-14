@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Consequence if nothing is done: the app does not boot at all. ... +Pagy::DEFAULT[:limit] = 10 +Pagy::DEFAULT[:limit_param] = :per_page +Pagy::DEFAULT[:limit_max] = 50 ... +options_for_select([5, 10, 25, 50], @pagy.limit) ... R1, R2 and the Gemfile/Gemfile.lock bump must ship together in one commit.",
+      "reasons": "Validation is partial because it relies on the suite, named tests, the 500→50 cap and the selected-option check. It lacks the key's discriminating scenario: asymmetric owned, filter-excluded and foreign data; positions 6–10 on page 2 at size 5; following the actual Next href; the default of 10; the size-25 last page; exact retained filter queries; /journal; foreign-note 404; and anonymous redirect.",
+      "actionable": true
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "a URL such as `/notes?page=0` or `?page=abc` (a stale or hand-edited link) returns a 500 error instead of page 1. ... +    @pagy, @notes = pagy(@notes, page: [params[:page].to_i, 1].max) ... Works on the current version: yes ... Control: the same test's `per_page=50, page=9` request still lands on the last page",
+      "reasons": "Validation is partial: it covers the four invalid inputs, the stale-page control and the backport on 8.6.3, but omits comparisons with page-one content, valid first/next/last controls, filtering and ownership checks.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.090576,
+  "duration_ms": 19282
+}

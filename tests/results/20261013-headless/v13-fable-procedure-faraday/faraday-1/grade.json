@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Faraday::Error: :retry is not registered on Faraday::Request` ... every citation lookup raises when the connection is built ... +gem \"faraday-retry\", \"~> 2.2\" ... This **requires the upgrade** and ships in the same commit as the faraday bump ... the retry-on-503 test passes in check 4, so `max: 1, retry_statuses: [503]` is still honoured.",
+      "reasons": "Validation is partial: the plan relies on controller tests passing. It does not use a real HTTP provider with a queue worker, and it does not count requests for three cases: 503 then 200 should make two requests, persistent 503 should make six requests over three attempts with empty retry and dead sets, and 401 should make one request. It also does not check zero requests and pending citations on the unrepaired target bundle.",
+      "actionable": true
+    },
+    "FD2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Faraday::Error: :basic_auth is not registered on Faraday::Request` ... Consequence if nothing is done: every citation lookup fails. ... +        faraday.request :authorization, :basic, @user, @password ... The credentials test asserts that the server receives the `basic_auth(user, password)` header unchanged.",
+      "reasons": "Validation is partial: the plan has a credentials header test and a non-ASCII header probe. It does not reproduce the zero-request failure with FD1 repaired, and it does not test numeric, colon or hash credentials in a fresh process. It also omits the real wrong-password 401, successful and failed refresh, owner and no-DOI denial, and unsafe metadata controls.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.081712,
+  "duration_ms": 12085
+}

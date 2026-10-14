@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "+gem \"faraday-retry\", \"~> 2.2\" # retry middleware moved out of faraday 2.0 ... Consequence if nothing is done: every citation lookup raises, both in the citation-enrichment request and in `CitationEnrichmentJob`. ... Works on the current version: no.",
+      "reasons": "Validation is partial: it relies on test results and the check 2→3 error shift. It does not use a real HTTP provider with a Sidekiq worker, and it has no request counts (two, six or one), no checks of the scheduled, retry and dead sets, and no check that the raw target bundle makes zero requests.",
+      "actionable": true
+    },
+    "FD2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "-        faraday.request :basic_auth, @user, @password\n+        faraday.request :authorization, :basic, @user, @password ... \"provider credentials from the environment reach the server unchanged\", which asserts the exact Basic header the server receives.",
+      "reasons": "Validation is partial: it reproduces the failure with FD1 repaired and asserts the Basic header in a test. It does not use a fresh process with numeric, colon and hash credentials, a real wrong-password 401, refresh success and failure, owner and no-DOI denial, or the unsafe-metadata controls.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.099356,
+  "duration_ms": 19600
+}
