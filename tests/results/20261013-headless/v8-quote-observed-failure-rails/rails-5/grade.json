@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum status: {...}, _prefix: true` raises `ArgumentError` ... Fix: `enum :status, { draft: 0, ready: 1 }, prefix: true`. Works on 7.0.",
+      "reasons": "Validation: the plan gives only overall suite results, with no persisted draft/ready filter or helper check after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `serialize :tags, coder: JSON`. Does not work on 7.0, so it ships with the upgrade. ... raw `[\"a\",\"b\"]` round-trips identically",
+      "reasons": "Validation: the probe only round-trips raw data; it does not test editing comma-separated input or unequal tags after reload.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `alias_method :highlight_color, :color` plus `alias_method :highlight_color=, :color=`.",
+      "reasons": "Validation: there is no specific edit/reload/form-rendering check, only the general suite result.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`PG::UndefinedColumn: column notes.notebooks does not exist`. The notebook filter and pagination break. Fix: `where(notebook: @notebook)`.",
+      "reasons": "Validation: there are no unequal notebook populations and no foreign-owner denial checks.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the receipt CSV's doi column comes out empty on 8.1. It was `10.1000/Essays.1` on 7.0. Fix: `citation&.doi`.",
+      "reasons": "Validation: the plan reports one observation, not a check comparing distinct DOIs against persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "a failing row now commits the import and the earlier rows ... Since 7.2 a non-local return always commits, regardless of `load_defaults`. Fix: `raise ActiveRecord::Rollback ...`",
+      "reasons": "Validation: the plan names the test and its counts, but has no successful-batch control or fresh PostgreSQL count check through a real request.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: String can't be coerced into Integer`. Every export job fails. Fix: `fragments.join`.",
+      "reasons": "Validation: there is no real-worker check of the exact ordered Markdown bytes or of the failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`HashWithIndifferentAccess#stringify_keys` now stringifies integer keys ... annotations vanish from the import preview. Fix: use `@import.annotations` directly.",
+      "reasons": "Validation: there is no check with unequal annotations at lines 2 and 4 that includes a multiline row.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "across a DST change the preview shows `2026-11-01T08:00:00-05:00` instead of `09:00:00-04:00`. The instant is the same (+86400 s)",
+      "reasons": "Validation: the DST boundary case is covered, but there is no non-boundary control or explicit epoch/offset comparison.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the digest subject changed from \"October 05\" to \"October 04\" ... Fix: `requested_at = params[:requested_at].utc` in the mailer.",
+      "reasons": "Validation: there is no real queue/worker check that crosses each midnight or inspects reservation keys and note membership.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`NoMethodError: undefined method 'utc' for an instance of Integer`. Scheduling and postponing reminders return 500. Fix: `wait_until: Time.at(reminder_epoch)`.",
+      "reasons": "Validation: there is no inspection of the scheduled payload/score or the persisted schedule time.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "only when a retry happens: `RuntimeError: Couldn't determine a delay based on :exponentially_longer`. Fix: `:polynomially_longer`, which does not exist on 7.0, or a lambda",
+      "reasons": "Impact: names the error but not that bounded retries fall through to Sidekiq retries. Validation: there is no persistent-503 request count or 503->200/401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Passed nil to the :model argument, expect an object or false`. The notes list returns 500. Fix: drop `model: nil`.",
+      "reasons": "Validation: the only check is a grep; there is no render/submit check of field names, method and resulting membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "split it into `get \"/notes\", to: \"notes#index\", as: :notes` and `get \"/journal\", to: \"notes#index\"`",
+      "reasons": "Validation: there is no explicit check that requests both URLs as an owner.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`show_exceptions = false` no longer raises in tests; tests got a 404 instead of `RecordNotFound`. Fix: set it to `:none`. That value is only valid from 7.1",
+      "reasons": "Validation: there is no explicit raised-exception/missing-record check and no CI eager-load mode check.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "start from `allowed_tags || sanitizer.class.allowed_tags + [attachment tag, \"figure\", \"figcaption\"]` and add `details summary`",
+      "reasons": "Validation: the existing test covers excerpts and unsafe markup only generally; it does not cover attachments, handlers or javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "set `config.x.citation_provider = config_for(:citation_provider)...` ... the credentials test asserts the exact Basic auth header.",
+      "reasons": "Validation: there is no fresh-process check with special-character credentials and no bounded-failure check.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`raise_on_invalid_cache_expiration_time`: the export partial raises ... for expired exports. Clamp `expires_in` or skip the cache when the export is not downloadable.",
+      "reasons": "Recommendation: the skip-cache option is offered on equal footing with clamping and is known to break the stale-link contract. Validation: no deadline or cache-hit tests are specified.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Notebook` `serialize :preferences` fails at load with `missing keyword: :coder`. Add `coder: YAML` (7.1+ only); stored YAML stays readable.",
+      "reasons": "Validation: per-level suite logs exist, but there is no create/edit/reload of unequal preferences with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`NotebooksController#update` raises `ActiveRecord::ReadonlyAttributeError: slug`, because `notebook_params` permits `:slug`. Remove `:slug` from the permitted params.",
+      "reasons": "Recommendation: removing slug from the shared params does not ensure creation still sets the slug. Validation: there is no creation or persisted-slug check.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`postgresql_adapter_decode_dates`: `Notebook#daily_note_counts` raises `TypeError` ... Fix with `Date.iso8601(day.to_s)` or handle a Date, which works on both.",
+      "reasons": "Validation: there is no explicit decoding off/on test with asymmetric counts, empty reports and ownership.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "missing",
+      "validation": "partial",
+      "quote": "`strict_freshness`: the export download checks only `If-None-Match` when both headers are sent; the existing test passes.",
+      "reasons": "Impact: the 200-to-304 change is not stated. Recommendation: no explicit keep/adopt decision is made. Validation: only the existing test is cited.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "When I gave those payloads to 7.0, it raised `... BigDecimalSerializer is not known` ... Jobs queued by 7.0 run correctly on 8.1 ... pass `completion` as a String",
+      "reasons": "Validation: both cross-version directions were tested, but there are no same-version controls and no check of the exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 19,
+  "cost_usd": 0.180396,
+  "duration_ms": 47117
+}

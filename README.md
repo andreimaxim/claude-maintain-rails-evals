@@ -304,6 +304,19 @@ five-run noise; the losses are again partial impact (R14, R16, R19). The
 [v7 record](tests/results/20261013-headless/v7-consequence-compact-output-rails/summary.json)
 keeps each run's plan, receipt and grade.
 
+**Quoting the observed failure gives the best recall at lower cost.**
+[Variant v8](tests/planner-variants/v8-quote-observed-failure) asks v7's planner
+to quote the exact error or observed behavior when an experiment showed the
+consequence. Five runs scored 20, 21, 20, 20 and 19 (mean 20.0) at a median of
+11.0 minutes and $2.48: higher than v6 at less cost, and above the October 12
+Opus-high runs (18.2 at about $9.60) under the same grader. R19 rose to 5/5 and
+R16 recovered to 5/5. R09 (1/5) and R21 (1/5) fail on recommendations that break
+other behavior, such as dropping `slug` for creation too or offering cache
+skipping on equal footing with clamping; R25 stays at 0/5 and R14 at 3/5. No plan
+fully specified any validation. The
+[v8 record](tests/results/20261013-headless/v8-quote-observed-failure-rails/summary.json)
+keeps each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

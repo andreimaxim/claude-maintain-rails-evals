@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`note.rb` `enum status: {...}, _prefix: true` | `ArgumentError: wrong number of arguments (given 0, expected 1..2)` from `enum.rb:217` while loading classes. | `enum :status, { draft: 0, ready: 1 }, prefix: true` | yes",
+      "reasons": "Validation: the plan only cites the full suite passing. It does not persist draft and ready notes and exercise filters and helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, JSON` | `wrong number of arguments (given 2, expected 1)` from `serialization.rb:193`. | `serialize :tags, coder: JSON` | **no** (keyword added in 7.1)",
+      "reasons": "Validation: suite results only. Nothing reloads existing tags, edits comma-separated input or checks the stored representation.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`color` is a `store_accessor`, not a column: `ArgumentError: Note model aliases 'color', but 'color' is not an attribute.` | `alias_method :highlight_color, :color` and `alias_method :highlight_color=, :color=`",
+      "reasons": "Validation: suite only. Nothing edits the color, reloads the JSON settings or checks form and error rendering.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`where(notebooks: @notebook)` | `PG::UndefinedColumn: column notes.notebooks does not exist` when the list is filtered by notebook. | `where(notebook: @notebook)`",
+      "reasons": "Validation: no scenario with unequal notebook populations, inclusion and exclusion checks, or denial of another owner's notebook.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Citations use `doi` as the primary key... on 8.1 it returns `nil`, so the receipt CSV's doi column is blank. No test asserts it. | `citation&.doi`",
+      "reasons": "Validation: only a console-level `[:id]` check. Nothing applies an import and compares the downloaded receipt to the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Experiment `/tmp/up/apply_exp.rb` (an import with one valid row and one blank-title row): 7.0 gives `apply=false imports=0 notes=0`; 8.1 gives `apply=false imports=1 notes=1`... `raise ActiveRecord::Rollback`",
+      "reasons": "Validation: the experiment does not go through a real apply request, does not count citations, and has no successful-batch control.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`export.rb` `finish(fragments.sum)` | Every export job fails with `TypeError: String can't be coerced into Integer`... | `fragments.join`",
+      "reasons": "Validation: suite only. No real-worker run checks the exact ordered Markdown bytes or the failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`@import.annotations.stringify_keys` | **Silent.** The keys become `\"2\"`, so the lookup by integer `row.line` returns nil and annotations vanish from the preview... | Drop `.stringify_keys`.",
+      "reasons": "Validation: only the observed hash keys. No preview with unequal annotations at lines 2 and 4 or with a multiline CSV row.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "across the DST change the preview shows `2026-11-01 08:00 -0500` instead of `09:00 -0400`. The moment in time... is the same... `reminder_at.to_time.getlocal(reminder_at.utc_offset) + 86_400`, or accept the new display and update the test and comment.",
+      "reasons": "Validation: the DST-boundary case is shown, but there is no explicit epoch comparison and no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Since 7.1, Active Job keeps a TimeWithZone's zone, so the digest covers the reader's local day instead of the UTC day the app promises... `requested_at = requested_at.utc`",
+      "reasons": "Validation: one test date mismatch only. No real queue and worker run crossing each midnight, and no check of reservation keys or delivered note membership.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`set(wait_until: reminder_epoch)` (an Integer) | Scheduling a reminder raises `undefined method 'utc' for an instance of Integer`. | `wait_until: Time.at(reminder_epoch)`",
+      "reasons": "Validation: suite only. Nothing inspects the real scheduled payload or score, or the persisted schedule time.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`wait: :exponentially_longer` | When the provider is unavailable, the job raises `RuntimeError: Couldn't determine a delay...` | `:polynomially_longer` | **no**",
+      "reasons": "Impact: the plan names the raised error but not the consequence: bounded Active Job retry is lost and the job falls into Sidekiq retries. Validation: no persistent-503 request-count scenario and no 503->200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The note list, which is also the page after sign-in, returns 500: `Passed nil to the :model argument...` | Drop `model: nil`.",
+      "reasons": "Validation: suite only. Nothing checks the form's field names, method or the resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Two separate `get` lines. The route names `notes` and `journal` stay the same (checked with `bin/rails routes` on both versions).",
+      "reasons": "Validation: route names are checked, but neither URL is requested as an owner to compare the list behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Exceptions are turned into responses, so every `assert_raises ActiveRecord::RecordNotFound` ownership test fails... | `:none` | **no** (7.0 would treat `:none` as true)",
+      "reasons": "Validation: ownership tests and eager-load are mentioned, but there is no explicit raised-request-exception scenario or CI eager-loading mode check.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "set `allowed_tags = sanitizer.class.allowed_tags.to_a + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\", \"details\", \"summary\"]`. The test that keeps `details` and `summary` passes.",
+      "reasons": "Validation: the details and summary test is cited, but attachment markup and exclusion of scripts, handlers and javascript URLs are not explicitly checked.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Moved the settings to `config/citation_provider.yml`... and `config.x.citation_provider = config_for(:citation_provider)`. The test that passes credentials through the environment, including values like `\"00123\"`... passes.",
+      "reasons": "Validation: no fresh-process check of the actual Basic header, the successful metadata response or the bounded failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`raise_on_invalid_cache_expiration_time` | **Breaks:** `Cache expiration time is invalid, cannot be negative: -60.0`... Clamp the value or skip caching expired exports.",
+      "reasons": "Recommendation: skipping the cache is offered on equal footing with clamping, and that alternative breaks the stale-link contract. Validation: no tests before and after the deadline, for cached versus fresh reads, or for download expiry.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`default_column_serializer = nil` | **Breaks:** `ArgumentError: missing keyword: :coder` for `serialize :preferences`... Use `serialize :preferences, coder: YAML` so existing YAML text stays readable",
+      "reasons": "Validation: only a suite run under 8.1 defaults. No create, edit and reload of unequal preferences with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`raise_on_assign_to_attr_readonly` | **Breaks:** `ActiveRecord::ReadonlyAttributeError: slug`. The settings form resubmits `slug`, and `notebook_params` permits it. Stop permitting `:slug` on update.",
+      "reasons": "Validation: observed only through the defaults suite run. No tests for creation, an attempted slug change or the persisted slug.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`postgresql_adapter_decode_dates` | **Breaks:** `TypeError: no implicit conversion of Date into String` in `Notebook#daily_note_counts`... `day.is_a?(Date) ? day : Date.iso8601(day)`",
+      "reasons": "Validation: only the defaults suite run. No decoding off and on comparison with asymmetric counts, an empty report or an ownership check.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "`action_dispatch.strict_freshness` | ...With this on, only `If-None-Match` is considered when both are sent. The ownership and expiry checks still run first. Not tested.",
+      "reasons": "Impact: the precedence rule is described, but not the concrete change from a 200 with bytes to a 304. Recommendation: no explicit keep/adopt decision. Validation: explicitly not tested.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 8.1, a `BigDecimal` job argument is always written with `BigDecimalSerializer`... Rails 7.0 cannot read it... upgrade Sidekiq workers before or together with web servers... pass `reading_completion.to_s`.",
+      "reasons": "Validation: only the 8.1->7.0 deserialization error was observed. No full producer/consumer matrix with same-version controls and exact delivered completion percentages.",
+      "actionable": true
+    }
+  },
+  "actionable": 20,
+  "cost_usd": 0.18802,
+  "duration_ms": 49256
+}
