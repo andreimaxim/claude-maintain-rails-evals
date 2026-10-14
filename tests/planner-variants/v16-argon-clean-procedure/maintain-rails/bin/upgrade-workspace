@@ -1,0 +1,980 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Manages an isolated disposable workspace for evaluating a gem upgrade.
+#
+# Subcommands:
+#   ruby upgrade-workspace setup GEM FROM TO [APP_DIR] [--work-dir DIR]
+#   ruby upgrade-workspace probe 'RUBY_CODE' [--work-dir DIR] [--defaults VERSION]
+#   ruby upgrade-workspace test [TEST_PATHS...] [--work-dir DIR] [--defaults VERSION] [--target baseline|upgraded|both]
+#   ruby upgrade-workspace reset [--work-dir DIR]
+#   ruby upgrade-workspace cleanup [GEM] [TO] [--work-dir DIR]
+#
+# Uses only Ruby's standard library. Isolates PostgreSQL databases, Redis
+# database numbers, and Active Storage directories so the real application
+# checkout and its services are never modified.
+
+require "bundler"
+require "digest"
+require "fileutils"
+require "json"
+require "open3"
+require "set"
+
+LAST_WORKSPACE_FILE = "/tmp/.maintain-rails-last-workspace"
+
+def abort_usage
+  abort <<~USAGE
+    Usage:
+      upgrade-workspace setup GEM FROM TO [APP_DIR] [--work-dir DIR]
+      upgrade-workspace probe 'RUBY_CODE' [--work-dir DIR] [--defaults VERSION]
+      upgrade-workspace test [TEST_PATHS...] [--work-dir DIR] [--defaults VERSION] [--target baseline|upgraded|both]
+      upgrade-workspace reset [--work-dir DIR]
+      upgrade-workspace cleanup [GEM] [TO] [--work-dir DIR]
+  USAGE
+end
+
+def parse_flags(args)
+  opts = {}
+  rest = []
+  i = 0
+  while i < args.size
+    case args[i]
+    when "--work-dir"
+      opts[:work_dir] = args[i + 1]
+      i += 2
+    when "--defaults"
+      opts[:defaults] = args[i + 1]
+      i += 2
+    when "--target"
+      opts[:target] = args[i + 1]
+      i += 2
+    else
+      rest << args[i]
+      i += 1
+    end
+  end
+  [rest, opts]
+end
+
+def resolve_work_dir(opts, gem_name = nil, to_ver = nil)
+  return File.expand_path(opts[:work_dir]) if opts[:work_dir]
+  return "/tmp/upgrade-#{gem_name}-#{to_ver}" if gem_name && to_ver
+  if File.exist?(LAST_WORKSPACE_FILE)
+    dir = File.read(LAST_WORKSPACE_FILE).strip
+    return dir if !dir.empty? && File.directory?(dir)
+  end
+  candidates = Dir.glob("/tmp/upgrade-*").select { |d| File.exist?(File.join(d, "meta.json")) }
+  abort "No active upgrade workspace found. Run `upgrade-workspace setup` first." if candidates.empty?
+  candidates.max_by { |d| File.mtime(File.join(d, "meta.json")) }
+end
+
+def run_cmd(cmd, chdir: nil, env: {}, timeout: 180)
+  opts = {}
+  opts[:chdir] = chdir if chdir
+  stdout, stderr, status = Open3.capture3(env, *Array(cmd), **opts)
+  [
+    stdout.dup.force_encoding(Encoding::UTF_8).scrub,
+    stderr.dup.force_encoding(Encoding::UTF_8).scrub,
+    status.exitstatus || 1
+  ]
+rescue StandardError => e
+  ["", "#{e.class}: #{e.message}", 1]
+end
+
+def copy_app(src, dst)
+  FileUtils.mkdir_p(dst)
+  run_cmd(["rsync", "-a", "--exclude=/tmp/*", "--exclude=/log/*", "--exclude=/storage/*", "--exclude=/vendor/bundle", "#{src}/", "#{dst}/"])
+  unless File.exist?(File.join(dst, "Gemfile"))
+    # Fallback if rsync is unavailable
+    Dir.glob(File.join(src, "*"), File::FNM_DOTMATCH).each do |entry|
+      base = File.basename(entry)
+      next if [".", "..", "tmp", "log", "storage"].include?(base)
+
+      FileUtils.cp_r(entry, dst)
+    end
+  end
+  %w[tmp tmp/pids tmp/cache tmp/storage log storage].each { |d| FileUtils.mkdir_p(File.join(dst, d)) }
+end
+
+def pg_available?
+  _, _, code = run_cmd(["psql", "-U", "postgres", "-d", "postgres", "-tAc", "SELECT 1"])
+  return ["postgres", nil] if code == 0
+
+  user = ENV["USER"] || "user"
+  _, _, code2 = run_cmd(["psql", "-U", user, "-d", "postgres", "-tAc", "SELECT 1"])
+  return [user, nil] if code2 == 0
+
+  _, _, code3 = run_cmd(["psql", "-h", "127.0.0.1", "-U", "postgres", "-d", "postgres", "-tAc", "SELECT 1"])
+  return ["postgres", "127.0.0.1"] if code3 == 0
+
+  [nil, nil]
+end
+
+def run_psql(sql, pg_user, pg_host)
+  cmd = ["psql"]
+  cmd += ["-h", pg_host] if pg_host
+  cmd += ["-U", pg_user] if pg_user
+  cmd += ["-d", "postgres", "-v", "ON_ERROR_STOP=0", "-tAc", sql]
+  run_cmd(cmd)
+end
+
+def pick_redis_dbs
+  used = Set.new([0, 1])
+  (10..15).each do |db|
+    out, _, code = run_cmd(["redis-cli", "-n", db.to_s, "DBSIZE"])
+    if code == 0 && out.strip.to_i == 0
+      # candidate empty db
+    elsif code == 0
+      used << db
+    end
+  end
+  avail = (4..15).reject { |d| used.include?(d) }
+  avail = [11, 12] if avail.size < 2
+  [avail[0], avail[1]]
+end
+
+def flush_redis_db(db)
+  run_cmd(["redis-cli", "-n", db.to_s, "FLUSHDB"])
+end
+
+def isolate_copy_config(copy_dir, dev_db, test_db, redis_db, pg_user, pg_host)
+  db_yml = File.join(copy_dir, "config", "database.yml")
+  if File.exist?(db_yml)
+    content = File.read(db_yml, encoding: "UTF-8").scrub
+    # Replace database names under development and test sections
+    lines = content.lines
+    section = nil
+    rewritten = lines.map do |line|
+      if line.match?(/\A(development|test|production|default):\s*(#.*)?\z/)
+        section = line[/\A(\w+):/, 1]
+        line
+      elsif section == "development" && line.match?(/\A(\s*database:\s*).+/)
+        suffix = line[/database:\s*\S+(_cache|_queue|_cable)\b/, 1]
+        "#{Regexp.last_match(1) || line[/\A\s*database:\s*/]}#{dev_db}#{suffix}\n"
+      elsif section == "test" && line.match?(/\A(\s*database:\s*).+/)
+        suffix = line[/database:\s*\S+(_cache|_queue|_cable)\b/, 1]
+        "#{Regexp.last_match(1) || line[/\A\s*database:\s*/]}#{test_db}#{suffix}\n"
+      elsif line.match?(/\A\s*username:\s*(?!<)/) && pg_user
+        "#{line[/\A\s*username:\s*/]}#{pg_user}\n"
+      else
+        line
+      end
+    end
+    File.write(db_yml, rewritten.join)
+  end
+
+  redis_url = "redis://127.0.0.1:6379/#{redis_db}"
+  Dir.glob(File.join(copy_dir, "config", "**", "*.{rb,yml,yaml}")).each do |cfg|
+    next if File.basename(cfg) == "database.yml"
+
+    text = File.read(cfg, encoding: "UTF-8").scrub
+    updated = text.gsub(%r{redis://(?:localhost|127\.0\.0\.1)(?::\d+)?(?:/\d+)?}, redis_url)
+    File.write(cfg, updated) if updated != text
+  end
+end
+
+def write_preload_script(work_dir)
+  preload_path = File.join(work_dir, "preload_probe.rb")
+  File.write(preload_path, <<~'RUBY')
+    # frozen_string_literal: true
+
+    ENV["UPGRADE_REQUIRE_LIBS"].to_s.split(",").map(&:strip).reject(&:empty?).each do |lib|
+      require lib
+    rescue LoadError
+      nil
+    end
+
+    if ENV["UPGRADE_LOAD_DEFAULTS"] && !ENV["UPGRADE_LOAD_DEFAULTS"].empty?
+      TracePoint.new(:end) do |tp|
+        if tp.self.name == "Rails::Application::Configuration"
+          tp.disable
+          tp.self.prepend(Module.new do
+            def load_defaults(target_version)
+              if !@_upgrade_load_defaults_applied && ENV["UPGRADE_LOAD_DEFAULTS"] && !ENV["UPGRADE_LOAD_DEFAULTS"].empty?
+                @_upgrade_load_defaults_applied = true
+                super(ENV["UPGRADE_LOAD_DEFAULTS"])
+              else
+                super(target_version)
+              end
+            end
+          end)
+        end
+      end.enable
+    end
+
+    TracePoint.new(:end) do |tp|
+      if tp.self.name == "Rails::Application"
+        tp.disable
+        if defined?(ActiveSupport::Deprecation) && ActiveSupport::Deprecation.respond_to?(:debug=)
+          ActiveSupport::Deprecation.debug = true
+        end
+      end
+    end.enable
+  RUBY
+  preload_path
+end
+
+def copy_env(meta, target, defaults: nil)
+  info = meta[target.to_s]
+  preload = File.join(meta["work_dir"], "preload_probe.rb")
+  req_libs = Array(info["require_libs"]).join(",")
+  rubyopt = [ENV["RUBYOPT"], "-r#{preload}"].compact.join(" ").strip
+  env = {
+    "RAILS_ENV" => "test",
+    "RACK_ENV" => "test",
+    "REDIS_URL" => "redis://127.0.0.1:6379/#{info["redis_db"]}",
+    "REDIS_TEST_URL" => "redis://127.0.0.1:6379/#{info["redis_db"]}",
+    "CABLE_URL" => "redis://127.0.0.1:6379/#{info["redis_db"]}",
+    "BUNDLE_GEMFILE" => File.join(info["dir"], "Gemfile"),
+    "UPGRADE_REQUIRE_LIBS" => req_libs,
+    "UPGRADE_LOAD_DEFAULTS" => defaults.to_s,
+    "RUBYOPT" => rubyopt,
+    "DISABLE_SPRING" => "1",
+    "BOOTSNAP_CACHE_DIR" => File.join(info["dir"], "tmp", "cache")
+  }
+  env["PGUSER"] = meta["pg_user"] if meta["pg_user"]
+  env["PGHOST"] = meta["pg_host"] if meta["pg_host"]
+  env
+end
+
+def update_gemfile_for_target(gemfile_path, gem_name, target_version)
+  content = File.read(gemfile_path, encoding: "UTF-8").scrub
+  pattern = /^(\s*gem\s+["']#{Regexp.escape(gem_name)}["'])(?:\s*,\s*["'][^"']*["'])?(.*)$/
+  if content.match?(pattern)
+    updated = content.sub(pattern, "\\1, \"= #{target_version}\"\\2")
+  else
+    updated = "#{content.chomp}\ngem \"#{gem_name}\", \"= #{target_version}\"\n"
+  end
+  File.write(gemfile_path, updated)
+end
+
+def resolve_bundle_in_upgraded(upgraded_dir, gem_name, to_ver, logs_dir)
+  env = { "BUNDLE_GEMFILE" => File.join(upgraded_dir, "Gemfile") }
+  notes = []
+
+  # Try local resolution first for speed, then network
+  out, err, code = run_cmd(["bundle", "update", gem_name, "--local"], chdir: upgraded_dir, env: env)
+  if code != 0
+    out, err, code = run_cmd(["bundle", "update", gem_name], chdir: upgraded_dir, env: env)
+  end
+
+  if code != 0
+    combined = "#{out}\n#{err}"
+    File.write(File.join(logs_dir, "bundle-conflict.log"), combined)
+    # Identify conflicting gems mentioned by Bundler (both legacy resolver and PubGrub output)
+    conflicting = combined.scan(/(?:Gemfile depends on|depends on|requires|for gem)\s+["']?([a-zA-Z0-9_-]+)/i).flatten.uniq
+    conflicting += combined.scan(/([a-zA-Z0-9_-]+)\s+\([^)]*\)\s+was resolved to/m).flatten.uniq
+    conflicting -= [gem_name, "bundler", "ruby"]
+
+    if conflicting.any?
+      notes << "Initial `bundle update #{gem_name}` failed due to conflicting constraints from: #{conflicting.join(", ")} (see logs/bundle-conflict.log)."
+      # Relax exact/narrow constraints on conflicting gems in Gemfile if present
+      gemfile_path = File.join(upgraded_dir, "Gemfile")
+      gf = File.read(gemfile_path, encoding: "UTF-8").scrub
+      relaxed = []
+      conflicting.each do |cg|
+        pat = /^(\s*gem\s+["']#{Regexp.escape(cg)}["'])\s*,\s*["'][^"']+["'](.*)$/
+        if gf.match?(pat)
+          gf.sub!(pat, "\\1\\2")
+          relaxed << cg
+        end
+      end
+      File.write(gemfile_path, gf) if relaxed.any?
+
+      out2, err2, code2 = run_cmd(["bundle", "update", gem_name, *conflicting, "--local"], chdir: upgraded_dir, env: env)
+      out2, err2, code2 = run_cmd(["bundle", "update", gem_name, *conflicting], chdir: upgraded_dir, env: env) if code2 != 0
+      if code2 == 0
+        notes << "Resolved by updating companion gems alongside `#{gem_name}`: #{conflicting.join(", ")}."
+        out, err, code = out2, err2, code2
+      else
+        # If a gem in Gemfile has no compatible version at all (e.g. faraday_middleware with faraday 2.x), comment it out so target gem can still be installed and probed
+        commented = []
+        gf2 = File.read(gemfile_path, encoding: "UTF-8").scrub
+        conflicting.each do |cg|
+          pat = /^(\s*gem\s+["']#{Regexp.escape(cg)}["'].*)$/
+          if gf2.match?(pat)
+            gf2.sub!(pat, "# UPGRADE_CONFLICT: \\1")
+            commented << cg
+          end
+        end
+        if commented.any?
+          File.write(gemfile_path, gf2)
+          out3, err3, code3 = run_cmd(["bundle", "update", gem_name, "--local"], chdir: upgraded_dir, env: env)
+          out3, err3, code3 = run_cmd(["bundle", "update", gem_name], chdir: upgraded_dir, env: env) if code3 != 0
+          if code3 == 0
+            notes << "Incompatible gem(s) in Gemfile had no release supporting #{gem_name} #{to_ver} and were commented out in upgraded/Gemfile to allow probing: #{commented.join(", ")}."
+            out, err, code = out3, err3, code3
+          end
+        end
+      end
+    end
+  end
+
+  File.write(File.join(logs_dir, "bundle-update.log"), "#{out}\n#{err}")
+  [code == 0, notes]
+end
+
+def diff_lockfiles(base_dir, up_dir)
+  f1 = File.join(base_dir, "Gemfile.lock")
+  f2 = File.join(up_dir, "Gemfile.lock")
+  return [] unless File.exist?(f1) && File.exist?(f2)
+
+  l1 = Bundler::LockfileParser.new(File.read(f1)).specs.to_h { |s| [s.name, s.version.to_s] }
+  l2 = Bundler::LockfileParser.new(File.read(f2)).specs.to_h { |s| [s.name, s.version.to_s] }
+  changes = []
+  (l1.keys | l2.keys).sort.each do |name|
+    v1 = l1[name]
+    v2 = l2[name]
+    next if v1 == v2
+
+    if v1 && v2
+      changes << "#{name}: #{v1} → #{v2}"
+    elsif v2
+      changes << "#{name}: (added) #{v2}"
+    else
+      changes << "#{name}: #{v1} → (removed)"
+    end
+  end
+  changes
+rescue StandardError
+  []
+end
+
+def load_schema_for_copy(meta, target, logs_dir)
+  dir = meta[target]["dir"]
+  env = copy_env(meta, target)
+  schema_rb = File.join(dir, "db", "schema.rb")
+  structure_sql = File.join(dir, "db", "structure.sql")
+  task = if File.exist?(schema_rb)
+           "db:schema:load"
+         elsif File.exist?(structure_sql)
+           "db:structure:load"
+         else
+           "db:migrate"
+         end
+  out, err, code = run_cmd(["bundle", "exec", "rails", task], chdir: dir, env: env)
+  if code != 0 && "#{out}\n#{err}".include?("ActiveSupport::LoggerThreadSafeLevel::Logger")
+    meta[target]["require_libs"] |= ["logger"]
+    meta[target]["auto_recovered_boot_error"] = "NameError: uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger (concurrent-ruby removed transitive `require 'logger'`; ActiveSupport < 7.1 references Logger::Severity without requiring logger)"
+    File.write(File.join(meta["work_dir"], "meta.json"), JSON.pretty_generate(meta))
+    env = copy_env(meta, target)
+    out, err, code = run_cmd(["bundle", "exec", "rails", task], chdir: dir, env: env)
+  end
+  # Also load development DB schema if needed by runner scripts
+  dev_env = env.merge("RAILS_ENV" => "development", "RACK_ENV" => "development")
+  run_cmd(["bundle", "exec", "rails", task], chdir: dir, env: dev_env)
+  File.write(File.join(logs_dir, "schema-load-#{target}.log"), "#{out}\n#{err}")
+  code == 0
+end
+
+DIAGNOSTIC_SCRIPT = <<~'RUBY'
+  # frozen_string_literal: true
+  require "json"
+  require "stringio"
+
+  result = {
+    boot_ok: false,
+    boot_error: nil,
+    eager_load_ok: false,
+    eager_load_error: nil,
+    file_errors: [],
+    routes_ok: false,
+    routes_error: nil,
+    routes: [],
+    deprecations: []
+  }
+
+  $stderr_capture = StringIO.new
+  orig_stderr = $stderr
+  $stderr = $stderr_capture
+
+  begin
+    require File.expand_path("config/environment", Dir.pwd)
+    result[:boot_ok] = true
+  rescue Exception => e
+    loc = e.backtrace&.find { |l| l.include?(Dir.pwd) && !l.include?("/vendor/") } || e.backtrace&.first
+    result[:boot_error] = "#{e.class}: #{e.message} (#{loc&.sub("#{Dir.pwd}/", "")})"
+  end
+
+    check_files = lambda do |patterns|
+      Dir.glob(patterns).sort.each do |rel|
+        next if rel.start_with?("lib/tasks/")
+        full = File.expand_path(rel, Dir.pwd)
+        begin
+          require full
+        rescue Exception => e
+          loc = e.backtrace&.find { |l| l.include?(Dir.pwd) } || "#{rel}:1"
+          rel_loc = loc.sub("#{Dir.pwd}/", "")
+          err_str = "#{rel}: #{e.class}: #{e.message.lines.first&.strip} (#{rel_loc})"
+          result[:file_errors] << err_str unless result[:file_errors].include?(err_str)
+
+          # Probe remaining lines of the same file in memory (up to 3 times) in case multiple lines fail
+          src_lines = File.readlines(full, encoding: "UTF-8").map(&:scrub) rescue nil
+          3.times do
+            break unless src_lines
+            line_num = rel_loc[/#{Regexp.escape(rel)}:(\d+)/, 1]&.to_i
+            break unless line_num && line_num >= 1 && line_num <= src_lines.size
+            break if src_lines[line_num - 1].lstrip.start_with?("#", "class ", "module ", "def ", "end")
+
+            src_lines[line_num - 1] = "# #{src_lines[line_num - 1]}"
+            begin
+              TOPLEVEL_BINDING.eval(src_lines.join, full, 1)
+              break
+            rescue Exception => e2
+              loc2 = e2.backtrace&.find { |l| l.include?(Dir.pwd) } || "#{rel}:1"
+              rel_loc = loc2.sub("#{Dir.pwd}/", "")
+              err_str2 = "#{rel}: #{e2.class}: #{e2.message.lines.first&.strip} (#{rel_loc})"
+              result[:file_errors] << err_str2 unless result[:file_errors].include?(err_str2)
+            end
+          end
+        end
+      end
+    end
+
+    if result[:boot_ok]
+      if defined?(Rails.application) && Rails.application.respond_to?(:deprecators)
+        Rails.application.deprecators.behavior = :stderr if Rails.application.deprecators.respond_to?(:behavior=)
+        Rails.application.deprecators.debug = true if Rails.application.deprecators.respond_to?(:debug=)
+      elsif defined?(ActiveSupport::Deprecation)
+        ActiveSupport::Deprecation.behavior = :stderr if ActiveSupport::Deprecation.respond_to?(:behavior=)
+        ActiveSupport::Deprecation.debug = true if ActiveSupport::Deprecation.respond_to?(:debug=)
+      end
+
+      begin
+        Rails.application.eager_load!
+        result[:eager_load_ok] = true
+      rescue Exception => e
+        loc = e.backtrace&.find { |l| l.include?(Dir.pwd) } || e.backtrace&.first
+        result[:eager_load_error] = "#{e.class}: #{e.message} (#{loc&.sub("#{Dir.pwd}/", "")})"
+      end
+
+      check_files.call(["{app,lib}/**/*.rb"])
+
+      begin
+        Rails.application.reload_routes!
+        routes = Rails.application.routes.routes.map do |r|
+          verb = r.verb.to_s
+          path = r.path.spec.to_s
+          reqs = r.defaults.map { |k, v| "#{k}=#{v}" }.join(" ")
+          "#{verb} #{path} #{reqs}".strip
+        end.reject(&:empty?)
+        result[:routes_ok] = true
+        result[:routes] = routes
+      rescue Exception => e
+        loc = e.backtrace&.find { |l| l.include?(Dir.pwd) } || e.backtrace&.first
+        result[:routes_error] = "#{e.class}: #{e.message} (#{loc&.sub("#{Dir.pwd}/", "")})"
+      end
+    else
+      begin
+        require File.expand_path("config/application", Dir.pwd)
+      rescue Exception => e
+        loc = e.backtrace&.find { |l| l.include?(Dir.pwd) } || e.backtrace&.first
+        result[:file_errors] << "config/application.rb: #{e.class}: #{e.message.lines.first&.strip} (#{loc&.sub("#{Dir.pwd}/", "")})"
+      end
+      check_files.call(["config/initializers/*.rb"])
+    end
+
+  $stderr = orig_stderr
+  dep_blocks = []
+  cur_dep = nil
+  $stderr_capture.string.lines.each do |l|
+    s = l.strip
+    if s.start_with?("DEPRECATION WARNING:")
+      dep_blocks << cur_dep.join(" ") if cur_dep
+      if s.include?("(called from ")
+        dep_blocks << s
+        cur_dep = nil
+      else
+        cur_dep = [s]
+      end
+    elsif cur_dep
+      cur_dep << s
+      if s.include?("(called from ") || cur_dep.size >= 6
+        dep_blocks << cur_dep.join(" ")
+        cur_dep = nil
+      end
+    end
+  end
+  dep_blocks << cur_dep.join(" ") if cur_dep
+  result[:deprecations] = dep_blocks.uniq
+  puts "===DIAG_JSON_START==="
+  puts JSON.generate(result)
+  puts "===DIAG_JSON_END==="
+RUBY
+
+def run_diagnostics(meta, target, logs_dir, defaults: nil)
+  dir = meta[target]["dir"]
+  env = copy_env(meta, target, defaults: defaults)
+  label = defaults ? "#{target}-defaults-#{defaults}" : target
+  out, err, _ = run_cmd(["bundle", "exec", "ruby", "-e", DIAGNOSTIC_SCRIPT], chdir: dir, env: env)
+  combined = "#{out}\n#{err}"
+
+  # Check if boot failed due to unloaded stdlib logger in Rails < 7.1 with concurrent-ruby >= 1.3.5
+  if combined.include?("ActiveSupport::LoggerThreadSafeLevel::Logger") && !meta[target]["require_libs"].include?("logger")
+    boot_err_line = "NameError: uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger (concurrent-ruby removed transitive `require 'logger'`; ActiveSupport < 7.1 references Logger::Severity without requiring logger)"
+    meta[target]["require_libs"] << "logger"
+    File.write(File.join(meta["work_dir"], "meta.json"), JSON.pretty_generate(meta))
+    env = copy_env(meta, target, defaults: defaults)
+    out2, err2, _ = run_cmd(["bundle", "exec", "ruby", "-e", DIAGNOSTIC_SCRIPT], chdir: dir, env: env)
+    combined = "#{out2}\n#{err2}"
+    json_str = combined[/===DIAG_JSON_START===\n(.*?)\n===DIAG_JSON_END===/m, 1]
+    data = json_str ? JSON.parse(json_str) : {}
+    data["auto_recovered_boot_error"] = boot_err_line
+    File.write(File.join(logs_dir, "diag-#{label}.log"), combined)
+    return data
+  end
+
+  File.write(File.join(logs_dir, "diag-#{label}.log"), combined)
+  json_str = combined[/===DIAG_JSON_START===\n(.*?)\n===DIAG_JSON_END===/m, 1]
+  data = json_str ? JSON.parse(json_str) : { "boot_ok" => false, "boot_error" => combined.lines.grep(/Error|Exception/).first&.strip || "Unknown boot failure" }
+  data["auto_recovered_boot_error"] ||= meta[target]["auto_recovered_boot_error"] if meta[target]["auto_recovered_boot_error"]
+  data
+end
+
+def extract_deprecations(text)
+  blocks = []
+  cur = nil
+  text.lines.each do |l|
+    s = l.strip
+    if s.start_with?("DEPRECATION WARNING:")
+      blocks << cur.join(" ") if cur
+      if s.include?("(called from ")
+        blocks << s
+        cur = nil
+      else
+        cur = [s]
+      end
+    elsif cur
+      cur << s
+      if s.include?("(called from ") || cur.size >= 6
+        blocks << cur.join(" ")
+        cur = nil
+      end
+    end
+  end
+  blocks << cur.join(" ") if cur
+  blocks.uniq
+end
+
+def clean_Default_gem_warnings(text)
+  text.lines.reject do |l|
+    l.include?("will no longer be part of the default gems") ||
+      (l.include?("You can add ") && l.include?("to your Gemfile or gemspec to silence this warning"))
+  end.join
+end
+
+def run_test_suite(meta, target, logs_dir, paths: [], defaults: nil)
+  dir = meta[target]["dir"]
+  env = copy_env(meta, target, defaults: defaults)
+  label = defaults ? "#{target}-defaults-#{defaults}" : target
+  use_rspec = File.directory?(File.join(dir, "spec")) && !File.directory?(File.join(dir, "test"))
+  cmd = if use_rspec
+          ["bundle", "exec", "rspec", *paths]
+        else
+          ["bundle", "exec", "rails", "test", *paths]
+        end
+  out, err, code = run_cmd(cmd, chdir: dir, env: env)
+  combined = clean_Default_gem_warnings("#{out}\n#{err}")
+  File.write(File.join(logs_dir, "tests-#{label}.log"), combined)
+
+  summary_line = combined.lines.find { |l| l.match?(/\d+ runs?, \d+ assertions?|\d+ examples?, \d+ failures?/) }&.strip
+  deprecations = extract_deprecations(combined)
+
+  # Extract Failure: and Error: blocks from Minitest or RSpec
+  failures = []
+  current_block = nil
+  combined.lines.each do |line|
+    if line.match?(/\A(Failure|Error):\s*\z/) || line.match?(/\A\s*\d+\)\s+\S+/)
+      failures << current_block.join.strip if current_block
+      current_block = [line]
+    elsif line.match?(/\A(Finished in |rails test |bundle exec rspec )/)
+      failures << current_block.join.strip if current_block
+      current_block = nil
+    elsif current_block
+      current_block << line if current_block.size < 12
+    end
+  end
+  failures << current_block.join.strip if current_block
+
+  # If the test runner crashed before running any tests, capture the exception
+  if !summary_line && code != 0
+    crash_lines = combined.lines.reject { |l| l.include?("warning: ") && l.include?("default gems") }.first(15).join.strip
+    failures << crash_lines unless crash_lines.empty?
+  end
+
+  {
+    exit_code: code,
+    summary: summary_line || (code == 0 ? "0 failures" : "Test runner exited with status #{code} before completing"),
+    failures: failures,
+    deprecations: deprecations,
+    log_path: File.join(logs_dir, "tests-#{label}.log")
+  }
+end
+
+def check_schema_dump_diff(meta, logs_dir)
+  base_dir = meta["baseline"]["dir"]
+  up_dir = meta["upgraded"]["dir"]
+  schema_rel = File.join("db", "schema.rb")
+  return nil unless File.exist?(File.join(base_dir, schema_rel))
+
+  run_cmd(["bundle", "exec", "rails", "db:schema:dump"], chdir: base_dir, env: copy_env(meta, "baseline"))
+  run_cmd(["bundle", "exec", "rails", "db:schema:dump"], chdir: up_dir, env: copy_env(meta, "upgraded"))
+
+  s1 = File.read(File.join(base_dir, schema_rel), encoding: "UTF-8").scrub
+  s2 = File.read(File.join(up_dir, schema_rel), encoding: "UTF-8").scrub
+  # Reset schema.rb in both copies so git status stays clean
+  run_cmd(["git", "checkout", "--", schema_rel], chdir: base_dir)
+  run_cmd(["git", "checkout", "--", schema_rel], chdir: up_dir)
+
+  norm1 = s1.sub(/ActiveRecord::Schema\[\d+\.\d+\]/, "ActiveRecord::Schema")
+  norm2 = s2.sub(/ActiveRecord::Schema\[\d+\.\d+\]/, "ActiveRecord::Schema")
+  return nil if norm1 == norm2
+
+  diff_path = File.join(logs_dir, "schema-dump.diff")
+  File.write(File.join(logs_dir, "schema-baseline.rb"), s1)
+  File.write(File.join(logs_dir, "schema-upgraded.rb"), s2)
+  diff_out, _, _ = run_cmd(["diff", "-u", File.join(logs_dir, "schema-baseline.rb"), File.join(logs_dir, "schema-upgraded.rb")])
+  File.write(diff_path, diff_out)
+  diff_out.lines.grep(/\A[+-][^+-]/).first(16).map(&:strip)
+end
+
+def cmd_setup(args, opts)
+  gem_name, from_ver, to_ver, app_arg = args
+  abort_usage unless gem_name && from_ver && to_ver
+  app_dir = File.expand_path(app_arg || Dir.pwd)
+  work_dir = resolve_work_dir(opts, gem_name, to_ver)
+
+  # Clean up any prior workspace at the same directory
+  if File.exist?(File.join(work_dir, "meta.json"))
+    cmd_cleanup([gem_name, to_ver], { work_dir: work_dir }, quiet: true)
+  end
+  FileUtils.rm_rf(work_dir)
+  logs_dir = File.join(work_dir, "logs")
+  base_dir = File.join(work_dir, "baseline")
+  up_dir = File.join(work_dir, "upgraded")
+  FileUtils.mkdir_p(logs_dir)
+
+  short_id = Digest::SHA256.hexdigest("#{gem_name}-#{to_ver}-#{Process.pid}")[0, 6]
+  pg_user, pg_host = pg_available?
+  base_dev_db = "up_#{short_id}_b_dev"
+  base_test_db = "up_#{short_id}_b_test"
+  up_dev_db = "up_#{short_id}_u_dev"
+  up_test_db = "up_#{short_id}_u_test"
+  base_redis, up_redis = pick_redis_dbs
+
+  if pg_user
+    [base_dev_db, base_test_db, up_dev_db, up_test_db].each do |db|
+      run_psql("DROP DATABASE IF EXISTS #{db};", pg_user, pg_host)
+      run_psql("CREATE DATABASE #{db};", pg_user, pg_host)
+    end
+  end
+  flush_redis_db(base_redis)
+  flush_redis_db(up_redis)
+
+  copy_app(app_dir, base_dir)
+  copy_app(app_dir, up_dir)
+  write_preload_script(work_dir)
+
+  isolate_copy_config(base_dir, base_dev_db, base_test_db, base_redis, pg_user, pg_host)
+  isolate_copy_config(up_dir, up_dev_db, up_test_db, up_redis, pg_user, pg_host)
+
+  meta = {
+    "work_dir" => work_dir,
+    "app_dir" => app_dir,
+    "gem_name" => gem_name,
+    "from_version" => from_ver,
+    "to_version" => to_ver,
+    "pg_user" => pg_user,
+    "pg_host" => pg_host,
+    "baseline" => {
+      "dir" => base_dir,
+      "dev_db" => base_dev_db,
+      "test_db" => base_test_db,
+      "redis_db" => base_redis,
+      "require_libs" => []
+    },
+    "upgraded" => {
+      "dir" => up_dir,
+      "dev_db" => up_dev_db,
+      "test_db" => up_test_db,
+      "redis_db" => up_redis,
+      "require_libs" => []
+    }
+  }
+  File.write(File.join(work_dir, "meta.json"), JSON.pretty_generate(meta))
+  File.write(LAST_WORKSPACE_FILE, work_dir)
+
+  update_gemfile_for_target(File.join(up_dir, "Gemfile"), gem_name, to_ver)
+  bundle_ok, bundle_notes = resolve_bundle_in_upgraded(up_dir, gem_name, to_ver, logs_dir)
+
+  # Commit isolated baseline state in both copies so git diff/reset works cleanly
+  [base_dir, up_dir].each do |d|
+    run_cmd(["git", "init", "-q"], chdir: d) unless File.directory?(File.join(d, ".git"))
+    run_cmd(["git", "add", "-A"], chdir: d)
+    run_cmd(["git", "commit", "-m", "Isolated upgrade workspace baseline", "-q", "--allow-empty"], chdir: d)
+  end
+
+  lock_changes = diff_lockfiles(base_dir, up_dir)
+  base_diag = nil
+  up_diag = nil
+  base_tests = nil
+  up_tests = nil
+
+  t_base = Thread.new do
+    load_schema_for_copy(meta, "baseline", logs_dir) if pg_user
+    base_diag = run_diagnostics(meta, "baseline", logs_dir)
+    base_tests = run_test_suite(meta, "baseline", logs_dir)
+  end
+
+  t_up = Thread.new do
+    if bundle_ok
+      load_schema_for_copy(meta, "upgraded", logs_dir) if pg_user
+      up_diag = run_diagnostics(meta, "upgraded", logs_dir)
+      up_tests = run_test_suite(meta, "upgraded", logs_dir)
+    else
+      up_diag = { "boot_ok" => false, "boot_error" => "Bundle resolution failed" }
+      up_tests = { exit_code: 1, summary: "Skipped (bundle failed)", failures: [], deprecations: [] }
+    end
+  end
+
+  t_base.join
+  t_up.join
+  schema_diff = (pg_user && bundle_ok) ? check_schema_dump_diff(meta, logs_dir) : nil
+
+  # If upgrading rails (or a railtie component) and load_defaults is older than target minor series, also test with target load_defaults
+  current_load_defaults = File.read(File.join(app_dir, "config", "application.rb"))[/load_defaults\s+["']?(\d+\.\d+)/, 1] rescue nil
+  target_series = to_ver.split(".")[0, 2].join(".")
+  defaults_diag = nil
+  defaults_tests = nil
+  if bundle_ok && (gem_name == "rails" || lock_changes.any? { |c| c.start_with?("railties:") }) &&
+     current_load_defaults && Gem::Version.new(target_series) > Gem::Version.new(current_load_defaults)
+    defaults_diag = run_diagnostics(meta, "upgraded", logs_dir, defaults: target_series)
+    defaults_tests = run_test_suite(meta, "upgraded", logs_dir, defaults: target_series)
+  end
+
+  puts "# Upgrade workspace: #{gem_name} #{from_ver} → #{to_ver}"
+  puts
+  puts "- Workspace: `#{work_dir}` (`baseline` and `upgraded` copies)"
+  puts "- Isolated PostgreSQL DBs: baseline=`#{base_test_db}`, upgraded=`#{up_test_db}`" if pg_user
+  puts "- Isolated Redis DBs: baseline=`redis://127.0.0.1:6379/#{base_redis}`, upgraded=`redis://127.0.0.1:6379/#{up_redis}`"
+  puts "- Logs directory: `#{logs_dir}`"
+
+  puts
+  puts "## Dependency resolution & Gemfile.lock diff (#{lock_changes.size} gems changed)"
+  puts "- Bundle status: #{bundle_ok ? "resolved" : "FAILED (see #{logs_dir}/bundle-conflict.log)"}"
+  bundle_notes.each { |n| puts "- Note: #{n}" }
+  lock_changes.each { |c| puts "- `#{c}`" }
+
+  puts
+  puts "## Boot, eager load, routes, and schema comparison"
+  puts "- Baseline (#{from_ver}): boot=#{base_diag["boot_ok"] ? "OK" : "FAILED (#{base_diag["boot_error"]})"}, eager_load=#{base_diag["eager_load_ok"] ? "OK" : "FAILED (#{base_diag["eager_load_error"]})"}, routes=#{base_diag["routes"]&.size || 0}"
+  if up_diag["auto_recovered_boot_error"]
+    puts "- Upgraded (#{to_ver}) initial boot: FAILED with `#{up_diag["auto_recovered_boot_error"]}`"
+    puts "  (Automatically added `-rlogger` in workspace so remaining checks could run.)"
+  end
+  puts "- Upgraded (#{to_ver}): boot=#{up_diag["boot_ok"] ? "OK" : "FAILED (#{up_diag["boot_error"]})"}, eager_load=#{up_diag["eager_load_ok"] ? "OK" : "FAILED (#{up_diag["eager_load_error"]})"}, routes=#{up_diag["routes"]&.size || 0}"
+  if up_diag["file_errors"].to_a.any?
+    puts "- Upgraded file load errors across `config/`, `app/`, and `lib/`:"
+    up_diag["file_errors"].each { |fe| puts "  - `#{fe}`" }
+  end
+  if base_diag["routes_ok"] && up_diag["routes_ok"]
+    added_routes = up_diag["routes"] - base_diag["routes"]
+    removed_routes = base_diag["routes"] - up_diag["routes"]
+    if added_routes.any? || removed_routes.any?
+      puts "- Route differences:"
+      removed_routes.each { |r| puts "  - removed: `#{r}`" }
+      added_routes.each { |r| puts "  - added:   `#{r}`" }
+    else
+      puts "- Routes diff: identical (#{up_diag["routes"].size} routes)"
+    end
+  elsif up_diag["routes_error"]
+    puts "- Upgraded routes error: `#{up_diag["routes_error"]}`"
+  end
+  if schema_diff && schema_diff.any?
+    puts "- `db/schema.rb` dump diff (excluding schema version header):"
+    schema_diff.each { |l| puts "  `#{l}`" }
+  end
+
+  puts
+  puts "## Test suite comparison (with current `load_defaults #{current_load_defaults || "default"}`)"
+  puts "- Baseline (#{from_ver}): #{base_tests[:summary]}"
+  puts "- Upgraded (#{to_ver}): #{up_tests[:summary]}"
+  if up_tests[:failures].any?
+    puts
+    puts "### Upgraded test failures and errors"
+    up_tests[:failures].each do |f|
+      puts "```"
+      puts f
+      puts "```"
+    end
+  end
+
+  all_deprecations = (Array(up_diag["deprecations"]) + Array(up_tests[:deprecations])).uniq
+  if all_deprecations.any?
+    puts
+    puts "### Deprecation warnings on upgraded (#{all_deprecations.size})"
+    all_deprecations.each { |d| puts "- #{d}" }
+  end
+
+  if defaults_diag && defaults_tests
+    puts
+    puts "## Target framework defaults check (`load_defaults #{target_series}` enabled on upgraded)"
+    puts "- Boot: #{defaults_diag["boot_ok"] ? "OK" : "FAILED (#{defaults_diag["boot_error"]})"}, eager_load: #{defaults_diag["eager_load_ok"] ? "OK" : "FAILED (#{defaults_diag["eager_load_error"]})"}"
+    if defaults_diag["file_errors"].to_a.any?
+      defaults_diag["file_errors"].each { |fe| puts "  - File load error: `#{fe}`" }
+    end
+    puts "- Tests with `load_defaults #{target_series}`: #{defaults_tests[:summary]}"
+    new_failures = defaults_tests[:failures] - up_tests[:failures]
+    if new_failures.any?
+      puts
+      puts "### Additional test failures with `load_defaults #{target_series}`"
+      new_failures.each do |f|
+        puts "```"
+        puts f
+        puts "```"
+      end
+    end
+    new_deps = (Array(defaults_diag["deprecations"]) + Array(defaults_tests[:deprecations])).uniq - all_deprecations
+    if new_deps.any?
+      puts
+      puts "### Additional deprecation warnings with `load_defaults #{target_series}`"
+      new_deps.each { |d| puts "- #{d}" }
+    end
+  end
+end
+
+def cmd_probe(args, opts)
+  code = args.first
+  abort_usage unless code
+  work_dir = resolve_work_dir(opts)
+  meta = JSON.parse(File.read(File.join(work_dir, "meta.json")))
+
+  runner_wrapper = <<~RUBY
+    begin
+      #{code}
+    rescue Exception => e
+      loc = e.backtrace&.find { |l| l.include?(Dir.pwd) && !l.include?("/vendor/") } || e.backtrace&.first
+      puts "RAISED \#{e.class}: \#{e.message} (\#{loc&.sub("\#{Dir.pwd}/", "")})"
+    end
+  RUBY
+
+  targets = [
+    ["baseline (#{meta["from_version"]})", "baseline", nil],
+    ["upgraded (#{meta["to_version"]})", "upgraded", nil]
+  ]
+  if opts[:defaults]
+    targets << ["upgraded (#{meta["to_version"]} + load_defaults #{opts[:defaults]})", "upgraded", opts[:defaults]]
+  end
+
+  by_copy = targets.group_by { |_, target, _| target }
+  copy_threads = by_copy.map do |_, group|
+    Thread.new do
+      group.map do |label, target, defs|
+        dir = meta[target]["dir"]
+        env = copy_env(meta, target, defaults: defs)
+        out, err, status = run_cmd(["bundle", "exec", "rails", "runner", runner_wrapper], chdir: dir, env: env)
+        [label, out, clean_Default_gem_warnings(err), status]
+      end
+    end
+  end
+  results = copy_threads.flat_map(&:value)
+
+  results.each do |label, out, err, status|
+    puts "=== #{label} (exit #{status}) ==="
+    puts out.strip unless out.strip.empty?
+    err_lines = err.lines.map(&:strip).reject(&:empty?)
+    puts err_lines.join("\n") if err_lines.any?
+  end
+end
+
+def cmd_test(args, opts)
+  work_dir = resolve_work_dir(opts)
+  meta = JSON.parse(File.read(File.join(work_dir, "meta.json")))
+  logs_dir = File.join(work_dir, "logs")
+  target_opt = opts[:target] || "upgraded"
+  targets = target_opt == "both" ? %w[baseline upgraded] : [target_opt]
+
+  targets.each do |target|
+    diag = run_diagnostics(meta, target, logs_dir, defaults: opts[:defaults])
+    res = run_test_suite(meta, target, logs_dir, paths: args, defaults: opts[:defaults])
+    ver = target == "baseline" ? meta["from_version"] : meta["to_version"]
+    defs_note = opts[:defaults] ? " (load_defaults #{opts[:defaults]})" : ""
+    puts "=== #{target} #{ver}#{defs_note}: boot=#{diag["boot_ok"] ? "OK" : "FAILED"}, eager_load=#{diag["eager_load_ok"] ? "OK" : "FAILED"}, routes=#{diag["routes"]&.size || 0}, tests: #{res[:summary]} ==="
+    if diag["file_errors"].to_a.any?
+      puts "File load errors:"
+      diag["file_errors"].each { |fe| puts "- `#{fe}`" }
+    end
+    res[:failures].each do |f|
+      puts "```"
+      puts f
+      puts "```"
+    end
+    all_deps = (Array(diag["deprecations"]) + Array(res[:deprecations])).uniq
+    if all_deps.any?
+      puts "Deprecations:"
+      all_deps.each { |d| puts "- #{d}" }
+    end
+  end
+end
+
+def cmd_reset(_args, opts)
+  work_dir = resolve_work_dir(opts)
+  meta = JSON.parse(File.read(File.join(work_dir, "meta.json")))
+  %w[baseline upgraded].each do |target|
+    dir = meta[target]["dir"]
+    run_cmd(["git", "checkout", "-f", "HEAD"], chdir: dir)
+    run_cmd(["git", "clean", "-fd"], chdir: dir)
+    flush_redis_db(meta[target]["redis_db"])
+  end
+  puts "Reset `baseline` and `upgraded` in #{work_dir} to clean post-setup state."
+end
+
+def cmd_cleanup(args, opts, quiet: false)
+  gem_name, to_ver = args
+  work_dir = resolve_work_dir(opts, gem_name, to_ver)
+  meta_path = File.join(work_dir, "meta.json")
+  if File.exist?(meta_path)
+    meta = JSON.parse(File.read(meta_path))
+    pg_user = meta["pg_user"]
+    pg_host = meta["pg_host"]
+    %w[baseline upgraded].each do |target|
+      info = meta[target] || {}
+      if pg_user
+        [info["dev_db"], info["test_db"]].compact.each do |db|
+          run_psql("DROP DATABASE IF EXISTS #{db};", pg_user, pg_host)
+        end
+      end
+      flush_redis_db(info["redis_db"]) if info["redis_db"]
+    end
+    app_dir = meta["app_dir"]
+  end
+  FileUtils.rm_rf(work_dir)
+  FileUtils.rm_f(LAST_WORKSPACE_FILE) if File.exist?(LAST_WORKSPACE_FILE) && File.read(LAST_WORKSPACE_FILE).strip == work_dir
+  unless quiet
+    puts "Cleaned up workspace #{work_dir} and dropped temporary PostgreSQL and Redis databases."
+    if app_dir && File.directory?(app_dir)
+      out, _, _ = run_cmd(["git", "status", "--short"], chdir: app_dir)
+      puts "Working checkout git status: #{out.strip.empty? ? "clean" : out.strip}"
+    end
+  end
+end
+
+subcommand = ARGV.shift
+abort_usage unless subcommand
+rest, opts = parse_flags(ARGV)
+
+case subcommand
+when "setup"
+  cmd_setup(rest, opts)
+when "probe"
+  cmd_probe(rest, opts)
+when "test"
+  cmd_test(rest, opts)
+when "reset"
+  cmd_reset(rest, opts)
+when "cleanup"
+  cmd_cleanup(rest, opts)
+else
+  abort_usage
+end

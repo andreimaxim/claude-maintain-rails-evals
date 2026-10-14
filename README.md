@@ -429,6 +429,23 @@ runs stopped within four minutes on the Claude session limit; those runs were
 discarded and rerun after the reset. Its records are under
 [`tests/results/20261013-headless/`](tests/results/20261013-headless/).
 
+**A procedure written without the evaluation app matched v12 on Rails in less
+time.** [Variant v16](tests/planner-variants/v16-argon-clean-procedure) is
+Gemini 4 Argon's redesign from the
+[clean-room brief](tests/results/20261014-optimizers/brief-clean-room.md): the
+optimizer saw only step outlines, scores and costs, never the application,
+plans or command output, and tested its scripts on a Rails 7.0 app it built
+itself. Its planner follows five steps. `bin/upgrade-workspace` sets up baseline
+and upgraded copies with their own databases and Redis numbers, checks boot,
+per-file eager loading, routes, schema dump and tests on both, runs Ruby probes
+side by side, and cleans up. Five runs per case scored 21, 19, 22, 23 and 20 on
+Rails (mean 21.0, the same as v12, and the first 23 of 23) at a median of $3.01
+and 11.0 minutes (v12 15.0); 1, 2, 2, 2 and 2 on Pagy (mean 1.8) at $0.44; 1,
+0, 1, 2 and 2 on Faraday (mean 1.2; v12 1.8) at $0.54, where the misses state
+the outage without the queued jobs it leaves behind; 1 of 2 in every
+patch-bump run; and 1 of 1 in every no-op run. Its records are under
+[`tests/results/20261013-headless/`](tests/results/20261013-headless/).
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

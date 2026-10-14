@@ -1,0 +1,28 @@
+{
+  "case": "concurrent-ruby",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "CR1": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`/home/user/workspace/repo/Gemfile`, line 8: `gem \"concurrent-ruby\", \"1.3.4\"`. ... change `Gemfile` line 8 to `gem \"concurrent-ruby\", \"1.3.8\"` and run `bundle update concurrent-ruby`. Only `concurrent-ruby` changes in the lockfile",
+      "reasons": "Impact: the plan lists the exact pin as affected code but never says the pin stops 1.3.8 from resolving unless the requirement changes. Validation: the plan reports that only concurrent-ruby changed in the lockfile, but it never mentions running `bundle check`.",
+      "actionable": false
+    },
+    "CR2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Failing check: `RAILS_ENV=test bin/rails runner 'p Concurrent::VERSION'` on `upgraded` without the line raises the `NameError` above. ... Full suite with the repair (`upgrade-workspace test`): boot OK, eager load OK, 67 routes, 46 runs",
+      "reasons": "Validation: the plan boots the app on 1.3.8 with and without the fix and includes a 1.3.4 control, but it never says the test suite was run in eager-loading CI mode as well as normal mode.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.08371500000000001,
+  "duration_ms": 20669
+}

@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum :status, { draft: 0, ready: 1 }, prefix: true` (before bump: yes)",
+      "reasons": "Validation only says the status filters pass. It does not persist unequal draft and ready notes or exercise the prefixed helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, coder: JSON` (7.1+ only, so ship it with the bump)",
+      "reasons": "Validation is only a general claim that JSON tags read unchanged. It does not test unequal tags, comma-separated editing or the stored representation.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`alias_method :highlight_color, :color` plus `alias_method :highlight_color=, :color=`",
+      "reasons": "The radio-button check after save does not cover reloading JSON settings, error rendering or preserving existing settings.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`PG::UndefinedColumn: column notes.notebooks does not exist`. ... `where(notebook: @notebook)`",
+      "reasons": "There is no specific validation, only the overall suite result. Unequal notebook populations, a second owner and foreign-notebook denial are not checked.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The receipt changes from `On idleness,10.1000/Essays.1` to `On idleness,`.",
+      "reasons": "The exact-receipt test does not explicitly use distinct DOIs and compare them with the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "With one valid row and one invalid row, the import and the valid note are saved: `record_counts` changed from `[0, 3, 0, 1]` to `[1, 4, 1, 2]`.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: String can't be coerced into Integer`. Every export job fails.",
+      "reasons": "Validation says only that the export tests download the file. It does not check the exact ordered Markdown bytes from the real worker or the failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`stringify_keys` turns the Integer line keys into `\"2\"`, so `annotations[2]` is nil.",
+      "reasons": "It checks lines 2 and 3, not unequal annotations at lines 2 and 4 with a multiline CSV row, and it does not confirm that nothing is saved.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "7.0 gives `2026-11-01 09:00:00 -0400`. 8.1 gives `2026-11-01 08:00:00 -0500`.",
+      "reasons": "The test checks only one offset string. It does not compare epochs across the DST boundary or include a non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "In the mailer, add `requested_at = requested_at.in_time_zone(\"UTC\")` after reading params.",
+      "reasons": "It runs a single digest test and a payload control. It does not use a real queue and worker crossing each midnight, and it does not inspect reservation keys or note membership.",
+      "actionable": true
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0 worker given that payload raises `ActiveJob::DeserializationError` ... deploy `DigestJob.perform_later(self, requested_at, reading_completion.to_s)` on 7.0 first.",
+      "reasons": "It has cross-version deserialization probes and a proposed staging drain check, but no full producer/consumer matrix with same-version controls and an exact delivered completion percentage.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "With `Time.at`, both versions scheduled the job at `2026-10-31 13:00:00 UTC` in `Sidekiq::ScheduledSet`.",
+      "reasons": "It does not check the persisted schedule time or include the replacement and ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "This is raised at enqueue time, inside `Citation#request_enrichment`'s lock, so the request returns 500.",
+      "reasons": "The plan claims a 500 at enqueue time, which is not the key's consequence: bounded ActiveJob retry breaks and the job falls into Sidekiq retries. Validation is one passing test, without the persistent-503, 503->200 and 401 scenarios.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Passed nil to the :model argument, expect an object or false`. Every note list and the post-sign-in page return 500.",
+      "reasons": "There is no specific validation beyond the overall suite. The plan does not check form names, method, submission or the resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "The route list on 8.1 contains both `GET /notes` and `GET /journal`, and the test \"lists the reader's notes newest first at both list paths\" passes.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "This is 7.1+ only, so ship it with the bump: on 7.0 the symbol counts as true and the error pages would be rendered.",
+      "reasons": "It names the failing exception assertions but does not cover the normal test and CI eager-loading modes.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "helper.allowed_tags = defaults + %w[ details summary ]",
+      "reasons": "The probe checks details/summary and script stripping only. It does not test attachment markup, event handlers or javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "fresh `bin/rails runner` boot with `CITATION_PROVIDER_USER=00123` and password `\"sample: value # keep\"`, which arrive unchanged",
+      "reasons": "It does not verify the actual Basic header, successful metadata or bounded failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`expires_in: (export.expires_at - Time.current if export.downloadable?)`",
+      "reasons": "The only test is the past-deadline case. It does not cover the before-deadline case, cached versus fresh reads, or authoritative download expiry and ownership.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :preferences, coder: YAML` (7.1+, ship with the bump). The stored YAML stays readable.",
+      "reasons": "It relies only on the suite results. There is no create/edit/reload of unequal preferences or export-heading check with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `permit(:name, :export_heading)`. ... notebooks_controller_test.rb:22 (slug stays \"novels\" while the name changes); the create test is the control.",
+      "reasons": "It does not test an export-heading change or explicitly test an attempted slug change.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Date.iso8601(day)` raises `TypeError: no implicit conversion of Date into String`. Repair: `[day.to_date, count]`.",
+      "reasons": "It relies only on the suite run under the 8.1 defaults. There is no decoding off/on comparison, asymmetric UTC counts, empty report or ownership check.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "a matching `If-None-Match` returns 304 even if `If-Modified-Since` is older. This is harmless because the blob checksum is the ETag.",
+      "reasons": "The plan calls the change harmless rather than making an explicit keep/adopt decision. It also proposes no validation: the case was not probed and no ETag-list or validator scenarios are listed.",
+      "actionable": false
+    }
+  },
+  "actionable": 21,
+  "cost_usd": 0.24346000000000004,
+  "duration_ms": 64466
+}

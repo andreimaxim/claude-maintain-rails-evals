@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum :status, { draft: 0, ready: 1 }, prefix: true`",
+      "reasons": "Validation is only 'the existing test that failed'. It does not persist unequal draft/ready notes or exercise the filters and helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, coder: JSON`. The stored value stays `[\"b\",\"a\"]` on both versions (probe). | **No.** On 7.0 `coder:` is ignored and `tags` comes back as a String",
+      "reasons": "Impact only names the removal and does not say what breaks in the app on 8.1. Validation checks the stored value and the existing test but not reloading unequal tags or editing the comma-separated input.",
+      "actionable": false
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`alias_method :highlight_color, :color` plus `alias_method :highlight_color=, :color=`",
+      "reasons": "Validation covers the setter and the radio-button rendering. It does not explicitly reload the JSON settings, render errors or preserve existing settings.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`@notes = @notes.where(notebook: @notebook)`",
+      "reasons": "Validation is only the existing failing test. There are no unequal notebook populations, no other-owner exclusion and no foreign-notebook denial checks.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`csv << [ note.title, citation&.doi ]`",
+      "reasons": "Receipt output is checked, but there is no explicit comparison of distinct DOI values against the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "raise ActiveRecord::Rollback unless rows.all? { |row| row.note.save } ... Invalid CSV gives `false`, `delta=[0, 0]`. Valid two-row CSV gives `true`, `delta=[1, 2]` (control).",
+      "reasons": "",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`finish(fragments.join)`",
+      "reasons": "Validation is only the existing failing test. It does not cover the real worker's exact ordered Markdown bytes or the failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`<% annotations = @import.annotations %>`",
+      "reasons": "Validation is one test assertion. It lacks unequal annotations at lines 2 and 4, a multiline CSV row and a check that nothing is saved.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `expires_in: [export.expires_at - Time.current, 0].max`. Works on 7.0.",
+      "reasons": "Checks cover positive/zero TTL and one download-authorization test. They do not test before/after the deadline with both cached and fresh reads, or download expiry and ownership.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Reminder 2026-10-31 09:00 −04:00: 7.0 gives `2026-11-01T09:00:00-04:00`, 8.1 gives `2026-11-01T08:00:00-05:00`.",
+      "reasons": "The plan says reminders 'move by an hour across daylight saving', which frames this as a changed instant rather than an offset/display change. Validation compares the iso8601 strings but never compares epochs explicitly.",
+      "actionable": false
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "After `params.values_at`, add `requested_at = requested_at.in_time_zone(Time.zone)`",
+      "reasons": "Validation only checks the subject date. There is no real queue/worker run, no separate test across each midnight and no inspection of reservation keys or note membership.",
+      "actionable": true
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0 worker raises `ActiveJob::DeserializationError` ... This happens during rollout (new web, old workers) and on rollback. Preparatory repair: ... pass `reading_completion.to_s`.",
+      "reasons": "The repair is unverified and only a test against a 7.0 worker is proposed. There is no full producer/consumer matrix with same-version controls and an exact completion percentage.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`NoteReminderJob.set(wait_until: Time.at(reminder_epoch))` | Yes. ... Sidekiq scheduled the job `at=2030-01-01 00:00:00 UTC` on both versions.",
+      "reasons": "The Sidekiq score is inspected, but the persisted schedule time is not, and there are no replacement or ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The symbol was removed in 8.0. | ... | `wait: :polynomially_longer` (same back-off formula) | **No.** ... Ship with the bump.",
+      "reasons": "Impact only cites the removal and does not say retries fall through to Sidekiq. Validation has the six-requests test but no 503->200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`form_with(url: notes_path, method: :get, class: \"search\", html: { role: \"search\" })`",
+      "reasons": "Validation is only the existing test. It does not confirm field names, method or the resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Two lines: `get \"/notes\", to: \"notes#index\"` and `get \"/journal\", to: \"notes#index\"` | Yes. `journal_path=/journal` and `notes_path=/notes`",
+      "reasons": "Only the helpers are checked. Neither URL is requested as an owner to compare list behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`config.action_dispatch.show_exceptions = :none` | **No.** On 7.0 the new value is ignored ... Ship with the bump.",
+      "reasons": "Validation relies on the test suite and does not cover CI eager-loading mode.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "ActionText::ContentHelper.sanitizer.class.allowed_tags.to_a + [ ActionText::Attachment.tag_name, \"figure\", \"figcaption\", \"details\", \"summary\" ]",
+      "reasons": "Validation is a single rich-text test. It does not explicitly cover attachment markup, event handlers or javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Add `config.x.citation_provider = config_for(:citation_provider)` ... The test that passes `\"00123\"` / `\"sample: value # keep\"` through a fresh `bin/rails runner` boot passes.",
+      "reasons": "A fresh-process run with special characters is covered, but the actual Basic header, successful metadata and bounded failure are not verified.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :preferences, coder: YAML`. The stored text stays `\"---\\nexport_heading: Heads\\n\"`, and a NULL column still gives `nil`.",
+      "reasons": "There is no create/edit/reload of unequal preferences or export-heading check with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: at line 40, `params.require(:notebook).permit(:name, :export_heading)`. Works on 7.0. Creation still gives `\"second-book\"`",
+      "reasons": "Validation covers the slug-change attempt and creation but does not explicitly test editing the name or heading.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": ".map { |day, count| [Date.iso8601(day.to_s), count] }",
+      "reasons": "There is a single result check. It lacks decoding off/on runs, asymmetric UTC date counts, empty reports and ownership checks.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "incorrect",
+      "applicability": "partial",
+      "recommendation": "missing",
+      "validation": "partial",
+      "quote": "probe of `ExportDownloadsController#show` with a matching ETag and an old `If-Modified-Since` returned 304 on 7.0, 8.1, and 8.1 with the 8.1 defaults. No change.",
+      "reasons": "The plan concludes there is no change, when the gate turns a matching-ETag-list request from 200 into 304. It names the correct gate and controller but reaches the wrong conclusion, makes no keep/adopt decision, and its probe does not use an ETag list in both orders.",
+      "actionable": false
+    }
+  },
+  "actionable": 19,
+  "cost_usd": 0.230856,
+  "duration_ms": 63618
+}

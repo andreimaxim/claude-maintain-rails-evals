@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "enum :status, { draft: 0, ready: 1 }, prefix: true ... a probe gave {\"draft\"=>0,\"ready\"=>1} and status_ready? == true on both versions.",
+      "reasons": "Validation: the plan uses a mapping probe and the existing filter tests, but it never persists separate draft and ready notes and then checks the helpers and scopes after a reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 7.0, `serialize :tags, coder: JSON` silently gives `ActiveRecord::Coders::YAMLColumn` (probed)... Ship it only together with the bump.",
+      "reasons": "Validation: the plan checks the coder class and one fixture tag render/edit, but it does not reload unequal existing JSON tags or check both the stored representation and the array values.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "alias_method :highlight_color, :color\nalias_method :highlight_color=, :color= ... create!(highlight_color: \"pink\") then reload gave [\"pink\", \"{\\\"color\\\": \\\"pink\\\"}\"]",
+      "reasons": "Validation: the plan covers create/reload and the invalid-update rendering, but it does not show that existing settings are preserved.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `@notes = @notes.where(notebook: @notebook)` ... The second covers two notebooks with different notes.",
+      "reasons": "Validation: there is no other-owner control and no check that a foreign notebook is denied.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `csv << [ note.title, note.citation&.doi ]` ... with one cited and one uncited row",
+      "reasons": "Validation: the plan tests only one DOI, not several distinct DOI values compared against the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "Rows `Adam Bede/10.1000/bede` and a blank title with `not-a-doi` returned `[false, 0, 0, 0]` ... Control: a two-row valid CSV returned `true`",
+      "reasons": "",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "every export job raises `TypeError: String can't be coerced into Integer`... Repair: `finish(fragments.join)`",
+      "reasons": "Validation: the plan relies on the export tests and does not specify a real worker run that checks the exact ordered bytes.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `<% annotations = @import.annotations %>` ... the preview test passes for line 2 and line 4.",
+      "reasons": "Validation: the plan has no multiline CSV row case and does not check that the preview saves nothing.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The epoch is the same in both cases, so the scheduled postponement time does not change. Repair: `Time.at(reminder_epoch + 86_400, in: reminder_at.formatted_offset)`",
+      "reasons": "Validation: the plan probes only the DST-boundary case and has no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `@reader, requested_at = params[:reader], params[:requested_at].in_time_zone` ... Auckland reader ... Control: UTC `2026-10-05 12:00`",
+      "reasons": "Validation: the plan checks only the subject line; it has no real JSON queue/worker run, no reservation-key inspection, no note-membership check and no separate crossing of each midnight.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `NoteReminderJob.set(wait_until: Time.at(reminder_epoch))` ... both reminder tests pass",
+      "reasons": "Validation: the plan does not inspect the real scheduled payload/score or persisted schedule time, and has no replacement or ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the error goes to Sidekiq's own retries, and the citation stays `pending`... Use `:polynomially_longer` once only 8.1 is running; it does not exist on 7.0.",
+      "reasons": "Validation: the plan checks a single delay value and one test; it does not count requests over the attempts and has no 503->200 or 401 controls.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `form_with(url: notes_path, method: :get, class: \"search\", html: { role: \"search\" })`",
+      "reasons": "Validation: the plan checks only that the form renders; it does not submit the form or check field names and the resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "get \"/notes\", to: \"notes#index\"\nget \"/journal\", to: \"notes#index\" ... \"lists the reader's notes newest first at both list paths\" passes",
+      "reasons": "",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "immediate on the bump, test environment only. **Do not** ship it on 7.0 ... `config.action_dispatch.show_exceptions = :none`",
+      "reasons": "Validation: the plan covers the missing-record tests, but it does not exercise a general raised exception or the CI eager-loading mode.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "defaults = helper.allowed_tags || (helper.sanitizer.class.allowed_tags.to_a + [ ActionText::Attachment.tag_name, \"figure\", \"figcaption\" ])",
+      "reasons": "Validation: the plan checks details and unsafe markup only; it does not render attachment markup or check event handlers and javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "boots a fresh `bin/rails runner` with user `00123` and password `sample: value # keep`, and asserts the exact Basic auth header",
+      "reasons": "Validation: the plan does not verify successful metadata or bounded failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `expires_in: (export.expires_at - Time.current if export.downloadable?)`. The expired state is cached without expiry.",
+      "reasons": "Validation: the plan has no explicit before/after-deadline check, no cached versus fresh reads and no download expiry/ownership checks.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `serialize :preferences, coder: YAML`. Ship it with the bump ... the notebook tests pass under 8.1 defaults.",
+      "reasons": "Validation: the plan does not create, edit and reload unequal preferences or check the export heading with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `params.require(:notebook).permit(:name, :export_heading)` ... \"settings update the name and export heading but keep the slug\" passes",
+      "reasons": "Validation: the plan does not explicitly test an attempted slug change.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `[day.to_date, count]`. Works on 7.0 and on both value types.",
+      "reasons": "Validation: the plan relies on one test and has no explicit off/on decoding comparison, empty-report case or ownership check.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "when the ETag matches but `If-Modified-Since` is older, the response is now 304. Probed `fresh?` changes from `false` to `true`... adopt.",
+      "reasons": "Validation: the plan probes only `fresh?`; it has no ETag-list orders, conflicting/nonconflicting validators, expired 302 or foreign 404 tests.",
+      "actionable": true
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "only when 7.0 and 8.1 processes run together ... `DigestJob.perform_later(self, requested_at, reading_completion.to_s)`",
+      "reasons": "Validation: the plan checks only the payload shape and has no real cross-version producer/consumer matrix with an exact delivered percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 23,
+  "cost_usd": 0.236628,
+  "duration_ms": 54376
+}

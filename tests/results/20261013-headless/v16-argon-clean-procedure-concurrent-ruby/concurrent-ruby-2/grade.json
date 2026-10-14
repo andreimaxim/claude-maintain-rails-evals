@@ -1,0 +1,28 @@
+{
+  "case": "concurrent-ruby",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "CR1": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "The exact pin `gem \"concurrent-ruby\", \"1.3.4\"` at `/home/user/workspace/repo/Gemfile:8` is almost certainly there to work around this boot failure. Once the fix below is in place, the pin can be changed to `\"1.3.8\"` or loosened to `\"~> 1.3\"`.",
+      "reasons": "Impact: the plan never says the exact pin keeps 1.3.8 from resolving; it only guesses why the pin is there. Recommendation: changing the pin and updating concurrent-ruby is right, but the plan stops to ask permission ('Want me to make those changes?') instead of making the edit. Validation: it reports that only concurrent-ruby changed in the lockfile but never mentions `bundle check`.",
+      "actionable": false
+    },
+    "CR2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "on upgraded without the fix, boot fails with the `NameError` above. With the fix it prints `1.3.8`, `ActiveSupport::Logger`, `0`.",
+      "reasons": "Validation: it covers boot with and without the fix, the 1.3.4 control and a normal suite run, but it never runs the suite or an eager load with the fix in eager-loading CI mode; the only eager-load check used the injected -rlogger.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.0662662,
+  "duration_ms": 18210
+}

@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Startup, eager loading and the test run all fail with `LoadError: cannot load such file -- pagy/extras/items` ... The notes list cannot render, because `Pagy#items` was renamed to `#limit` in 9.0.0 ... require \"pagy/extras/limit\" ... Pagy::DEFAULT[:limit] = 10 / Pagy::DEFAULT[:limit_param] = :per_page / Pagy::DEFAULT[:limit_max] = 50 ... change ... `@pagy.items` to ... `@pagy.limit`",
+      "reasons": "Validation: the plan relies on the suite passing, a printout of the settings, the per_page=500 cap and the selected-option check. It leaves out the key's scenario: asymmetric owned, filter-excluded and foreign notes; page 2 at size 5 showing positions 6–10; following the actual Next href to positions 11–15; the last page at size 25; the exact filter queries kept in links; /journal; empty search; the foreign-note 404; and the anonymous redirect.",
+      "actionable": true
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`GET /notes?page=0` (and `page=-1`, `page=two` or `page=`) now raises `Pagy::VariableError` ... which is a 500 error in production. On 8.6.3 these requests show page 1. ... The repair below also works on 8.6.3 (confirmed by probe), so it can be deployed before the bump.",
+      "reasons": "Validation: the content comparison against page one, done with 52 records, covers only \"0\", \"-1\" and \"two\". The blank page was checked only in a probe with zero records. The checks include no valid first or next page controls and no filtering or ownership controls. The patch was checked on the baseline only by a zero-record probe, not by a content-level run on 8.6.3.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.072092,
+  "duration_ms": 22267
+}

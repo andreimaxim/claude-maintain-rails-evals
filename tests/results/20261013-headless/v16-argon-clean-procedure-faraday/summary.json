@@ -1,0 +1,87 @@
+{
+  "configuration": "opus-5.5-low",
+  "case": "faraday",
+  "request": "Upgrade the faraday gem to 2.12.2",
+  "variant": "v16-argon-clean-procedure (Gemini 4 Argon clean-room optimizer: five-step procedure with upgrade-workspace script)",
+  "harness": "claude -p --plugin-dir via scripts/run-worker.ts",
+  "grader": {
+    "script": "scripts/grade-plan.ts",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "instructions_sha256": "c405ad0f3874725c5fd9d725b7a17e19c10cb912d51de4f746ffbdad2aa55594"
+  },
+  "runs": [
+    {
+      "run": 1,
+      "thread": "https://ampcode.com/threads/T-01a13b45-ec0b-73cd-9b53-f72e6616f998",
+      "archive_sha256": "2334b8185f9f4cab786ff7efdcb40094c6770253fafe0ae43698702a10905cc2",
+      "wall_time_ms": 201503,
+      "cost_usd": 0.5445116,
+      "grader_actionable": 1,
+      "grader_supported_validation": 0,
+      "grading_cost_usd": 0.0661562,
+      "checkout_unchanged": true
+    },
+    {
+      "run": 2,
+      "thread": "https://ampcode.com/threads/T-01a13b45-f6bd-7096-8509-b5b6e832473d",
+      "archive_sha256": "899a0150b01d2c52f204ae1521e4cade9346edd71cd2ab90a15f52d12b912c4b",
+      "wall_time_ms": 176978,
+      "cost_usd": 0.4929192,
+      "grader_actionable": 0,
+      "grader_supported_validation": 0,
+      "grading_cost_usd": 0.0932392,
+      "checkout_unchanged": true
+    },
+    {
+      "run": 3,
+      "thread": "https://ampcode.com/threads/T-01a13b46-03a3-7452-b2e0-f52dde5947da",
+      "archive_sha256": "683dccb14fa4ddaa8aaa41322ac6a4946106399706a881ebdd0a4d73138e0d68",
+      "wall_time_ms": 183305,
+      "cost_usd": 0.5428894000000001,
+      "grader_actionable": 1,
+      "grader_supported_validation": 0,
+      "grading_cost_usd": 0.0806032,
+      "checkout_unchanged": true
+    },
+    {
+      "run": 4,
+      "thread": "https://ampcode.com/threads/T-01a13b46-0d7c-7745-9038-21428bb89a6f",
+      "archive_sha256": "cf38279f62561b6ebff3c14937003ac8c0b53d1f444951d858fe4045884c63b7",
+      "wall_time_ms": 185949,
+      "cost_usd": 0.48612279999999997,
+      "grader_actionable": 2,
+      "grader_supported_validation": 0,
+      "grading_cost_usd": 0.07505519999999999,
+      "checkout_unchanged": true
+    },
+    {
+      "run": 5,
+      "thread": "https://ampcode.com/threads/T-01a13b46-1749-7253-990b-d80ae846536e",
+      "archive_sha256": "332bc74052231af097b54682821e7da2d96b5a76a67d133ff81a4bdf77e9ba94",
+      "wall_time_ms": 249000,
+      "cost_usd": 0.6357958,
+      "grader_actionable": 2,
+      "grader_supported_validation": 0,
+      "grading_cost_usd": 0.0782432,
+      "checkout_unchanged": true
+    }
+  ],
+  "privacy_omissions": [
+    {
+      "file": "faraday-1/final.md",
+      "source_sha256": "acdbf6b933376352c5cb6871279ac66f391328c6258af70ce33c1a9151ba4ced",
+      "reason": "Literal Basic-auth value from an experiment redacted; grading used the unredacted plan, and redaction does not change the grade."
+    },
+    {
+      "file": "faraday-4/final.md",
+      "source_sha256": "586e974b183dc228a951efafb513fdc49c867d97c29c63ffaf42dfc48f5d4c5d",
+      "reason": "Literal Basic-auth value from an experiment redacted; grading used the unredacted plan, and redaction does not change the grade."
+    },
+    {
+      "file": "faraday-5/final.md",
+      "source_sha256": "c015335ef8d2ba4483aee1937f89066f638e25b2b5071bf74fb86a8f25e80ccd",
+      "reason": "Literal Basic-auth value from an experiment redacted; grading used the unredacted plan, and redaction does not change the grade."
+    }
+  ]
+}

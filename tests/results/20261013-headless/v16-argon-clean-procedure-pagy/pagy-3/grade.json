@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Boot, eager load and the whole test suite fail with `LoadError: cannot load such file -- pagy/extras/items` ... `NoMethodError` (undefined method `items`) when rendering `/notes`... Keep `:limit_param = :per_page`. Without it, the URL parameter would quietly become `limit` ... Change it to `@pagy.limit`.",
+      "reasons": "Validation: the plan relies on existing tests (per_page=5 page 2 showing 6-10, prev/next keeping per_page, a cap at 50, overflow). It does not follow the actual Next href to 11–15, check default 10, check the size 25 last page, check retained filter queries, /journal, empty search, foreign 404 or anonymous redirect, or use asymmetric owned/excluded/foreign data.",
+      "actionable": true
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "With R1 and R2 applied, `GET /notes?page=` (also `page=0`, `-1` or `two`) returns a 500 with `Pagy::VariableError` ... On 8.6.3 all four values give page 1. ... The repair also works on 8.6.3 (verified) ... def pagy_get_page(vars, **) [super, 1].max end",
+      "reasons": "Validation: the plan probes page numbers at the controller level with controls (none, 3, 99) on both versions, plus the suite. It does not compare the rendered response for each invalid input with page-one content, and it has no filtering or ownership controls.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.06707600000000001,
+  "duration_ms": 17458
+}

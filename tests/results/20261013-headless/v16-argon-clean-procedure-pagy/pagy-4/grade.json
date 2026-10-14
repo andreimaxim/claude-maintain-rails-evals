@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "require \"pagy/extras/limit\"\nPagy::DEFAULT[:limit] = 10\nPagy::DEFAULT[:limit_param] = :per_page\nPagy::DEFAULT[:limit_max] = 50 ... Change line 30 to `@pagy.limit`. ... (`per_page=5`, page 2 shows \"Reading 08..04\" and \"Displaying notes 6-10 of 13 in total\") passes. So does `per_page=500` being capped to 50.",
+      "reasons": "Validation covers page 2 at five, the 500→50 cap, the selected option, default 10 and filter retention. It omits following the actual Next href to 11–15, the size-25 last page, /journal, empty search, the foreign 404 and the anonymous redirect.",
+      "actionable": true
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Requests with `page=\"\"`, `\"0\"`, `\"-1\"` or `\"two\"` now raise `Pagy::VariableError` ... Change line 18 to `@pagy, @notes = pagy(@notes, page: [params[:page].to_i, 1].max)` ... `GET /notes?page=0` (also `\"\"` and `two`) must return 200 with \"Chapter 50\" first",
+      "reasons": "Validation runs after the PG1 repair and checks three invalid inputs with page 3, page 99 and filtering controls, but it omits the negative page and ownership controls.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.069468,
+  "duration_ms": 18597
+}

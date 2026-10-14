@@ -1,0 +1,28 @@
+{
+  "case": "concurrent-ruby",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "CR1": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "The `Gemfile` pins `concurrent-ruby` to exactly `1.3.4` ... Then change the Gemfile pin to `gem \"concurrent-ruby\", \"1.3.8\"` ... `bundle update concurrent-ruby --conservative` ... the lockfile diff was only `concurrent-ruby 1.3.4 → 1.3.8` and the bundle resolved.",
+      "reasons": "Impact: the plan mentions the exact pin and says to change it, but never says the pin stops 1.3.8 from resolving; it describes the pin as a guard against the boot failure.",
+      "actionable": false
+    },
+    "CR2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "In `config/boot.rb`, after `require \"bundler/setup\"` and before `require \"bootsnap/setup\"`, add: `require \"logger\"` ... **Failing check:** ... without the line ... should raise the `NameError` ... **Control:** `bin/rails test` ... `bin/rails zeitwerk:check` should pass.",
+      "reasons": "Validation: the plan proposes runs with and without the fix, the normal test suite and zeitwerk:check, but never runs the suite in eager-loading CI mode.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.0907626,
+  "duration_ms": 23229
+}
