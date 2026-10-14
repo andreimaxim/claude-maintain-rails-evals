@@ -351,6 +351,20 @@ PostgreSQL counts, unequal data or another owner's records. The
 [v10 record](tests/results/20261013-headless/v10-discriminating-checks-rails/summary.json)
 keeps each run's plan, receipt and grade.
 
+**Routine bumps are cheap: a patch bump costs about $0.27 and a no-op $0.02.**
+[`tests/planner-training.md`](tests/planner-training.md) adds two training cases
+to the grader: a concurrent-ruby 1.3.4 → 1.3.8 patch bump and a no-op request
+for pagy's current 8.6.3. Five v10 runs each scored 1 of 2 on the patch bump, at a
+median of 1.5 minutes and $0.27, and 1 of 1 on the no-op, at about 7 seconds and
+$0.02. Every patch-bump plan found the Rails 7.0 logger boot failure and its
+`require "logger"` repair (CR2). CR1 was graded partial every time because the
+plans change the exact pin without stating that it blocks 1.3.8; this key is new
+and uncalibrated, and the repair itself was always correct. For the no-op, the
+main agent answered from the Gemfile and lockfile without calling the planner.
+The [patch-bump](tests/results/20261013-headless/v10-discriminating-checks-concurrent-ruby/summary.json)
+and [no-op](tests/results/20261013-headless/v10-discriminating-checks-noop/summary.json)
+records keep each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

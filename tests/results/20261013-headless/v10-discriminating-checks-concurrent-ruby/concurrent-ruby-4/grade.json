@@ -1,0 +1,28 @@
+{
+  "case": "concurrent-ruby",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "CR1": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "Gemfile line 8 has `gem \"concurrent-ruby\", \"1.3.4\"`, an exact pin. ... Change the Gemfile pin to `\"1.3.8\"`, then run `bundle lock --update concurrent-ruby`. In my experiment the only lockfile changes were `concurrent-ruby (1.3.8)` and the matching DEPENDENCIES line",
+      "reasons": "Impact: the plan names the exact pin and says to change it, but never states that the pin keeps 1.3.8 from resolving; that consequence is only implied.",
+      "actionable": false
+    },
+    "CR2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "With only the gem bumped to 1.3.8, `bin/rails runner -e test` exited with code 1 ... uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger (NameError) ... In `config/boot.rb`, add `require \"logger\"` ... boot exits 0 ... 46 runs, 325 assertions, 0 failures",
+      "reasons": "Validation: the plan covers boot failing without the fix and passing with it, zeitwerk:check, and one normal test-suite run, but it does not run the suite in an eager-loading CI mode.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.09528220000000001,
+  "duration_ms": 16853
+}

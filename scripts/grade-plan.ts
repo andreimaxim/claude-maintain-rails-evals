@@ -5,7 +5,7 @@
  * plan text, with no tools. It returns four judgments per selected finding;
  * actionability (first three supported) is computed here, not by the model.
  *
- *   node scripts/grade-plan.ts <rails|sidekiq|pagy|faraday> <plan.md> <grade.json>
+ *   node scripts/grade-plan.ts <case> <plan.md> <grade.json>
  *     [--model claude-opus-5-5] [--effort high]
  */
 
@@ -18,7 +18,7 @@ import { DIMENSIONS, type FamilyGrade, isActionable, JUDGMENTS } from "./hand-gr
 
 const tests = (name: string) => fileURLToPath(new URL(`../tests/${name}`, import.meta.url));
 
-export const CASES = ["rails", "sidekiq", "pagy", "faraday"] as const;
+export const CASES = ["rails", "sidekiq", "pagy", "faraday", "concurrent-ruby", "noop"] as const;
 export type Case = (typeof CASES)[number];
 
 /** Answer-key sections per case, by heading prefix. */
@@ -27,12 +27,16 @@ const KEY_SECTIONS: Record<Case, { file: string; headings: string[] }> = {
   sidekiq: { file: "planner-development.md", headings: ["## Sidekiq:"] },
   pagy: { file: "planner-held-out.md", headings: ["## Pagy"] },
   faraday: { file: "planner-held-out.md", headings: ["## Faraday"] },
+  "concurrent-ruby": { file: "planner-training.md", headings: ["## Concurrent-ruby"] },
+  noop: { file: "planner-training.md", headings: ["## No-op"] },
 };
 const REQUESTS: Record<Case, string> = {
   rails: "Upgrade the rails gem to 8.1.0 (from 7.0.8.7)",
   sidekiq: "Upgrade the sidekiq gem to 7.3.9 (from 6.5.12)",
   pagy: "Upgrade the pagy gem to 9.3.5 (from 8.6.3)",
   faraday: "Upgrade the faraday gem to 2.12.2 (from 1.10.4)",
+  "concurrent-ruby": "Upgrade the concurrent-ruby gem to 1.3.8 (from 1.3.4)",
+  noop: "Upgrade the pagy gem to 8.6.3 (already 8.6.3)",
 };
 
 export interface GradedFamily extends FamilyGrade {
@@ -61,7 +65,7 @@ function sections(markdown: string, prefixes: string[]): string {
 export function answerKey(caseName: Case): { text: string; families: string[] } {
   const { file, headings } = KEY_SECTIONS[caseName];
   const text = sections(readFileSync(tests(file), "utf8"), headings);
-  const families = [...text.matchAll(/^\| (R\d\d|SK\d|PG\d|FD\d) \|/gm)].map((match) => match[1]!);
+  const families = [...text.matchAll(/^\| (R\d\d|SK\d|PG\d|FD\d|CR\d|NO\d) \|/gm)].map((match) => match[1]!);
   return { text, families };
 }
 
@@ -154,7 +158,7 @@ if (import.meta.main) {
     options: { model: { type: "string" }, effort: { type: "string" } },
   });
   if (!CASES.includes(caseName as Case) || !planPath || !output) {
-    throw new Error("Usage: grade-plan.ts <rails|sidekiq|pagy|faraday> <plan.md> <grade.json>");
+    throw new Error("Usage: grade-plan.ts <case> <plan.md> <grade.json>");
   }
   const grade = await gradePlan(caseName as Case, readFileSync(planPath, "utf8"), {
     model: values.model, effort: values.effort,
