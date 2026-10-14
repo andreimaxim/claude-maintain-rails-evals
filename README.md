@@ -294,6 +294,16 @@ fully specified any validation. The
 [v6 record](tests/results/20261013-headless/v6-state-consequence-rails/summary.json)
 keeps each run's plan, receipt and grade.
 
+**With the consequence required, compact output costs less recall.**
+[Variant v7](tests/planner-variants/v7-consequence-compact-output) adds v5's
+instruction to v6: keep long output in files and read only the needed lines.
+Five runs scored 15, 18, 18, 18 and 20 (mean 17.8; v6 19.2) at a median of 11.4
+minutes and $2.16 (v6 $3.15). Cache reads fell from 5.5M to 3.9M tokens per run,
+with output tokens unchanged at about 48k. The difference in recall is within
+five-run noise; the losses are again partial impact (R14, R16, R19). The
+[v7 record](tests/results/20261013-headless/v7-consequence-compact-output-rails/summary.json)
+keeps each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

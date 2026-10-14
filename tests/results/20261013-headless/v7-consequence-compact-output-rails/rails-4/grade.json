@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum status: {...}, _prefix: true` | `ArgumentError` when the class loads (keyword form removed in 8.0) | `enum :status, { draft: 0, ready: 1 }, prefix: true`",
+      "reasons": "Validation: the plan only marks this 'Executed' and reports a passing suite; it does not persist unequal draft/ready notes or exercise the filters and helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, coder: JSON` | **No.** 7.0 has no `coder:`. Ship it with the bump, or in a 7.1 step.",
+      "reasons": "Validation: there is no scenario that reloads existing unequal JSON tags, edits comma-separated input, and checks the stored representation.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`alias_method :highlight_color, :color` plus `alias_method :highlight_color=, :color=`",
+      "reasons": "Validation: the plan says only 'Executed'; it does not edit the color, reload the JSON settings, or check form and error rendering.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`where(notebooks: @notebook)` | `PG::UndefinedColumn notes.notebooks` ... | `where(notebook: @notebook)`",
+      "reasons": "Validation: there is no test with unequal notebook populations, another owner, or denial of a foreign notebook.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Import#receipt` uses `citation[:id]`... the receipt CSV has empty DOIs. ... **Fix:** `citation&.doi`.",
+      "reasons": "Validation: the plan says only 'Evidence (executed)'; it does not compare downloaded receipt fields with the persisted DOIs.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A CSV with a bad row would keep the import plus the earlier notes and citations. ... `raise ActiveRecord::Rollback unless row.note.save`",
+      "reasons": "Validation: the only check is a test's record counts; there is no real apply request with fresh PostgreSQL counts and no successful-batch control.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`fragments.sum` (Strings) | `TypeError`: every export fails in the worker ... | `fragments.join`",
+      "reasons": "Validation: there is no real worker run checking the exact ordered Markdown bytes, and no failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`preview.html.erb` calls `annotations.stringify_keys`, then looks up `annotations[row.line]` with an Integer... **Fix:** drop `.stringify_keys`.",
+      "reasons": "Validation: there is no scenario with unequal annotations on lines 2 and 4 or a multiline CSV row.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The preview changes from `2026-11-01T09:00-04:00` to `08:00-05:00`. The stored epoch is unchanged",
+      "reasons": "Validation: the plan checks only the DST-boundary example and has no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the worker gets the reader's zone. `to_date`/`all_day` become the reader's local day, while the Redis reservation key ... stays the UTC day. ... `requested_at = requested_at.utc`",
+      "reasons": "Validation: the plan uses a test and a serialization probe, not a real JSON queue and worker that crosses each midnight and inspects the reservation keys and delivered membership.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`set(wait_until: reminder_epoch)` (Integer) | `NoMethodError utc for Integer` ... | `wait_until: Time.at(reminder_epoch)`. Same scheduled epoch; tests assert the `:at`.",
+      "reasons": "Validation: the plan checks the `:at` but not the persisted schedule time or the replacement and ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`wait: :exponentially_longer` | `RuntimeError` the first time it retries (removed in 7.2) | `:polynomially_longer`",
+      "reasons": "Impact: the plan names the retry error but does not say that bounded ActiveJob retry is lost and the job falls into Sidekiq retries. Validation: there is no persistent-503 request-count scenario and no 503->200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`form_with(model: nil, …)` | `ArgumentError` on the notes list, which is the landing page | Drop `model: nil`",
+      "reasons": "Validation: the plan does not render and submit the search form or check field names, method, and resulting membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Routes fail to load ... Two routes: `get \"/notes\", …, as: :notes` and `get \"/journal\", …, as: :journal`.",
+      "reasons": "Validation: the plan does not request both URLs as an owner to compare list behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`show_exceptions = false` | Setting removed in 7.2 | `:none` | **No.** On 7.0, `:none` is truthy and would show exceptions. Ship with the bump.",
+      "reasons": "Impact: the plan says only that the setting was removed, not how the exception policy changes. Validation: there is no raised-exception or missing-record scenario, and no CI eager-loading mode.",
+      "actionable": false
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "App fails to boot: `allowed_tags` defaults to nil since 7.1. | ... `(allowed_tags || sanitizer.class.allowed_tags + [attachment tag, \"figure\", \"figcaption\"]) + %w[details summary]`",
+      "reasons": "Validation: the plan cites boot and test logs but does not render details/summary and attachments while checking that scripts, handlers, and javascript URLs are stripped.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "set `config.x.citation_provider = config_for(:citation_provider).fetch(:citation_provider)` ... The env-var test (credentials passed to a fresh `bin/rails runner`) passes.",
+      "reasons": "Validation: the fresh-process test does not use special-character credentials, check the actual Basic header, or cover bounded failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`exports/_export.html.erb:26` passes a negative `expires_in` for expired exports and raises (executed). Today it is reported and logged. Use `cache_if export.downloadable?` or clamp the value.",
+      "reasons": "Recommendation: the plan offers the `cache_if` alternative, which breaks the stale-link contract, on equal footing with clamping. Validation: there is no before/after-deadline, cached/fresh, or download expiry and ownership scenario.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Works under `load_defaults 7.0`. Fails to load once 7.1+ defaults are adopted (\"missing keyword :coder\"). | `serialize :preferences, coder: YAML` (existing YAML rows still load)",
+      "reasons": "Validation: the plan relies on the defaults-matrix suite and has no create/edit/reload scenario with unequal preferences under the gate off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`ReadonlyAttributeError` on notebook settings update, because the form resubmits `slug` (executed). Stop permitting `:slug` in `notebook_params` before adopting.",
+      "reasons": "Recommendation: removing `:slug` from the shared params does not say how slug assignment on creation is preserved. Validation: there are no creation, editable-field, attempted slug-change, or persisted-slug checks.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`postgresql_adapter_decode_dates` | `Notebook#daily_note_counts` raises `TypeError` (`Date.iso8601(Date)`) ... Accept a `Date` or `String`",
+      "reasons": "Validation: there is no decoding off/on scenario on PostgreSQL with asymmetric UTC date counts, empty reports, and ownership checks.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "incorrect",
+      "applicability": "partial",
+      "recommendation": "missing",
+      "validation": "partial",
+      "quote": "`strict_freshness` | `ExportDownloadsController` ETag is the blob checksum, so outcomes are equivalent. The both-headers test passes.",
+      "reasons": "Impact: the plan claims outcomes are equivalent, but a matching ETag list plus an older If-Modified-Since changes the response from 200 to 304. Applicability: it names the right gate and controller but wrongly concludes there is no effect. Recommendation: it makes no keep/adopt decision. Validation: the single both-headers test does not cover ETag lists in both orders, conflicting validators, the 302 or 404 controls.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Jobs enqueued on 8.1 and run on 7.0: ... **`DigestJob` fails** with `DeserializationError: BigDecimalSerializer is not known` ... pass `reading_completion.to_s` ... The mailer already calls `BigDecimal(params[:completion])`.",
+      "reasons": "Validation: the cross-version check called `perform` directly rather than a real worker, and it does not report the exact delivered completion percentage or same-version controls.",
+      "actionable": true
+    }
+  },
+  "actionable": 18,
+  "cost_usd": 0.191588,
+  "duration_ms": 49768
+}
