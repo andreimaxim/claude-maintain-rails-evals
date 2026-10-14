@@ -446,6 +446,18 @@ the outage without the queued jobs it leaves behind; 1 of 2 in every
 patch-bump run; and 1 of 1 in every no-op run. Its records are under
 [`tests/results/20261013-headless/`](tests/results/20261013-headless/).
 
+**Claude Opus 5.5's clean-room procedure scored lower on Rails and was not run
+further.** [Variant v17](tests/planner-variants/v17-opus-clean-procedure) came
+from the same clean-room brief. Its planner works through `bin/upgrade-copy`
+(setup, check, step, bump and validate on before and after copies) and
+`bin/gem-diff`, and repairs problems in a fixed order: boot, eager load, routes,
+schema, tests, changed responses, logged exceptions. Five Rails runs scored 14,
+17, 18, 16 and 15 (mean 16.0) at a median of $3.59 and 19.6 minutes. With v16
+already at 21.0 for less, its training cases were skipped to save quota. The
+first five Rails runs stopped on the Claude session limit and were rerun after
+the reset. Its records are under
+[`tests/results/20261013-headless/`](tests/results/20261013-headless/).
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

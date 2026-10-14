@@ -1,0 +1,1394 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Runs gem-upgrade experiments in disposable copies of a Rails application, each
+# with its own databases and Redis database. The application itself is only read.
+#
+#   ruby upgrade-copy setup GEM VERSION [--app DIR] [--dir DIR] [--also GEM,GEM]
+#       Copies the application twice: "before" stays at the current version,
+#       "after" gets GEM at VERSION (Gemfile edited, bundle resolved and
+#       installed). Rewrites database names and Redis URLs in both copies, checks
+#       that none points at the application's own, and loads the schema.
+#   ruby upgrade-copy check [--side before|after|both] [--tests PATHS]
+#       Boots, eager-loads, draws routes, dumps the schema, runs the tests and
+#       sends GET requests to routes without parameters in each side, then
+#       compares after with before. Also written to DIR/logs/check-report.md.
+#   ruby upgrade-copy step VERSION
+#       Copies the after copy, with its kept changes, to "step", moves GEM to an
+#       intermediate VERSION there and checks it against before.
+#   ruby upgrade-copy validate "KEPT TITLE" --file CHECK.rb
+#       Runs CHECK.rb with `rails runner` on before, on a copy of after with only
+#       the kept change of that title undone, and on after: the evidence that a
+#       repair is needed and works.
+#   ruby upgrade-copy runner [--side both|before|after|step] (CODE | --file PATH)
+#       Runs Ruby code with `rails runner` in each side and prints the outputs.
+#   ruby upgrade-copy run [--side after|before|both|step] COMMAND...
+#       Runs a shell command in a side with its isolated environment.
+#   ruby upgrade-copy bump GEM [VERSION] [--side after]
+#       Also moves another gem in a side: edits the Gemfile, resolves and
+#       installs, and keeps the change like `keep`. VERSION is an exact version,
+#       a requirement such as "< 3", or omitted for the latest release.
+#   ruby upgrade-copy keep MESSAGE [--side after]
+#       Keeps the current edits of a side as part of its baseline, so that later
+#       experiments start from them and `reset` does not discard them.
+#   ruby upgrade-copy backport [--file "W/check-*.rb"] [--hold]
+#       Applies the changes kept in after to before (code as a patch, other gem
+#       moves by moving the same gems), checks before with them, runs the given
+#       check scripts there, then restores before (with --hold, leaves them
+#       applied for runner probes until `reset --side before`). Shows which
+#       repairs also work at the current version.
+#   ruby upgrade-copy drop "KEPT TITLE"
+#       Undoes one kept change (or gem move) in after, for a repair that did
+#       not help.
+#   ruby upgrade-copy diff [--side after] [--all]
+#       Shows edits not yet kept; with --all, every change since setup.
+#   ruby upgrade-copy reset [--side after]  Discards edits not yet kept.
+#   ruby upgrade-copy cleanup               Drops the copies' databases, empties
+#                                           their Redis databases and deletes the
+#                                           copies; keeps notes and logs in DIR.
+#
+# Commands after setup find the workspace of the application in the current
+# directory; pass --dir when one application has several workspaces.
+# Output is short; full logs are written under DIR/logs and their paths printed.
+
+require "digest"
+require "erb"
+require "fileutils"
+require "json"
+require "open3"
+require "set"
+require "socket"
+require "tmpdir"
+require "uri"
+
+ROOT = File.join(ENV.fetch("TMPDIR", Dir.tmpdir), "gem-upgrade")
+COPY_EXCLUDES = %w[.git log tmp storage coverage .DS_Store].freeze
+SCAN_DIRS = %w[config app lib].freeze
+SCAN_FILES = %w[.env .env.test .env.development .env.local Procfile Procfile.dev].freeze
+NOISE = /was loaded from the standard library|to your Gemfile or gemspec|please contact the author of|^\s*from |^\s*$/
+TEST_SEED = "4242"
+# Both sides run at once, so a check stays under a 10-minute tool timeout.
+TEST_TIMEOUT = Integer(ENV.fetch("UPGRADE_COPY_TEST_TIMEOUT", "480"))
+
+# --- Small helpers ---------------------------------------------------------------
+
+def fail!(message)
+  warn message
+  exit 1
+end
+
+def options_from(args)
+  options = {}
+  rest = []
+  until args.empty?
+    arg = args.shift
+    if arg == "--"
+      rest.concat(args)
+      break
+    elsif %w[--all --hold].include?(arg)
+      options[arg.delete_prefix("--")] = true
+    elsif arg.start_with?("--") && %w[--app --dir --also --side --tests --file].include?(arg)
+      options[arg.delete_prefix("--")] = args.shift
+    else
+      rest << arg
+    end
+  end
+  [options, rest]
+end
+
+def locked_versions(lockfile)
+  versions = {}
+  File.foreach(lockfile) do |line|
+    match = line.match(/\A {4}([\w.-]+) \(([^)]+)\)\s*\z/)
+    versions[match[1]] ||= match[2].split("-").first if match
+  end
+  versions
+end
+
+def gemfile_name(dir)
+  File.exist?(File.join(dir, "gems.rb")) && !File.exist?(File.join(dir, "Gemfile")) ? "gems.rb" : "Gemfile"
+end
+
+def lockfile_name(dir)
+  gemfile_name(dir) == "gems.rb" ? "gems.locked" : "Gemfile.lock"
+end
+
+def relative(text, dir)
+  text.gsub("#{dir}/", "")
+end
+
+# --- Workspace state -------------------------------------------------------------
+
+# The workspace whose application is the current directory, or that contains it.
+def workspace(options)
+  return options["dir"] if options["dir"] && File.exist?(File.join(options["dir"], "state.json"))
+
+  here = File.expand_path(Dir.pwd)
+  found = Dir.glob(File.join(ROOT, "*", "state.json")).filter_map do |file|
+    state = JSON.parse(File.read(file))
+    state["dir"] if state["app"] == here || here.start_with?("#{state["dir"]}/") || here == state["dir"]
+  rescue JSON::ParserError
+    nil
+  end
+  fail!("No workspace for #{here}. Run `upgrade-copy setup GEM VERSION` from the application root first, or pass --dir.") if found.empty?
+  fail!("Several workspaces for this application: #{found.join(", ")}. Pass --dir with one of them.") if found.size > 1
+  found.first
+end
+
+def load_state(dir)
+  JSON.parse(File.read(File.join(dir, "state.json")))
+end
+
+STATE_LOCK = Mutex.new
+
+def save_state(dir, state)
+  STATE_LOCK.synchronize { File.write(File.join(dir, "state.json"), JSON.pretty_generate(state)) }
+end
+
+def sides_for(state, option, default)
+  wanted = option || default
+  list = wanted == "both" ? %w[before after] : wanted.split(",")
+  list.each { |side| fail!("No #{side} copy in this workspace.") unless state["sides"][side] }
+  list
+end
+
+# --- Running commands in a copy --------------------------------------------------
+
+def side_env(state, side)
+  info = state["sides"][side]
+  dir = info["dir"]
+  env = {
+    "RAILS_ENV" => "test", "RACK_ENV" => "test",
+    "BUNDLE_GEMFILE" => File.join(dir, gemfile_name(dir)), "BUNDLE_APP_CONFIG" => File.join(dir, ".bundle"),
+    "BUNDLE_FROZEN" => "false", "BUNDLE_DEPLOYMENT" => "false",
+    "DISABLE_SPRING" => "1", "PARALLEL_WORKERS" => "1", "BOOTSNAP_CACHE_DIR" => File.join(dir, "tmp", "cache"),
+    "BUNDLE_BIN_PATH" => nil, "BUNDLER_SETUP" => nil, "RUBYOPT" => ENV["RUBYOPT"].to_s.gsub(%r{-rbundler/setup}, "").strip
+  }
+  env.merge(info["env"])
+end
+
+def rails_command(dir)
+  File.executable?(File.join(dir, "bin", "rails")) ? ["bin/rails"] : %w[bundle exec rails]
+end
+
+# Runs a command in a side, writes its output to a log and returns [output, ok].
+def run_in(state, side, argv, log:, timeout: 900, extra_env: {})
+  dir = state["sides"][side]["dir"]
+  FileUtils.mkdir_p(File.dirname(log))
+  output = +""
+  status = nil
+  Open3.popen2e(side_env(state, side).merge(extra_env), *argv, chdir: dir, pgroup: true) do |stdin, stream, thread|
+    stdin.close
+    reader = Thread.new { stream.each_line { |line| output << line } }
+    unless thread.join(timeout)
+      Process.kill("-TERM", thread.pid) rescue nil
+      thread.join(10) || (Process.kill("-KILL", thread.pid) rescue nil)
+      output << "\n[upgrade-copy: stopped after #{timeout}s]\n"
+    end
+    reader.join(5)
+    status = thread.value
+  end
+  File.write(log, output)
+  [output, status&.success?]
+end
+
+# The first error line of a failed command and the application frames under it.
+def error_excerpt(output, dir)
+  lines = output.lines.map(&:rstrip).reject { |line| line.match?(/warning: .*was loaded from the standard library|to your Gemfile or gemspec|\A<internal:/) }
+  # Ruby prints an uncaught exception as "file:line:in 'method': message (Class)".
+  index = lines.index { |line| line.match?(/(Error|Exception)\b|aborted!|uninitialized constant|undefined (method|local)|can't|cannot|Could not|not found|\[upgrade-copy: stopped|\([A-Z]\w*(::[A-Z]\w*)*\)\s*\z/i) && !line.match?(/DEPRECATION|deprecated/) }
+  return lines.last(5).map { |line| relative(line, dir) } unless index
+
+  index += 1 if lines[index].strip == "rails aborted!"
+  message = lines[index, 3].take_while { |line| !line.match?(/^\s*(from |\/|\S+\.rb:\d+)/) || line == lines[index] }
+  after = lines[(index + 1)..].select { |line| line.match?(/\A\s*(from )?\S+:\d+:in /) }
+  # The two frames nearest the error say which library raised it; the
+  # application frames say which code of the application led there.
+  library = after.first(2).reject { |line| line.include?("#{dir}/") }
+  frames = after.select { |line| line.include?("#{dir}/") && !line.match?(%r{/bin/|/config/boot\.rb|tmp/upgrade_copy}) }.first(3)
+  (message + (library + frames).map { |frame| "  at #{short_path(frame.strip.sub(/\Afrom /, ""))}" }).map { |line| relative(short_path(line), dir) }
+end
+
+def short_path(line)
+  line.gsub(%r{\S*/gems/(?=[\w.-]+-\d[\w.]*/)}, "").gsub(%r{\S*/lib/ruby/\d\.\d\.\d/}, "ruby/")
+end
+
+# --- Redis ------------------------------------------------------------------------
+
+def redis_reply(socket)
+  line = socket.gets("\r\n")
+  raise "Redis closed the connection" unless line
+
+  type = line[0]
+  body = line[1..].chomp
+  case type
+  when "+" then body
+  when "-" then raise body
+  when ":" then body.to_i
+  when "$" then body.to_i.negative? ? nil : socket.read(body.to_i + 2)[0..-3]
+  when "*" then body.to_i.negative? ? nil : Array.new(body.to_i) { redis_reply(socket) }
+  else raise "Unexpected Redis reply #{line.inspect}"
+  end
+end
+
+# Sends commands to the Redis database named by the URL (database 0 if none).
+def redis(url, *commands)
+  uri = URI(url)
+  socket = TCPSocket.new(uri.host || "localhost", uri.port || 6379, connect_timeout: 2)
+  preamble = []
+  preamble << ["AUTH", *[uri.user, uri.password].compact.reject(&:empty?)] if uri.password
+  preamble << ["SELECT", redis_db_of(url)]
+  (preamble + commands).map do |command|
+    socket.write("*#{command.size}\r\n#{command.map { |arg| "$#{arg.to_s.bytesize}\r\n#{arg}\r\n" }.join}")
+    redis_reply(socket)
+  end.drop(preamble.size)
+ensure
+  socket&.close
+end
+
+# Empties a database this workspace allocated; never database 0.
+def flush_redis(server, db, allocated)
+  raise "refusing to empty Redis database #{db.inspect}" if db.nil? || db.to_i.zero? || !allocated.include?(db)
+
+  redis(with_db(server, db), ["FLUSHDB"])
+end
+
+def with_db(url, db)
+  uri = URI(url)
+  uri.path = "/#{db}"
+  uri.to_s
+end
+
+def redis_db_of(url)
+  URI(url).path.to_s[%r{\A/(\d+)}, 1]&.to_i || 0
+rescue URI::Error
+  nil
+end
+
+REDIS_LITERAL = %r{(rediss?://[^\s"'/?#<>]+)(/\d*)?}
+
+def scan_files(dir)
+  SCAN_DIRS.flat_map { |sub| Dir.glob(File.join(dir, sub, "**", "*")) }.concat(SCAN_FILES.map { |name| File.join(dir, name) })
+           .select { |file| File.file?(file) && File.size(file) < 1_000_000 && !file.include?("/node_modules/") }
+end
+
+# Redis URLs and REDIS env variable names the application mentions.
+def redis_usage(app)
+  literals = []
+  env_names = Set.new
+  scan_files(app).each do |file|
+    text = File.read(file, encoding: "UTF-8", invalid: :replace)
+    literals.concat(text.scan(REDIS_LITERAL).map { |base, path| "#{base}#{path}" })
+    env_names.merge(text.scan(/ENV(?:\.fetch\(|\[)\s*["']([A-Z0-9_]*REDIS[A-Z0-9_]*)["']/).flatten)
+  rescue ArgumentError
+    next
+  end
+  env_names.merge(ENV.keys.grep(/REDIS/).select { |name| ENV[name].start_with?("redis") })
+  [literals.uniq, env_names.to_a.sort]
+end
+
+# Empty Redis databases on the server, highest first, that the application does not use.
+def free_redis_dbs(server, used, count)
+  databases = (redis(server, %w[CONFIG GET databases]).first[1].to_i rescue 16)
+  candidates = (1...databases).to_a.reverse - used
+  free = candidates.select { |db| redis(with_db(server, db), ["DBSIZE"]).first.zero? }
+  raise "only #{free.size} empty Redis databases on #{server}" if free.size < count
+
+  # Claim each database so that a concurrent workspace does not pick it too.
+  free.first(count).each { |db| redis(with_db(server, db), ["SET", "upgrade-copy:claimed", Time.now.to_i]) }
+end
+
+# --- Isolation ----------------------------------------------------------------------
+
+def suffix_database_value(value, suffix)
+  value = value.sub(/\s+#.*\z/, "") unless value.start_with?("<%", "\"", "'")
+  if value.start_with?("<%")
+    "#{value}#{suffix}"
+  elsif (match = value.match(/\A(["'])(.*)\1\z/))
+    "#{match[1]}#{match[2]}#{suffix}#{match[1]}"
+  elsif value == ":memory:" || (value.include?("/") && !value.start_with?("/")) || value.end_with?(".sqlite3")
+    value # a file inside the copy is already separate
+  else
+    "#{value}#{suffix}"
+  end
+end
+
+# Each isolate_* method records, in `restore`, the original text of every value
+# it rewrote ({file => {isolated => original}}), so that diffs and patches can be
+# shown and moved between copies with the application's own values.
+def isolate_database_yml(dir, suffix, restore)
+  path = File.join(dir, "config", "database.yml")
+  return [] unless File.exist?(path)
+
+  changed = []
+  lines = File.readlines(path).map.with_index do |line, index|
+    match = line.match(/\A(\s*database:\s*)(\S.*?)\s*\z/)
+    next line unless match
+
+    value = suffix_database_value(match[2], suffix)
+    next line if value == match[2]
+
+    changed << "config/database.yml:#{index + 1}"
+    (restore["config/database.yml"] ||= {})[value] ||= match[2]
+    "#{match[1]}#{value}\n"
+  end
+  File.write(path, lines.join)
+  changed
+end
+
+def suffix_database_url(url, suffix)
+  uri = URI(url)
+  return url unless uri.path && uri.path.length > 1 && !uri.scheme.to_s.start_with?("sqlite")
+
+  uri.path = "#{uri.path}#{suffix}"
+  uri.to_s
+rescue URI::Error
+  url
+end
+
+def isolate_redis(dir, server, db, env_names, restore)
+  changed = []
+  scan_files(dir).each do |file|
+    text = File.read(file, encoding: "UTF-8", invalid: :replace)
+    next unless text.match?(REDIS_LITERAL)
+
+    updated = text.lines.map.with_index do |line, index|
+      next line unless line.match?(REDIS_LITERAL)
+
+      relative_file = file.delete_prefix("#{dir}/")
+      changed << "#{relative_file}:#{index + 1}"
+      line.gsub(REDIS_LITERAL) do
+        isolated = "#{Regexp.last_match(1)}/#{db}"
+        (restore[relative_file] ||= {})[isolated] ||= Regexp.last_match(0)
+        isolated
+      end
+    end.join
+    File.write(file, updated)
+  rescue ArgumentError
+    next
+  end
+  env = { "REDIS_URL" => with_db(server, db) }
+  env_names.each { |name| env[name] = ENV[name] ? with_db(ENV[name], db) : with_db(server, db) }
+  [env, changed]
+end
+
+# Lines that configure Redis or other services in ways the rewrite does not cover.
+def isolation_warnings(dir)
+  warnings = []
+  scan_files(dir).each do |file|
+    File.readlines(file, encoding: "UTF-8", invalid: :replace).each_with_index do |line, index|
+      next if line.lstrip.start_with?("#")
+
+      reason = if line.match?(/\bdb:\s*\d+/) && (file.include?("redis") || line.match?(/redis/i)) then "Redis database number"
+               elsif line.match?(/Redis(?:Client)?\.new\(\s*(?:host|port|path):/) then "Redis host or port without a URL"
+               elsif line.match?(/mem_cache_store|Dalli::Client\.new/) then "memcached is shared, not isolated"
+               elsif line.match?(%r{(https?|amqp|nats|mongodb|elasticsearch)://(localhost|127\.0\.0\.1)}) then "local service URL"
+               end
+      warnings << "#{file.delete_prefix("#{dir}/")}:#{index + 1}: #{reason}: #{line.strip[0, 120]}" if reason
+    end
+  rescue ArgumentError
+    next
+  end
+  warnings
+end
+
+STATIC_DB = <<~'RUBY'
+  require "erb"; require "yaml"; require "json"; require "pathname"
+  module Rails
+    def self.root; Pathname.new(Dir.pwd); end
+    def self.env; ENV.fetch("RAILS_ENV", "development"); end
+    def self.application; nil; end
+  end
+  text = ERB.new(File.read("config/database.yml")).result
+  data = YAML.respond_to?(:unsafe_load) ? YAML.unsafe_load(text) : YAML.load(text)
+  result = {}
+  conf = data["test"] || {}
+  configs = conf.key?("adapter") || conf.key?("database") || conf.key?("url") ? { "primary" => conf } : conf
+  configs.each { |name, c| result[name] = [c["database"], c["url"]].compact if c.is_a?(Hash) }
+  result["DATABASE_URL"] = [ENV["DATABASE_URL"]] if ENV["DATABASE_URL"]
+  puts JSON.generate(result)
+RUBY
+
+# Database names and URLs of the test environment, read from config/database.yml.
+def test_databases(dir, env)
+  return {} unless File.exist?(File.join(dir, "config", "database.yml"))
+
+  output, status = Open3.capture2e(ENV.to_h.merge(env).merge("RAILS_ENV" => "test"), "ruby", "-e", STATIC_DB, chdir: dir)
+  status.success? ? JSON.parse(output.lines.last) : { "error" => [output.lines.last.to_s.strip] }
+end
+
+# --- Gemfile and bundle ---------------------------------------------------------------
+
+def bump_gemfile(dir, gem_name, version)
+  path = File.join(dir, gemfile_name(dir))
+  text = File.read(path)
+  pattern = /^(\s*gem\s*\(?\s*["']#{Regexp.escape(gem_name)}["'])((?:\s*,\s*["'][^"']*["'])*)/
+  if text.match?(pattern)
+    File.write(path, text.sub(pattern) { "#{Regexp.last_match(1)}, \"#{version}\"" })
+    "#{gemfile_name(dir)}: requirement for #{gem_name} set to \"#{version}\""
+  else
+    File.write(path, "#{text.chomp}\n\n# Added by upgrade-copy: #{gem_name} is a transitive dependency.\ngem \"#{gem_name}\", \"#{version}\", require: false\n")
+    "#{gemfile_name(dir)}: #{gem_name} is not in the Gemfile; added `gem \"#{gem_name}\", \"#{version}\", require: false` to pin it"
+  end
+end
+
+def resolve(state, side, gem_name, version, also)
+  dir = state["sides"][side]["dir"]
+  logs = File.join(state["dir"], "logs")
+  # `bundle lock --update` accepts only gems already in the lockfile.
+  locked = locked_versions(File.join(dir, lockfile_name(dir)))
+  update = [gem_name, *also].select { |name| locked.key?(name) }
+  argv = update.empty? ? %w[bundle lock] : ["bundle", "lock", "--update", *update]
+  output, ok = run_in(state, side, argv, log: File.join(logs, "#{side}-bundle-lock.log"))
+  unless ok
+    conflict = output.lines.reject { |line| line.match?(NOISE) }.last(25).join
+    return [false, "Bundler could not resolve #{gem_name} #{version}#{" with #{also.join(", ")}" unless also.empty?}:\n#{conflict}\n" \
+                   "If the message names other gems whose requirements block the upgrade, rerun setup with " \
+                   "`--also GEM,GEM` to let them move too, and report each as a required change.\n" \
+                   "Log: #{File.join(logs, "#{side}-bundle-lock.log")}"]
+  end
+  resolved = locked_versions(File.join(dir, lockfile_name(dir)))[gem_name]
+  # VERSION may be a requirement such as "< 3" instead of an exact version.
+  wanted = Gem::Requirement.new(version.match?(/\A\s*[<>=~!]/) ? version : "= #{version}")
+  return [false, "Bundler resolved #{gem_name} to #{resolved}, which does not satisfy #{version}."] unless resolved && wanted.satisfied_by?(Gem::Version.new(resolved))
+
+  output, ok = run_in(state, side, %w[bundle install], log: File.join(logs, "#{side}-bundle-install.log"))
+  return [false, "bundle install failed:\n#{output.lines.reject { |line| line.match?(NOISE) }.last(15).join}"] unless ok
+
+  [true, nil]
+end
+
+def lock_changes(before_lock, after_lock)
+  old = locked_versions(before_lock)
+  new = locked_versions(after_lock)
+  rows = new.filter_map do |name, version|
+    if !old.key?(name) then "#{name}: added at #{version}"
+    elsif old[name] != version
+      major = old[name].split(".").first != version.split(".").first
+      "#{name}: #{old[name]} → #{version}#{" (major)" if major}"
+    end
+  end
+  rows + old.keys.reject { |name| new.key?(name) }.map { |name| "#{name}: removed (was #{old[name]})" }
+end
+
+# --- Copies ----------------------------------------------------------------------------
+
+def copy_app(app, dir)
+  FileUtils.mkdir_p(dir)
+  Dir.children(app).each do |entry|
+    next if COPY_EXCLUDES.include?(entry)
+
+    FileUtils.cp_r(File.join(app, entry), dir, preserve: true)
+  end
+  %w[log tmp tmp/pids tmp/cache storage].each { |sub| FileUtils.mkdir_p(File.join(dir, sub)) }
+end
+
+def git_in(dir, *args)
+  Open3.capture2e("git", "-c", "user.name=upgrade-copy", "-c", "user.email=upgrade-copy@localhost",
+                  "-c", "commit.gpgsign=false", "-C", dir, *args)
+end
+
+def snapshot(dir, message)
+  unless File.directory?(File.join(dir, ".git"))
+    git_in(dir, "init", "-q")
+    # Generated files are never part of a repair, with or without a .gitignore.
+    File.write(File.join(dir, ".git", "info", "exclude"), "/log/\n/tmp/\n/storage/\n/coverage/\n/node_modules/\n/.bundle/\n")
+  end
+  git_in(dir, "add", "-A")
+  git_in(dir, "commit", "-q", "--allow-empty", "-m", message)
+end
+
+def create_side(state, side, server, redis_db, literals_env)
+  app = state["app"]
+  dir = File.join(state["dir"], side)
+  FileUtils.rm_rf(dir)
+  copy_app(app, dir)
+  # Commit 0 is the plain copy, commit 1 the isolation rewrites, commit 2 (after
+  # only) the gem bump; kept changes follow.
+  snapshot(dir, "Copy of #{app}")
+  suffix = "_#{state["id"]}_#{side[0]}"
+  restore = {}
+  changed = isolate_database_yml(dir, suffix, restore)
+  env = {}
+  ENV.keys.grep(/DATABASE_URL\z/).each { |name| env[name] = suffix_database_url(ENV[name], suffix) }
+  if server
+    redis_env, redis_changed = isolate_redis(dir, server, redis_db, literals_env, restore)
+    env.merge!(redis_env)
+    changed.concat(redis_changed)
+  end
+  state["sides"][side] = { "dir" => dir, "suffix" => suffix, "redis_db" => (redis_db if server), "env" => env,
+                           "rewritten" => changed, "restore" => restore }
+  snapshot(dir, "Isolate services for the #{side} copy")
+  changed
+end
+
+def commit_at(dir, index)
+  git_in(dir, "rev-list", "--reverse", "HEAD").first.split[index]
+end
+
+# Replaces a side's isolated values in a diff with the application's originals.
+def unisolate_diff(diff, restore)
+  file = nil
+  diff.lines.map do |line|
+    file = line[%r{\Adiff --git a/(\S+)}, 1] || file
+    next line if line.start_with?("diff --git", "--- ", "+++ ", "@@") || !restore[file]
+
+    restore[file].reduce(line) { |text, (isolated, original)| text.gsub(isolated, original) }
+  end.join
+end
+
+# Replaces the application's original values in a diff with a side's isolated ones.
+def isolate_diff(diff, restore)
+  unisolate_diff(diff, restore.transform_values(&:invert))
+end
+
+# Undoes one kept change in a copy. Code changes are undone with zero context
+# lines, so a later change on a neighbouring line does not block it; a gem moved
+# with `bump` gets its Gemfile line back and is resolved again. Returns an error
+# message, or nil.
+def undo_change(state, side, sha, subject)
+  dir = state["sides"][side]["dir"]
+  gemfile = gemfile_name(dir)
+  lock = lockfile_name(dir)
+  logs = File.join(state["dir"], "logs")
+  gem_line = ->(name) { /^[ \t]*gem\s*\(?\s*["']#{Regexp.escape(name)}["'].*\n/ }
+  if (moved = subject[/\AAlso move (\S+)/, 1])
+    parent, = git_in(dir, "show", "#{sha}~1:#{gemfile}")
+    old_line = parent[gem_line.(moved)]
+    text = File.read(File.join(dir, gemfile))
+    text = if old_line then text.sub(gem_line.(moved), old_line)
+           else text.sub(/\n?# Added by upgrade-copy: #{Regexp.escape(moved)} .*\n/, "\n").sub(gem_line.(moved), "")
+           end
+    File.write(File.join(dir, gemfile), text)
+    output, ok = run_in(state, side, ["bundle", "lock", "--update", moved], log: File.join(logs, "#{side}-undo-lock.log"))
+    return "bundle lock failed while moving #{moved} back:\n#{output.lines.last(10).join}" unless ok
+  else
+    patch, = git_in(dir, "diff", "--unified=0", "--binary", "#{sha}~1", sha, "--", ".", ":(exclude)#{lock}")
+    return "this kept change contains no edits (they were kept under another title)" if patch.strip.empty?
+
+    file = File.join(state["dir"], "undo.patch")
+    File.write(file, patch)
+    output, status = Open3.capture2e("git", "-C", dir, "apply", "-R", "--unidiff-zero", file)
+    return "a later kept change edits the same lines (#{output.lines.first.to_s.strip})" unless status.success?
+
+    if patch.include?("a/#{gemfile}")
+      output, ok = run_in(state, side, %w[bundle lock], log: File.join(logs, "#{side}-undo-lock.log"))
+      return "bundle lock failed:\n#{output.lines.last(10).join}" unless ok
+    end
+  end
+  output, ok = run_in(state, side, %w[bundle install], log: File.join(logs, "#{side}-undo-install.log"))
+  return "bundle install failed:\n#{output.lines.last(10).join}" unless ok
+
+  snapshot(dir, "Undo #{subject}")
+  nil
+end
+
+# Fails unless every test database of the copy differs from the application's.
+def verify_isolation(state, side)
+  info = state["sides"][side]
+  original = test_databases(state["app"], {})
+  copy = test_databases(info["dir"], side_env(state, side))
+  values = ->(map) { map.reject { |key, _| key == "error" }.values.flatten.compact }
+  shared = values.(copy) & values.(original)
+  problems = shared.reject { |value| value.include?("/") && !value.include?("://") && !value.start_with?("/") }
+  problems << "could not read config/database.yml: #{copy["error"].first}" if copy["error"]
+  info["databases"] = values.(copy).uniq
+  problems
+end
+
+def prepare_database(state, side)
+  dir = state["sides"][side]["dir"]
+  logs = File.join(state["dir"], "logs")
+  rails = rails_command(dir)
+  schema = Dir.glob(File.join(dir, "db", "{schema.rb,structure.sql,*_schema.rb,*_structure.sql}")).any?
+  steps = [[*rails, "db:create"], [*rails, schema ? "db:schema:load" : "db:migrate"]]
+  steps.each do |argv|
+    output, ok = run_in(state, side, argv, log: File.join(logs, "#{side}-#{argv.last.tr(":", "-")}.log"))
+    return "#{argv.join(" ")} failed:\n#{error_excerpt(output, dir).join("\n")}" unless ok
+  end
+  # Every side starts with the same data: the test fixtures, when there are any.
+  if Dir.glob(File.join(dir, "test", "fixtures", "**", "*.yml")).any?
+    run_in(state, side, [*rails, "db:fixtures:load"], log: File.join(logs, "#{side}-db-fixtures-load.log"))
+  end
+  state["sides"][side]["prepared"] = true
+  save_state(state["dir"], state)
+  nil
+end
+
+# --- Checks -----------------------------------------------------------------------------
+
+BOOT_PROBE = <<~'RUBY'
+  $stdout.sync = true # keep markers in order with errors printed on stderr
+  puts "UPGRADE_COPY BOOT OK"
+  puts "UPGRADE_COPY VERSIONS " + %w[rails].concat(ARGV).uniq.filter_map { |name| (spec = Gem.loaded_specs[name]) && "#{name} #{spec.version}" }.join(", ")
+  Rails.application.eager_load!
+  Zeitwerk::Loader.eager_load_all if defined?(Zeitwerk::Loader) && Zeitwerk::Loader.respond_to?(:eager_load_all)
+  puts "UPGRADE_COPY EAGER LOAD OK"
+RUBY
+
+# GET every route without parameters, through the whole middleware stack.
+SMOKE_PROBE = <<~'RUBY'
+  $stdout.sync = true
+  require "json"
+  paths = Rails.application.routes.routes.filter_map do |route|
+    next unless route.verb.to_s.include?("GET") && (route.app.dispatcher? rescue false)
+
+    path = route.path.spec.to_s.sub("(.:format)", "")
+    path unless path.match?(/[:*(]/) || path.start_with?("/rails/")
+  end.uniq.first(60)
+  session = ActionDispatch::Integration::Session.new(Rails.application)
+  headers = {}
+  results = paths.to_h do |path|
+    session.get(path)
+    outcome = session.response.status.to_s
+    headers[path] = session.response.headers.to_h.keys.sort
+    if session.response.status >= 500 && (error = session.request.env["action_dispatch.exception"])
+      outcome += " #{error.class}: #{error.message[0, 160]}"
+    end
+    [path, outcome]
+  rescue Exception => error
+    frame = error.backtrace.to_a.find { |line| line.start_with?(Rails.root.to_s) && !line.include?("/vendor/") }
+    [path, "raised #{error.class}: #{error.message[0, 160]}#{" (#{frame.delete_prefix("#{Rails.root}/")})" if frame}"]
+  end
+  puts "UPGRADE_COPY SMOKE #{JSON.generate(results)}"
+  puts "UPGRADE_COPY HEADERS #{JSON.generate(headers)}"
+RUBY
+
+def deprecations(text, dir)
+  counts = Hash.new(0)
+  examples = {}
+  text.each_line do |line|
+    next unless line.match?(/DEPRECATION WARNING|deprecated|will be removed/i) && !line.match?(NOISE)
+
+    clean = relative(line.strip, dir).sub(/\A\.+/, "") # test progress dots
+    key = clean.sub(/\s*\(called from .*\)\s*\z/, "").sub(/\(called from:? .*?\)/, "").gsub(/\b0x\h+/, "").strip[0, 220]
+    counts[key] += 1
+    examples[key] ||= clean[/called from:? ([^)]+)/, 1]
+  end
+  counts.map { |key, count| { "text" => key, "count" => count, "at" => examples[key] } }
+end
+
+# Exceptions that requests rescued and logged (a test sees only a 500 response).
+def logged_exceptions(log, dir = nil)
+  return [] unless File.exist?(log)
+
+  lines = File.readlines(log, chomp: true, encoding: "UTF-8", invalid: :replace)
+  found = Hash.new(0)
+  lines.each_with_index do |line, index|
+    match = line.match(/\A\s*([A-Z]\w*(?:::[A-Z]\w*)*) \((.+)\):\s*\z/)
+    next unless match && match[1].match?(/Error|Exception|Invalid|NotFound|Missing|Unknown/)
+
+    frames = lines[(index + 1)..(index + 40)].to_a.drop_while { |text| text.strip.empty? }
+                                              .take_while { |text| text.match?(/\A\s*\S+:\d+:in /) }.map(&:strip)
+    frames = frames.map { |frame| dir ? relative(frame, dir) : frame }
+    app_frame = frames.find { |frame| frame.match?(%r{\A(app|lib|config)/}) }
+    origin = frames.first if frames.first && frames.first != app_frame && frames.first.include?("/gems/")
+    where = [(short_path(origin) if origin), app_frame].compact.join(", called from ")
+    found["#{match[1]}: #{match[2][0, 200]}#{" (#{where})" unless where.empty?}"] += 1
+  end
+  found.map { |text, count| { "text" => text, "count" => count } }
+end
+
+def minitest_failures(output)
+  lines = output.lines.map(&:rstrip)
+  failures = {}
+  lines.each_with_index do |line, index|
+    next unless line.match?(/\A\s*(?:\d+\) )?(Failure|Error):\s*\z/)
+
+    id_line = lines[index + 1].to_s
+    id = id_line.sub(/\s*\[[^\]]*\]:?\s*\z/, "").sub(/:\s*\z/, "").strip
+    where = id_line[/\[([^\]]+)\]/, 1]
+    body = lines[(index + 2)..(index + 40)].to_a.take_while { |text| !text.match?(/\A\s*(?:\d+\) )?(Failure|Error):\s*\z|\Arails test /) }
+    message = body.reject(&:empty?).first.to_s.strip
+    frames = body.select { |text| text.match?(/\A\s*\S+:\d+:in /) }.map(&:strip)
+    app_frame = frames.find { |text| text.match?(%r{\A(app|lib|config|test|spec)/}) || text.include?("/app/") }
+    where ||= app_frame
+    # The library frame nearest the error, when the error was raised inside a gem.
+    origin = frames.first if frames.first && frames.first != app_frame && frames.first.match?(%r{/gems/})
+    failures[id] = { "message" => message[0, 300], "where" => [(short_path(origin) if origin), where].compact.join(", called from ") }
+  end
+  failures
+end
+
+def rspec_failures(output)
+  failures = {}
+  blocks = output.split(/^\s+(?=\d+\) )/).select { |block| block.match?(/\A\d+\) /) }
+  blocks.each do |block|
+    lines = block.lines.map(&:rstrip)
+    name = lines.first.sub(/\A\d+\) /, "")
+    detail = lines.drop(1).reject { |line| line.strip.empty? || line.include?("# ./") }.first(4).map(&:strip).join(" ")
+    where = block[%r{# (\./\S+:\d+)}, 1]
+    failures[name] = { "message" => detail[0, 300], "where" => where }
+  end
+  failures
+end
+
+def test_commands(dir, paths)
+  locked = locked_versions(File.join(dir, lockfile_name(dir)))
+  commands = []
+  rspec = locked.key?("rspec-core") && File.directory?(File.join(dir, "spec"))
+  minitest = Dir.glob(File.join(dir, "test", "**", "*_test.rb")).reject { |file| file.include?("/system/") }.any?
+  selected = paths ? paths.split(/[\s,]+/) : nil
+  if rspec && (selected.nil? || selected.any? { |path| path.start_with?("spec") })
+    commands << [:rspec, ["bundle", "exec", "rspec", "--backtrace", "--seed", TEST_SEED, *selected&.select { |path| path.start_with?("spec") }]]
+  end
+  if minitest && (selected.nil? || selected.any? { |path| path.start_with?("test") })
+    commands << [:minitest, [*rails_command(dir), "test", *selected&.select { |path| path.start_with?("test") }, "--seed", TEST_SEED]]
+  end
+  commands
+end
+
+def check_side(state, side, tests: nil, save_as: nil)
+  dir = state["sides"][side]["dir"]
+  logs = File.join(state["dir"], "logs")
+  rails = rails_command(dir)
+  result = { "side" => side, "logs" => {} }
+  all_output = +""
+
+  FileUtils.mkdir_p(File.join(dir, "tmp"))
+  File.write(File.join(dir, "tmp", "upgrade_copy_boot.rb"), BOOT_PROBE)
+  log = File.join(logs, "#{side}-boot.log")
+  output, = run_in(state, side, [*rails, "runner", "tmp/upgrade_copy_boot.rb", state["gem"]], log: log)
+  all_output << output
+  result["logs"]["boot"] = log
+  result["versions"] = output[/UPGRADE_COPY VERSIONS (.*)/, 1]
+  result["boot"] = output.include?("UPGRADE_COPY BOOT OK") ? "ok" : error_excerpt(output, dir)
+  result["eager_load"] = if result["boot"] != "ok" then "not run"
+                         elsif output.include?("UPGRADE_COPY EAGER LOAD OK") then "ok"
+                         else error_excerpt(output.split("UPGRADE_COPY BOOT OK").last, dir)
+                         end
+
+  if result["boot"] == "ok"
+    log = File.join(logs, "#{side}-routes.log")
+    output, ok = run_in(state, side, [*rails, "routes"], log: log)
+    all_output << output
+    result["routes"] = ok ? "ok" : error_excerpt(output, dir)
+    # Compare the route table only, without warnings printed while booting.
+    table = output.lines.drop_while { |line| !line.match?(/\A\s*Prefix\s+Verb|\A\s*\S*\s*(GET|POST|PATCH|PUT|DELETE)\s+\//) }
+    result["routes_file"] = File.join(logs, "#{side}-routes.txt")
+    File.write(result["routes_file"], table.reject { |line| line.match?(/warning|deprecat/i) }.join)
+
+    schema_file = File.join(logs, "#{side}-schema-dump")
+    log = File.join(logs, "#{side}-schema-dump.log")
+    output, ok = run_in(state, side, [*rails, "db:schema:dump"], log: log, extra_env: { "SCHEMA" => schema_file })
+    all_output << output
+    result["schema"] = ok ? "ok" : error_excerpt(output, dir)
+    result["schema_file"] = schema_file
+  end
+
+  result["tests"] = []
+  test_log = File.join(dir, "log", "test.log")
+  File.write(test_log, "") if File.exist?(test_log)
+  test_commands(dir, tests).each do |kind, argv|
+    log = File.join(logs, "#{side}-#{kind}.log")
+    # Full backtraces: the frame that raised is often inside a gem.
+    output, = run_in(state, side, argv, log: log, timeout: TEST_TIMEOUT, extra_env: { "BACKTRACE" => "1" })
+    all_output << output
+    summary = output[/^\d+ (?:runs|tests), \d+ assertions, \d+ failures, \d+ errors, \d+ skips/] ||
+              output[/^\d+ examples?, \d+ failures?.*$/]
+    failures = kind == :rspec ? rspec_failures(output) : minitest_failures(output)
+    entry = { "kind" => kind.to_s, "command" => argv.join(" "), "log" => log, "summary" => summary, "failures" => failures }
+    entry["crash"] = error_excerpt(output, dir) unless summary
+    entry["crash"] = ["stopped after #{TEST_TIMEOUT}s; run `check --tests DIR` once for each directory under test/ or spec/"] if output.include?("[upgrade-copy: stopped")
+    result["tests"] << entry
+  end
+  if result["boot"] == "ok"
+    File.write(File.join(dir, "tmp", "upgrade_copy_smoke.rb"), SMOKE_PROBE)
+    log = File.join(logs, "#{side}-requests.log")
+    output, = run_in(state, side, [*rails, "runner", "tmp/upgrade_copy_smoke.rb"], log: log, timeout: 600)
+    all_output << output
+    smoke = output[/^UPGRADE_COPY SMOKE (.*)$/, 1]
+    result["requests"] = smoke ? JSON.parse(smoke) : error_excerpt(output, dir)
+    result["response_headers"] = JSON.parse(output[/^UPGRADE_COPY HEADERS (.*)$/, 1] || "{}")
+  end
+  result["logged_exceptions"] = logged_exceptions(test_log, dir)
+  result["deprecations"] = deprecations(all_output + (File.exist?(test_log) ? File.read(test_log) : ""), dir)
+  FileUtils.mkdir_p(File.join(state["dir"], "results"))
+  # Only a full run is a baseline for later comparisons.
+  File.write(File.join(state["dir"], "results", "#{save_as || side}#{"-subset" if tests}.json"), JSON.pretty_generate(result))
+  result
+end
+
+def status_text(value)
+  value == "ok" ? "ok" : (value.is_a?(Array) ? "FAILED" : value.to_s)
+end
+
+def diff_files(a, b, out)
+  return nil unless a && b && File.exist?(a) && File.exist?(b)
+
+  output, = Open3.capture2("git", "diff", "--no-index", "--no-color", "--unified=1", a, b)
+  return "identical" if output.empty?
+
+  File.write(out, output)
+  changed = output.lines.count { |line| line.match?(/\A[+-](?![+-])/) }
+  "#{changed} lines differ: #{out}"
+end
+
+def report(state, results, baseline)
+  lines = []
+  names = results.map { |result| result["side"] }
+  lines << "| check | #{names.join(" | ")} |"
+  lines << "|---|#{names.map { "---" }.join("|")}|"
+  %w[boot eager_load routes schema].each do |check|
+    lines << "| #{check.tr("_", " ")} | #{results.map { |result| status_text(result[check] || "not run") }.join(" | ")} |"
+  end
+  lines << "| tests | #{results.map { |result| result["tests"].map { |t| t["summary"] || "CRASHED" }.join("; ").then { |s| s.empty? ? "none found" : s } }.join(" | ")} |"
+  lines << "| GET requests | #{results.map { |result| result["requests"].is_a?(Hash) ? "#{result["requests"].size} routes" : status_text(result["requests"] || "not run") }.join(" | ")} |"
+  lines << ""
+  results.each do |result|
+    lines << "#{result["side"]}: #{result["versions"]}" if result["versions"]
+    %w[boot eager_load routes schema].each do |check|
+      next unless result[check].is_a?(Array)
+
+      lines << "#{result["side"]} #{check.tr("_", " ")} failed (log #{result["logs"]["boot"] if check =~ /boot|eager/}):"
+      result[check].each { |line| lines << "    #{line}" }
+    end
+    result["tests"].each do |test|
+      next unless test["crash"]
+
+      lines << "#{result["side"]} #{test["kind"]} did not finish (#{test["log"]}):"
+      test["crash"].each { |line| lines << "    #{line}" }
+    end
+  end
+  return lines unless baseline
+
+  results.reject { |result| result["side"] == baseline["side"] }.each do |result|
+    side = result["side"]
+    lines << ""
+    lines << "## #{side} compared with #{baseline["side"]}"
+    routes = diff_files(baseline["routes_file"], result["routes_file"], File.join(state["dir"], "logs", "routes-#{side}.diff"))
+    schema = diff_files(baseline["schema_file"], result["schema_file"], File.join(state["dir"], "logs", "schema-#{side}.diff"))
+    lines << "Routes: #{routes || "not compared"}. Schema dump: #{schema || "not compared"}."
+    if result["requests"].is_a?(Hash) && baseline["requests"].is_a?(Hash)
+      changed = result["requests"].reject { |path, outcome| baseline["requests"][path] == outcome }
+      lines << "GET requests to #{result["requests"].size} routes without parameters, with the test fixtures: #{changed.empty? ? "same responses on both sides" : "#{changed.size} differ"}"
+      changed.each { |path, outcome| lines << "- GET #{path}: #{baseline["requests"][path] || "no route"} → #{outcome}" }
+      old_headers = baseline["response_headers"].to_h
+      renamed = result["response_headers"].to_h.flat_map { |path, names| (names - old_headers.fetch(path, names)).map { |name| [path, name] } }
+      unless renamed.empty?
+        gone = result["response_headers"].to_h.flat_map { |path, names| old_headers.fetch(path, names) - names }.uniq
+        lines << "Response header names that differ (#{renamed.map(&:last).uniq.size}): before #{gone.join(", ")}; after #{renamed.map(&:last).uniq.join(", ")}"
+      end
+    elsif result["requests"].is_a?(Array)
+      lines << "GET requests could not run: #{result["requests"].first}"
+    end
+    old_failures = baseline["tests"].map { |test| test["failures"] }.reduce({}, :merge)
+    new_failures = result["tests"].map { |test| test["failures"] }.reduce({}, :merge)
+    added = new_failures.reject { |id, _| old_failures.key?(id) }
+    fixed = old_failures.keys - new_failures.keys
+    lines << "New test failures (#{added.size}):"
+    # Tests failing with the same error at the same place are one problem.
+    added.group_by { |_, failure| [failure["message"], failure["where"]] }.each do |(message, where), group|
+      names = group.map(&:first)
+      label = names.size == 1 ? names.first : "#{names.size} tests (#{names.first(3).join(", ")}#{", …" if names.size > 3})"
+      lines << "- #{label}: #{message}#{" (#{where})" if where}"
+    end
+    lines << "Failing on both sides (#{(new_failures.keys & old_failures.keys).size}): #{(new_failures.keys & old_failures.keys).first(10).join(", ")}" if (new_failures.keys & old_failures.keys).any?
+    lines << "Fixed by the upgrade (#{fixed.size}): #{fixed.first(10).join(", ")}" if fixed.any?
+    old_logged = baseline["logged_exceptions"].to_a.map { |item| item["text"] }.to_set
+    logged = result["logged_exceptions"].to_a.reject { |item| old_logged.include?(item["text"]) }
+    lines << "Exceptions rescued and written to log/test.log, new in #{side} (#{logged.size})#{":" unless logged.empty?}"
+    logged.each { |item| lines << "- #{item["text"]} ×#{item["count"]}" }
+    old_warnings = baseline["deprecations"].map { |item| item["text"] }.to_set
+    fresh = result["deprecations"].reject { |item| old_warnings.include?(item["text"]) }
+    lines << "Deprecation warnings new in #{side} (#{fresh.size}):"
+    fresh.first(30).each { |item| lines << "- #{item["text"]} ×#{item["count"]}#{" (at #{item["at"]})" if item["at"]}" }
+  end
+  if baseline["deprecations"].any?
+    compared = results.reject { |result| result["side"] == baseline["side"] }
+    later = compared.flat_map { |result| result["deprecations"].map { |item| item["text"] } }.to_set
+    ran = compared.all? { |result| result["boot"] == "ok" && result["tests"].none? { |test| test["crash"] } }
+    lines << ""
+    lines << "Deprecation warnings at the current version, from the last full before run (#{baseline["deprecations"].size}); the target may remove these:"
+    baseline["deprecations"].first(30).each do |item|
+      names = compared.map { |r| r["side"] }.join(", ")
+      state_after = if compared.empty? then ""
+                    elsif later.include?(item["text"]) then " [still in #{names}]"
+                    elsif ran then " [gone in #{names}]"
+                    else " [#{names} did not run fully]"
+                    end
+      lines << "- #{item["text"]} ×#{item["count"]}#{" (at #{item["at"]})" if item["at"]}#{state_after}"
+    end
+  end
+  lines << ""
+  lines << "Logs: #{File.join(state["dir"], "logs")}/"
+  lines
+end
+
+# --- Commands ---------------------------------------------------------------------------
+
+def setup(options, args)
+  gem_name, version = args
+  fail!("Usage: upgrade-copy setup GEM VERSION [--app DIR] [--dir DIR] [--also GEM,GEM]") unless gem_name && version
+  app = File.expand_path(options["app"] || Dir.pwd)
+  lockfile = File.join(app, lockfile_name(app))
+  fail!("#{app} has no #{File.basename(lockfile)}; run from the application root or pass --app.") unless File.exist?(lockfile)
+  current = locked_versions(lockfile)[gem_name]
+  fail!("#{gem_name} is not in #{lockfile}.") unless current
+  also = options["also"].to_s.split(",").map(&:strip).reject(&:empty?)
+  id = Digest::SHA256.hexdigest("#{app} #{gem_name} #{version}")[0, 6]
+  dir = File.expand_path(options["dir"] || File.join(ROOT, "#{File.basename(app)}-#{gem_name}-#{version}"))
+  # A finished workspace keeps its notes after cleanup; set it aside so that a new
+  # run does not mix them with its own.
+  if File.directory?(dir) && !File.exist?(File.join(dir, "state.json"))
+    File.rename(dir, "#{dir}-#{File.mtime(dir).strftime("%Y%m%d%H%M%S")}")
+  end
+  FileUtils.mkdir_p(File.join(dir, "logs"))
+  state = File.exist?(File.join(dir, "state.json")) ? load_state(dir) : nil
+  state = nil if state && (state["app"] != app || state["gem"] != gem_name || state["to"] != version)
+  state ||= { "app" => app, "dir" => dir, "gem" => gem_name, "from" => current, "to" => version, "id" => id, "sides" => {} }
+  state["also"] = also
+
+  literals, env_names = redis_usage(app)
+  server = ENV["REDIS_URL"] || literals.first || "redis://localhost:6379"
+  server = with_db(server.sub(REDIS_LITERAL) { Regexp.last_match(1) }, 0)
+  begin
+    redis(server, ["PING"])
+  rescue StandardError => error
+    puts "Redis at #{server} is not reachable (#{error.message}); Redis settings are not rewritten." unless literals.empty? && env_names.empty?
+    server = nil
+  end
+  if server && !(state["sides"]["before"] && state["sides"]["after"])
+    used = (literals + env_names.filter_map { |name| ENV[name] }).filter_map { |url| redis_db_of(url) }
+    reserved = Dir.glob(File.join(ROOT, "*", "state.json")).flat_map { |file| JSON.parse(File.read(file))["sides"].values.map { |s| s["redis_db"] } rescue [] }.compact
+    redis_dbs = free_redis_dbs(server, used + reserved, 2)
+  end
+
+  %w[before after].each_with_index do |side, position|
+    if state["sides"][side]
+      git_in(state["sides"][side]["dir"], "checkout", "-q", "--", ".") if side == "after"
+      next
+    end
+    create_side(state, side, server, redis_dbs&.at(position), env_names)
+    problems = verify_isolation(state, side)
+    unless problems.empty?
+      save_state(dir, state)
+      fail!("The #{side} copy would share these databases with the application: #{problems.join(", ")}.\n" \
+            "Fix the copy's config/database.yml in #{state["sides"][side]["dir"]} or the environment, then rerun setup.")
+    end
+  end
+  state["server"] = server
+  save_state(dir, state)
+
+  bump = bump_gemfile(state["sides"]["after"]["dir"], gem_name, version)
+  ok, message = resolve(state, "after", gem_name, version, also)
+  save_state(dir, state)
+  unless ok
+    puts message
+    exit 2
+  end
+  snapshot(state["sides"]["after"]["dir"], "#{gem_name} #{version}")
+  failures = %w[before after].map { |side| Thread.new { (error = prepare_database(state, side)) && "#{side}: #{error}" } }.filter_map(&:value)
+  save_state(dir, state)
+
+  after_dir = state["sides"]["after"]["dir"]
+  puts "Workspace: #{dir}"
+  puts "before: #{state["sides"]["before"]["dir"]} (#{gem_name} #{current})"
+  puts "after:  #{after_dir} (#{gem_name} #{version}). #{bump}."
+  %w[before after].each do |side|
+    info = state["sides"][side]
+    puts "#{side} test databases: #{info["databases"].join(", ")}; Redis database: #{info["redis_db"] || "none"}"
+  end
+  puts "Rewritten for isolation: #{state["sides"]["after"]["rewritten"].join(", ")}" unless state["sides"]["after"]["rewritten"].empty?
+  warnings = isolation_warnings(after_dir)
+  unless warnings.empty?
+    puts "Not isolated automatically; check before running code that uses them:"
+    warnings.each { |warning| puts "- #{warning}" }
+  end
+  changes = lock_changes(File.join(state["sides"]["before"]["dir"], lockfile_name(after_dir)), File.join(after_dir, lockfile_name(after_dir)))
+  File.write(File.join(dir, "lock-changes.txt"), changes.join("\n") + "\n")
+  puts "Bundle changes (#{changes.size}, also in #{File.join(dir, "lock-changes.txt")}):"
+  changes.first(40).each { |change| puts "- #{change}" }
+  puts "- …" if changes.size > 40
+  puts "Upgraded lockfile: #{File.join(after_dir, lockfile_name(after_dir))}"
+  unless failures.empty?
+    puts "Database preparation failed (check will show why):"
+    failures.each { |failure| puts failure.lines.map { |line| "    #{line}" }.join }
+  end
+end
+
+def check(options, _args)
+  dir = workspace(options)
+  state = load_state(dir)
+  sides = sides_for(state, options["side"], "both")
+  # Each side has its own databases, so both run at once.
+  results = sides.map do |side|
+    Thread.new do
+      # A copy that did not boot at setup has no database yet.
+      prepare_database(state, side) unless state["sides"][side]["prepared"]
+      # A before copy holding backported repairs is not the baseline.
+      held = side == "before" && state["sides"]["before"]["held"]
+      check_side(state, side, tests: options["tests"], save_as: ("before-backport" if held)).tap { |r| r["side"] = "before+repairs" if held }
+    end
+  end.map(&:value)
+  baseline_path = File.join(dir, "results", "before.json")
+  baseline = results.find { |result| result["side"] == "before" } || (JSON.parse(File.read(baseline_path)) if File.exist?(baseline_path))
+  results.unshift(baseline) if baseline && results.none? { |result| result["side"] == "before" } && results.any? { |result| result["side"] == "before+repairs" }
+  lines = ["# Checks: #{state["gem"]} #{state["from"]} (before) → #{state["to"]} (after)#{" — tests limited to #{options["tests"]}" if options["tests"]}"]
+  kept = state["sides"]["after"]["kept"].to_a
+  lines << "after also has these kept changes: #{kept.join("; ")}" unless kept.empty?
+  pending, = git_in(state["sides"]["after"]["dir"], "status", "--porcelain", "--", ".", ":(exclude)tmp", ":(exclude)log")
+  lines << "after has edits not yet kept: #{pending.lines.map { |line| line[3..].strip }.join(", ")}" unless pending.strip.empty?
+  lines << ""
+  lines.concat(report(state, results, baseline))
+  File.write(File.join(dir, "logs", "check-report.md"), "#{lines.join("\n")}\n")
+  puts lines
+end
+
+# Copies the after copy, with its kept changes, to another side that has its own
+# databases and Redis database.
+# With revert, that kept commit is undone first, before the service settings are
+# rewritten, so the two edits cannot conflict.
+def clone_after(state, side, revert: nil)
+  dir = state["dir"]
+  side_dir = File.join(dir, side)
+  FileUtils.rm_rf(side_dir)
+  FileUtils.cp_r(state["sides"]["after"]["dir"], side_dir, preserve: true)
+  git_in(side_dir, "checkout", "-q", "--", ".")
+  git_in(side_dir, "clean", "-fdq", "-e", "tmp", "-e", "log", "-e", "storage")
+  after = state["sides"]["after"]
+  info = (state["sides"][side] ||= {})
+  if state["server"] && !info["redis_db"]
+    reserved = Dir.glob(File.join(ROOT, "*", "state.json")).flat_map { |file| JSON.parse(File.read(file))["sides"].values.map { |s| s["redis_db"] } rescue [] }.compact
+    info["redis_db"] = free_redis_dbs(state["server"], reserved, 1).first
+  end
+  suffix = "_#{state["id"]}_#{side[0]}"
+  rename = lambda do |text|
+    text = text.gsub(after["suffix"], suffix)
+    after["redis_db"] ? text.gsub(%r{(rediss?://[^\s"'/?#<>]+)/#{after["redis_db"]}\b}) { "#{Regexp.last_match(1)}/#{info["redis_db"]}" } : text
+  end
+  env = after["env"].transform_values do |value|
+    value.to_s.start_with?("redis") ? with_db(value, info["redis_db"]) : value.gsub(after["suffix"], suffix)
+  end
+  restore = after["restore"].to_h.transform_values { |pairs| pairs.transform_keys(&rename) }
+  info.merge!("dir" => side_dir, "suffix" => suffix, "env" => env, "rewritten" => after["rewritten"], "restore" => restore, "prepared" => false)
+  save_state(dir, state)
+  # Undo first, while the files still hold the after copy's values that the
+  # kept commits were made with.
+  if revert
+    error = undo_change(state.merge("sides" => state["sides"].merge(side => info.merge("env" => after["env"]))), side, revert[0], revert[1])
+    fail!("Could not undo \"#{revert[1]}\" alone: #{error}") if error
+  end
+  after["rewritten"].map { |place| place.split(":").first }.uniq.each do |file|
+    path = File.join(side_dir, file)
+    File.write(path, rename.(File.read(path))) if File.exist?(path)
+  end
+  problems = verify_isolation(state, side)
+  fail!("The #{side} copy would share databases with the application: #{problems.join(", ")}") unless problems.empty?
+  snapshot(side_dir, "Isolate services for the #{side} copy")
+  save_state(dir, state)
+end
+
+def step(options, args)
+  version = args.first
+  fail!("Usage: upgrade-copy step VERSION") unless version
+  dir = workspace(options)
+  state = load_state(dir)
+  # The step copy starts from the after copy, so repairs and pins kept there
+  # apply at the intermediate version too; only its services differ.
+  clone_after(state, "step")
+  bump = bump_gemfile(state["sides"]["step"]["dir"], state["gem"], version)
+  ok, message = resolve(state, "step", state["gem"], version, state["also"].to_a)
+  fail!(message) unless ok
+  save_state(dir, state)
+  snapshot(state["sides"]["step"]["dir"], "#{state["gem"]} #{version}")
+  error = prepare_database(state, "step")
+  puts "Database preparation failed; the check below shows the error." if error
+  baseline_path = File.join(dir, "results", "before.json")
+  baseline = File.exist?(baseline_path) ? JSON.parse(File.read(baseline_path)) : check_side(state, "before")
+  result = check_side(state, "step")
+  File.write(File.join(dir, "results", "step-#{version}.json"), JSON.pretty_generate(result))
+  puts "# Step: #{state["gem"]} #{version}, starting from the after copy with its kept changes (#{bump})"
+  puts
+  puts report(state, [baseline, result], baseline)
+end
+
+# Applies the after copy's kept code changes (not Gemfile or lockfile) to the
+# before copy, checks it, compares with the saved baseline and restores it.
+# Applies the after copy's kept changes to the before copy: code changes as a
+# patch, gem moves by moving the same gems. Checks before with them, runs any
+# check scripts, compares with the saved baseline and restores before.
+def backport(options, _args)
+  dir = workspace(options)
+  state = load_state(dir)
+  after = state["sides"]["after"]
+  before = state["sides"]["before"]
+  after_dir = after["dir"]
+  before_dir = before["dir"]
+  excluded = [gemfile_name(after_dir), lockfile_name(after_dir), "tmp", "log"].map { |path| ":(exclude)#{path}" }
+  patch, = git_in(after_dir, "diff", "--binary", commit_at(after_dir, 2), "HEAD", "--", ".", *excluded)
+  bumps = after["bumps"].to_a
+  if patch.strip.empty? && bumps.empty?
+    puts "Nothing to backport: the after copy has no kept changes besides the #{state["gem"]} bump."
+    return
+  end
+  baseline_path = File.join(dir, "results", "before.json")
+  baseline = File.exist?(baseline_path) ? JSON.parse(File.read(baseline_path)) : check_side(state, "before")
+  patch_file = File.join(dir, "backport.patch")
+  File.write(patch_file, isolate_diff(unisolate_diff(patch, after["restore"].to_h), before["restore"].to_h))
+  notes = []
+  unless patch.strip.empty?
+    output, status = Open3.capture2e("git", "-C", before_dir, "apply", "--reject", "--whitespace=nowarn", patch_file)
+    notes.concat(output.lines.grep(/Rejected hunk|error:/).map(&:strip)) unless status.success?
+  end
+  bumps.each do |gem_name, requirement|
+    bump_gemfile(before_dir, gem_name, requirement)
+    ok, message = resolve(state, "before", gem_name, requirement, [])
+    notes << (ok ? "#{gem_name} #{requirement}: resolves and installs at #{state["gem"]} #{state["from"]}" :
+                   "#{gem_name} #{requirement}: cannot move at #{state["gem"]} #{state["from"]}: #{message.lines.first(3).join(" ").strip}")
+  end
+  result = check_side(state, "before", save_as: "before-backport")
+  result["side"] = "before+repairs"
+  checks = options["file"] ? Dir.glob(options["file"]).sort : []
+  puts "# Backport: kept changes of after applied to before (#{state["gem"]} #{state["from"]}); " \
+       "#{options["hold"] ? "still applied until `reset --side before`" : "before restored afterwards"}"
+  puts "Patch: #{patch_file}"
+  notes.each { |note| puts "- #{note}" }
+  puts
+  puts report(state, [baseline, result], baseline)
+  checks.each { |file| puts; run_probe(state, "before", File.read(file), "#{File.basename(file)} on before with the repairs", "backport") }
+  if options["hold"]
+    before["held"] = true
+    save_state(dir, state)
+  else
+    git_in(before_dir, "checkout", "-q", "--", ".")
+    git_in(before_dir, "clean", "-fdq", "-e", "tmp", "-e", "log", "-e", "storage")
+    run_in(state, "before", %w[bundle install], log: File.join(dir, "logs", "before-restore-install.log")) unless bumps.empty?
+  end
+end
+
+# Runs Ruby code with `rails runner` in a side and prints a short result: the
+# last lines of output, or the error and application frames when it failed.
+def run_probe(state, side, code, label, kind)
+  side_dir = state["sides"][side]["dir"]
+  prepare_database(state, side) unless state["sides"][side]["prepared"]
+  FileUtils.mkdir_p(File.join(side_dir, "tmp"))
+  File.write(File.join(side_dir, "tmp", "upgrade_copy_probe.rb"), code)
+  log = File.join(state["dir"], "logs", "#{side}-#{kind}-#{Time.now.strftime("%H%M%S")}.log")
+  output, ok = run_in(state, side, [*rails_command(side_dir), "runner", "tmp/upgrade_copy_probe.rb"], log: log)
+  puts "== #{label} (#{ok ? "exit 0" : "FAILED"}; log #{log})"
+  if ok
+    shown = output.lines.reject { |line| line.match?(NOISE) || line.match?(/deprecat/i) }
+    puts relative(shown.last(40).join, side_dir)
+  else
+    puts error_excerpt(output, side_dir).join("\n")
+  end
+  puts
+end
+
+# Runs a check script on before, on after without one kept change, and on after.
+def kept_commit(state, title)
+  log, = git_in(state["sides"]["after"]["dir"], "log", "--format=%H%x09%s")
+  kept = log.lines.map { |line| line.chomp.split("\t", 2) }
+  kept.find { |_, subject| subject == title } || kept.find { |_, subject| subject.include?(title) } ||
+    fail!("No kept change titled \"#{title}\". Kept: #{state["sides"]["after"]["kept"].to_a.join("; ")}")
+end
+
+def validate(options, args)
+  title = args.join(" ")
+  fail!("Usage: upgrade-copy validate \"KEPT TITLE\" --file CHECK.rb") if title.strip.empty? || !options["file"]
+  dir = workspace(options)
+  state = load_state(dir)
+  match = kept_commit(state, title)
+  code = File.read(options["file"])
+  runs = [["before", "before (current version)"], ["without", "after without \"#{match[1]}\""], ["after", "after (with every kept change)"]]
+  begin
+    clone_after(state, "without", revert: match)
+  rescue SystemExit
+    # clone_after printed why; the other two runs are still evidence.
+    runs.delete_at(1)
+    puts "Only before and after were run."
+    puts
+  end
+  if runs.size == 3 && prepare_database(state, "without")
+    puts "Without this change the copy cannot load its database, which is expected for a boot repair; the run below shows the error."
+  end
+  runs.each { |side, label| run_probe(state, side, code, label, "validate") }
+end
+
+def runner(options, args)
+  dir = workspace(options)
+  state = load_state(dir)
+  code = options["file"] ? File.read(options["file"]) : args.join(" ")
+  fail!("Usage: upgrade-copy runner [--side both] (CODE | --file PATH)") if code.strip.empty?
+  sides_for(state, options["side"], "both").each do |side|
+    label = side == "before" && state["sides"]["before"]["held"] ? "before+repairs" : side
+    run_probe(state, side, code, "#{label} (#{state["gem"]} #{side == "before" ? state["from"] : state["to"]})", "runner")
+  end
+end
+
+def run(options, args)
+  dir = workspace(options)
+  state = load_state(dir)
+  fail!("Usage: upgrade-copy run [--side after] COMMAND...") if args.empty?
+  sides_for(state, options["side"], "after").each do |side|
+    log = File.join(dir, "logs", "#{side}-run-#{Time.now.strftime("%H%M%S")}.log")
+    argv = args.size == 1 ? ["bash", "-c", args.first] : args
+    output, ok = run_in(state, side, argv, log: log)
+    shown = output.lines.reject { |line| line.match?(/was loaded from the standard library|to your Gemfile or gemspec/) }
+    puts "== #{side} (#{ok ? "exit 0" : "FAILED"}; full output #{log})"
+    puts relative(shown.last(60).join, state["sides"][side]["dir"])
+  end
+end
+
+def latest_release(gem_name)
+  require "net/http"
+  JSON.parse(Net::HTTP.get(URI("https://rubygems.org/api/v1/versions/#{gem_name}/latest.json")))["version"]
+end
+
+def bump(options, args)
+  gem_name, version = args
+  fail!("Usage: upgrade-copy bump GEM [VERSION] [--side after]") unless gem_name
+  dir = workspace(options)
+  state = load_state(dir)
+  version ||= latest_release(gem_name)
+  sides_for(state, options["side"], "after").each do |side|
+    side_dir = state["sides"][side]["dir"]
+    old = locked_versions(File.join(side_dir, lockfile_name(side_dir)))[gem_name]
+    edit = bump_gemfile(side_dir, gem_name, version)
+    ok, message = resolve(state, side, gem_name, version, [])
+    unless ok
+      git_in(side_dir, "checkout", "-q", "--", gemfile_name(side_dir), lockfile_name(side_dir))
+      fail!(message)
+    end
+    resolved = locked_versions(File.join(side_dir, lockfile_name(side_dir)))[gem_name]
+    snapshot(side_dir, "Also move #{gem_name} #{old || "(new)"} → #{resolved}")
+    (state["sides"][side]["kept"] ||= []) << "Also move #{gem_name} #{old || "(new)"} → #{resolved}"
+    (state["sides"][side]["bumps"] ||= []) << [gem_name, version]
+    save_state(dir, state)
+    puts "#{side}: #{edit}; resolved to #{resolved} and installed. Kept as \"Also move #{gem_name}\". Run `check --side #{side}` next."
+  end
+end
+
+def keep(options, args)
+  message = args.join(" ")
+  fail!("Usage: upgrade-copy keep MESSAGE [--side after]") if message.strip.empty?
+  dir = workspace(options)
+  state = load_state(dir)
+  sides_for(state, options["side"], "after").each do |side|
+    pending, = git_in(state["sides"][side]["dir"], "status", "--porcelain", "--", ".", ":(exclude)tmp", ":(exclude)log")
+    fail!("#{side}: no edits to keep; a change kept earlier may already include them.") if pending.strip.empty?
+    snapshot(state["sides"][side]["dir"], message)
+    (state["sides"][side]["kept"] ||= []) << message
+    save_state(dir, state)
+    puts "#{side}: kept edits as \"#{message}\"."
+  end
+end
+
+def diff(options, _args)
+  dir = workspace(options)
+  state = load_state(dir)
+  sides_for(state, options["side"], "after").each do |side|
+    info = state["sides"][side]
+    side_dir = info["dir"]
+    # Commit 1 holds the isolation rewrites; from there, --all includes the bump.
+    range = options["all"] ? [commit_at(side_dir, 1)] : []
+    lock = lockfile_name(side_dir)
+    output, = git_in(side_dir, "diff", "--no-color", *range, "--", ".", ":(exclude)tmp", ":(exclude)log", ":(exclude)#{lock}")
+    untracked, = git_in(side_dir, "ls-files", "--others", "--exclude-standard")
+    puts "== #{side}: #{options["all"] ? "all changes since setup, with the application's own database names and URLs" : "edits not yet kept"}"
+    puts "Kept so far: #{info["kept"].join("; ")}" if options["all"] && info["kept"]
+    puts output.empty? ? "(no changes to tracked files)" : unisolate_diff(output, info["restore"].to_h)
+    lock_diff, = git_in(side_dir, "diff", "--stat", *range, "--", lock)
+    unless lock_diff.strip.empty?
+      old_lock = File.join(dir, "#{side}-lock-base")
+      File.write(old_lock, git_in(side_dir, "show", "#{options["all"] ? range.first : "HEAD"}:#{lock}").first)
+      puts "#{lock} changes: #{lock_changes(old_lock, File.join(side_dir, lock)).join("; ")}"
+    end
+    puts "New files: #{untracked.split.join(", ")}" unless untracked.strip.empty?
+  end
+end
+
+def drop(options, args)
+  title = args.join(" ")
+  fail!("Usage: upgrade-copy drop \"KEPT TITLE\"") if title.strip.empty?
+  dir = workspace(options)
+  state = load_state(dir)
+  sha, subject = kept_commit(state, title)
+  error = undo_change(state, "after", sha, subject)
+  fail!("Could not drop \"#{subject}\": #{error}") if error
+  after = state["sides"]["after"]
+  after["kept"] = after["kept"].to_a - [subject]
+  after["bumps"] = after["bumps"].to_a.reject { |gem_name, _| subject == "Also move #{gem_name}" || subject.start_with?("Also move #{gem_name} ") }
+  save_state(dir, state)
+  puts "after: \"#{subject}\" undone. Run `check --side after` next."
+end
+
+def reset(options, _args)
+  dir = workspace(options)
+  state = load_state(dir)
+  sides_for(state, options["side"], "after").each do |side|
+    git_in(state["sides"][side]["dir"], "checkout", "-q", "--", ".")
+    git_in(state["sides"][side]["dir"], "clean", "-fdq", "-e", "tmp", "-e", "log", "-e", "storage")
+    restored_lock = state["sides"][side].delete("held") && state["sides"]["after"]["bumps"].to_a.any?
+    save_state(dir, state)
+    puts "#{side}: edits discarded#{"; Gemfile and lockfile restored" if restored_lock}."
+  end
+end
+
+DROP_PROBE = <<~'RUBY'
+  config = ActiveRecord::Base.configurations.configs_for(env_name: "test").first.configuration_hash
+  ARGV.each do |name|
+    db = ActiveRecord::DatabaseConfigurations::HashConfig.new("test", "primary", config.merge(database: name))
+    ActiveRecord::Tasks::DatabaseTasks.drop(db)
+  rescue StandardError => error
+    puts "could not drop #{name}: #{error.message}"
+  end
+RUBY
+
+def cleanup(options, _args)
+  dir = workspace(options)
+  state = load_state(dir)
+  leftovers = []
+  state["sides"].each do |side, info|
+    next unless File.directory?(info["dir"])
+
+    _, ok = run_in(state, side, [*rails_command(info["dir"]), "db:drop"], log: File.join(dir, "logs", "#{side}-db-drop.log"),
+                                                                          extra_env: { "DISABLE_DATABASE_ENVIRONMENT_CHECK" => "1" })
+    leftovers.concat(info["databases"].to_a.reject { |name| name.include?("/") }) unless ok
+  end
+  if leftovers.any? && state["sides"]["before"] && File.directory?(state["sides"]["before"]["dir"])
+    probe = File.join(state["sides"]["before"]["dir"], "tmp", "upgrade_copy_drop.rb")
+    File.write(probe, DROP_PROBE)
+    output, = run_in(state, "before", [*rails_command(state["sides"]["before"]["dir"]), "runner", "tmp/upgrade_copy_drop.rb", *leftovers],
+                     log: File.join(dir, "logs", "drop-leftovers.log"))
+    puts output.lines.grep(/could not drop/).join
+  end
+  if state["server"]
+    allocated = state["sides"].values.filter_map { |info| info["redis_db"] }
+    state["sides"].each_value do |info|
+      flush_redis(state["server"], info["redis_db"], allocated) if info["redis_db"]
+    rescue StandardError => error
+      puts "Could not empty Redis database #{info["redis_db"]}: #{error.message}"
+    end
+  end
+  dropped = state["sides"].values.flat_map { |info| info["databases"].to_a }
+  # The copies go; notes, check scripts, logs and the change summary stay as evidence.
+  state["sides"].each_value { |info| FileUtils.rm_rf(info["dir"]) }
+  %w[results state.json undo.patch].each { |name| FileUtils.rm_rf(File.join(dir, name)) }
+  Dir.glob(File.join(dir, "*-lock-base")).each { |file| File.delete(file) }
+  puts "Dropped databases #{dropped.join(", ")}; emptied Redis databases " \
+       "#{state["sides"].values.filter_map { |info| info["redis_db"] }.join(", ")}; removed the copies. " \
+       "Notes and logs remain in #{dir}."
+end
+
+command, *rest = ARGV
+options, args = options_from(rest)
+case command
+when "setup" then setup(options, args)
+when "check" then check(options, args)
+when "step" then step(options, args)
+when "runner" then runner(options, args)
+when "run" then run(options, args)
+when "bump" then bump(options, args)
+when "backport" then backport(options, args)
+when "validate" then validate(options, args)
+when "keep" then keep(options, args)
+when "drop" then drop(options, args)
+when "diff" then diff(options, args)
+when "reset" then reset(options, args)
+when "cleanup" then cleanup(options, args)
+else
+  puts File.read(__FILE__).lines.drop(3).take_while { |line| line.start_with?("#") }.map { |line| line.sub(/\A# ?/, "") }.join
+  exit(command ? 1 : 0)
+end

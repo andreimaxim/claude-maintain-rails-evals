@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `enum :status, { draft: 0, ready: 1 }, prefix: true`. Works on 7.0: yes.",
+      "reasons": "Validation is a PASS/ArgumentError/PASS check with an Export control; it does not persist draft and ready notes and exercise the filters and helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `serialize :tags, coder: JSON`. Works on 7.0: **no**. On 7.0 the `coder:` keyword is ignored and the column is written as YAML",
+      "reasons": "The check confirms the raw JSON storage, but it does not reload existing unequal tags or test editing the comma-separated input.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `alias_method :highlight_color, :color` and `alias_method :highlight_color=, :color=`.",
+      "reasons": "The check verifies the raw stored color only; it does not cover form or error rendering, or keeping existing settings.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `where(notebook: @notebook)`.",
+      "reasons": "The check is PASS/StatementInvalid/PASS; it does not use unequal notebook populations or test denial of another owner's notebook.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the CSV receipt is `\"title,doi\\nA,\\nB,\\n\"` with the DOIs missing. Repair: `citation&.doi`.",
+      "reasons": "The check is PASS/FAIL/PASS; it does not compare the downloaded receipt fields with distinct persisted DOIs.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `raise ActiveRecord::Rollback unless rows.all? { |row| row.note.save }` with an `applied` flag",
+      "reasons": "Record counts and a valid-import control are given, but the plan does not specify a real apply request with a valid row followed by an invalid one, or fresh PostgreSQL counts.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `finish(fragments.join)`.",
+      "reasons": "The check looks only at export status; it does not verify the exact ordered Markdown bytes from the real worker.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: use `@import.annotations` without `.stringify_keys`.",
+      "reasons": "The check does not specify unequal annotations at source lines 2 and 4, a multiline CSV row, or a preview that saves nothing.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "Repair: `(reminder_at.to_time + 86_400).getlocal(reminder_at.utc_offset)`... CONTROL (summer date and epoch) is the same.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `requested_at = requested_at.in_time_zone(Time.zone)`.",
+      "reasons": "The plan gives a unit check with a midday control, but no real JSON queue and worker, no crossing of each midnight separately, and no inspection of reservation keys.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `wait_until: Time.at(reminder_epoch)`. ... `check-13.rb`: PASS (`at=1767225600.0`)",
+      "reasons": "The check shows a scheduled time but not the real scheduled payload and score, the persisted schedule time, or the replacement and ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "No retry is scheduled when the provider is unavailable. Repair: `wait: :polynomially_longer`... Ship with the upgrade.",
+      "reasons": "The plan says no retry is scheduled, which misses the real consequence: the job falls out of bounded ActiveJob retries into Sidekiq retries. Validation is PASS/FAIL/PASS, with no count of six requests over three attempts and no 503->200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: remove `model: nil`.",
+      "reasons": "The check does not render and submit the search form or confirm the field names, method and resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`get \"/notes\", to: \"notes#index\", as: :notes` and `get \"/journal\", to: \"notes#index\", as: :journal`",
+      "reasons": "The check does not request both URLs as an owner and compare the authorized list behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `config.action_dispatch.show_exceptions = :none`. Works on 7.0: **no**",
+      "reasons": "The check is PASS/FAIL/PASS; it does not cover the raised-exception and missing-record policy across normal test and CI eager-loading modes.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "set `allowed_tags = (allowed_tags || sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\"]) + %w[details summary]`",
+      "reasons": "The control checks that script is stripped and figure is allowed, but not details/summary rendering, event-handler attributes or javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "add `config.citation_provider = config_for(:citation_provider)[:citation_provider]` to `config/application.rb`",
+      "reasons": "The check does not use special-character credentials in a fresh process or verify the actual Basic header and bounded failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "With the 7.1 default `raise_on_invalid_cache_expiration_time=true` it would raise and return 500 (from source). Repair: `expires_in: [export.expires_at - Time.current, 0].max`.",
+      "reasons": "The check covers storage plus a live-export control, not before and after the deadline, cached and fresh reads, or authoritative download expiry and ownership.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`default_column_serializer` (→ nil): `notebook.rb:7 serialize :preferences` relies on YAML. Adopt only after adding `coder: YAML` there.",
+      "reasons": "The plan does not say that the model raises a missing-coder error under the gate, and it gives no validation with the gate off and on.",
+      "actionable": false
+    },
+    "R21": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`raise_on_assign_to_attr_readonly` (false): `notebook.rb:8 attr_readonly :slug`. Writing a slug would then raise instead of being silently ignored. Adopt later, after checking the slug edit paths.",
+      "reasons": "The plan does not say that an ordinary update resubmits the slug and raises, does not name the controller or form, and gives a vague 'check the slug edit paths' step instead of a repair and tests.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`notebook.rb:40` calls `Date.iso8601(day)` on `select_rows`, which would then receive a Date and fail. Never adopt without changing that line.",
+      "reasons": "The plan gives no concrete repair that accepts both String and Date, and no validation with decoding off and on.",
+      "actionable": false
+    },
+    "R25": {
+      "impact": "incorrect",
+      "applicability": "incorrect",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "When the etag differs but the date matches, the response is already 200 (probe-3), so adopting changes nothing observed. Adopt now.",
+      "reasons": "The plan claims that adopting the setting changes nothing, but a matching ETag list with an older If-Modified-Since turns 200 into 304. The 'adopt now' decision rests on that wrong premise, and the probe tested the wrong scenario.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0 worker that sees this during a rolling deploy or after a rollback cannot deserialize it (from source). Repair: `reading_completion.to_s`. The mailer already does `BigDecimal(params[:completion])`.",
+      "reasons": "The plan checks payload shapes, but it does not run a real producer/consumer matrix in both directions with same-version controls and the exact delivered percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 18,
+  "cost_usd": 0.299972,
+  "duration_ms": 53416
+}

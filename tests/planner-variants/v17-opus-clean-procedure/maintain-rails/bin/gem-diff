@@ -1,0 +1,118 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Compares the packaged code of two versions of a gem.
+#
+#   ruby gem-diff GEM FROM TO            Lists changed files under lib/ with line counts.
+#   ruby gem-diff GEM FROM TO PATH       Diff of one file, such as lib/redis/client.rb.
+#   ruby gem-diff GEM FROM TO NAME       Diff hunks that mention NAME (a method, constant
+#                                        or option), across all changed files.
+#
+# Works without the gem's repository: it reads the .gem files from rubygems.org
+# (cached with gem-changes). Use it to see what a changelog entry or an error
+# message refers to, or to read a small gem's changes when it has no release tags.
+
+require "fileutils"
+require "net/http"
+require "open3"
+require "rubygems/package"
+require "tmpdir"
+
+CACHE = File.join(ENV.fetch("XDG_CACHE_HOME", File.join(Dir.home, ".cache")), "gem-changes")
+
+def download(url)
+  uri = URI(url)
+  5.times do
+    response = Net::HTTP.get_response(uri)
+    return response.body if response.is_a?(Net::HTTPSuccess)
+    raise "#{url}: HTTP #{response.code}" unless response.is_a?(Net::HTTPRedirection)
+
+    uri = URI.join(uri.to_s, response["location"])
+  end
+  raise "#{url}: too many redirects"
+end
+
+# Same layout as gem-changes: CACHE/NAME-VERSION-lib holds lib/**/*.rb.
+def code(gem_name, version)
+  directory = File.join(CACHE, "#{gem_name}-#{version}-lib")
+  return directory if File.directory?(directory)
+
+  path = File.join(CACHE, "#{gem_name}-#{version}.gem")
+  FileUtils.mkdir_p(CACHE)
+  File.binwrite(path, download("https://rubygems.org/downloads/#{gem_name}-#{version}.gem")) unless File.exist?(path)
+  staging = Dir.mktmpdir("gem-diff", CACHE)
+  Gem::Package.new(path).extract_files(staging, "lib/*.rb") # "*" also matches "/"
+  File.rename(staging, directory)
+  directory
+end
+
+def files(directory)
+  Dir.glob(File.join(directory, "lib", "**", "*.rb")).map { |file| file.delete_prefix("#{directory}/") }
+end
+
+def diff(old_file, new_file, label)
+  output, = Open3.capture2("git", "diff", "--no-index", "--no-color", "--unified=3", old_file, new_file)
+  output.gsub(%r{(?<=a/|b/|--- |\+\+\+ )\S*?/(lib/\S*)}) { Regexp.last_match(1) }.sub(/\Adiff --git .*\n/, "diff #{label}\n")
+end
+
+gem_name, from, to, target = ARGV
+abort "Usage: gem-diff GEM FROM TO [PATH | NAME]" unless gem_name && from && to
+old_dir = code(gem_name, from)
+new_dir = code(gem_name, to)
+old_files = files(old_dir)
+new_files = files(new_dir)
+null = File::NULL
+pair = ->(path) { [old_files.include?(path) ? File.join(old_dir, path) : null, new_files.include?(path) ? File.join(new_dir, path) : null] }
+changed = (old_files | new_files).sort.reject do |path|
+  a, b = pair.(path)
+  a != null && b != null && File.read(a) == File.read(b)
+end
+
+# Long diffs go to a file; the first lines are printed.
+at_exit do
+  next unless $stdout.is_a?(StringIO)
+
+  text = $stdout.string
+  $stdout = STDOUT
+  lines = text.lines
+  if lines.size > 150
+    file = File.join(Dir.tmpdir, "gem-diff-#{gem_name}-#{from}-#{to}-#{(target || "files").tr("/", "_")}.txt")
+    File.write(file, text)
+    puts lines.first(150).join, "… #{lines.size - 150} more lines in #{file}"
+  else
+    print text
+  end
+end
+require "stringio"
+$stdout = StringIO.new
+
+if target.nil?
+  puts "# #{gem_name} #{from} → #{to}: #{changed.size} files under lib/ changed"
+  puts "#{gem_name} has no code of its own here; run gem-diff on its component gems (the summary's Components line)." if changed.empty?
+  changed.each do |path|
+    a, b = pair.(path)
+    stat, = Open3.capture2("git", "diff", "--no-index", "--numstat", a, b)
+    added, removed = stat.split.first(2)
+    state = a == null ? "added" : (b == null ? "removed" : "+#{added} -#{removed}")
+    puts "- #{path} (#{state})"
+  end
+elsif (old_files | new_files).include?(target)
+  a, b = pair.(target)
+  output = diff(a, b, target)
+  puts output.empty? ? "#{target} is the same in #{from} and #{to}." : output
+else
+  pattern = /(?<![\w])#{Regexp.escape(target)}(?![\w])/
+  shown = 0
+  changed.each do |path|
+    a, b = pair.(path)
+    hunks = diff(a, b, path).split(/^(?=@@ )/)
+    header = hunks.shift
+    matching = hunks.select { |hunk| hunk.match?(pattern) }
+    next if matching.empty?
+
+    puts header, matching
+    shown += matching.size
+  end
+  puts shown.zero? ? "No changed lines in #{gem_name}'s packaged lib/ between #{from} and #{to} mention #{target}. " \
+                     "It may belong to a component or another gem: try that gem's two versions from the lockfile changes." : "\n#{shown} hunks mention #{target}."
+end

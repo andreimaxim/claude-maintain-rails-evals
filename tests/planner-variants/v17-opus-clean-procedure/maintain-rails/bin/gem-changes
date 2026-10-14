@@ -1,0 +1,968 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Summarizes what changes between two versions of a gem, for this application.
+#
+#   ruby gem-changes GEM FROM TO [APP_DIR] [--lock UPGRADED_GEMFILE_LOCK] [--out DIR]
+#
+# Reads, for the gem and the components released in lockstep with it (such as
+# activerecord for rails):
+#
+#   - the packaged changelog of the latest release of every minor series between
+#     FROM and TO, or the changelog named in the gem metadata, or GitHub releases;
+#   - upgrade guides kept in the gem's repository (sections for versions in range);
+#   - commits between the FROM and TO release tags;
+#   - the gem's own code at FROM and TO, to find methods and constants that were
+#     removed while this application still references them;
+#   - with --lock, every other gem whose version moves in the upgraded lockfile.
+#
+# With --out, writes DIR/summary.md plus detail files (guide text, commit list,
+# one file per moved gem) and prints their paths. Without --out, prints the
+# summary and writes the detail files under the system temporary directory.
+#
+# Matching is textual. A missing match does not prove a change is safe, and a
+# match does not prove it applies. Read the cited code before concluding.
+
+require "fileutils"
+require "set"
+require "json"
+require "net/http"
+require "open3"
+require "rubygems/package"
+require "tmpdir"
+
+CACHE = File.join(ENV.fetch("XDG_CACHE_HOME", File.join(Dir.home, ".cache")), "gem-changes")
+SOURCE_DIRS = %w[app config lib db].freeze
+SOURCE_EXTENSIONS = %w[.rb .erb .yml .yaml .rake .builder .jbuilder .ru .haml .slim].freeze
+# Generated schema files and old migrations name columns, not API usage.
+IGNORED_SOURCES = %r{(\A|/)(tmp|log|node_modules|vendor)/|db/(schema\.rb|[\w]*structure\.sql)\z|db/migrate/|environments/development\.rb\z}
+STOPWORDS = %w[
+  true false nil self class module def end new config rails ruby gem test tests
+  then else when case each with from into only also this that have will been
+  string symbol hash array integer boolean value values option options method
+  methods name names default defaults error errors call block args params
+  application initialize configure base load_defaults
+  active_support active_record active_model active_job active_storage action_controller
+  action_dispatch action_view action_mailer action_cable action_text action_mailbox
+].to_set.freeze
+# Calls so common that a changelog naming them points at nothing in particular.
+COMMON_CALLS = %w[
+  count merge find where select order first last sum map each create update save destroy
+  delete render includes joins pluck find_by fetch read write to_i to_s to_h to_a to_json
+  present? blank? empty? include? key? size length join split first! last! reload require
+  scope group source version routes draw root env logger name new
+].to_set.freeze
+# Framework namespaces and core classes appear in nearly every change and app.
+GENERIC_CONSTANTS = %w[
+  Rails ActiveRecord ActiveSupport ActiveModel ActiveJob ActiveStorage ActionController
+  ActionDispatch ActionView ActionMailer ActionCable ActionText ActionMailbox Railties
+  ActiveRecord::Base ActionController::Base ActionMailer::Base ActiveJob::Base ApplicationRecord
+  ApplicationController ApplicationJob ApplicationMailer ApplicationCable
+  ArgumentError StandardError RuntimeError NoMethodError NameError TypeError
+  Time Date DateTime String Symbol Hash Array Integer Float Object Class Module JSON YAML
+].to_set.freeze
+# Top-level namespaces of the gems being summarized, added as they are read: every
+# use of the gem mentions them.
+NAMESPACES = Set.new
+
+# Names every Ruby library defines; their removal from one gem says nothing.
+COMMON_DEFS = %w[initialize method_missing respond_to_missing? inspect to_s to_h to_a call == eql? hash].to_set.freeze
+REMOVAL = /\b(remove[sd]?|no longer|drop(?:ped)? support|deleted?|breaking|rename[sd]?)\b/i
+DEPRECATION = /deprecat/i
+BEHAVIOR = /\b(raise[sd]?|now |changed?|default|instead of)\b/i
+COMMIT_FLAG = /\b(remov|deprecat|break|renam|drop|no longer|default|raise|requir|replac|instead)/i
+COMMIT_LIST_LIMIT = 300
+COMMIT_PRINT_LIMIT = 60
+
+def get(url)
+  uri = URI(url)
+  5.times do
+    response = Net::HTTP.get_response(uri)
+    return response.body if response.is_a?(Net::HTTPSuccess)
+    raise "#{url}: HTTP #{response.code}" unless response.is_a?(Net::HTTPRedirection)
+
+    uri = URI.join(uri.to_s, response["location"])
+  end
+  raise "#{url}: too many redirects"
+end
+
+def cached(name)
+  path = File.join(CACHE, name)
+  FileUtils.mkdir_p(File.dirname(path))
+  File.write(path, yield) unless File.exist?(path)
+  path
+end
+
+def releases(gem_name)
+  @releases ||= {}
+  @releases[gem_name] ||= JSON.parse(get("https://rubygems.org/api/v1/versions/#{gem_name}.json"))
+                              .reject { |release| release["prerelease"] }
+                              .map { |release| Gem::Version.new(release["number"]) }
+end
+
+def spec_json(gem_name, version)
+  JSON.parse(File.read(cached("specs/#{gem_name}-#{version}.json") do
+    get("https://rubygems.org/api/v2/rubygems/#{gem_name}/versions/#{version}.json")
+  end))
+end
+
+# Latest release of each minor series in (from, to], plus `to` itself.
+def series_versions(gem_name, from, to)
+  candidates = releases(gem_name).select { |version| version > from && version <= to }
+  candidates.group_by { |version| version.segments.first(2) }.values.map(&:max).push(to).uniq.sort
+end
+
+def lockstep_components(gem_name, version)
+  same = spec_json(gem_name, version).dig("dependencies", "runtime").to_a
+                                     .select { |dependency| dependency["requirements"] == "= #{version}" }
+                                     .map { |dependency| dependency["name"] }
+  [gem_name, *same]
+end
+
+def gem_file(gem_name, version)
+  path = File.join(CACHE, "#{gem_name}-#{version}.gem")
+  FileUtils.mkdir_p(CACHE)
+  File.binwrite(path, get("https://rubygems.org/downloads/#{gem_name}-#{version}.gem")) unless File.exist?(path)
+  path
+end
+
+def extract(gem_name, version, suffix, patterns)
+  directory = File.join(CACHE, "#{gem_name}-#{version}#{suffix}")
+  return directory if File.directory?(directory)
+
+  path = gem_file(gem_name, version)
+  staging = Dir.mktmpdir("gem-changes", CACHE)
+  package = Gem::Package.new(path)
+  patterns.each { |pattern| package.extract_files(staging, pattern) }
+  File.rename(staging, directory)
+  directory
+end
+
+# Changelogs, upgrade notes and framework-default templates.
+def unpack(gem_name, version)
+  extract(gem_name, version, "", ["*.md", "CHANGELOG*", "Changes*", "docs/*.md", "**/new_framework_defaults*"])
+end
+
+# The gem's Ruby code.
+def unpack_code(gem_name, version)
+  # Without File::FNM_PATHNAME, "*" also matches "/".
+  extract(gem_name, version, "-lib", ["lib/*.rb"])
+end
+
+Entry = Struct.new(:component, :version, :text, :identifiers, keyword_init: true)
+
+def heading_version(line)
+  match = line.match(/\A#+.*?(\d+\.\d+(?:\.\d+)*(?:\.[a-z]+\d*)?)/)
+  match && Gem::Version.new(match[1])
+rescue ArgumentError
+  nil
+end
+
+# Code names come from backtick spans in the prose and, for release notes written
+# in plain text, from symbols, double-quoted words and snake_case names. Code
+# examples are skipped: they use invented model and column names.
+def identifiers(text)
+  prose = text.gsub(/^(```|~~~).*?^\s*\1/m, " ").gsub(/```.*?```/m, " ")
+              .lines.reject { |line| line.match?(/\A {8,}\S/) }.join
+  spans = prose.scan(/`([^`\n]+)`/).flatten
+  plain = prose.gsub(/`[^`\n]+`/, " ")
+  spans += plain.scan(/(?<![\w:]):\w+/) + plain.scan(/"(\w+)"/).flatten + plain.scan(/\b[a-z]+_[a-z_]+\b/)
+  # A qualified call such as `Client.default` is matched whole: its method name
+  # alone may be common.
+  qualified = spans.flat_map { |span| span.scan(/\b[A-Z]\w*(?:::[A-Z]\w*)*\.[a-z_]\w*[?!]?/) }
+                   .reject { |call| GENERIC_CONSTANTS.include?(call.split(".").first) }
+  spans.flat_map { |span| span.scan(/[A-Z]\w*(?:::[A-Z]\w*)+|[a-z_]\w*[?!]?|:\w+|[A-Z]\w+/) }
+       .map { |token| token.delete_prefix(":") }
+       .reject { |token| token.length < 4 || STOPWORDS.include?(token.downcase) || GENERIC_CONSTANTS.include?(token) }
+       .reject { |token| COMMON_CALLS.include?(token) || NAMESPACES.include?(token) }
+       .then { |tokens| (qualified + tokens).uniq }
+end
+
+def new_entry(component, version, text)
+  Entry.new(component: component, version: version, text: text, identifiers: identifiers(text))
+end
+
+# Splits a changelog into bullet entries released after `from` and up to `to`.
+def changelog_entries(component, file, from, to)
+  entries = []
+  version = nil
+  current = nil
+  flush = lambda do
+    if current && version && version > from && version <= to
+      entries << new_entry(component, version, current.join.strip)
+    end
+    current = nil
+  end
+  File.foreach(file) do |line|
+    # Markdown headings, or a bare version line underlined with dashes (Sidekiq).
+    if line.start_with?("#") || line.match?(/\A\d+\.\d+[\w.]*\s*\z/)
+      flush.call
+      version = heading_version("# #{line}") || version
+    elsif line.match?(/\A {0,2}[*-] /)
+      flush.call
+      current = [line]
+    elsif current
+      current << line
+    end
+  end
+  flush.call
+  entries
+end
+
+# Returns [host, owner, repo] for the first repository URL in the metadata.
+def repository(metadata)
+  metadata.values_at("source_code_uri", "changelog_uri", "homepage_uri", "bug_tracker_uri").compact.each do |uri|
+    match = uri.match(%r{(github\.com|gitlab\.com|codeberg\.org)/([\w.-]+)/([\w.-]+)})
+    return [match[1], match[2], match[3].delete_suffix(".git")] if match
+  end
+  nil
+end
+
+def metadata(component, version)
+  spec = spec_json(component, version)
+  spec.slice("changelog_uri", "source_code_uri", "homepage_uri", "bug_tracker_uri").compact.merge(spec["metadata"].to_h)
+end
+
+# Splits release-note bodies into bullet entries for releases in (from, to].
+def release_entries(component, owner, repo, from, to)
+  releases = (1..5).each_with_object([]) do |page, all|
+    batch = JSON.parse(File.read(cached("#{owner}-#{repo}-releases-#{page}.json") do
+      get("https://api.github.com/repos/#{owner}/#{repo}/releases?per_page=100&page=#{page}")
+    end))
+    all.concat(batch)
+    break all if batch.size < 100
+  end
+  releases.flat_map do |release|
+    number = release["tag_name"].to_s[/\d+(?:\.\d+)+/]
+    version = number && Gem::Version.new(number)
+    next [] unless version && version > from && version <= to
+
+    release["body"].to_s.split(/\r?\n(?= {0,2}[*-] )/).map(&:strip).select { |text| text.match?(/\A[*-] /) }
+                       .map { |text| new_entry(component, version, text) }
+  end
+end
+
+# Reads the changelog named in the gem's metadata, or its GitHub releases.
+def remote_entries(component, from, to)
+  meta = metadata(component, to)
+  blob = meta["changelog_uri"].to_s.match(%r{github\.com/([\w.-]+)/([\w.-]+)/blob/([^/]+)/(.+)})
+  if blob
+    url = "https://raw.githubusercontent.com/#{blob[1]}/#{blob[2]}/#{blob[3]}/#{blob[4]}"
+    found = changelog_entries(component, cached("#{component}-#{to}-changelog.md") { get(url) }, from, to)
+    return [found, url] if found.any?
+  end
+  host, owner, repo = repository(meta)
+  return [[], nil] unless host == "github.com"
+
+  found = release_entries(component, owner, repo, from, to)
+  [found, found.any? ? "https://github.com/#{owner}/#{repo}/releases" : nil]
+end
+
+# Packaged changelogs of every series release, with remote notes for components
+# whose packaged changelog does not reach the target series.
+def all_entries(components, versions, from, to, gem_name)
+  entries = []
+  defaults = []
+  versions.each do |version|
+    components.each do |component|
+      directory = unpack(component, version)
+      defaults.concat(framework_defaults(directory)) if component == "railties" || component == gem_name
+      Dir.glob(File.join(directory, "{CHANGELOG,Changes,HISTORY,History}*")).each do |changelog|
+        entries.concat(changelog_entries(component, changelog, from, to))
+      rescue StandardError => error
+        warn "Skipping #{changelog}: #{error.message}"
+      end
+    rescue StandardError => error
+      warn "Skipping #{component} #{version}: #{error.message}"
+    end
+  end
+  target_series = to.segments.first(2)
+  sources = []
+  covers_target = ->(component) { entries.any? { |entry| entry.component == component && entry.version.segments.first(2) == target_series } }
+  # A meta-gem such as rails packages no changelog; its lockstep components cover it.
+  lockstep_covered = components.size > 1 && components.any?(&covers_target)
+  missing = components.reject do |component|
+    next true if lockstep_covered || covers_target.(component)
+
+    found, source = remote_entries(component, from, to)
+    entries.concat(found)
+    sources << source if source
+    source
+  rescue StandardError => error
+    warn "No release notes for #{component}: #{error.message}"
+    false
+  end
+  [entries.uniq { |entry| [entry.component, entry.text] }, defaults, sources, missing]
+end
+
+def source_files(app)
+  files = SOURCE_DIRS.flat_map { |dir| Dir.glob(File.join(app, dir, "**", "*")) }
+  files += %w[Gemfile config.ru].map { |name| File.join(app, name) }
+  files.select { |file| File.file?(file) && (SOURCE_EXTENSIONS.include?(File.extname(file)) || File.basename(file) == "Gemfile") }
+       .reject { |file| file.delete_prefix("#{app}/").match?(IGNORED_SOURCES) }
+end
+
+# Finds identifiers in application code. Identifiers present in a quarter of the
+# files or more are too generic to point at a specific change.
+class AppIndex
+  attr_reader :files
+
+  def initialize(app)
+    @app = app
+    @files = source_files(app).to_h { |file| [file, File.readlines(file, chomp: true)] }
+    @cache = {}
+  end
+
+  # A plain lowercase word such as `sum` only counts as a method call (`.sum`)
+  # or as a macro at the start of a line.
+  # With nested: true a constant also matches as the last part of a qualified
+  # name (`Outer::Inner::Thing` for `Thing`).
+  def hits(identifier, call: identifier.match?(/\A[a-z_]+[?!]?\z/), limit: true, nested: false)
+    @cache[[identifier, call, limit, nested]] ||= begin
+      escaped = Regexp.escape(identifier)
+      # Class-body macros such as `validates :name` are calls without a receiver.
+      call = false if identifier.include?(".")
+      pattern = if call then /\.#{escaped}(?![\w?!])|\A\s*#{escaped}[ (](?!\s*=[^=~])/
+                elsif nested then /(?<![\w])#{escaped}(?![\w])/
+                else /(?<![\w:])#{escaped}(?![\w])/
+                end
+      found = @files.flat_map do |file, lines|
+        lines.each_with_index.filter_map do |line, index|
+          next if line.lstrip.start_with?("#")
+
+          "#{file.delete_prefix("#{@app}/")}:#{index + 1}: #{line.strip[0, 140]}" if line.match?(pattern)
+        end
+      end
+      files = found.map { |hit| hit.split(":").first }.uniq.size
+      # Plain words such as `where` are calls in many files; only a rare one points at a change.
+      max = if identifier.include?(".") then @files.size # a qualified call is specific
+            elsif identifier.match?(/\A[a-z_]+[?!]?\z/) then 2
+            else [@files.size / 4, 2].max
+            end
+      limit && files > max ? [] : found
+    end
+  end
+
+  def mentions?(relative_file, names)
+    lines = @files["#{@app}/#{relative_file}"] || []
+    names.any? { |name| lines.any? { |line| line.match?(/(?<![\w])#{Regexp.escape(name)}(?![\w])/) } }
+  end
+
+  # Words that follow a dot, and capitalized names, anywhere in the application.
+  def tokens
+    @tokens ||= @files.values.flatten.reject { |line| line.lstrip.start_with?("#") }.flat_map do |line|
+      line.scan(/\.([a-z_]\w*[?!]?)/).flatten + line.scan(/\b[A-Z]\w+/)
+    end.to_set
+  end
+end
+
+def framework_defaults(directory)
+  Dir.glob(File.join(directory, "**", "new_framework_defaults_*.rb.tt")).sort.flat_map do |template|
+    version = File.basename(template)[/defaults_(\d+_\d+)/, 1].tr("_", ".")
+    comment = []
+    File.readlines(template, chomp: true).filter_map do |line|
+      if line.match?(/\A#\s*Rails\.application\.config\.\S+\s*=/)
+        setting = line.sub(/\A#\s*Rails\.application\./, "")
+        note = comment.join(" ").delete("#").gsub("++", "").squeeze(" ").strip[0, 240]
+        comment = []
+        { version: version, setting: setting, note: note }
+      elsif line.start_with?("#")
+        text = line.delete_prefix("#").strip
+        comment = [] if text.empty? || text.start_with?("=")
+        comment << text unless text.empty? || text.start_with?("=")
+        nil
+      else
+        comment = []
+        nil
+      end
+    end
+  end
+end
+
+def load_defaults(app)
+  File.read(File.join(app, "config", "application.rb"))[/load_defaults\s+["']?(\d+\.\d+)/, 1]
+rescue Errno::ENOENT
+  nil
+end
+
+def setting_hits(app, setting)
+  key = setting.split("=").first.strip.sub(/\Aconfig\./, "")
+  pattern = /config\.#{Regexp.escape(key)}\s*=/
+  Dir.glob(File.join(app, "config", "**", "*.rb")).flat_map do |file|
+    File.readlines(file, chomp: true).each_with_index.filter_map do |line, index|
+      "#{file.delete_prefix("#{app}/")}:#{index + 1}: #{line.strip}" if line.match?(pattern) && !line.strip.start_with?("#")
+    end
+  end
+end
+
+def kinds(text)
+  [("removal" if text.match?(REMOVAL)), ("deprecation" if text.match?(DEPRECATION)),
+   ("behavior" if text.match?(BEHAVIOR))].compact
+end
+
+def first_sentence(text)
+  text.sub(/\A[*-]\s+/, "").split(/(?<=\.)\s|\n\n/).first.to_s.gsub(/\s+/, " ")[0, 150]
+end
+
+# --- Removed code ------------------------------------------------------------
+
+DECLARATION = /\A\s*(?:(?:singleton_class|self\.class|class)\.)?(?:attr_(?:reader|writer|accessor)|[mc]attr_(?:reader|writer|accessor)|thread_mattr_accessor|
+                class_attribute|delegate|alias_method|define_method|define_singleton_method|module_function)\b(.*)/x
+
+# Method and constant names defined by a gem's code, with one defining file each.
+def definitions(component, version)
+  directory = unpack_code(component, version)
+  methods = {}
+  constants = {}
+  Dir.glob(File.join(directory, "lib", "**", "*.rb")).each do |file|
+    relative = file.delete_prefix("#{directory}/")
+    File.foreach(file) do |line|
+      if (match = line.match(/\A\s*def\s+(?:self\.)?([a-z_]\w*[?!=]?)/))
+        methods[match[1]] ||= relative
+      elsif (match = line.match(DECLARATION))
+        match[1].scan(/:([a-z_]\w*[?!]?)/).flatten.each do |name|
+          methods[name] ||= relative
+          methods["#{name}="] ||= relative if line.match?(/writer|accessor|class_attribute/)
+        end
+      elsif (match = line.match(/\A\s*alias\s+:?([a-z_]\w*[?!=]?)/))
+        methods[match[1]] ||= relative
+      elsif (match = line.match(/\A\s*(?:class|module)\s+([A-Z][\w:]*)/))
+        constants[match[1].split("::").last] ||= relative
+      elsif (match = line.match(/\A\s*([A-Z][A-Za-z0-9_]+)\s*=[^=~]/))
+        constants[match[1]] ||= relative
+      end
+    end
+  rescue ArgumentError
+    next # invalid byte sequence
+  end
+  [methods, constants]
+rescue StandardError => error
+  warn "Cannot read code of #{component} #{version}: #{error.message}"
+  [{}, {}]
+end
+
+# Ruby's own File or Set, or a standard library class such as Logger.
+def ruby_constant?(name)
+  snake = name.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
+  Object.const_defined?(name, false) || File.exist?(File.join(RbConfig::CONFIG["rubylibdir"], "#{snake}.rb"))
+end
+
+# Names defined by FROM and by no component at TO that the application still uses.
+# For a single gem, a removed method counts only in files that mention one of the
+# gem's namespaces: method names such as `find` are shared by unrelated objects.
+def removed_references(components_from, components_to, index, namespaces: nil)
+  old_methods = {}
+  old_constants = {}
+  new_methods = Set.new
+  new_constants = Set.new
+  components_from.each do |component, version|
+    methods, constants = definitions(component, version)
+    methods.each { |name, file| old_methods[name] ||= "#{component} #{file}" }
+    constants.each { |name, file| old_constants[name] ||= "#{component} #{file}" }
+  end
+  components_to.each do |component, version|
+    methods, constants = definitions(component, version)
+    new_methods.merge(methods.keys)
+    new_constants.merge(constants.keys)
+  end
+  tokens = index.tokens
+  results = []
+  old_methods.each do |name, origin|
+    next if new_methods.include?(name) || COMMON_DEFS.include?(name) || name.length < 4
+    # Setters are used as `x.name = value`.
+    plain = name.delete_suffix("=")
+    next unless tokens.include?(plain)
+
+    found = index.hits(plain, call: true, limit: false)
+    found = found.select { |hit| hit.match?(/\.#{Regexp.escape(plain)}\s*=[^=]/) } if name.end_with?("=")
+    found = found.select { |hit| index.mentions?(hit.split(":").first, namespaces) } if namespaces
+    results << { name: name, kind: "method", origin: origin, hits: found } if found.any?
+  end
+  old_constants.each do |name, origin|
+    next if new_constants.include?(name) || name.length < 4 || GENERIC_CONSTANTS.include?(name) || !tokens.include?(name)
+    next if ruby_constant?(name)
+
+    found = index.hits(name, call: false, limit: false, nested: true)
+    results << { name: name, kind: "constant", origin: origin, hits: found } if found.any?
+  end
+  # A getter and setter removed together point at the same lines; report one.
+  results.uniq { |item| [item[:name].delete_suffix("="), item[:hits]] }
+end
+
+# --- Repository: upgrade guides and commits ----------------------------------
+
+def git(*args)
+  output, status = Open3.capture2e("git", *args)
+  [output, status.success?]
+rescue Errno::ENOENT
+  ["git is not installed", false]
+end
+
+def remote_tags(url)
+  @remote_tags ||= {}
+  @remote_tags[url] ||= begin
+    output, ok = git("ls-remote", "--tags", "--refs", url)
+    ok ? output.lines.map { |line| line.split("\t").last.strip.delete_prefix("refs/tags/") } : []
+  end
+end
+
+def release_tag(url, gem_name, version)
+  pattern = /(?:\A|[^\w.])v?#{Regexp.escape(version.to_s)}\z/
+  candidates = remote_tags(url).select { |tag| tag.match?(pattern) || tag == version.to_s }
+  candidates.max_by { |tag| [tag.include?(gem_name) ? 1 : 0, -tag.length] }
+end
+
+def clone(url, name, *options)
+  directory = File.join(CACHE, "repos", name)
+  return directory if File.directory?(directory)
+
+  FileUtils.mkdir_p(File.dirname(directory))
+  output, ok = git("clone", "--quiet", "--bare", *options, url, "#{directory}.tmp")
+  unless ok
+    FileUtils.rm_rf("#{directory}.tmp")
+    raise output.lines.reject { |line| line.include?("is not a commit") }.join.strip
+  end
+  File.rename("#{directory}.tmp", directory)
+  directory
+end
+
+def heading_versions(title)
+  title.scan(/\d+\.\d+(?:\.\d+)*/).filter_map do |number|
+    Gem::Version.new(number)
+  rescue ArgumentError
+    nil
+  end
+end
+
+# Splits a markdown or rdoc document into [level, title, body] sections,
+# ignoring lines inside code fences.
+def sections(text)
+  result = []
+  fence = nil
+  lines = text.lines
+  lines.each_with_index do |line, index|
+    if (marker = line[/\A\s*(```|~~~)/, 1])
+      fence = fence == marker ? nil : (fence || marker)
+    end
+    following = lines[index + 1].to_s
+    heading = if fence.nil? && (match = line.match(/\A(#+|=+)\s+(\S.*)/))
+                [match[1].length, match[2].strip]
+              elsif fence.nil? && line.strip != "" && !line.match?(/\A\s*[-*=]/) && following.match?(/\A(-{3,}|={3,})\s*\z/)
+                [following.start_with?("=") ? 1 : 2, line.strip]
+              end
+    if heading
+      result << [heading[0], heading[1], +""]
+    elsif result.any? && !line.match?(/\A(-{3,}|={3,})\s*\z/)
+      result.last[2] << line
+    end
+  end
+  result
+end
+
+# Sections of an upgrade guide for versions in (from, to], with their subsections.
+def guide_sections(text, from, to)
+  all = sections(text)
+  in_range = []
+  open_level = nil
+  open_version = nil
+  all.each do |level, title, body|
+    versions = heading_versions(title)
+    if open_level && level > open_level
+      in_range << { version: open_version, title: title, body: body, level: level }
+      next
+    end
+    open_level = nil
+    next if versions.empty?
+
+    version = versions.max
+    next unless version > from && version <= to
+
+    open_level = level
+    open_version = version
+    in_range << { version: version, title: title, body: body, level: level }
+  end
+  in_range
+end
+
+GUIDE_NAME = /(upgrad|migrat|breaking)/i
+DOC_EXTENSIONS = %w[.md .markdown .rdoc .txt .adoc].freeze
+
+def upgrade_guides(url, tag, from, to, out)
+  name = url.split("/").last(2).join("-")
+  repo = clone(url, "#{name}-#{tag.tr("/", "_")}-tip", "--filter=blob:none", "--depth", "1", "--branch", tag)
+  files, = git("--git-dir", repo, "ls-tree", "-r", "--name-only", "HEAD")
+  candidates = files.lines.map(&:strip).select do |path|
+    DOC_EXTENSIONS.include?(File.extname(path).downcase) && File.basename(path).match?(GUIDE_NAME) &&
+      !path.match?(%r{(\A|/)(test|spec|lib|vendor|node_modules)/})
+  end
+  candidates.filter_map do |path|
+    text, ok = git("--git-dir", repo, "show", "HEAD:#{path}")
+    next unless ok
+
+    found = guide_sections(text, from, to)
+    if found.empty?
+      # An unversioned upgrade guide is kept whole; a migration guide without
+      # versions in range is about something else.
+      next unless File.basename(path).match?(/upgrad/i) && heading_versions(text).none? { |version| version > from }
+
+      found = [{ version: to, title: File.basename(path), body: text, level: 1 }]
+    end
+    file = File.join(out, "guides", "#{name}-#{File.basename(path, ".*")}.md")
+    FileUtils.mkdir_p(File.dirname(file))
+    File.write(file, found.map { |section| "#{"#" * section[:level]} #{section[:title]}\n\n#{section[:body]}" }.join("\n"))
+    { path: path, file: file, sections: found }
+  end
+end
+
+def commits(url, gem_name, from_tag, to_tag)
+  name = "#{url.split("/").last(2).join("-")}-#{from_tag.tr("/", "_")}..#{to_tag.tr("/", "_")}"
+  # Commit objects only: cheap even for large repositories.
+  repo = clone(url, "#{name}-log", "--filter=tree:0", "--shallow-exclude=#{from_tag}", "--single-branch", "--branch", to_tag)
+  count = git("--git-dir", repo, "rev-list", "--count", "HEAD").first.to_i
+  if count > COMMIT_LIST_LIMIT
+    log, = git("--git-dir", repo, "log", "--no-merges", "--format=%h %ad %s", "--date=short", "HEAD")
+    return { count: count, log: log, repo: repo, detailed: false }
+  end
+
+  repo = clone(url, "#{name}-files", "--filter=blob:none", "--shallow-exclude=#{from_tag}", "--single-branch", "--branch", to_tag)
+  # The clone's boundary commits look like ordinary commits that add every file.
+  boundary = File.exist?(File.join(repo, "shallow")) ? File.readlines(File.join(repo, "shallow"), chomp: true).map { |sha| sha[0, 7] } : []
+  log, = git("--git-dir", repo, "log", "--no-merges", "--format=@@%h %ad %s%n%b", "--date=short", "--name-only", "HEAD")
+  list = log.split(/^@@/).reject(&:empty?).map do |chunk|
+    lines = chunk.lines.map(&:rstrip)
+    header = lines.shift
+    files = lines.select { |line| line.match?(%r{\A[\w./-]+\.\w+\z}) && !line.include?(" ") }
+    body = (lines - files).join(" ").squeeze(" ").strip
+    code = files.reject { |file| file.match?(%r{(\A|/)(test|spec|\.github|docs?|benchmark\w*|examples?)/}) }
+    lib = code.select { |file| file.start_with?("lib/") }
+    version_only = lib.any? && lib.all? { |file| File.basename(file) == "version.rb" }
+    { header: header, body: body, files: code, flagged: "#{header} #{body}".match?(COMMIT_FLAG),
+      lib: lib.any? && !version_only, version_only: version_only }
+  end.reject { |commit| boundary.any? { |sha| commit[:header].start_with?(sha) } }
+  { count: count, list: list, repo: repo, detailed: true }
+end
+
+# --- Lockfiles -----------------------------------------------------------------
+
+def locked_versions(lockfile)
+  versions = {}
+  File.foreach(lockfile) do |line|
+    match = line.match(/\A {4}([\w.-]+) \(([^)]+)\)\s*\z/)
+    next unless match
+
+    number = match[2].split("-").first
+    versions[match[1]] ||= Gem::Version.new(number)
+  rescue ArgumentError
+    next
+  end
+  versions
+end
+
+# --- Main ------------------------------------------------------------------------
+
+def namespaces(component, version)
+  directory = unpack_code(component, version)
+  # Top-level declarations in any file, minus Ruby's own classes the gem extends.
+  Dir.glob(File.join(directory, "lib", "**", "*.rb")).flat_map { |file| File.read(file, encoding: "UTF-8", invalid: :replace).scan(/^(?:module|class) ([A-Z]\w*)/).flatten }
+     .uniq.reject { |name| ruby_constant?(name) }
+rescue StandardError
+  []
+end
+
+def analyze(gem_name, from, to, index, out, with_repo: true)
+  versions = series_versions(gem_name, from, to)
+  components = lockstep_components(gem_name, to)
+  own = components.flat_map { |component| namespaces(component, from) + namespaces(component, to) }.uniq
+  NAMESPACES.merge(own)
+  entries, defaults, remote_sources, missing = all_entries(components, versions, from, to, gem_name)
+  removed = removed_references(components.map { |component| [component, from] },
+                               components.map { |component| [component, to] }, index,
+                               namespaces: (own unless components.size > 1 || own.empty?))
+  repo = { guides: [], commits: nil, notes: [] }
+  if with_repo
+    host, owner, name = repository(metadata(gem_name, to))
+    if host
+      url = "https://#{host}/#{owner}/#{name}"
+      repo[:url] = url
+      to_tag = release_tag(url, gem_name, to)
+      from_tag = release_tag(url, gem_name, from)
+      if to_tag
+        begin
+          repo[:guides] = upgrade_guides(url, to_tag, from, to, out)
+        rescue StandardError => error
+          repo[:notes] << "Could not read upgrade guides: #{error.message.lines.first}"
+        end
+      else
+        repo[:notes] << "No release tag for #{to} in #{url}."
+      end
+      if to_tag && from_tag
+        begin
+          repo[:commits] = commits(url, gem_name, from_tag, to_tag).merge(range: "#{from_tag}..#{to_tag}")
+        rescue StandardError => error
+          repo[:notes] << "Could not read commits #{from_tag}..#{to_tag}: #{error.message.lines.first}"
+        end
+      elsif to_tag
+        repo[:notes] << "No release tag for #{from} in #{url}; commits not read."
+      end
+    else
+      repo[:notes] << "No repository URL in the gem metadata; commits and upgrade guides not read."
+    end
+  end
+  { versions: versions, components: components, entries: entries, defaults: defaults,
+    remote_sources: remote_sources, missing: missing, removed: removed, repo: repo }
+end
+
+def entry_lines(entry, index)
+  hits = entry.identifiers.flat_map { |identifier| index.hits(identifier) }.uniq
+  text = entry.text.gsub(/\s+/, " ")
+  lines = ["", "### #{entry.component} #{entry.version} [#{kinds(entry.text).join(", ")}]",
+           text.length > 350 ? "#{text[0, 350]}…" : text, "", "Application references:"]
+  lines += hits.first(2).map { |hit| "- #{hit}" }
+  lines << "- …and #{hits.size - 2} more" if hits.size > 2
+  lines
+end
+
+def removed_lines(removed)
+  removed.sort_by { |item| item[:name] }.flat_map do |item|
+    ["- #{item[:kind]} `#{item[:name]}` (defined in #{item[:origin]} at the current version, by no file at the target):",
+     *item[:hits].first(10).map { |hit| "  - #{hit}" },
+     *(item[:hits].size > 10 ? ["  - …and #{item[:hits].size - 10} more"] : [])]
+  end
+end
+
+def split_entries(entries, index)
+  # New features rarely break an application; keep removals, deprecations and behavior changes.
+  breaking = entries.reject { |entry| kinds(entry.text).empty? }
+  matched, unmatched = breaking.partition { |entry| entry.identifiers.any? { |identifier| index.hits(identifier).any? } }
+  notable = unmatched.select { |entry| entry.text.match?(REMOVAL) || entry.text.match?(DEPRECATION) }
+  [matched.sort_by { |entry| [entry.version, entry.component] }, notable.sort_by { |entry| [entry.version, entry.component] }]
+end
+
+args = ARGV.dup
+options = {}
+while (flag = args.find { |arg| arg.start_with?("--") })
+  position = args.index(flag)
+  options[flag.delete_prefix("--")] = args[position + 1]
+  args.slice!(position, 2)
+end
+gem_name, from_arg, to_arg, app = args
+abort "Usage: gem-changes GEM FROM TO [APP_DIR] [--lock UPGRADED_GEMFILE_LOCK] [--out DIR]" unless gem_name && from_arg && to_arg
+app = File.expand_path(app || Dir.pwd)
+from = Gem::Version.new(from_arg)
+to = Gem::Version.new(to_arg)
+out = File.expand_path(options["out"] || File.join(Dir.tmpdir, "gem-changes", "#{gem_name}-#{from}-#{to}"))
+FileUtils.mkdir_p(out)
+
+index = AppIndex.new(app)
+result = analyze(gem_name, from, to, index, out)
+matched, notable = split_entries(result[:entries], index)
+lines = []
+say = ->(line = "") { lines << line }
+
+say.("# #{gem_name} #{from} → #{to}: changes for this application")
+say.()
+say.("Releases read: #{result[:versions].join(", ")} (the latest of each series; each changelog covers the series' earlier releases). " \
+     "Components: #{result[:components].size > 1 ? result[:components].join(", ") : "none (a single gem)"}.")
+say.("Changelog entries in range: #{result[:entries].size}. Matching is textual; read the cited code before concluding.")
+say.("Release notes read from #{result[:remote_sources].join(", ")}.") unless result[:remote_sources].empty?
+unless result[:missing].empty?
+  say.("No changelog or release notes found for #{result[:missing].join(", ")}; read the project's release notes for those.")
+end
+say.("Repository: #{result[:repo][:url]}.") if result[:repo][:url]
+result[:repo][:notes].each { |note| say.(note) }
+
+if result[:components].size == 1
+  own = (namespaces(gem_name, from) + namespaces(gem_name, to)).uniq.reject { |name| ruby_constant?(name) }
+  uses = own.flat_map { |name| index.hits(name, call: false, limit: false) }.uniq
+  say.()
+  say.("## Where this application uses the gem (#{uses.size} lines naming #{own.join(", ")})")
+  say.()
+  uses.first(25).each { |hit| say.("- #{hit}") }
+  say.("- …and #{uses.size - 25} more") if uses.size > 25
+end
+
+say.()
+say.("## Upgrade guides in the repository")
+say.()
+if result[:repo][:guides].empty?
+  say.("None found for versions in range.")
+else
+  result[:repo][:guides].each do |guide|
+    say.("### #{guide[:path]} (full text of the sections in range: #{guide[:file]})")
+    say.()
+    guide[:sections].each do |section|
+      entry = new_entry("guide", section[:version], "#{section[:title]}\n#{section[:body]}")
+      hits = entry.identifiers.flat_map { |identifier| index.hits(identifier) }.uniq
+      indent = "  " * [section[:level] - guide[:sections].first[:level], 0].max
+      match = hits.empty? ? "" : " — application: #{hits.first(2).join("; ")}#{" …" if hits.size > 2}"
+      say.("#{indent}- #{section[:title]}#{match}")
+    end
+    say.()
+  end
+end
+
+# Settings the target's code no longer mentions cannot be adopted.
+target_code = result[:components].flat_map do |component|
+  Dir.glob(File.join(unpack_code(component, to), "lib", "**", "*.rb")).map { |file| File.read(file, encoding: "UTF-8", invalid: :replace) }
+rescue StandardError
+  []
+end.join("\n")
+current_defaults = load_defaults(app)
+pending_defaults = result[:defaults].uniq { |default| default[:setting] }
+                                    .reject { |default| current_defaults && Gem::Version.new(default[:version]) <= Gem::Version.new(current_defaults) }
+unless pending_defaults.empty?
+  probe = File.join(out, "defaults-probe.rb")
+  keys = pending_defaults.map { |default| default[:setting].split("=").first.strip.sub(/\Aconfig\./, "") }.uniq
+  File.write(probe, <<~RUBY)
+    # Prints each new framework default's value in this copy: what the application
+    # configures, and what the framework object reports when it has a reader.
+    OWNERS = { "active_record" => %w[ActiveRecord ActiveRecord::Base], "active_support" => %w[ActiveSupport],
+               "action_controller" => %w[ActionController::Base], "action_dispatch" => %w[ActionDispatch],
+               "action_view" => %w[ActionView::Base], "active_job" => %w[ActiveJob::Base],
+               "active_storage" => %w[ActiveStorage], "action_mailer" => %w[ActionMailer::Base],
+               "action_text" => %w[ActionText], "action_cable" => %w[ActionCable] }
+    #{keys.inspect}.each do |key|
+      parts = key.split(".")
+      configured = parts.reduce(Rails.application.config) { |object, part| object.respond_to?(part) ? object.public_send(part) : (break :unset) } rescue :unset
+      effective = nil
+      if parts.size == 2
+        OWNERS.fetch(parts[0], []).each do |owner|
+          object = Object.const_get(owner) rescue next
+          next unless object.respond_to?(parts[1])
+
+          effective = object.public_send(parts[1]) rescue next
+          break
+        end
+      end
+      puts "\#{key}: config=\#{configured.inspect} (after load_defaults and the application's settings) framework=\#{effective.nil? ? "(no reader)" : effective.inspect}"
+    end
+  RUBY
+end
+unless pending_defaults.empty?
+  say.()
+  say.("## New framework defaults")
+  say.()
+  say.("This application calls `load_defaults #{current_defaults || "?"}`. A setting below keeps its old value " \
+       "until the application loads that version's defaults or sets it explicitly. To print each setting's current " \
+       "value on both sides, run `upgrade-copy runner --file #{File.join(out, "defaults-probe.rb")}`.")
+  result[:defaults].uniq { |default| default[:setting] }.group_by { |default| default[:version] }.each do |version, settings|
+    next if current_defaults && Gem::Version.new(version) <= Gem::Version.new(current_defaults)
+
+    say.()
+    say.("### #{version}")
+    settings.each do |default|
+      explicit = setting_hits(app, default[:setting])
+      state = explicit.empty? ? "not set explicitly" : "set at #{explicit.join("; ")}"
+      key = default[:setting].split("=").first.strip.split(".").last
+      state += "; removed by #{to}, nothing to adopt" unless target_code.include?(key)
+      say.("- `#{default[:setting]}` (#{state}). #{default[:note]}")
+    end
+  end
+end
+
+say.()
+say.("## Methods and constants removed from the gem that this application references (#{result[:removed].size})")
+say.()
+say.("A name defined by the gem's code at #{from} and nowhere in it at #{to}. The application line may call a")
+say.("different object's method of the same name; read it before concluding.")
+removed_lines(result[:removed]).each { |line| say.(line) }
+
+say.()
+say.("## Changelog entries that mention code used by this application (#{matched.size})")
+matched.each { |entry| entry_lines(entry, index).each { |line| say.(line) } }
+
+if options["lock"]
+  old_lock = locked_versions(File.join(app, "Gemfile.lock"))
+  new_lock = locked_versions(File.expand_path(options["lock"]))
+  skip = result[:components].to_set
+  # A gem new to the lockfile may replace the copy that ships with Ruby, which the
+  # application used before without listing it.
+  default_gems = new_lock.keys.reject { |name| old_lock.key?(name) }.filter_map do |name|
+    version = Gem::Specification.find_all_by_name(name).select(&:default_gem?).map(&:version).max
+    [name, version] if version
+  end.to_h
+  previous_versions = default_gems.merge(old_lock)
+  moved = new_lock.select { |name, version| !skip.include?(name) && previous_versions[name] && previous_versions[name] != version }
+  added = new_lock.reject { |name, _| previous_versions.key?(name) }
+  dropped = old_lock.reject { |name, _| new_lock.key?(name) }
+  say.()
+  say.("## Other gems that move with this upgrade (#{moved.size} moved, #{added.size} added, #{dropped.size} removed)")
+  say.()
+  say.("Each moved gem was summarized the same way; details in #{File.join(out, "moved")}/.") unless moved.empty?
+  moved.sort.each do |name, version|
+    previous = previous_versions[name]
+    file = File.join(out, "moved", "#{name}.md")
+    begin
+      if version < previous
+        say.("- #{name} #{previous} → #{version} (downgrade).")
+        next
+      end
+      sub = analyze(name, previous, version, index, out, with_repo: false)
+      sub_matched, sub_notable = split_entries(sub[:entries], index)
+      body = ["# #{name} #{previous} → #{version}", "",
+              "Releases read: #{sub[:versions].join(", ")}. Changelog entries in range: #{sub[:entries].size}.",
+              *(sub[:missing].empty? ? [] : ["No changelog or release notes found."]), "",
+              "## Removed methods and constants this application references (#{sub[:removed].size})",
+              *removed_lines(sub[:removed]), "",
+              "## Changelog entries that mention code used by this application (#{sub_matched.size})",
+              *sub_matched.flat_map { |entry| entry_lines(entry, index) }, "",
+              "## Removals and deprecations with no textual match (#{sub_notable.size})", "",
+              *sub_notable.map { |entry| "- #{entry.version}: #{first_sentence(entry.text)}" }]
+      FileUtils.mkdir_p(File.dirname(file))
+      File.write(file, "#{body.join("\n")}\n")
+      major = version.segments.first != previous.segments.first || (previous.segments.first.zero? && version.segments[1] != previous.segments[1])
+      changelog = sub[:entries].empty? ? "no changelog found" : "#{sub_matched.size} changelog entries and #{sub[:removed].size} removed names match this application, #{sub_notable.size} other removals or deprecations"
+      origin = default_gems.key?(name) && !old_lock.key?(name) ? " (before: the copy bundled with Ruby)" : ""
+      say.("- #{name} #{previous} → #{version}#{" (major)" if major}#{origin}: #{changelog}.")
+    rescue StandardError => error
+      say.("- #{name} #{previous} → #{version}: could not summarize (#{error.message.lines.first.strip}).")
+    end
+  end
+  added.sort.each { |name, version| say.("- #{name} #{version}: new dependency.") }
+  dropped.sort.each { |name, version| say.("- #{name} #{version}: no longer in the bundle.") }
+end
+
+commit_info = result[:repo][:commits]
+if commit_info
+  log_file = File.join(out, "commits.txt")
+  say.()
+  say.("## Commits #{commit_info[:range]} (#{commit_info[:count]})")
+  say.()
+  if commit_info[:detailed]
+    File.write(log_file, commit_info[:list].map do |commit|
+      "#{commit[:header]}\n#{"    #{commit[:body][0, 400]}\n" unless commit[:body].empty?}#{commit[:files].map { |file| "    #{file}\n" }.join}"
+    end.join)
+    shown = commit_info[:list].size <= COMMIT_PRINT_LIMIT ? commit_info[:list] : commit_info[:list].select { |commit| commit[:flagged] }
+    say.("Local clone: #{commit_info[:repo]}. Show a commit with `git --git-dir #{commit_info[:repo]} show SHA -- lib`.")
+    say.("Every commit, with its message and changed files, is in #{log_file}.")
+    say.(shown.size == commit_info[:list].size ? "All commits listed: yes. Every non-merge commit:" : "All commits listed: no. Commits whose message mentions a removal, rename, deprecation, default or raise (#{shown.size} of #{commit_info[:list].size}):")
+    say.()
+    shown.each do |commit|
+      files = commit[:files].first(4).join(", ")
+      mark = commit[:lib] ? " (changes lib/)" : (commit[:version_only] ? " (version bump only)" : "")
+      say.("- #{commit[:header]}#{mark}#{" [#{files}#{" …" if commit[:files].size > 4}]" unless files.empty?}")
+    end
+  else
+    File.write(log_file, commit_info[:log])
+    say.("All commits listed: no. Too many to review one by one; the changelogs above cover this range. Their subjects are in")
+    say.("#{log_file}; search it for a class, method or error message when a check fails without a matching changelog entry.")
+    say.("Local clone (commit messages only): #{commit_info[:repo]}. Search messages with")
+    say.("`git --git-dir #{commit_info[:repo]} log --oneline -i --grep NAME`; `git --git-dir #{commit_info[:repo]} show SHA` fetches the change.")
+  end
+end
+
+say.()
+say.("## Removals and deprecations with no textual match (#{notable.size})")
+say.()
+notable.each { |entry| say.("- #{entry.component} #{entry.version}: #{first_sentence(entry.text)}") }
+
+summary = File.join(out, "summary.md")
+File.write(summary, "#{lines.join("\n")}\n")
+if options["out"]
+  puts "Wrote #{summary} (#{lines.size} lines)."
+  puts "Upgrade guide text: #{File.join(out, "guides")}/" if result[:repo][:guides].any?
+  puts "Commit list: #{File.join(out, "commits.txt")}" if commit_info
+  puts "Moved gems: #{File.join(out, "moved")}/" if options["lock"] && File.directory?(File.join(out, "moved"))
+else
+  puts lines
+end
