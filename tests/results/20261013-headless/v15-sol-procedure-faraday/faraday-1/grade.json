@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Observed failure (executed): `Faraday::Error: :retry is not registered on Faraday::Request` ... Repair: add `gem \"faraday-retry\", \"~> 2.2\"` (locks 2.4.0) and `require \"faraday/retry\"` at the top of `provider.rb`. Does not work on 1.10.4, so it must ship together with the bump.",
+      "reasons": "Impact: the plan names the registration error, but it never says what this does to the app: the error is raised before any provider request, citations stay pending and the job falls into Sidekiq retries. Validation: the probe runs against a fake server and has no real queue or worker. It does not check six requests over three attempts, a visible failure, or empty scheduled/retry/dead sets.",
+      "actionable": false
+    },
+    "FD2": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Observed failure (executed): `Faraday::Error: :basic_auth is not registered on Faraday::Request` ... Repair: use `faraday.request :authorization, :basic, @user, @password`. Does not work on 1.10.4 ... It must ship together with the bump.",
+      "reasons": "Impact: the plan names the registration error, but it does not say this happens before any I/O, leaves citations pending and triggers fallback retries, or that it is not a credential rejection by the provider. Validation: the plan checks the Basic header with awkward credentials on a fake server, but it lacks a real wrong-password 401, fresh-process numeric/hash credentials, successful/failed refresh, owner/no-DOI denial and unsafe-metadata controls.",
+      "actionable": false
+    }
+  },
+  "actionable": 0,
+  "cost_usd": 0.1104658,
+  "duration_ms": 21171
+}

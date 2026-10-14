@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "with only the bump, boot fails with `cannot load such file -- pagy/extras/items (LoadError)` ... changing only the `require` line boots but silently misbehaves. Pages show 20 notes instead of 10, `per_page` is ignored and the 50 cap is lost. ... Change the require to `require \"pagy/extras/limit\"`. Set `Pagy::DEFAULT[:limit] = 10`, `[:limit_param] = :per_page` and `[:limit_max] = 50` ... change `@pagy.items` to `@pagy.limit`.",
+      "reasons": "Impact: the plan gets the boot failure right, but it pins the silent drift (20 per page, per_page ignored, cap lost) on the require-only fix. In that stage the stale `@pagy.items` reader actually breaks rendering, and the drift only appears once the reader is also fixed. Validation: the probe covers default 10, per_page=5 carried into the next link, the 50 cap and overflow. It does not cover asymmetric owned/filter-excluded/foreign data, page 2 showing positions 6–10, following the real Next href to 11–15, size 25 last page, selection/range, kept filter queries, /journal, empty search, foreign 404 or anonymous redirect.",
+      "actionable": false
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Invalid page numbers now cause a 500 error. ... `Pagy::VariableError: expected :page >= 1; got 0` at `app/controllers/notes_controller.rb:18`. This happens for `?page=` (blank), `0`, `-1` and `two`. ... def pagy_get_page(vars, force_integer: true) page = super; force_integer ? [page, 1].max : page end",
+      "reasons": "Validation: the probe checks that invalid pages show page 1, with page=2 and overflow-to-last-page as controls. It does not say all four invalid inputs are compared against page-one content, and it has no filtering or ownership controls.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.068604,
+  "duration_ms": 22121
+}

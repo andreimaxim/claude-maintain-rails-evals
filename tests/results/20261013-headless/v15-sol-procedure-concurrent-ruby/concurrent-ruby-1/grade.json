@@ -1,0 +1,28 @@
+{
+  "case": "concurrent-ruby",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "CR1": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "**Gemfile:** change `gem \"concurrent-ruby\", \"1.3.4\"` to `\"1.3.8\"`, then run `bundle update concurrent-ruby --conservative`. In the lab, only `concurrent-ruby` moved in Gemfile.lock.",
+      "reasons": "Impact: the plan lists the Gemfile edit as a required repair but never says that the exact pin prevents 1.3.8 from resolving.",
+      "actionable": false
+    },
+    "CR2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "add `require \"logger\"` right after `require \"bundler/setup\"` ... `uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger (NameError)` ... the require is harmless on 1.3.4 ... Upgraded, without the repair | `BOOT_FAIL` ... with the repair | `BOOT_OK concurrent=1.3.8`",
+      "reasons": "Validation: the plan boots the app with and without the fix and runs separate test and eager-load checks, but it never runs the test suite in an eager-loading CI mode.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.06860000000000001,
+  "duration_ms": 12393
+}

@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Faraday 2.0 moved the retry middleware into its own gem. It affects `app/models/citation/provider.rb:37`. ... Every lookup raised an unrescued error, so enrichment jobs crashed instead of finishing or recording a failure. ... add `gem \"faraday-retry\", \"~> 2.2\"` (resolves 2.4.0). `Bundler.require` loads it ... faraday-retry 2.x needs faraday 2, so it can't land earlier. ... 503 then 200 gives two requests ... Two 503s give `Unavailable` after 2 requests ... A 401 gives `Error`.",
+      "reasons": "Validation is partial because the plan tests the HTTP retry counts (503→200, persistent 503, 401) with a direct probe against a local fake provider. It does not cover the queue/worker scenario of six requests over three attempts, a visible failure and empty scheduled/retry/dead sets. It also does not check that the raw target makes zero requests and leaves citations pending.",
+      "actionable": true
+    },
+    "FD2": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Faraday 2.0 dropped the `:basic_auth` middleware (#1308). It affects `provider.rb:38`. ... `Faraday::Error: :basic_auth is not registered on Faraday::Request` ... Repair: `faraday.request :authorization, :basic, @user, @password` ... Fails on 1.10.4 (executed) ... The Authorization header bytes are unchanged.",
+      "reasons": "Impact is partial because the plan only gives the registration error and does not say what changes in the app: the failure happens before any request and leaves citations pending under fallback retries, and it is not a credential rejection. Validation is partial because the plan checks the header with non-ASCII and nil-password credentials, a 401 and the reverted-repair failure. It does not cover a fresh process with numeric/colon/hash credentials, successful and failed refreshes, owner/no-DOI denial or unsafe-metadata controls.",
+      "actionable": false
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.090992,
+  "duration_ms": 18564
+}

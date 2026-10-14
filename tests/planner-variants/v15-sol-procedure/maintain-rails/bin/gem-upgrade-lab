@@ -1,0 +1,350 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "optparse"
+require "rbconfig"
+require "securerandom"
+require "socket"
+require "tmpdir"
+require_relative "upgrade-support"
+
+# No gem dependencies. PostgreSQL's psql and a local Redis are prerequisites.
+# This is an experiment harness, not an OS/network sandbox. Review isolation.md
+# and configure other services in the copy before `seal` enables app execution.
+module UpgradeLab
+  module_function
+
+  MARKER = "maintain-rails:disposable-owner"
+  OMIT = %r{\A(?:\.git(?:/|\z)|\.bundle/|\.amp/|tmp/|log/|storage/|vendor/bundle/|\.env(?:\.|\z)|config/master\.key\z|config/credentials/.*\.key\z)}
+
+  def redis(url, *parts)
+    uri = URI(url)
+    raise "Redis must be local redis:// with an explicit nonzero database" unless uri.scheme == "redis" && %w[localhost 127.0.0.1 ::1].include?(uri.host) && uri.path.match?(%r{\A/[1-9]\d*\z}) && !uri.userinfo
+
+    socket = Socket.tcp(uri.host, uri.port || 6379, connect_timeout: 5)
+    socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_RCVTIMEO, [10, 0].pack("l!l!"))
+    read = lambda do
+      line = socket.gets("\r\n") or raise "Redis disconnected"
+      case line[0]
+      when "+" then line[1..].strip
+      when "-" then raise line[1..].strip
+      when ":" then line[1..].to_i
+      when "$"
+        length = line[1..].to_i
+        next nil if length == -1
+        value = socket.read(length)
+        socket.read(2)
+        value
+      else raise "Unexpected Redis response"
+      end
+    end
+    send = lambda do |args|
+      socket.write("*#{args.size}\r\n" + args.map { |arg| text = arg.to_s; "$#{text.bytesize}\r\n#{text}\r\n" }.join)
+      read.call
+    end
+    send.call(["SELECT", uri.path.delete_prefix("/")])
+    send.call(parts)
+  ensure
+    socket&.close
+  end
+
+  def pg(url, sql)
+    uri = URI(url)
+    raise "Use a local PostgreSQL admin URL without a password" unless %w[postgres postgresql].include?(uri.scheme) && [nil, "", "localhost", "127.0.0.1", "::1"].include?(uri.host) && !uri.userinfo.to_s.include?(":") && !uri.query
+
+    # Parent PG* settings and .psqlrc must not redirect the command elsewhere.
+    clean = ENV.keys.grep(/\APG/).to_h { |key| [key, nil] }
+    clean["PGPASSFILE"] = File::NULL
+    out, status = Open3.capture2e(clean, "psql", "-X", "-w", "-v", "ON_ERROR_STOP=1", "--dbname", url, "-c", sql)
+    raise "psql failed: #{out}" unless status.success?
+    out
+  end
+
+  def claim_redis(url, token)
+    uri = URI(url)
+    candidates = uri.path.to_s.empty? || uri.path == "/" ? (1..15).to_a.reverse.map { |db| copy = uri.dup; copy.path = "/#{db}"; copy.to_s } : [url]
+    candidates.each do |candidate|
+      claimed = redis(candidate, "EVAL", "if redis.call('DBSIZE') == 0 then return redis.call('SET', ARGV[1], ARGV[2], 'NX') end; return false", 0, MARKER, token)
+      return candidate if claimed == "OK"
+    end
+    raise "No empty nonzero Redis database available; provide a separate local Redis URL"
+  end
+
+  def files(root)
+    UpgradeSupport.command("git", "-C", root, "ls-files", "-z", "--cached", "--others", "--exclude-standard").split("\0").uniq.sort.reject { |path| path.match?(OMIT) }
+  end
+
+  def fingerprint(root, paths)
+    paths.to_h do |path|
+      file = File.join(root, path)
+      [path, File.file?(file) ? Digest::SHA256.file(file).hexdigest : nil]
+    end
+  end
+
+  def create(source, pg_url, redis_url, emit: true)
+    source = File.realpath(source)
+    raise "Use PostgreSQL config or provide a manual isolated harness" unless File.read(File.join(source, "config/database.yml")).match?(/adapter:\s*postgresql/)
+    paths = files(source)
+    raise "External symlink or submodule; materialize it in a disposable source first" if paths.any? { |path| File.symlink?(File.join(source, path)) || File.directory?(File.join(source, path)) }
+    root = Dir.mktmpdir("gem-upgrade-")
+    token = SecureRandom.hex(12)
+    database = "gem_upgrade_#{token}"
+    app = File.join(root, "app")
+    FileUtils.mkdir_p(app)
+    manifest = { "format" => 1, "root" => root, "app" => app, "source" => source,
+      "source_files" => fingerprint(source, paths), "token" => token, "database" => database,
+      "pg_url" => pg_url, "redis_url" => redis_url, "sealed" => false }
+    UpgradeSupport.json(File.join(root, "lab.json"), manifest)
+    redis_url = claim_redis(redis_url, token)
+    claimed = true
+    manifest["redis_url"] = redis_url
+    pg(pg_url, "CREATE DATABASE #{database};")
+    pg_created = true
+    paths.each do |path|
+      src = File.join(source, path)
+      next unless File.file?(src)
+
+      dest = File.join(app, path)
+      FileUtils.mkdir_p(File.dirname(dest))
+      FileUtils.cp(src, dest, preserve: true)
+    end
+    FileUtils.mkdir_p(File.join(root, "original-config"))
+    %w[database.yml storage.yml cable.yml].each do |name|
+      path = File.join(app, "config", name)
+      FileUtils.cp(path, File.join(root, "original-config", name)) if File.file?(path)
+    end
+    FileUtils.cp(File.join(app, "Gemfile.lock"), File.join(root, "baseline.lock"))
+    # Replace all Rails environments so tests spawned by app code stay isolated.
+    File.write(File.join(app, "config/database.yml"), %w[development test production].map do |environment|
+      "#{environment}:\n  adapter: postgresql\n  url: <%= ENV.fetch('DATABASE_URL') %>\n  pool: 5\n"
+    end.join)
+    File.write(File.join(app, "config/storage.yml"), %w[test local].map do |service|
+      "#{service}:\n  service: Disk\n  root: <%= Rails.root.join('tmp/upgrade-storage/#{service}') %>\n"
+    end.join)
+    File.write(File.join(app, "config/cable.yml"), %w[development test production].map do |environment|
+      "#{environment}:\n  adapter: redis\n  url: <%= ENV.fetch('REDIS_URL') %>\n  channel_prefix: upgrade_#{token}\n"
+    end.join)
+    uri = URI(pg_url)
+    uri.path = "/#{database}"
+    manifest["env"] = {
+      "PATH" => "#{File.dirname(RbConfig.ruby)}:#{ENV.fetch('PATH')}", "HOME" => Dir.home,
+      "LANG" => "C.UTF-8", "RAILS_ENV" => "test", "RACK_ENV" => "test",
+      "DATABASE_URL" => uri.to_s, "REDIS_URL" => redis_url,
+      "PGDATABASE" => database, "PGHOST" => uri.host.to_s.empty? ? "/var/run/postgresql" : uri.host,
+      "PGUSER" => uri.user || ENV.fetch("USER", "user"), "PGPORT" => (uri.port || 5432).to_s,
+      "BUNDLE_PATH" => File.join(root, "gems"), "BUNDLE_USER_HOME" => File.join(root, "bundle-home"),
+      "BUNDLE_FROZEN" => "false", "BUNDLE_DEPLOYMENT" => "false",
+      "BUNDLE_GEMFILE" => File.join(app, "Gemfile"), "DISABLE_SPRING" => "1",
+      "PARALLEL_WORKERS" => "1", "SECRET_KEY_BASE" => SecureRandom.hex(64)
+    }
+    UpgradeSupport.json(File.join(root, "lab.json"), manifest)
+    audit = paths.grep(%r{\A(?:app|config|lib|test|spec|bin)/}).flat_map do |path|
+      next [] unless File.file?(File.join(app, path))
+      File.read(File.join(app, path), encoding: "UTF-8").scrub.lines.each_with_index.filter_map do |line, index|
+        "#{path}:#{index + 1}" if line.match?(/ENV(?:\[|\.fetch)|https?:\/\/|redis:\/\/|smtp|bucket|connects_to|establish_connection|cache_store|delivery_method|active_storage\.service|queue_adapter/)
+      end
+    end
+    File.write(File.join(root, "isolation.md"), <<~TEXT)
+      # Review before seal
+      The copy has its own PostgreSQL database and a claimed, initially empty Redis database.
+      Rails database, storage and cable configs were replaced. Originals are in original-config/.
+      No parent application secrets or environment variables are passed to child commands.
+      Review the source configs and the references below. In the COPY, redirect extra databases,
+      hard-coded Redis/cache endpoints, file paths and storage service names to disposable resources.
+      Disable real email and replace external HTTP services with local fakes. Preserve adapter semantics
+      when testing queues, caches, storage or delivery. Record each override and its limits in this file.
+      Custom initializers and tests can bypass these settings. This harness is not network isolation.
+      If any resource cannot be isolated, do not seal or boot; report the blocked check.
+
+      #{audit.join("\n")}
+    TEXT
+    puts root if emit
+    root
+  rescue StandardError => error
+    pg(pg_url, "DROP DATABASE #{database} WITH (FORCE);") if pg_created
+    redis(redis_url, "EVAL", "if redis.call('GET', ARGV[1]) == ARGV[2] then return redis.call('DEL', ARGV[1]) end; return 0", 0, MARKER, token) if claimed
+    warn "Lab creation failed. Partial lab retained at #{root}" if root
+    raise error
+  end
+
+  def load_lab(root, verify_source: true)
+    root = File.realpath(root)
+    lab = JSON.parse(File.read(File.join(root, "lab.json")))
+    raise "Invalid lab marker" unless lab["format"] == 1 && lab["root"] == root && lab["app"] == File.join(root, "app") && lab["database"] == "gem_upgrade_#{lab['token']}" && lab["token"].match?(/\A[0-9a-f]{24}\z/)
+    raise "Copy cannot be the source" if File.realpath(lab["app"]) == lab["source"]
+    raise "Source files changed since snapshot" if verify_source && fingerprint(lab["source"], lab["source_files"].keys) != lab["source_files"]
+    raise "Redis ownership marker lost; no command will run" unless redis(lab["redis_url"], "GET", MARKER) == lab["token"]
+    lab
+  end
+
+  def fork_lab(parent, pg_url, redis_url)
+    root = create(parent["source"], pg_url, redis_url, emit: false)
+    child = JSON.parse(File.read(File.join(root, "lab.json")))
+    # Preserve generated isolation configs while copying the tested variant,
+    # including uncommitted repairs and probes. Never clone a Git HEAD instead.
+    protected = %w[config/database.yml config/storage.yml config/cable.yml]
+    Dir.glob(File.join(child["app"], "**", "*"), File::FNM_DOTMATCH).each do |file|
+      path = file.delete_prefix("#{child['app']}/")
+      File.delete(file) if File.file?(file) && !protected.include?(path)
+    end
+    Dir.glob(File.join(parent["app"], "**", "*"), File::FNM_DOTMATCH).each do |file|
+      path = file.delete_prefix("#{parent['app']}/")
+      next if path.match?(OMIT) || protected.include?(path) || !File.file?(file)
+      raise "Symlink in experiment; fork refused" if File.symlink?(file)
+
+      destination = File.join(child["app"], path)
+      FileUtils.mkdir_p(File.dirname(destination))
+      FileUtils.cp(file, destination, preserve: true)
+    end
+    child["env"]["BUNDLE_PATH"] = parent["env"]["BUNDLE_PATH"]
+    child["env"]["SECRET_KEY_BASE"] = parent["env"]["SECRET_KEY_BASE"]
+    child["parent"] = parent["root"]
+    UpgradeSupport.json(File.join(root, "lab.json"), child)
+    puts root
+  rescue StandardError
+    cleanup(child) if child
+    raise
+  end
+
+  def run(lab, label, argv, seconds: 300)
+    raise "Review isolation.md, then seal the lab before executing app code" unless lab["sealed"]
+    raise "Invalid label" unless label.match?(/\A[\w.-]+\z/)
+    stamp = "#{Time.now.utc.strftime('%Y%m%dT%H%M%S')}-#{SecureRandom.hex(3)}-#{label}"
+    directory = File.join(lab["root"], "runs", stamp)
+    FileUtils.mkdir_p(directory)
+    FileUtils.cp(File.join(lab["app"], "Gemfile.lock"), File.join(directory, "Gemfile.lock"))
+    FileUtils.cp(File.join(lab["app"], "Gemfile"), File.join(directory, "Gemfile"))
+    files = Dir.glob(File.join(lab["app"], "{app,config,lib,test,spec,db,bin}", "**", "*"), File::FNM_DOTMATCH).select { |path| File.file?(path) }
+    UpgradeSupport.json(File.join(directory, "files.json"), files.to_h { |file| [file.delete_prefix("#{lab['app']}/"), Digest::SHA256.file(file).hexdigest] })
+    files.select { |file| file.start_with?("#{lab['app']}/config/") }.each do |file|
+      destination = File.join(directory, file.delete_prefix("#{lab['app']}/"))
+      FileUtils.mkdir_p(File.dirname(destination))
+      FileUtils.cp(file, destination)
+    end
+    start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    status = nil
+    timeout = false
+    File.open(File.join(directory, "output.log"), "w") do |out|
+      pid = Process.spawn(lab["env"], *argv, chdir: lab["app"], unsetenv_others: true, out: out, err: out, pgroup: true)
+      begin
+        Timeout.timeout(seconds) { _, status = Process.wait2(pid) }
+      rescue Timeout::Error
+        timeout = true
+        Process.kill("TERM", -pid) rescue nil
+        sleep 0.3
+        Process.kill("KILL", -pid) rescue nil
+        _, status = Process.wait2(pid)
+      end
+    end
+    result = { label: label, command: argv, exit: status.exitstatus, signal: status.termsig, timeout: timeout,
+      seconds: (Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2),
+      environment: lab["env"].reject { |key, _| key == "SECRET_KEY_BASE" }, output: File.join(directory, "output.log") }
+    UpgradeSupport.json(File.join(directory, "result.json"), result)
+    # Lock resolution can change during bundle commands. Keep both locks.
+    FileUtils.cp(File.join(lab["app"], "Gemfile.lock"), File.join(directory, "after.lock"))
+    puts "#{label}: #{timeout ? 'TIMEOUT' : status.success? ? 'PASS' : 'FAIL'}; #{directory}"
+    status.success? && !timeout
+  end
+
+  def bundle
+    [RbConfig.ruby, Gem.bin_path("bundler", "bundle")]
+  end
+
+  def bump(lab, gem, version)
+    raise "Invalid gem/version" unless gem.match?(/\A[a-zA-Z0-9][\w.-]*\z/) && Gem::Version.correct?(version)
+    path = File.join(lab["app"], "Gemfile")
+    text = File.read(path)
+    pattern = /^([ \t]*gem\s+(["'])#{Regexp.escape(gem)}\2)([^\n]*)$/
+    matches = text.scan(pattern)
+    raise "Multiple declarations; edit only the copy's Gemfile" if matches.size > 1
+    if matches.empty?
+      # A transitive gem becomes a direct constraint for the experiment only.
+      text << "\ngem #{gem.inspect}, #{("= " + version).inspect} # upgrade experiment\n"
+    else
+      tail = matches.first[2]
+      raise "Dynamic, multiline, git or path declaration; edit only the copy's Gemfile" if tail.match?(/\b(?:git|path|github|branch|ref|tag)\s*[:=]/) || tail.rstrip.end_with?("\\", ",")
+      options = tail.sub(/\A(?:\s*,\s*(["'])[^"']*\1)*/, "")
+      raise "Dynamic version; edit only the copy's Gemfile" unless options.match?(/\A\s*(?:,\s*\w+\s*:|#|\z)/)
+      text = text.sub(pattern) { "#{$1}, #{("= " + version).inspect}#{options}" }
+    end
+    File.write(path, text)
+    ok = run(lab, "bundle-#{gem}-#{version}", [*bundle, "update", gem, "--conservative"], seconds: 600)
+    resolved = UpgradeSupport.lock(File.join(lab["app"], "Gemfile.lock"))[gem]
+    raise "Resolution failed or requested version was not locked; read the bundle log" unless ok && resolved && resolved["versions"].all? { |v| v == version || v.start_with?("#{version}-") }
+    delta = UpgradeSupport.lock_delta(File.join(lab["root"], "baseline.lock"), File.join(lab["app"], "Gemfile.lock"))
+    UpgradeSupport.json(File.join(lab["root"], "dependencies.json"), delta)
+    puts "Locked #{gem} #{version}. Dependency delta: #{lab['root']}/dependencies.json"
+  end
+
+  def check(lab, label)
+    checks = {
+      "bundle" => [*bundle, "check"],
+      "boot" => [RbConfig.ruby, "bin/rails", "runner", "puts 'BOOT_OK'; puts Rails.version; puts Rails.application.config.loaded_config_version.inspect"],
+      "eager-load" => [RbConfig.ruby, "bin/rails", "zeitwerk:check"],
+      "routes" => [RbConfig.ruby, "bin/rails", "routes"],
+      "database" => [RbConfig.ruby, "bin/rails", "db:prepare"],
+      "tests" => [RbConfig.ruby, "bin/rails", "test"]
+    }
+    outcomes = checks.map { |name, argv| [name, run(lab, "#{label}-#{name}", argv)] }.to_h
+    UpgradeSupport.json(File.join(lab["root"], "#{label}-checks.json"), outcomes)
+    puts "System tests and production mode are separate checks. A failed step did not skip later steps."
+    outcomes.values.all?
+  end
+
+  def cleanup(lab)
+    # Never flush an unclaimed database or drop a database inferred from app config.
+    pg(lab["pg_url"], "DROP DATABASE IF EXISTS #{lab['database']} WITH (FORCE);")
+    removed = redis(lab["redis_url"], "EVAL", "if redis.call('GET', ARGV[1]) == ARGV[2] then redis.call('FLUSHDB'); return 1 end; return 0", 0, MARKER, lab["token"])
+    raise "Redis claim lost; cleanup refused" unless removed == 1
+    lab["sealed"] = false
+    lab["cleaned"] = true
+    UpgradeSupport.json(File.join(lab["root"], "lab.json"), lab)
+    puts "Disposable services cleaned. Evidence retained: #{lab['root']}"
+  end
+end
+
+options = { pg: nil, redis: "redis://127.0.0.1:6379", seconds: 300 }
+parser = OptionParser.new do |p|
+  p.banner = "Usage: gem-upgrade-lab inspect APP GEM\n       gem-upgrade-lab create APP [--pg-url URL --redis-url URL]\n       gem-upgrade-lab fork LAB [--pg-url URL --redis-url URL]\n       gem-upgrade-lab seal LAB | bump LAB GEM TO | check LAB LABEL\n       gem-upgrade-lab run LAB LABEL [--timeout SECONDS] -- COMMAND...\n       gem-upgrade-lab cleanup LAB\nDefaults: local PostgreSQL and Redis. Redis without a path claims an empty database 1 to 15.\nRead isolation.md before seal."
+  p.on("--pg-url URL") { |value| options[:pg] = value }
+  p.on("--redis-url URL") { |value| options[:redis] = value }
+  p.on("--timeout SECONDS", Integer) { |value| options[:seconds] = value }
+  p.on("-h", "--help") { puts p; exit }
+end
+# Keep arguments following -- verbatim, including application CLI options.
+separator = ARGV.index("--")
+command_args = separator ? ARGV.slice!(separator..)[1..] : []
+parser.parse!(ARGV)
+action, root, *args = ARGV
+begin
+  if action == "inspect"
+    raise parser.to_s unless root && args.first
+    specs = UpgradeSupport.lock(File.join(root, "Gemfile.lock"))
+    raise "Gem is not in Gemfile.lock" unless specs[args.first]
+    puts JSON.pretty_generate({ gem: args.first, locked: specs[args.first], ruby: RUBY_DESCRIPTION,
+      required_by: specs.keys.select { |name| specs[name]["dependencies"].include?(args.first) } })
+  elsif action == "create"
+    raise parser.to_s unless root
+    UpgradeLab.create(root, options[:pg] || "postgresql:///postgres", options[:redis])
+  else
+    raise parser.to_s unless root
+    lab = UpgradeLab.load_lab(root, verify_source: action != "cleanup")
+    case action
+    when "fork" then UpgradeLab.fork_lab(lab, options[:pg] || lab["pg_url"], options[:redis])
+    when "seal"
+      lab["sealed"] = true
+      UpgradeSupport.json(File.join(lab["root"], "lab.json"), lab)
+      puts "Isolation review acknowledged. Commands run only inside #{lab['app']}"
+    when "bump" then UpgradeLab.bump(lab, *args)
+    when "check" then exit(UpgradeLab.check(lab, args.fetch(0)) ? 0 : 1)
+    when "run"
+      raise "Supply a command after --" if command_args.empty?
+      exit(UpgradeLab.run(lab, args.fetch(0), command_args, seconds: options[:seconds]) ? 0 : 1)
+    when "cleanup" then UpgradeLab.cleanup(lab)
+    else raise parser.to_s
+    end
+  end
+rescue StandardError => error
+  warn error.message
+  exit 1
+end

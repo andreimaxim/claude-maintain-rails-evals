@@ -1,0 +1,84 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "upgrade-support"
+
+# A closure check for the investigation, not a correctness grader. Evidence and
+# fixes remain the planner's responsibility. Never invent fields just to pass it.
+action, directory = ARGV
+abort "Usage: gem-upgrade-review init|check EVIDENCE_DIR" unless %w[init check].include?(action) && directory
+directory = File.expand_path(directory)
+path = File.join(directory, "review.json")
+FIELDS = %w[locations applicability impact evidence repair validation control current_version stored_data_and_rollback].freeze
+
+if action == "init"
+  abort "review.json already exists; append new candidates without losing decisions" if File.exist?(path)
+  rows = []
+  Dir.glob(File.join(directory, "**", "entries.json")).sort.each do |file|
+    relative = File.dirname(file).delete_prefix("#{directory}/")
+    relative = "primary" if File.dirname(file) == directory
+    entries = JSON.parse(File.read(file))
+    entries.group_by { |entry| [entry["component"], Gem::Version.new(entry["version"]).segments.first(2).join(".")] }.each do |(component, version), group|
+      source = File.join(File.dirname(file), "review-#{component}-#{version}.tsv")
+      File.write(source, group.sort_by { |entry| [entry["kinds"].empty? ? 1 : 0, entry["references"].empty? ? 1 : 0, entry["version"]] }.map do |entry|
+        [entry["id"], entry["version"], entry["kinds"].join(","), entry["references"].empty? ? "no-match" : "matched", entry["title"]].join("\t")
+      end.join("\n") + "\n")
+      rows << { "id" => "#{relative}/#{component}-#{version}", "source" => source,
+        "title" => "#{component} #{version}: #{group.size} entries", "priority" => "release-component",
+        "status" => "pending", "reason" => "", "finding_ids" => [] }
+    end
+  end
+  JSON.parse(File.read(File.join(directory, "defaults.json"))).each_with_index do |setting, index|
+    rows << { "id" => "default-#{index + 1}", "source" => "defaults.json", "title" => setting["setting"],
+              "priority" => "default", "status" => "pending", "reason" => "" }
+  end
+  if File.exist?(File.join(directory, "dependencies.json"))
+    JSON.parse(File.read(File.join(directory, "dependencies.json"))).each do |entry|
+      rows << { "id" => "dependency-#{entry['name']}", "source" => "dependencies.json", "title" => entry["name"],
+                "priority" => "dependency", "status" => "pending", "reason" => "" }
+    end
+  end
+  UpgradeSupport.json(path, { "candidates" => rows, "findings" => [], "source_review" => [], "check_runs" => [], "limits" => [] })
+  puts "#{rows.size} candidates: #{path}"
+  puts "Candidates: read every group index; set status to reviewed or unverified, fill reason and finding_ids."
+  puts "Reason records which entries apply, which do not, and which need more evidence. Add discoveries from guides, commits and experiments."
+  puts "Findings require id, category (required/default/rollout), #{FIELDS.join(', ')}. All fields are nonempty strings."
+  puts "source_review[] records each component's guide/tag/commit coverage and gaps. check_runs[] names run result.json files."
+  puts "Unverified rows are permitted only with a limits[] explanation, not a claim of safety."
+  exit
+end
+
+review = JSON.parse(File.read(path))
+errors = []
+expected = Dir.glob(File.join(directory, "**", "entries.json")).flat_map do |file|
+  prefix = File.dirname(file) == directory ? "primary" : File.dirname(file).delete_prefix("#{directory}/")
+  JSON.parse(File.read(file)).map { |entry| "#{prefix}/#{entry['component']}-#{Gem::Version.new(entry['version']).segments.first(2).join('.')}" }.uniq
+end
+expected.concat(JSON.parse(File.read(File.join(directory, "defaults.json"))).each_index.map { |index| "default-#{index + 1}" })
+if File.exist?(File.join(directory, "dependencies.json"))
+  expected.concat(JSON.parse(File.read(File.join(directory, "dependencies.json"))).map { |row| "dependency-#{row['name']}" })
+end
+candidate_ids = review.fetch("candidates").map { |row| row["id"] }
+errors << "Duplicate candidate ids" unless candidate_ids.uniq.size == candidate_ids.size
+(expected - candidate_ids).each { |id| errors << "#{id}: candidate removed from review" }
+findings = review.fetch("findings")
+ids = findings.map { |finding| finding["id"] }
+errors << "Duplicate or missing finding ids" if ids.any? { |id| !id.is_a?(String) || id.empty? } || ids.uniq.size != ids.size
+findings.each do |finding|
+  errors << "#{finding['id']}: invalid category" unless %w[required default rollout].include?(finding["category"])
+  FIELDS.each { |key| errors << "#{finding['id']}: missing #{key}" unless finding[key].is_a?(String) && !finding[key].strip.empty? }
+end
+review.fetch("candidates").each do |row|
+  errors << "#{row['id']}: unresolved" unless %w[reviewed unverified].include?(row["status"])
+  errors << "#{row['id']}: missing reason" if row["reason"].to_s.strip.empty?
+  errors << "#{row['id']}: missing linked finding" if row.fetch("finding_ids", []).any? { |id| !ids.include?(id) }
+  errors << "#{row['id']}: add an investigation limit" if row["status"] == "unverified" && review.fetch("limits").empty?
+end
+errors << "Record source coverage and missing guides/tags" if review.fetch("source_review").empty?
+errors << "Record executed checks, or explain why none could run in limits" if review.fetch("check_runs").empty? && review.fetch("limits").empty?
+if errors.any?
+  warn errors.join("\n")
+  exit 1
+end
+puts "Review closed: #{review['candidates'].size} candidates, #{findings.size} findings, #{review['limits'].size} limits."
+puts "Structural check only. It does not prove applicability, repairs or validation correctness."

@@ -417,6 +417,18 @@ every Pagy run at $0.96 (v13 2 of 2 at $0.37); 1, 2, 2, 2 and 2 on Faraday
 run. It is rejected. Its records are under
 [`tests/results/20261013-headless/`](tests/results/20261013-headless/).
 
+**GPT-6.1 Sol's procedure was the slowest and scored lowest.**
+[Variant v15](tests/planner-variants/v15-sol-procedure) has the planner build
+labs with `bin/gem-upgrade-lab`, map every changelog group in a review table and
+check that table with `bin/gem-upgrade-review` before returning. Five runs per
+case scored 20, 13, 21, 19 and 9 on Rails (mean 16.4) at a median of $8.27 and
+32.2 minutes; 2, 1, 1, 2 and 1 on Pagy (mean 1.4) at $0.98; 0, 2, 1, 1 and 1 on
+Faraday (mean 1.0) at $1.53; 1, 2, 1, 2 and 1 on the patch bump (mean 1.4) at
+$0.77; and 1 of 1 in every no-op run. It is rejected. The first launch of all 25
+runs stopped within four minutes on the Claude session limit; those runs were
+discarded and rerun after the reset. Its records are under
+[`tests/results/20261013-headless/`](tests/results/20261013-headless/).
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

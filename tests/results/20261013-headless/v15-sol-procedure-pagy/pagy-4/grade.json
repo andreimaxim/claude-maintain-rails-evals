@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "change `require \"pagy/extras/items\"` to `require \"pagy/extras/limit\"` ... change `@pagy.items` to `@pagy.limit` ... set `Pagy::DEFAULT[:limit] = 10`, `[:limit_param] = :per_page` and `[:limit_max] = 50` ... Page size goes from 10 to 20, `?per_page` is ignored, and a new public `?limit` parameter is honoured up to 100 instead of the cap of 50.",
+      "reasons": "Validation: the probe checks default 10, per_page 25 kept in the next link and the 500→50 cap. It lacks the key's asymmetric owned, filter-excluded and foreign dataset. It does not check page-2 positions 6–10 or follow the actual Next href to 11–15. It also lacks the retained filter query, /journal, empty search, foreign 404 and anonymous-redirect controls.",
+      "actionable": true
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Now `?page=0`, `-1`, blank or `two` returns HTTP 500 with `Pagy::VariableError` ... it should also work on 8.6.3, so it can land before the bump, but I did not run it on 8.6.3. ... pages `0`, `-3`, `two` and blank show page 1 ... `page=999` shows the last page",
+      "reasons": "Validation: the probe covers the four invalid inputs after the PG1 repair and includes a stale-page-999 control. It lacks filtering and ownership controls. It also never verifies the preparatory patch on 8.6.3, even though the plan recommends landing it before the bump.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.06313200000000001,
+  "duration_ms": 17037
+}
