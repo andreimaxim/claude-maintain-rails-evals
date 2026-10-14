@@ -1,0 +1,246 @@
+{
+  "config": {
+    "run_id": "v14-astra-procedure-noop-1",
+    "model": "claude-opus-5-5",
+    "effort": "low",
+    "app": "/home/user/workspace/repo",
+    "application_commit": "ab732f534dce525ae70f1d31aac6908a1ab3d8f7",
+    "result_path": "/home/user/workspace/repo/.git/planner-run-result.tar.gz",
+    "skip_service_checks": false,
+    "plugin_files": {
+      ".claude-plugin/plugin.json": "5144a7b5c3ffe02656cefcbca851ec4c91241c829db48bcde802dd9e5905b764",
+      "agents/gem-upgrade-planner.md": "693ec7f61fafef09b8947061674d5e0855bc168f393ac6221ae0256ddfa1052d",
+      "bin/README.md": "74d824b667de283fb41510866f08b3de6fca3854147d0d5de56e4c732831ed73",
+      "bin/gem-changes": "969f361cc752a5e41e72faf8cc66d5c644dc03dff27dfaffe17eab833bd3f1af",
+      "bin/gem-upgrade-lab": "00212c28d31dff78d3ea0018d6348571e3a738c8983c2f9da4bc4c52431a9b76",
+      "bin/gem-upgrade-report": "1514de559d82fa11a340b6d5d1a1c23b1ea27f4587624329861aaad3b2d082b1",
+      "bin/lib/gem_sources.rb": "c5d4c4e3bdc7170338ab514fb115b74bad5ab59e1c7391be69aa67018c417074",
+      "bin/lib/runtime_snapshot.rb": "49f2046431d706926122744d6f118b17ef1713bb6c5b100ee2fdc63fbf14fac6",
+      "bin/lib/upgrade_support.rb": "f6afa325ec98c8f029a7385b9de873e2f19f769e40a712e1a25f2f64b503bb9b",
+      "skills/upgrade-gem/SKILL.md": "4586bbccdd2d9adec117fdb1487b005a816295418feec8ab1f6f7a70b69dc1c8",
+      "test/application_smoke.rb": "fae007082d6293d8a068550db246519010a752f9ceb313863fba8641ad059d72",
+      "test/contract_test.rb": "8c0070c2eb751607e7c2770f35d2488480a06b1c6494640d14d5d1effb9cf977"
+    }
+  },
+  "request": "Upgrade the pagy gem to 8.6.3",
+  "state": {
+    "run_id": "v14-astra-procedure-noop-1",
+    "session_id": "6a0ec402-0b10-49ca-876d-6ae47c2cab14",
+    "prepared_at": "2026-10-14T12:24:54.631Z",
+    "app_before": {
+      "head": "ab732f534dce525ae70f1d31aac6908a1ab3d8f7",
+      "status": ""
+    },
+    "services": {
+      "postgres": {
+        "exit": 0,
+        "output": "1"
+      },
+      "redis": {
+        "exit": 0,
+        "output": "PONG"
+      },
+      "bundle": {
+        "exit": 0,
+        "output": "The Gemfile's dependencies are satisfied\nbash: cannot set terminal process group (70746): Inappropriate ioctl for device\nbash: no job control in this shell"
+      }
+    },
+    "claude_version": "2.1.299 (Claude Code)",
+    "command": [
+      "claude",
+      "-p",
+      "<request>",
+      "--plugin-dir",
+      "/home/user/planner-run/maintain-rails",
+      "--model",
+      "claude-opus-5-5",
+      "--effort",
+      "low",
+      "--permission-mode",
+      "bypassPermissions",
+      "--session-id",
+      "6a0ec402-0b10-49ca-876d-6ae47c2cab14",
+      "--output-format",
+      "stream-json",
+      "--verbose"
+    ],
+    "removed_env": [
+      "CLAUDECODE",
+      "CLAUDE_AGENT_SDK_VERSION",
+      "CLAUDE_CODE_AUTO_CONNECT_IDE",
+      "CLAUDE_CODE_CHILD_SESSION",
+      "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY",
+      "CLAUDE_CODE_ENTRYPOINT",
+      "CLAUDE_CODE_EXECPATH",
+      "CLAUDE_CODE_IDE_SKIP_AUTO_INSTALL",
+      "CLAUDE_CODE_MESSAGING_SOCKET",
+      "CLAUDE_CODE_MESSAGING_TOKEN",
+      "CLAUDE_CODE_SESSION_ATTENDED",
+      "CLAUDE_CODE_SESSION_ID",
+      "CLAUDE_EFFORT",
+      "CLAUDE_PID"
+    ],
+    "started_at": "2026-10-14T12:24:54.747Z",
+    "ended_at": "2026-10-14T12:25:00.535Z",
+    "wall_time_ms": 5787,
+    "exit_code": 0,
+    "app_after": {
+      "head": "ab732f534dce525ae70f1d31aac6908a1ab3d8f7",
+      "status": ""
+    }
+  },
+  "summary": {
+    "init": {
+      "session_id": "6a0ec402-0b10-49ca-876d-6ae47c2cab14",
+      "model": "claude-opus-5-5",
+      "claude_code_version": "2.1.299",
+      "plugins": [
+        {
+          "name": "maintain-rails",
+          "path": "/home/user/planner-run/maintain-rails",
+          "source": "maintain-rails@inline"
+        },
+        {
+          "name": "cc-plugin-agents-md",
+          "path": "builtin",
+          "source": "cc-plugin-agents-md@builtin"
+        },
+        {
+          "name": "cc-plugin-plugin-authoring",
+          "path": "builtin",
+          "source": "cc-plugin-plugin-authoring@builtin"
+        }
+      ],
+      "agents": [
+        "claude",
+        "Explore",
+        "general-purpose",
+        "maintain-rails:gem-upgrade-planner",
+        "Plan",
+        "statusline-setup"
+      ],
+      "skills": [
+        "writing-rails-controllers",
+        "writing-rails-models",
+        "writing-rails-views",
+        "deep-research",
+        "maintain-rails:upgrade-gem",
+        "design",
+        "design-sync",
+        "dataviz",
+        "update-config",
+        "verify",
+        "debug",
+        "code-review",
+        "simplify",
+        "batch",
+        "fewer-permission-prompts",
+        "doctor",
+        "loop",
+        "schedule",
+        "claude-api",
+        "workflow-authoring",
+        "run",
+        "run-skill-generator",
+        "plugin-authoring"
+      ]
+    },
+    "results": [
+      {
+        "subtype": "success",
+        "is_error": false,
+        "duration_ms": 5262,
+        "num_turns": 4,
+        "session_id": "6a0ec402-0b10-49ca-876d-6ae47c2cab14",
+        "total_cost_usd": 0.021903400000000003,
+        "usage": {
+          "input_tokens": 6,
+          "cache_creation_input_tokens": 638,
+          "cache_read_input_tokens": 52477,
+          "output_tokens": 314,
+          "output_tokens_details": {
+            "thinking_tokens": 30
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 638,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [],
+          "speed": "standard",
+          "fallback_credit": null
+        },
+        "modelUsage": {
+          "claude-opus-5-5": {
+            "inputTokens": 6,
+            "outputTokens": 314,
+            "cacheReadInputTokens": 52477,
+            "cacheCreationInputTokens": 638,
+            "webSearchRequests": 0,
+            "costUSD": 0.021903400000000003,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 128000,
+            "thinkingTokens": 30,
+            "canonicalModel": "claude-opus-5-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        }
+      }
+    ],
+    "result": {
+      "subtype": "success",
+      "is_error": false,
+      "duration_ms": 5262,
+      "num_turns": 4,
+      "session_id": "6a0ec402-0b10-49ca-876d-6ae47c2cab14",
+      "total_cost_usd": 0.021903400000000003,
+      "usage": {
+        "input_tokens": 6,
+        "cache_creation_input_tokens": 638,
+        "cache_read_input_tokens": 52477,
+        "output_tokens": 314,
+        "output_tokens_details": {
+          "thinking_tokens": 30
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 638,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "global",
+        "iterations": [],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "modelUsage": {
+        "claude-opus-5-5": {
+          "inputTokens": 6,
+          "outputTokens": 314,
+          "cacheReadInputTokens": 52477,
+          "cacheCreationInputTokens": 638,
+          "webSearchRequests": 0,
+          "costUSD": 0.021903400000000003,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "thinkingTokens": 30,
+          "canonicalModel": "claude-opus-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      }
+    },
+    "skill_calls": 1,
+    "planner_calls": 0,
+    "subagent_messages": 0
+  }
+}

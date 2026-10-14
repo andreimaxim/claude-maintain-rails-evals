@@ -1,0 +1,183 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "lib/upgrade_support"
+
+# Structural checks make omissions visible. They cannot judge whether a repair
+# or an applicability claim is correct, and never infer findings from text hits.
+module UpgradeReport
+  FINDING = {
+    "id" => "F1", "category" => "required", "title" => "", "app_locations" => [],
+    "condition" => "", "consequence" => "", "source_evidence" => [], "repair" => "",
+    "other_paths" => "", "current_version_compatibility" => "", "rollout_and_rollback" => "",
+    "validation" => { "data" => "", "assertion_without_repair" => "", "assertion_with_repair" => "", "unchanged_control" => "" },
+    "evidence_status" => "proposed", "observations" => "", "runs" => []
+  }.freeze
+
+  def self.sources(paths)
+    paths.flat_map do |path|
+      manifest = UpgradeSupport.read_json(path)
+      raise UpgradeSupport::Error, "Not a gem-changes manifest: #{path}" unless manifest["format"] == "gem-changes-v2"
+      manifest.fetch("pages").map { |page| page.merge("path" => File.expand_path(page["path"], File.dirname(path))) }
+    end.uniq { |page| page["id"] }
+  end
+
+  def self.seed(destination, manifests)
+    raise UpgradeSupport::Error, "Refusing to overwrite #{destination}" if File.exist?(destination)
+    first = UpgradeSupport.read_json(manifests.first)
+    sources(manifests).each do |page|
+      raise UpgradeSupport::Error, "Missing source page: #{page['path']}" unless File.file?(page["path"])
+    end
+    defaults = manifests.flat_map do |path|
+      file = File.join(File.dirname(path), "defaults.json")
+      File.file?(file) ? UpgradeSupport.read_json(file) : []
+    end.uniq { |item| item.values_at("version", "setting") }
+    data = {
+      "format" => "gem-upgrade-plan-v1", "upgrade" => first.slice("gem", "from", "to"),
+      "manifests" => manifests.map { |path| File.expand_path(path) }, "summary" => "",
+      "coverage" => sources(manifests).map { |page| page.merge("status" => "open", "notes" => "", "findings" => []) },
+      "findings" => [], "experiments" => [],
+      "default_decisions" => defaults.map do |item|
+        { "default" => item.values_at("version", "setting").join(": "),
+          "current_value" => "", "impact" => "", "decision" => "", "evidence" => "" }
+      end,
+      "limitations" => manifests.flat_map { |path| UpgradeSupport.read_json(path).fetch("gaps") }.uniq
+    }
+    UpgradeSupport.json(destination, data)
+    example = File.join(File.dirname(File.expand_path(destination)), "finding-template.json")
+    UpgradeSupport.json(example, FINDING) unless File.exist?(example)
+    puts "Created #{destination} with #{data['coverage'].size} source pages. Finding shape: #{example}."
+  end
+
+  def self.errors(data)
+    errors = []
+    errors << "Wrong report format" unless data["format"] == "gem-upgrade-plan-v1"
+    errors << "Write a summary, including blockers and scope" if data["summary"].to_s.strip.empty?
+    pages = sources(data.fetch("manifests"))
+    coverage = data.fetch("coverage")
+    ids = data.fetch("findings").map { |finding| finding.fetch("id") }
+    errors << "Duplicate finding IDs" unless ids.uniq == ids
+    errors << "Duplicate coverage rows" unless coverage.map { |row| row["id"] }.uniq.size == coverage.size
+    errors << "Coverage rows do not match source pages" unless pages.map { |page| page["id"] }.sort == coverage.map { |row| row["id"] }.sort
+    coverage.each do |row|
+      errors << "#{row['id']}: use reviewed, not_applicable, or unknown" unless %w[reviewed not_applicable unknown].include?(row["status"])
+      errors << "#{row['id']}: cite the search/code evidence or missing evidence in notes" if row["notes"].to_s.strip.empty?
+      errors << "#{row['id']}: unknown finding reference" unless (row.fetch("findings") - ids).empty?
+    end
+    data["findings"].each do |finding|
+      id = finding["id"]
+      %w[title condition consequence repair other_paths current_version_compatibility rollout_and_rollback observations].each do |field|
+        errors << "#{id}: missing #{field}" if finding[field].to_s.strip.empty?
+      end
+      %w[app_locations source_evidence].each do |field|
+        errors << "#{id}: missing #{field}" unless finding[field].is_a?(Array) && finding[field].any? && finding[field].all? { |value| !value.to_s.strip.empty? }
+      end
+      errors << "#{id}: invalid category" unless %w[required optional_default rollout].include?(finding["category"])
+      errors << "#{id}: invalid evidence_status" unless %w[executed source_based proposed].include?(finding["evidence_status"])
+      %w[data assertion_without_repair assertion_with_repair unchanged_control].each do |field|
+        errors << "#{id}: missing validation.#{field}" if finding.dig("validation", field).to_s.strip.empty?
+      end
+      runs = finding.fetch("runs", [])
+      errors << "#{id}: executed finding needs run records" if finding["evidence_status"] == "executed" && runs.empty?
+      runs.each { |path| errors.concat(run_errors(path, id)) }
+    end
+    # Every template assignment needs a disposition, including defaults judged
+    # irrelevant. A short grouped explanation is fine, an omitted row is not.
+    expected_defaults = data["manifests"].flat_map do |path|
+      defaults_path = File.join(File.dirname(path), "defaults.json")
+      next [] unless File.file?(defaults_path)
+      UpgradeSupport.read_json(defaults_path).map { |item| item.values_at("version", "setting").join(": ") }
+    end.uniq.sort
+    decisions = data.fetch("default_decisions")
+    errors << "Default decisions do not cover every template assignment" unless decisions.map { |item| item["default"] }.sort == expected_defaults
+    decisions.each do |item|
+      %w[current_value impact decision evidence].each do |field|
+        errors << "#{item['default']}: missing #{field}" if item[field].to_s.strip.empty?
+      end
+    end
+    data.fetch("experiments").each { |path| errors.concat(run_errors(path, "experiment")) }
+    errors << "No run records; explain unavailable execution under limitations" if data["experiments"].empty? && data.fetch("limitations").empty?
+    errors
+  rescue KeyError, TypeError, JSON::ParserError => error
+    ["Malformed report: #{error.message}"]
+  end
+
+  def self.run_errors(path, label)
+    return ["#{label}: missing run record #{path}"] unless File.file?(path)
+    result = UpgradeSupport.read_json(path)
+    required = %w[command directory started_at seconds success log variant stage files diff lock_sha256]
+    missing = required.reject { |key| result.key?(key) }
+    return ["#{label}: incomplete run record #{path}: #{missing.join(', ')}"] unless missing.empty?
+    absent = %w[log files diff].reject { |key| File.file?(result[key]) }
+    absent.map { |key| "#{label}: missing #{key} artifact for #{path}" }
+  rescue JSON::ParserError, TypeError => error
+    ["#{label}: malformed run record #{path}: #{error.message}"]
+  end
+
+  def self.render(data, path)
+    lines = ["# #{data['upgrade']['gem']} #{data['upgrade']['from']} to #{data['upgrade']['to']} upgrade plan", "", data["summary"], ""]
+    %w[required optional_default rollout].each do |category|
+      findings = data["findings"].select { |finding| finding["category"] == category }
+      next if findings.empty?
+      lines += ["## #{category.tr('_', ' ').capitalize}", ""]
+      findings.each do |finding|
+        lines += ["### #{finding['id']}. #{finding['title']}", "",
+                  "Affected code: #{finding['app_locations'].join('; ')}.", "",
+                  "Applies when: #{finding['condition']}", "", finding["consequence"], "",
+                  "Recommendation: #{finding['repair']}", "", "Other paths: #{finding['other_paths']}", "",
+                  "Current-version preparation: #{finding['current_version_compatibility']}", "",
+                  "Rollout and rollback: #{finding['rollout_and_rollback']}", "",
+                  "Evidence (#{finding['evidence_status']}): #{finding['observations']}",
+                  *finding["source_evidence"].map { |source| "- Source: #{source}" },
+                  *finding["runs"].map { |path| "- Run: #{path}" }, "",
+                  "Validation data: #{finding['validation']['data']}",
+                  "- Without repair: #{finding['validation']['assertion_without_repair']}",
+                  "- With repair: #{finding['validation']['assertion_with_repair']}",
+                  "- Unchanged control: #{finding['validation']['unchanged_control']}", ""]
+      end
+    end
+    unless data["default_decisions"].empty?
+      lines += ["## Framework defaults", ""]
+      data["default_decisions"].each do |item|
+        lines += ["- #{item['default']}. Current: #{item['current_value']}. Impact: #{item['impact']}. Decision: #{item['decision']}. Evidence: #{item['evidence']}."]
+      end
+    end
+    lines += ["", "## Experiments", ""]
+    data["experiments"].each do |path|
+      result = UpgradeSupport.read_json(path)
+      lines << "- #{result['variant']} / #{result['stage']}: #{result['success'] ? 'passed' : 'failed or timed out'}, exit #{result['exit_status'].inspect}, #{result['seconds']}s. Record: #{path}. Log: #{result['log']}."
+    end
+    lines += ["", "## Source coverage", ""]
+    data["coverage"].group_by { |row| row["status"] }.sort.each do |status, rows|
+      lines << "- #{status}: #{rows.size} source pages."
+    end
+    lines << "\nFull source dispositions and finding references: #{File.expand_path(path)}."
+    gaps = data["manifests"].flat_map { |path| UpgradeSupport.read_json(path).fetch("gaps") }
+    unknown = data["coverage"].select { |row| row["status"] == "unknown" }.map { |row| "#{row['title']}: #{row['notes']}" }
+    lines += ["", "## Limits and unresolved checks", "", *(data["limitations"] + gaps + unknown).uniq.map { |item| "- #{item}" }, ""]
+    lines.join("\n")
+  end
+end
+
+usage = "Usage: gem-upgrade-report init PLAN.json MANIFEST.json [MANIFEST.json...] | check PLAN.json | render PLAN.json"
+begin
+  action, path, *manifests = ARGV
+  if %w[-h --help].include?(action)
+    puts usage
+  elsif action == "init" && path && manifests.any?
+    UpgradeReport.seed(path, manifests)
+  elsif %w[check render].include?(action) && path && manifests.empty?
+    data = UpgradeSupport.read_json(path)
+    errors = UpgradeReport.errors(data)
+    if errors.any?
+      warn errors.join("\n")
+      exit 1
+    end
+    puts(action == "check" ? "Report structure and referenced artifacts pass. Content correctness still needs review." : UpgradeReport.render(data, path))
+  else
+    raise UpgradeSupport::Error, usage
+  end
+rescue UpgradeSupport::Error, KeyError, SystemCallError, JSON::ParserError => error
+  warn "gem-upgrade-report: #{error.message}"
+  exit 2
+end

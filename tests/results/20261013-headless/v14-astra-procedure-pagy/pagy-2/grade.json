@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`cannot load such file -- pagy/extras/items (LoadError)` ... Only the `require` fixed: pagy 9 silently ignores the old settings. The page size becomes 20 instead of 10, the URL parameter becomes `limit` instead of `per_page`, and the cap becomes 100 instead of 50. ... The view then fails with ``undefined method `items' for an instance of Pagy``. ... `require \"pagy/extras/limit\"` ... `Pagy::DEFAULT[:limit] = 10` ... `Pagy::DEFAULT[:limit_param] = :per_page` ... `Pagy::DEFAULT[:limit_max] = 50` ... Keep `:overflow = :last_page` unchanged. ... change `@pagy.items` to `@pagy.limit`. ... `per_page=25`: 25 rows, next link `/notes?per_page=25&page=2`, 25 selected in the dropdown. No parameters: 10 rows. `per_page=500`: capped at 50 rows.",
+      "reasons": "Validation: the probe checks default size, size 25, the 500→50 cap, the next href and the dropdown selection. It does not use asymmetric owned, filter-excluded and foreign notes. It also skips page 2 at five (positions 6–10), following the actual Next href to positions 11–15, the last page at size 25, retained filter queries, /journal, empty search, the foreign-note 404 and the anonymous redirect.",
+      "actionable": true
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "pagy 8 treated `?page=` blank, `0`, `-1` or `two` as page 1. Pagy 9 no longer does this. ... pagy raises `Pagy::VariableError: expected :page >= 1; got 0` ... so users get a 500. With F1 alone, the existing test ... errors. ... def pagy_get_page(vars, force_integer: true) page = super; force_integer ? [page, 1].max : page ... Neither change works on 8.6.3 ... F2 not tested on 8.6.3 ... `page` set to `0`, `-1`, `two` or blank: page 1 shown, status 200. `page=99`: last page shown.",
+      "reasons": "Applicability: the plan says the F2 change cannot work on 8.6.3 but admits it never tried it, and it does not mention that explicit request-boundary normalization works on both versions and could ship in advance. Validation: the probe covers the four invalid inputs and page 99, but it does not compare the invalid-page results to page-one content, include filtering or ownership controls, or check the patch on the baseline.",
+      "actionable": false
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.078344,
+  "duration_ms": 25577
+}

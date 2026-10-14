@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "supported",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "If you rename only the `require` line, the old `:items` settings are silently ignored: Pages show 20 notes instead of 10. The `per_page` parameter is ignored",
+      "reasons": "Applicability: the plan attributes the silent drift to a require-only repair, but the key says require-only still fails on the remaining `@pagy.items` reader and drift only appears after the reader is also renamed. Validation: the plan relies on the suite and probe runs and omits the key's discriminating scenario (asymmetric owned, filter-excluded and foreign notes, exact page positions via the actual Next href, size-25 last page, 500-to-50 cap, retained filter queries, /journal, empty search, foreign 404, anonymous redirect).",
+      "actionable": false
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`page=\"\"`, `0`, `-1` or `two` on `/notes` now returns HTTP 500 with `Pagy::VariableError` ... `@pagy, @notes = pagy(@notes, page: [params[:page].to_i, 1].max)` ... That has not been run on 8.6.3 yet.",
+      "reasons": "Validation: only page 0 and 'two' were checked, plus page=2 and page=99 controls; blank and negative inputs, comparison to page-one content, filtering and ownership controls, and a baseline run of the preparatory patch are missing.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.066912,
+  "duration_ms": 21571
+}

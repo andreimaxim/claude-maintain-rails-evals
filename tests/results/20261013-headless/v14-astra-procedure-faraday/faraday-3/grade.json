@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "every lookup fails with `Faraday::Error: :retry is not registered on Faraday::Request` before any request is sent. `Citation::Provider` doesn't catch this error, so the enrichment job fails outright instead of recording a failed status.",
+      "reasons": "Validation: the probe covers only provider-level request counts (503→200 makes 2 requests; persistent 503 makes 2; 500 makes 1). It does not run a real queue/worker scenario with six requests over three attempts, empty scheduled/retry/dead sets, a visible failure status or the 401 control, and it does not isolate the raw target with zero requests and pending citations.",
+      "actionable": true
+    },
+    "FD2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "**Fix:** `faraday.request :authorization, :basic, @user, @password`. ... the Authorization header is byte-identical to today for: user `00123` with password `sample: value # keep`",
+      "reasons": "Validation: the plan checks header byte-identity for numeric, colon and hash credentials, but it does not cover a real wrong-password 401, successful and failed refresh, owner/no-DOI denial, unsafe metadata controls, a fresh-process run, or reproducing the zero-request failure with FD1 repaired.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.0705266,
+  "duration_ms": 16685
+}

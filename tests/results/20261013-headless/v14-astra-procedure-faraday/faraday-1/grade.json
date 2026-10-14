@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Every 2.x version tested fails with `Faraday::Error: :retry is not registered on Faraday::Request`. Nothing rescues this error, so the background job crashes and the citation stays \"pending\". ... Add `gem \"faraday-retry\", \"~> 2.2\"` (it resolved to 2.4.0) and put `require \"faraday/retry\"` at the top of `provider.rb`. ... 503 then 200: 2 requests, then success. 503 every time: 2 requests, then \"unavailable (HTTP 503)\". ... The test expecting 6 requests across three job attempts passes.",
+      "reasons": "Validation: the plan covers 503→200 and persistent-503 request counts. It does not check that a 401 makes one request and fails. It does not show a visible failure with empty scheduled/retry/dead sets through a real queue and worker. It does not check that the raw target makes zero requests, and it does not isolate FD1 with FD2 repaired.",
+      "actionable": true
+    },
+    "FD2": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The `:basic_auth` middleware was removed. Fix: Use `faraday.request :authorization, :basic, @user, @password`. Check: The `Authorization` header is byte-for-byte the same as today ... the test pair \"00123\" / \"sample: value # keep\" ... This line does not work on the current version.",
+      "reasons": "Impact: the plan only names the removed middleware. Apart from a general 'every citation lookup fails' in the intro, it does not say that registration fails before any provider request and leaves citations pending. Validation: the plan compares Authorization headers, but it does not reproduce the zero-request registration failure with FD1 repaired. It also omits a real wrong-password 401, successful and failed refresh, owner/no-DOI denial and unsafe-metadata controls.",
+      "actionable": false
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.0562272,
+  "duration_ms": 15458
+}

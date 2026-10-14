@@ -1,0 +1,28 @@
+{
+  "case": "concurrent-ruby",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "CR1": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Then pin concurrent-ruby to \"1.3.8\" in the Gemfile and run `bundle update concurrent-ruby --conservative`.",
+      "reasons": "Impact is partial because the plan never says that the existing exact pin blocks 1.3.8 from resolving. Applicability is partial because the plan does not name the current `gem \"concurrent-ruby\", \"1.3.4\"` exact pin as the affected code. Validation is partial because the plan says only concurrent-ruby changes in Gemfile.lock but does not mention `bundle check`.",
+      "actionable": false
+    },
+    "CR2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Unchanged 1.3.8: the boot stage exited 1 with the error above... Fixed 1.3.8: every stage passed... The same `boot.rb` change on the current 1.3.4 also passes every stage",
+      "reasons": "Validation is partial because the plan includes the failing and passing boot comparison, an eager-load stage and the suite, but it does not run the suite in both normal and eager-loading CI modes.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.0469862,
+  "duration_ms": 11025
+}

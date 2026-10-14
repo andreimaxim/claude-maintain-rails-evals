@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "lib/gem_sources"
+require "optparse"
+
+usage = <<~TEXT
+  Usage: gem-changes GEM FROM TO [APP_DIR] --out DIRECTORY [options]
+         gem-changes show COMMITS.json SHA
+  Writes full source evidence and a short index outside the application.
+  Options: --before LOCK --after LOCK [--dependencies-only]
+           --runtime-before JSON --runtime-after JSON (loaded gem versions)
+           --repository URL_OR_LOCAL_GIT --from-ref TAG --to-ref TAG
+           --small-limit NUMBER (default 80 commits, all patches saved)
+  Missing sources are explicit coverage gaps in manifest.json, not proof of no impact.
+TEXT
+
+begin
+  if ARGV.first == "show"
+    ARGV.shift
+    raise UpgradeSupport::Error, usage unless ARGV.size == 2
+    file, sha = ARGV
+    data = UpgradeSupport.read_json(file)
+    matches = data.fetch("commits").select { |commit| sha.match?(/\A[0-9a-f]{8,64}\z/) && commit["sha"].start_with?(sha) }
+    raise UpgradeSupport::Error, "Commit prefix must identify exactly one commit in this evidence range" unless matches.one?
+    sha = matches.first.fetch("sha")
+    path = File.join(File.dirname(File.expand_path(file)), "#{sha}.patch")
+    unless File.file?(path)
+      File.write(path, UpgradeSupport.capture("git", "-C", data.fetch("git_directory"), "show", "--format=fuller", "--first-parent", "--no-ext-diff", sha, "--"))
+    end
+    puts path
+  else
+    options = {}
+    parser = OptionParser.new do |opts|
+      opts.banner = usage
+      opts.on("--out DIRECTORY") { |value| options[:out] = value }
+      opts.on("--before LOCK") { |value| options[:before] = File.expand_path(value) }
+      opts.on("--after LOCK") { |value| options[:after] = File.expand_path(value) }
+      opts.on("--runtime-before JSON") { |value| options[:runtime_before] = File.expand_path(value) }
+      opts.on("--runtime-after JSON") { |value| options[:runtime_after] = File.expand_path(value) }
+      opts.on("--dependencies-only") { options[:dependencies_only] = true }
+      opts.on("--repository REPOSITORY") { |value| options[:repository] = value }
+      opts.on("--from-ref TAG") { |value| options[:from_ref] = value }
+      opts.on("--to-ref TAG") { |value| options[:to_ref] = value }
+      opts.on("--small-limit NUMBER", Integer) { |value| options[:small_limit] = value }
+      opts.on("-h", "--help") { puts opts; exit }
+    end
+    parser.parse!(ARGV)
+    raise UpgradeSupport::Error, usage unless (3..4).cover?(ARGV.size)
+    raise UpgradeSupport::Error, "Use --before and --after together" unless !!options[:before] == !!options[:after]
+    raise UpgradeSupport::Error, "--dependencies-only requires both lockfiles" if options[:dependencies_only] && !options[:before]
+    gem, from, to, app = ARGV
+    output = options.delete(:out) || Dir.mktmpdir("gem-changes-")
+    GemSources::Collector.new(gem, from, to, app || Dir.pwd, output, options).run
+  end
+rescue UpgradeSupport::Error, OptionParser::ParseError, ArgumentError, KeyError, SystemCallError => error
+  warn "gem-changes: #{error.message}"
+  exit 2
+end

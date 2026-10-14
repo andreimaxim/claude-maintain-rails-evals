@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Add `gem \"faraday-retry\", \"~> 2.2\"` (it resolved to 2.4.0) and put `require \"faraday/retry\"` at the top of `provider.rb`. Without it, every lookup fails with `Faraday::Error: :retry is not registered on Faraday::Request`. ... With it, the retry-then-success, persistent-503 (two attempts), 401 (one attempt) and unreachable-host cases give exactly the same output as the current version.",
+      "reasons": "Validation is partial because the probe used a local test server without going through the queue or worker. It does not check six requests over three attempts, empty scheduled/retry/dead sets, zero requests on the raw target, or FD1 isolated with FD2 repaired.",
+      "actionable": true
+    },
+    "FD2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "faraday.request :authorization, :basic, @user, @password ... With it, the `Authorization` header is byte-for-byte the same as today (`Basic [REDACTED]`, using awkward test credentials). This new form fails on 1.10.4",
+      "reasons": "Validation is partial: the plan has the auth-unchanged comparison copy and a byte-identical header check with awkward credentials. It does not check a fresh process with environment-backed credentials, a real wrong-password 401, successful or failed refresh, owner/no-DOI denial, or unsafe-metadata controls.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.058335200000000004,
+  "duration_ms": 16353
+}

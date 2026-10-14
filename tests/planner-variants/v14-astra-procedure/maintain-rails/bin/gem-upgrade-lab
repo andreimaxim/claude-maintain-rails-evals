@@ -1,0 +1,492 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "lib/upgrade_support"
+require "ripper"
+require "socket"
+require "tmpdir"
+require "yaml"
+
+# All writes and application commands belong to a marked directory outside the
+# source checkout. Redis is a foreground child for one command, not a daemon.
+class UpgradeLab
+  include UpgradeSupport
+  FORMAT = "maintain-rails-lab-v1"
+  ENV_KEYS = %w[PATH HOME LANG LC_ALL LC_CTYPE TZ GEM_HOME GEM_PATH SSL_CERT_FILE SSL_CERT_DIR PGHOST PGPORT PGUSER PGPASSWORD].freeze
+  STAGES = %w[bundle boot database eager routes tests].freeze
+  IGNORED = %w[.git .bundle .env tmp log storage node_modules].freeze
+
+  attr_reader :root, :state
+
+  def self.create(app, gem, from, to, destination = nil)
+    app = File.realpath(app)
+    UpgradeSupport.name!(gem)
+    raise UpgradeSupport::Error, "Target must be newer than current" unless UpgradeSupport.version!(to) > UpgradeSupport.version!(from)
+    lock = UpgradeSupport::Lockfile.new(File.join(app, "Gemfile.lock"))
+    raise UpgradeSupport::Error, "currentVersion differs from the lockfile" unless lock.version(gem) == from
+    if destination
+      UpgradeSupport.external_output!(destination, app)
+      raise UpgradeSupport::Error, "Destination already exists" if File.exist?(destination)
+      Dir.mkdir(destination, 0o700)
+    else
+      destination = Dir.mktmpdir("gem-upgrade-")
+    end
+    destination = File.realpath(destination)
+    snapshot = File.join(destination, "snapshot")
+    FileUtils.mkdir_p(snapshot)
+    paths = UpgradeSupport.capture("git", "-C", app, "ls-files", "--cached", "--others", "--exclude-standard", "-z").split("\0").uniq
+    manifest = {}
+    paths.each do |relative|
+      next if relative.split("/").any? { |part| IGNORED.include?(part) } || relative.start_with?(".env.")
+      source = File.join(app, relative)
+      next unless File.exist?(source)
+      raise UpgradeSupport::Error, "Unsupported directory or submodule: #{relative}" unless File.file?(source)
+      raise UpgradeSupport::Error, "External symlink: #{relative}" unless UpgradeSupport.inside?(File.realpath(source), app)
+      target = File.join(snapshot, relative)
+      FileUtils.mkdir_p(File.dirname(target))
+      FileUtils.copy_file(source, target, true)
+      manifest[relative] = Digest::SHA256.file(source).hexdigest
+    end
+    raise UpgradeSupport::Error, "Snapshot is missing Gemfile or lockfile" unless %w[Gemfile Gemfile.lock].all? { |name| manifest.key?(name) }
+    state = {
+      "format" => FORMAT, "source" => app, "source_files" => manifest,
+      "source_head" => UpgradeSupport.capture("git", "-C", app, "rev-parse", "HEAD").strip,
+      "gem" => gem, "from" => from, "to" => to, "ruby" => RbConfig.ruby,
+      "id" => SecureRandom.hex(6), "variants" => {}, "review" => nil, "closed" => false
+    }
+    UpgradeSupport.json(File.join(destination, "lab.json"), state)
+    UpgradeSupport.json(File.join(destination, "ruby-defaults.json"),
+                        Gem::Specification.select(&:default_gem?).to_h { |spec| [spec.name, { "version" => spec.version.to_s, "files" => spec.files }] })
+    lab = new(destination)
+    lab.inventory
+    lab.add_variant("baseline", snapshot)
+    lab.save
+    lab
+  end
+
+  def initialize(root)
+    @root = File.realpath(root)
+    @state = UpgradeSupport.read_json(File.join(@root, "lab.json"))
+    raise UpgradeSupport::Error, "Not an upgrade lab" unless @state["format"] == FORMAT
+    UpgradeSupport.external_output!(@root, @state.fetch("source"))
+    raise UpgradeSupport::Error, "Lab was cleaned; create a new one" if @state["closed"]
+  end
+
+  def save
+    UpgradeSupport.json(File.join(root, "lab.json"), state)
+  end
+
+  def assert_source_unchanged!
+    changed = state.fetch("source_files").keys.reject do |relative|
+      path = File.join(state["source"], relative)
+      File.file?(path) && Digest::SHA256.file(path).hexdigest == state["source_files"][relative]
+    end
+    raise UpgradeSupport::Error, "Source changed since snapshot: #{changed.join(', ')}" unless changed.empty?
+  end
+
+  def inventory
+    snapshot = File.join(root, "snapshot")
+    lock = UpgradeSupport::Lockfile.new(File.join(snapshot, "Gemfile.lock"))
+    lines = ["# Upgrade lab inventory", "", "Ruby executable: #{state['ruby']}",
+             "Requested: #{state['gem']} #{state['from']} to #{state['to']}",
+             "Snapshot includes tracked changes and nonignored untracked files; it excludes services, keys in ignored files, and caches.",
+             "", "## Direct dependencies", ""]
+    lock.direct.sort.each { |name| lines << "- #{name}: #{lock.specs.dig(name, 'versions')&.join(', ') || 'not resolved'}" }
+    lines += ["", "## Review before running copied code", "",
+              "Read the project's setup/test instructions, service declarations, initializers, and the references below.",
+              "The lab replaces database.yml and Disk/cloud storage definitions only in each copy.",
+              "REDIS_URL points to a private local Redis process. File cache and temporary files stay in the copy.",
+              "Check custom databases, queue/cache URLs, external APIs, mail, and absolute file paths. Redirect them in the copies or do not run them.",
+              "The lab is not a network or operating-system security sandbox. The environment is allowlisted, but credentials in files and SDK defaults still need review.", ""]
+    UpgradeSupport.file_hashes(snapshot).each_key do |relative|
+      next unless relative.match?(/\.(rb|yml|yaml|rake|ru)\z/) || relative == "Gemfile"
+      File.foreach(File.join(snapshot, relative)).with_index(1) do |line, number|
+        next if line.lstrip.start_with?("#")
+        if line.match?(/ENV|https?:\/\/|redis:\/\/|establish_connection|connects_to|cache_store|queue_adapter|delivery_method|service_configurations/)
+          lines << "- #{relative}:#{number} (service or environment reference; read the source, values omitted here)"
+        end
+      end
+    end
+    File.write(File.join(root, "inventory.md"), lines.join("\n") + "\n")
+  end
+
+  def yaml_config(path)
+    return {} unless File.file?(path)
+    # Do not evaluate application ERB while preparing isolation. Dynamic layouts
+    # need a deliberate adapter configuration rather than a guessed connection.
+    text = File.read(path).gsub(/<%=.*?%>/m, "5")
+    raise UpgradeSupport::Error, "Dynamic YAML layout needs manual isolation: #{path}" if text.include?("<%")
+    YAML.safe_load(text, aliases: true) || {}
+  rescue Psych::Exception => error
+    raise UpgradeSupport::Error, "Cannot safely read #{path}: #{error.message}"
+  end
+
+  def add_variant(label, source, parent: nil)
+    UpgradeSupport.name!(label)
+    raise UpgradeSupport::Error, "Variant already exists: #{label}" if state["variants"].key?(label)
+    directory = File.join(root, "variants", label, "app")
+    raise UpgradeSupport::Error, "Variant directory already exists" if File.exist?(directory)
+    FileUtils.mkdir_p(directory)
+    UpgradeSupport.file_hashes(source).each_key do |relative|
+      target = File.join(directory, relative)
+      FileUtils.mkdir_p(File.dirname(target))
+      FileUtils.copy_file(File.join(source, relative), target, true)
+    end
+    FileUtils.mkdir_p(%w[tmp log storage].map { |name| File.join(directory, name) })
+    variant = { "path" => directory, "parent" => parent, "databases" => [], "runs" => [] }
+    isolate(variant, state["variants"].size)
+    UpgradeSupport.capture("git", "init", "--quiet", directory)
+    UpgradeSupport.capture("git", "-C", directory, "add", "--all")
+    state["variants"][label] = variant
+    save
+    variant
+  end
+
+  def isolate(variant, number)
+    directory = variant.fetch("path")
+    resources = File.expand_path("../resources", directory)
+    FileUtils.mkdir_p(resources)
+    original = yaml_config(File.join(root, "snapshot", "config", "database.yml"))
+    raise UpgradeSupport::Error, "No database configuration; supply an isolated configuration before executing" if original.empty?
+    result = {}
+    %w[development test production].each do |environment|
+      config = original[environment] || original["default"]
+      raise UpgradeSupport::Error, "No #{environment} database configuration" unless config.is_a?(Hash)
+      connections = config.key?("adapter") || config.key?("url") || config.key?("database") ? { "primary" => config } : config
+      converted = connections.to_h do |name, connection|
+        raise UpgradeSupport::Error, "Unknown database layout" unless connection.is_a?(Hash)
+        adapter = connection["adapter"]
+        adapter ||= "postgresql" if connection["url"].to_s.start_with?("postgres:", "postgresql:")
+        identifier = "gu_#{state['id']}_#{number}_#{Digest::SHA256.hexdigest("#{environment}/#{name}")[0, 10]}"
+        base = connection.slice("adapter", "encoding", "pool", "schema_search_path", "migrations_paths", "replica", "database_tasks")
+        case adapter
+        when "postgresql"
+          base.merge!("adapter" => adapter, "database" => identifier)
+          variant["databases"] << { "name" => identifier, "created" => false }
+        when "sqlite3"
+          base.merge!("adapter" => adapter, "database" => File.join(resources, "#{identifier}.sqlite3"))
+        else
+          raise UpgradeSupport::Error, "Adapter #{adapter.inspect} is not supported by automatic isolation; do not execute against the original services"
+        end
+        [name, base]
+      end
+      result[environment] = connections.keys == ["primary"] && (config.key?("adapter") || config.key?("url")) ? converted["primary"] : converted
+    end
+    File.write(File.join(directory, "config", "database.yml"), YAML.dump(result))
+    storage_path = File.join(directory, "config", "storage.yml")
+    if File.file?(storage_path)
+      storage = yaml_config(storage_path).keys.to_h do |name|
+        [name, { "service" => "Disk", "root" => File.join(resources, "storage", Digest::SHA256.hexdigest(name.to_s)[0, 12]) }]
+      end
+      File.write(storage_path, YAML.dump(storage))
+    end
+    cable_path = File.join(directory, "config", "cable.yml")
+    if File.file?(cable_path)
+      cable = yaml_config(cable_path)
+      cable.each_value do |config|
+        config["url"] = "<%= ENV.fetch('REDIS_URL') %>" if config.is_a?(Hash) && config["adapter"] == "redis"
+      end
+      File.write(cable_path, YAML.dump(cable))
+    end
+    variant["resources"] = resources
+    File.write(File.expand_path("../isolation.json", directory), JSON.pretty_generate(result) + "\n")
+  end
+
+  def variant(label)
+    item = state.fetch("variants").fetch(label) { raise UpgradeSupport::Error, "Unknown variant #{label}" }
+    expected = File.join(root, "variants", label, "app")
+    raise UpgradeSupport::Error, "Variant path escaped the lab" unless item["path"] == expected && File.realpath(expected) == expected
+    item
+  end
+
+  def base_env(item)
+    env = ENV.to_h.slice(*ENV_KEYS)
+    host = env["PGHOST"]
+    unless host.nil? || host.start_with?("/") || %w[localhost 127.0.0.1 ::1].include?(host)
+      raise UpgradeSupport::Error, "Only local PostgreSQL is allowed"
+    end
+    env.merge!("PATH" => "#{File.dirname(state['ruby'])}:#{env.fetch('PATH', '/usr/bin:/bin')}",
+               "RAILS_ENV" => "test", "RACK_ENV" => "test", "DISABLE_SPRING" => "1",
+               "PARALLEL_WORKERS" => "1", "RAILS_MAX_THREADS" => "2",
+               "BUNDLE_GEMFILE" => File.join(item["path"], "Gemfile"),
+               "BUNDLE_APP_CONFIG" => File.join(item["resources"], "bundle-config"),
+               "BUNDLE_USER_CONFIG" => File.join(item["resources"], "user-bundle-config"),
+               "BUNDLE_FROZEN" => "false", "BUNDLE_DEPLOYMENT" => "false",
+               "TMPDIR" => File.join(item["path"], "tmp"), "HOME" => ENV.fetch("HOME"))
+    env
+  end
+
+  def bundle(item, *arguments)
+    version = UpgradeSupport::Lockfile.new(File.join(item["path"], "Gemfile.lock")).bundler
+    [state["ruby"], Gem.bin_path("bundler", "bundle", version || ">= 0"), *arguments]
+  end
+
+  def ensure_databases(item)
+    item["databases"].each do |database|
+      next if database["created"]
+      command = ["psql", "-X", "-v", "ON_ERROR_STOP=1", "-d", "postgres", "-c", "CREATE DATABASE \"#{database.fetch('name')}\""]
+      result = UpgradeSupport.run(command, directory: item["path"], env: base_env(item),
+                                  log: File.join(item["resources"], "#{database['name']}.log"), timeout: 30)
+      raise UpgradeSupport::Error, "Could not create isolated database; see #{result['log']}" unless result["success"]
+      database["created"] = true
+      save
+    end
+  end
+
+  def with_redis(item)
+    listener = TCPServer.new("127.0.0.1", 0)
+    port = listener.addr[1]
+    listener.close
+    directory = File.join(item["resources"], "redis")
+    FileUtils.mkdir_p(directory)
+    log = File.open(File.join(directory, "server.log"), "a", 0o600)
+    pid = Process.spawn(base_env(item), "redis-server", "--bind", "127.0.0.1", "--port", port.to_s,
+                        "--dir", directory, "--save", "", "--appendonly", "yes", "--daemonize", "no",
+                        out: log, err: log, unsetenv_others: true, pgroup: true)
+    Timeout.timeout(10) do
+      loop do
+        raise UpgradeSupport::Error, "Private Redis exited; see #{directory}/server.log" if Process.waitpid(pid, Process::WNOHANG)
+        begin
+          socket = TCPSocket.new("127.0.0.1", port)
+          socket.write("INFO server\r\n")
+          header = socket.gets
+          body = header&.start_with?("$") ? socket.read(header.delete_prefix("$").to_i + 2) : ""
+          ready = body.match?(/^process_id:#{pid}\r?$/)
+          socket.close
+          break if ready
+        rescue Errno::ECONNREFUSED
+          sleep 0.05
+        end
+      end
+    end
+    yield "redis://127.0.0.1:#{port}/0"
+  ensure
+    if pid
+      Process.kill("TERM", pid) rescue Errno::ESRCH
+      begin
+        Timeout.timeout(5) { Process.wait(pid) }
+      rescue Timeout::Error
+        Process.kill("KILL", pid) rescue Errno::ESRCH
+        Process.wait(pid) rescue Errno::ECHILD
+      rescue Errno::ECHILD
+        nil
+      end
+    end
+    log&.close
+  end
+
+  def execute(label, stage, command, application: true, frozen: false)
+    raise UpgradeSupport::Error, "Read inventory.md, isolate other services, then run review LAB NOTE" unless state["review"]
+    assert_source_unchanged!
+    item = variant(label)
+    ensure_databases(item) if application
+    number = item["runs"].size + 1
+    prefix = File.join(root, "runs", label, format("%03d-%s", number, stage))
+    FileUtils.mkdir_p(File.dirname(prefix))
+    hashes = UpgradeSupport.file_hashes(item["path"])
+    UpgradeSupport.json(prefix + ".files.json", hashes)
+    FileUtils.copy_file(File.join(item["path"], "Gemfile.lock"), prefix + ".before.lock")
+    File.write(prefix + ".diff", UpgradeSupport.capture("git", "-C", item["path"], "diff", "--no-ext-diff"))
+    env = base_env(item)
+    env["BUNDLE_FROZEN"] = "true" if frozen
+    run = lambda do
+      UpgradeSupport.run(command, directory: item["path"], env: env, log: prefix + ".log",
+                         timeout: Integer(ENV.fetch("GEM_UPGRADE_TIMEOUT", "300")))
+    end
+    result = if application
+               with_redis(item) { |url| env["REDIS_URL"] = url; run.call }
+             else
+               run.call
+             end
+    FileUtils.copy_file(File.join(item["path"], "Gemfile.lock"), prefix + ".lock")
+    result.merge!("variant" => label, "stage" => stage, "rails_env" => env["RAILS_ENV"],
+                  "lock_sha256" => Digest::SHA256.file(prefix + ".lock").hexdigest,
+                  "before_lock_sha256" => Digest::SHA256.file(prefix + ".before.lock").hexdigest,
+                  "lock" => prefix + ".lock", "before_lock" => prefix + ".before.lock",
+                  "files" => prefix + ".files.json", "diff" => prefix + ".diff", "record" => prefix + ".json")
+    relevant = File.readlines(result["log"], chomp: true).reject { |line| line.strip.empty? }
+    runtime = relevant.find { |line| line.start_with?("UPGRADE_RUNTIME ") }
+    if runtime
+      UpgradeSupport.json(File.join(root, "runtime-#{label}.json"), JSON.parse(runtime.delete_prefix("UPGRADE_RUNTIME ")))
+      relevant.delete(runtime)
+    end
+    result["excerpt"] = result["success"] ? relevant.last(6) : relevant.first(16)
+    UpgradeSupport.json(prefix + ".json", result)
+    item["runs"] << result["record"]
+    save
+    assert_source_unchanged!
+    puts JSON.pretty_generate(result.slice("variant", "stage", "success", "exit_status", "timed_out", "seconds", "record", "log", "excerpt"))
+    result["success"]
+  end
+
+  # Only a literal, single-line declaration is rewritten automatically. A
+  # dynamic Gemfile must be edited in the copy, not guessed or evaluated here.
+  def pin(item, version)
+    path = File.join(item["path"], "Gemfile")
+    text = File.read(path)
+    name = state.fetch("gem")
+    pattern = /^(\s*gem\s+)(["'])#{Regexp.escape(name)}\2((?:\s*,\s*["'][^"'\n]*["'])*)([^\n]*)$/
+    matches = text.to_enum(:scan, pattern).map { Regexp.last_match }
+    if matches.one?
+      match = matches.first
+      tail = match[4]
+      unless tail.match?(/\A\s*(?:,\s*\w+:.*)?\s*(?:#.*)?\z/) && !tail.match?(/\b(?:git|path|github|branch|ref):/)
+        raise UpgradeSupport::Error, "Nonliteral or nonregistry gem declaration; edit only the disposable Gemfile"
+      end
+      replacement = "#{match[1]}#{match[2]}#{name}#{match[2]}, \"#{version}\"#{tail}"
+      text[match.begin(0)...match.end(0)] = replacement
+    elsif matches.empty? && !UpgradeSupport::Lockfile.new(File.join(item["path"], "Gemfile.lock")).direct.include?(name)
+      text += "\n# Temporary exact constraint for an upgrade experiment.\ngem #{name.inspect}, #{version.inspect}\n"
+    else
+      raise UpgradeSupport::Error, "Expected one literal gem declaration; edit only the disposable Gemfile"
+    end
+    raise UpgradeSupport::Error, "Gemfile would not parse" unless Ripper.sexp(text)
+    File.write(path, text)
+  end
+
+  def bump(label, version)
+    UpgradeSupport.version!(version)
+    item = add_variant(label, File.join(root, "snapshot"))
+    item["requested_version"] = version
+    save
+    pin(item, version)
+    ok = execute(label, "resolve", bundle(item, "update", state["gem"], "--conservative"), application: false)
+    before = UpgradeSupport::Lockfile.new(File.join(root, "snapshot", "Gemfile.lock"))
+    after = UpgradeSupport::Lockfile.new(File.join(item["path"], "Gemfile.lock"))
+    changes = before.changes(after)
+    UpgradeSupport.json(File.expand_path("../dependencies.json", item["path"]), changes)
+    if ok && after.version(state["gem"]) != version
+      raise UpgradeSupport::Error, "Resolved gem version differs from the requested version"
+    end
+    ok
+  end
+
+  def check(label, only = nil)
+    item = variant(label)
+    raise UpgradeSupport::Error, "Unknown stage #{only}" if only && !STAGES.include?(only)
+    stages = only ? [only] : STAGES
+    defaults = File.join(root, "ruby-defaults.json")
+    unless File.file?(defaults)
+      UpgradeSupport.json(defaults, Gem::Specification.select(&:default_gem?).to_h { |spec| [spec.name, { "version" => spec.version.to_s, "files" => spec.files }] })
+    end
+    stages.each do |stage|
+      rails = [state["ruby"], "bin/rails"]
+      command = case stage
+                when "bundle" then bundle(item, "install", "--local")
+                when "boot"
+                  [*rails, "runner", File.expand_path("lib/runtime_snapshot.rb", __dir__), defaults]
+                when "database" then [*rails, "db:prepare"]
+                when "eager" then [*rails, "zeitwerk:check"]
+                when "routes" then [*rails, "routes"]
+                when "tests"
+                  minitest = Dir.glob(File.join(item["path"], "test", "**", "*_test.rb")).any?
+                  rspec = Dir.glob(File.join(item["path"], "spec", "**", "*_spec.rb")).any?
+                  raise UpgradeSupport::Error, "No single test suite detected; run its documented command through exec" if minitest == rspec
+                  minitest ? [*rails, "test"] : bundle(item, "exec", "rspec")
+                end
+      return false unless execute(label, stage, command, application: stage != "bundle", frozen: stage == "bundle")
+    end
+    true
+  end
+
+  def clean
+    state["variants"].each_value do |item|
+      item["databases"].each do |database|
+        next unless database["created"]
+        raise UpgradeSupport::Error, "Database is not owned by this lab" unless database["name"].match?(/\Agu_#{state['id']}_\d+_[0-9a-f]{10}\z/)
+        result = UpgradeSupport.run(["dropdb", "--if-exists", database["name"]], directory: item["path"],
+                                    env: base_env(item), log: File.join(item["resources"], "#{database['name']}-drop.log"), timeout: 30)
+        raise UpgradeSupport::Error, "Cleanup failed: #{result['log']}" unless result["success"]
+        database["created"] = false
+        save
+      end
+    end
+    state["closed"] = true
+    save
+    assert_source_unchanged!
+    puts "Owned databases removed. Copies, logs and Redis data retained at #{root}. Source hashes unchanged."
+  end
+end
+
+usage = <<~TEXT
+  Usage: gem-upgrade-lab init APP GEM FROM TO [NEW_LAB_DIR]
+         gem-upgrade-lab review LAB "service review and isolation notes"
+         gem-upgrade-lab bump LAB LABEL VERSION
+         gem-upgrade-lab fork LAB EXISTING_LABEL NEW_LABEL
+         gem-upgrade-lab check LAB LABEL [bundle|boot|database|eager|routes|tests]
+         gem-upgrade-lab exec LAB LABEL -- COMMAND [ARG...]
+         gem-upgrade-lab sweep LAB CHANGE_MANIFEST.json
+         gem-upgrade-lab status LAB
+         gem-upgrade-lab clean LAB
+  All application commands use test mode. Read bin/README.md before custom service probes.
+TEXT
+
+if ARGV.empty? || %w[-h --help].include?(ARGV.first)
+  puts usage
+  exit(ARGV.empty? ? 1 : 0)
+end
+
+begin
+  action = ARGV.shift
+  if action == "init"
+    raise UpgradeSupport::Error, usage unless (4..5).cover?(ARGV.size)
+    lab = UpgradeLab.create(*ARGV)
+    puts JSON.pretty_generate("lab" => lab.root, "inventory" => File.join(lab.root, "inventory.md"),
+                              "baseline" => lab.variant("baseline")["path"], "next" => "Read inventory, then review LAB NOTE")
+  else
+    root = ARGV.shift or raise UpgradeSupport::Error, usage
+    lab = UpgradeLab.new(root)
+    File.open(File.join(lab.root, ".command.lock"), "w") do |lock|
+      raise UpgradeSupport::Error, "Another command is using this lab" unless lock.flock(File::LOCK_EX | File::LOCK_NB)
+      lab = UpgradeLab.new(root) # Reload state under the lock.
+      case action
+      when "review"
+        raise UpgradeSupport::Error, "Supply your service isolation notes" unless ARGV.one? && ARGV.first.strip.length >= 20
+        lab.state["review"] = ARGV.first
+        lab.save
+        puts "Service review recorded. Only run code whose other effects you have isolated."
+      when "bump"
+        raise UpgradeSupport::Error, usage unless ARGV.size == 2
+        exit(lab.bump(*ARGV) ? 0 : 1)
+      when "fork"
+        raise UpgradeSupport::Error, usage unless ARGV.size == 2
+        parent, label = ARGV
+        puts JSON.pretty_generate(lab.add_variant(label, lab.variant(parent)["path"], parent: parent))
+      when "check"
+        raise UpgradeSupport::Error, usage unless (1..2).cover?(ARGV.size)
+        exit(lab.check(*ARGV) ? 0 : 1)
+      when "exec"
+        label = ARGV.shift
+        raise UpgradeSupport::Error, usage unless ARGV.shift == "--" && ARGV.any?
+        command = ARGV.dup
+        command[0] = lab.state["ruby"] if command.first == "ruby"
+        command = lab.bundle(lab.variant(label), *command.drop(1)) if command.first == "bundle"
+        command.unshift(lab.state["ruby"]) if command.first == "bin/rails"
+        exit(lab.execute(label, "probe", command) ? 0 : 1)
+      when "sweep"
+        raise UpgradeSupport::Error, usage unless ARGV.one?
+        manifest = UpgradeSupport.read_json(ARGV.first)
+        raise UpgradeSupport::Error, "Manifest does not match this upgrade" unless manifest.values_at("gem", "from", "to") == lab.state.values_at("gem", "from", "to")
+        outcomes = { "baseline" => lab.check("baseline") }
+        manifest.fetch("versions").each do |version|
+          label = "v#{version.tr('.', '_')}"
+          raise UpgradeSupport::Error, "Sweep variant exists; check it explicitly instead" if lab.state["variants"].key?(label)
+          outcomes[label] = lab.bump(label, version) && lab.check(label)
+        end
+        UpgradeSupport.json(File.join(lab.root, "sweep.json"), outcomes)
+        puts JSON.pretty_generate(outcomes)
+        exit(outcomes.values.all? ? 0 : 1)
+      when "status"
+        lab.assert_source_unchanged!
+        puts JSON.pretty_generate(lab.state.slice("gem", "from", "to", "review", "variants"))
+      when "clean"
+        lab.clean
+      else
+        raise UpgradeSupport::Error, usage
+      end
+    end
+  end
+rescue UpgradeSupport::Error, ArgumentError, KeyError, SystemCallError, Gem::Exception => error
+  warn "gem-upgrade-lab: #{error.message}"
+  exit 2
+end

@@ -406,6 +406,17 @@ v12 found in every run, mostly ones reached by reading rather than by a failing
 check. Its records are under
 [`tests/results/20261013-headless/`](tests/results/20261013-headless/).
 
+**A heavier scripted procedure doubled Rails cost without better plans.**
+[Variant v14](tests/planner-variants/v14-astra-procedure) is GPT-6 Astra Max's
+redesign from the same brief: `bin/gem-upgrade-lab` builds isolated copies and
+checks them, and `bin/gem-upgrade-report` checks the plan's required fields
+before the planner returns. Five runs per case scored 18, 14, 20, 15 and 22 on
+Rails (mean 17.8; v12 21.0) at a median of $7.10 and 22.7 minutes; 1 of 2 in
+every Pagy run at $0.96 (v13 2 of 2 at $0.37); 1, 2, 2, 2 and 2 on Faraday
+(mean 1.8) at $1.73; 1 of 2 in every patch-bump run; and 1 of 1 in every no-op
+run. It is rejected. Its records are under
+[`tests/results/20261013-headless/`](tests/results/20261013-headless/).
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:
