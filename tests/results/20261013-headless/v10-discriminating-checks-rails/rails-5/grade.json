@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `enum :status, { draft: 0, ready: 1 }, prefix: true`. 7.0 OK.",
+      "reasons": "Validation: the plan gives no check that persists draft and ready notes and then exercises filters and helpers after reload. Only the overall suite result covers this finding.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `serialize :tags, coder: JSON`. The stored data is the same. This one does **not** work on 7.0",
+      "reasons": "Validation: the plan has no check that reloads existing unequal JSON tags, edits the comma-separated input, and verifies both the stored representation and the array values.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `alias_method :highlight_color, :color` and `alias_method :highlight_color=, :color=`. 7.0 OK.",
+      "reasons": "Validation: the plan relies on existing form tests. It does not reload JSON settings or check that error rendering and existing settings are preserved.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `where(notebook: @notebook)`. ... assert that `GET /notes?notebook_id=` returns only that notebook's notes.",
+      "reasons": "Validation: the check does not use unequal notebook populations and does not test denial of another owner's notebook.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `citation&.doi`. 7.0 OK. ... request the receipt CSV and assert `10.1000/Essays.1` appears.",
+      "reasons": "Validation: the check asserts a single DOI value. It does not compare distinct DOIs in the receipt with the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `transaction { save!; raise ActiveRecord::Rollback unless rows.all? { |r| r.note.save }; true } || false`. 7.0 OK. Check: an invalid second row leaves all counts unchanged. Control: a fully valid CSV imports",
+      "reasons": "Validation: the check is a test-level count. It does not specify a real apply request with fresh PostgreSQL counts proving that nothing survives.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`fragments.sum` over strings** raises `TypeError: String can't be coerced into Integer`. Every export fails. Fix: `fragments.join`.",
+      "reasons": "Validation: there is no real-worker check of the exact ordered Markdown bytes or of the failed-export control. Only the suite result applies.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "7.0 gives `[2] → \"ann\"`, 8.1 gives `[\"2\"] → nil`. Annotations silently disappear from the import preview. Fix: drop `.stringify_keys`.",
+      "reasons": "Validation: the plan relies on the existing import test. It has no check with unequal annotations at lines 2 and 4, a multiline CSV row, and a preview that does not save.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The stored epoch is the same; only the \"24 hours later\" preview text changes. Fix: `Time.at(reminder_epoch + 86_400, in: reminder_at.formatted_offset)`.",
+      "reasons": "Validation: the plan checks only the DST-boundary offset and the epoch. It has no non-boundary control and no wall-clock comparison.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The digest silently covers the reader's local day instead of the documented UTC day. Fix: `requested_at = requested_at.utc` in the mailer.",
+      "reasons": "Validation: there is one subject check at 23:30 in New York. The plan does not use a real queue and worker, does not cross each midnight separately, and does not inspect reservation keys or delivered note membership.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`set(wait_until: <Integer>)` raises `NoMethodError: undefined method 'utc' for an instance of Integer`. ... Fix: `wait_until: Time.at(reminder_epoch)`.",
+      "reasons": "Validation: the plan does not check the real scheduled payload or score, or the persisted schedule time. It also has no replacement or ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The job then crashes into Sidekiq's own retries instead of recording `enrichment_failed`. Fix: `:polynomially_longer` ... Not valid on 7.0, so ship it with the bump.",
+      "reasons": "Validation: there is no persistent-503 scenario counting requests and attempts, and no 503→200 or 401 controls.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`form_with(model: nil, ...)` raises `Passed nil to the :model argument`, so the main notes list returns 500. Fix: remove `model: nil`.",
+      "reasons": "Validation: the plan gives no check that renders and submits the search form and verifies field names, method, and the resulting notes.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: two separate `get` lines. `bin/rails routes` still shows `notes` and `journal` with the same names as before.",
+      "reasons": "Validation: the plan only lists routes. It does not request both URLs as an owner and compare the list behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`show_exceptions = false` now means \"render all errors\".** Five `assert_raises RecordNotFound` tests break ... Fix: `:none` ... 8.x only.",
+      "reasons": "Validation: the plan relies on the suite. It does not explicitly exercise a raised exception and the missing-record policy in both normal and CI eager-loading modes.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "set `allowed_tags` to `ContentHelper.sanitizer.class.allowed_tags.to_a` plus the attachment tag name, `figure`, `figcaption`, `details` and `summary`",
+      "reasons": "Validation: the plan checks details rendering and script stripping. It does not check attachment markup, event handlers, or javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "move the settings to `config/citation_provider.yml`, load them with `config.citation_provider = config_for(:citation_provider)`",
+      "reasons": "Validation: the plan checks only that unset environment variables give a nil URL. It has no fresh-process request with special-character credentials that verifies the actual Basic header and a successful metadata lookup.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `expires_in: [export.expires_at - Time.current, 1.second].max`. ... A `cache_if downloadable?` variant broke that test.",
+      "reasons": "Validation: the plan proposes an expired-export page check. It does not cover before and after the deadline, cached versus fresh reads, or authoritative download expiry and ownership.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `coder: YAML`. The stored YAML is unchanged (run).",
+      "reasons": "Validation: the plan does not create, edit, and reload unequal preferences or check the export heading with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "Repair: remove `:slug` from `notebook_params`. 7.0 OK. The hidden field and its test can stay.",
+      "reasons": "Recommendation: the plan removes slug from the shared params without saying how slug assignment on creation is preserved. Validation: the plan offers only an update-with-slug repro, with no tests for creation or for the persisted slug.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Run result: `no implicit conversion of Date into String (TypeError)` in `Notebook#daily_note_counts`. ... Repair: `[day.to_date, count]`.",
+      "reasons": "Validation: the plan proposes the activity report under 7.2 defaults. It has no decoding off/on comparison, asymmetric UTC date counts, empty-report check, or ownership control.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "Adopting it means a matching ETag alone returns 304. That seems fine; not run.",
+      "reasons": "Impact: the plan states a generic consequence rather than the specific change from 200-with-bytes to 304 when an ETag list is combined with an older If-Modified-Since. Recommendation: 'seems fine' is not an explicit keep or adopt decision backed by evidence. Validation: the plan proposes no freshness test.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A digest job queued by 8.1 and run by a 7.0 worker fails ... Preparatory fix: `DigestJob.perform_later(self, requested_at, reading_completion.to_s)`. ... from 7.0 to 8.1, already work (run).",
+      "reasons": "Validation: the plan covers both cross-version directions. It lacks same-version controls and does not verify the exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 21,
+  "cost_usd": 0.345748,
+  "duration_ms": 84500
+}

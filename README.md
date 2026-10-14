@@ -339,6 +339,18 @@ in one. The [Pagy](tests/results/20261013-headless/v9-one-safe-repair-pagy/summa
 and [Faraday](tests/results/20261013-headless/v9-one-safe-repair-faraday/summary.json)
 records keep each run's plan, receipt and grade.
 
+**Asking for discriminating checks raised recall but not full validation.**
+[Variant v10](tests/planner-variants/v10-discriminating-checks) asks v9's planner
+for a check per finding that fails without the repair, passes with it, includes a
+control, and names its data and assertions. Five Rails runs scored 21, 22, 22, 21
+and 21 (mean 21.4) at a median of 13.2 minutes and $2.96. Validation was fully
+specified for 1 of 115 findings; 109 were partial. Plans now state checks such as
+"for a CSV with one good row and one untitled row, the request returns 422 but
+saves 1 import and 1 note", but omit parts of the key's scenario, such as fresh
+PostgreSQL counts, unequal data or another owner's records. The
+[v10 record](tests/results/20261013-headless/v10-discriminating-checks-rails/summary.json)
+keeps each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:
