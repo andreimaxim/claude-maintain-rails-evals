@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum :status, { draft: 0, ready: 1 }, prefix: true`. Prep-safe. | p05: `status_ready?` and the status scope work",
+      "reasons": "Validation checks a helper and a scope but does not persist distinct draft and ready notes and check filters and helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, coder: JSON`. **Ship with the 7.1 bump only.** On 7.0 the keyword is ignored and tags are stored as `\"---\\n- beta\\n- alpha\\n\"`",
+      "reasons": "Validation checks storage and an existing-row read but does not exercise comma-separated input editing.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`alias_method :highlight_color, :color` plus `alias_method :highlight_color=, :color=`",
+      "reasons": "Validation checks the write and the color validation but does not reload settings or check form and error rendering.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`where(notebook: @notebook)`. Prep-safe. | p09: notebook A included, B excluded.",
+      "reasons": "Validation has no other-owner control and no foreign-notebook denial check.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`citation&.doi`. Prep-safe. | p06: receipt shows the DOI; control: uncited row is blank.",
+      "reasons": "Validation does not compare distinct DOI values in the downloaded receipt against the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Raise `ActiveRecord::Rollback` and return `saved == true`. | p06: an invalid row saves nothing and returns false; control: a valid import applies.",
+      "reasons": "Validation does not send a real apply request with a valid row followed by an invalid row, and does not check fresh PostgreSQL counts.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`fragments.join`. Prep-safe. | p02: two notes come out oldest first; control: an empty notebook gives `\"# Empty\\n\"`",
+      "reasons": "Validation does not run the real worker to check exact Markdown bytes or the behavior of a failed export.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Remove `.stringify_keys`. Prep-safe. | p10: line 2 annotation shown; control: line 4 has none.",
+      "reasons": "Validation lacks unequal annotations at lines 2 and 4, a multiline CSV row, and a check that the preview saves nothing.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Hint shows `08:00-05:00` instead of `09:00-04:00` across the DST change ... `Time.at(reminder_epoch + 86_400, in: reminder_at.formatted_offset)`",
+      "reasons": "Validation covers the DST crossing but has no non-boundary control and does not separately compare offset and wall-clock time.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Subject `October 04, 2026` instead of `October 05` ... `params[:requested_at].utc`. Prep-safe.",
+      "reasons": "Validation compares cross-version payloads but does not cross each midnight separately or inspect reservation keys and delivered note membership.",
+      "actionable": true
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "An 8.1 payload becomes ...BigDecimalSerializer... 7.0.8.7 (rollback) then fails ... Pass `reading_completion.to_s`.",
+      "reasons": "Validation claims both directions but does not show same-version controls or the exact delivered percentage across the full matrix.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`wait_until: Time.at(reminder_epoch)`. Prep-safe. | p07: job scheduled at the exact epoch, job id saved, postponing adds 24h",
+      "reasons": "Inspecting the real Sidekiq scheduled payload or score is only proposed after deploy, and there is no ownership control.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Removed in 7.2 | `wait: :polynomially_longer` from 7.1 (raises on 7.0, executed).",
+      "reasons": "Impact only names the removal without stating the retry consequence, and validation checks delay values rather than the persistent-503, 503->200 and 401 scenarios.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Remove `model: nil`. Prep-safe. | Search-form request tests pass on r8051h.",
+      "reasons": "Validation is a generic test pass and does not check field names, method or resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Two routes, the first with `as: :notes`. Prep-safe. | p09: `notes_path == \"/notes\"`, `/journal` routes to `notes#index`",
+      "reasons": "Validation checks routing but does not request both URLs as an owner and compare the authorized list behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "7.1 warns that `false` is deprecated | Use `:none` **only from 7.1**.",
+      "reasons": "Impact only mentions a deprecation warning, not that the exception policy is no longer preserved, and validation is just a green suite.",
+      "actionable": false
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "use `allowed_tags` or the sanitizer's default list plus attachment/figure/figcaption, then add `details`, `summary`",
+      "reasons": "Validation removes scripts but does not check event handlers or javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Add `config/citation_provider.yml` (same ERB, `.to_json` quoting), set `config.citation_provider = config_for(:citation_provider)`",
+      "reasons": "Validation does not check special-character credentials in the actual Basic header or the bounded failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`exports/_export` computes `expires_in: expires_at - Time.current`, which is negative for expired exports and would raise. Clamp it first. (Proposed probe)",
+      "reasons": "Only an unspecified proposed probe is given, with no before/after-deadline, cache-hit or download-expiry checks.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`Notebook serialize :preferences` (no coder) would raise. Give it a coder; stored data is YAML.",
+      "reasons": "No validation is proposed.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`NotebooksController#update` resubmits `:slug` (the field is `attr_readonly`) and would raise. First stop permitting `:slug`.",
+      "reasons": "No validation is proposed.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`Notebook#daily_note_counts` calls `Date.iso8601` on the raw value and would fail on a Date. Repair before enabling.",
+      "reasons": "The repair is not specified (for example, accepting both String and Date), and no validation is given.",
+      "actionable": false
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "`ExportDownloadsController stale?(etag:, last_modified:)` changes only when both headers are sent.",
+      "reasons": "Impact does not state the 200-to-304 change, and the plan gives no keep/adopt decision and no validation.",
+      "actionable": false
+    }
+  },
+  "actionable": 19,
+  "cost_usd": 0.197104,
+  "duration_ms": 50698
+}

@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `enum :status, { draft: 0, ready: 1 }, prefix: true`. Safe before the bump.\n- Check: P8 (`status_ready?`) plus the status filter tests.",
+      "reasons": "Validation names a helper probe and existing filter tests, but it does not persist unequal draft/ready notes and check helpers and filters after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `serialize :tags, coder: JSON`. Ship it with the 7.1 bump: 7.0 has no `coder:` keyword",
+      "reasons": "Validation checks stored and reloaded representations but leaves out editing the comma-separated input.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: plain `highlight_color` / `highlight_color=` methods that call `color`.",
+      "reasons": "Validation checks save and invalid-colour rejection but not reload, form/error rendering or preservation of existing settings.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `where(notebook: @notebook)`. Safe before the bump.\n- Check (P13): filtered to `[\"in\"]`; the other notebook's note is excluded.",
+      "reasons": "Validation lacks the other-owner and foreign-notebook denial controls, and the populations are not unequal.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `citation&.doi`. Safe before the bump.\n- Check (P2): `Cited,10.1000/probe.1`; the control (a note with no citation) stays blank.",
+      "reasons": "The probe checks a single DOI and does not compare a downloaded receipt with several distinct persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "raise ActiveRecord::Rollback unless rows.all? { |row| row.note.save }",
+      "reasons": "The probe counts imports and notes only, not citations, and it is not a real apply request.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `fragments.join`. Safe before the bump.\n- Check (P12): the exact Markdown file content is identical on every version.",
+      "reasons": "Validation does not run the real worker and has no failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: use `@import.annotations` directly. Safe before the bump.\n- Check (P14): `a[2] == \"Note A\"`.",
+      "reasons": "Validation lacks unequal annotations at lines 2 and 4, a multiline CSV row and a no-save preview check.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "Fix: `Time.at(reminder_epoch + 86_400, in: reminder_at.formatted_offset)`. Safe before the bump.\n- Check (P16): same instant as before, the offset is kept across the DST change, and a summer date (control) is unchanged.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: in the mailer, `requested_at = params[:requested_at].utc`. Safe before the bump.\n- Check (P4): every repaired reader produces Oct 05",
+      "reasons": "Validation does not use a real queue/worker that crosses each midnight separately, and it does not inspect reservation keys.",
+      "actionable": true
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0.x worker reading a 7.2+ payload: `ActiveJob::DeserializationError` ... Fix: pass `reading_completion.to_s`.",
+      "reasons": "The payload matrix is cited, but it does not specify the same-version controls or the exact delivered completion percentage.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `wait_until: Time.at(reminder_epoch)`. Safe before the bump.\n- Check (P5): the Sidekiq schedule score equals 1793451600",
+      "reasons": "Validation checks the schedule score but not the persisted schedule time or the replacement and ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`RuntimeError: Couldn't determine a delay based on :exponentially_longer`.\n- Fix: `wait: ->(executions) { executions**4 + 2 }`.",
+      "reasons": "Impact names the error but not the loss of bounded ActiveJob retries and the fall-through to Sidekiq retries; validation checks only the first delay, without the persistent-503, 503->200 and 401 scenarios.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: drop `model:`. Safe before the bump.\n- Check: the \"renders an unbound search form\" test passes.",
+      "reasons": "Validation relies on one existing test, with no submit check of field names, method and resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: two separate `get` lines. Safe before the bump.\n- Check (P18): both paths route to `notes#index`.",
+      "reasons": "Validation checks routing only, with no requests as an owner and no comparison of list behaviour or helpers.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: `:none`. Ship it with 7.1: on 7.0, `:none` counts as true and would render exceptions",
+      "reasons": "The only validation is the suite results; there is no explicit raised-exception, missing-record or eager-loading mode check.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "take `allowed_tags || (sanitizer.class.allowed_tags.to_a + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\"])` and add `details`/`summary`",
+      "reasons": "Validation lacks attachment rendering and does not exclude event handlers or javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "In `config/application.rb`: `config.x.citation_provider = config_for(:citation_provider)`.",
+      "reasons": "Validation checks the URL and a fresh boot but not special-character credentials, the actual Basic header or failure behaviour.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "uses a negative `expires_in`, which then raises `ArgumentError: Cache expiration time is invalid, cannot be negative: -5` (executed at the cache-store level). Guard the cache call first.",
+      "reasons": "\"Guard the cache call\" is vague and does not specify clamping to zero, so it could mean the contract-breaking cache_if approach; validation was run only at the cache-store level, without the before/after-deadline or download checks.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`serialize :preferences` (Notebook) has no coder and would fail (source-based). Add `coder: YAML` first.",
+      "reasons": "There is no validation scenario, and the finding is marked source-based only.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "incorrect",
+      "applicability": "partial",
+      "recommendation": "missing",
+      "validation": "partial",
+      "quote": "D14 `raise_on_assign_to_attr_readonly` | false → true | Submitting the same slug did not raise (executed); a tampered slug would.",
+      "reasons": "The plan says an ordinary update that resubmits the same slug does not raise, which contradicts the key; it does not name the controller or form; it offers no repair; and the one check it ran is a partial scenario that led to the wrong conclusion.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "incorrect",
+      "applicability": "incorrect",
+      "recommendation": "missing",
+      "validation": "incorrect",
+      "quote": "D30 `decode_dates` | — | No effect on `daily_note_counts` (executed).",
+      "reasons": "The plan says the gate has no effect, but populated reports raise; it gives no repair; and its executed check wrongly cleared the finding.",
+      "actionable": false
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "D33 `strict_freshness` | — | Affects `ExportDownloadsController#stale?`. Proposed.",
+      "reasons": "The plan names the controller without the 200-to-304 consequence; it gives only a blanket \"don't enable\" instead of a reasoned keep/adopt decision; and it proposes no ETag/If-Modified-Since tests.",
+      "actionable": false
+    }
+  },
+  "actionable": 18,
+  "cost_usd": 0.2255,
+  "duration_ms": 66128
+}

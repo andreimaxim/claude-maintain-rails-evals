@@ -458,6 +458,16 @@ first five Rails runs stopped on the Claude session limit and were rerun after
 the reset. Its records are under
 [`tests/results/20261013-headless/`](tests/results/20261013-headless/).
 
+**GPT-6.1 Sol's clean-room procedure scored second best on Rails at two and a
+half times the cost.** [Variant v18](tests/planner-variants/v18-sol-clean-procedure)
+came from the same clean-room brief. Its planner follows eight steps around
+`bin/gem-history` (commits and upgrade guides between exact release tags) and
+`bin/upgrade-lab` (copies, isolated services, staged checks and probes). Five
+Rails runs scored 19, 18, 21, 18 and 20 (mean 19.2) at a median of $7.76 and
+36.8 minutes, one run reaching $12.43 and 54 minutes. It is rejected on cost;
+its training cases were skipped. Its records are under
+[`tests/results/20261013-headless/`](tests/results/20261013-headless/).
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

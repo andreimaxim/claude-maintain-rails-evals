@@ -1,0 +1,341 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Ruby stdlib only. Rails, Bundler, PostgreSQL tools and redis-server are executables.
+require "json"
+require "fileutils"
+require "digest"
+require "find"
+require "socket"
+require "timeout"
+require "securerandom"
+require "tmpdir"
+require "base64"
+
+module UpgradeLab
+  extend self
+  OMIT = %w[.git .bundle .env node_modules vendor log tmp storage coverage .upgrade-services .upgrade-home].freeze
+
+  def files(root)
+    list = []
+    Find.find(root) do |path|
+      next if path == root
+      name = File.basename(path)
+      if File.symlink?(path) || OMIT.include?(name) || name.start_with?(".env.") || name.end_with?(".key")
+        Find.prune if File.directory?(path) && !File.symlink?(path)
+        next
+      end
+      list << path.delete_prefix(root + "/") if File.file?(path)
+    end
+    list.sort
+  end
+
+  def hashes(root)
+    files(root).to_h { |name| [name, Digest::SHA256.file(File.join(root, name)).hexdigest] }
+  end
+
+  def changes(snapshot, path)
+    before, after = [snapshot, path].map { |directory| hashes(directory) }
+    (before.keys | after.keys).filter_map do |name|
+      next if before[name] == after[name]
+      { path: name, before: before[name], after: after[name],
+        content_base64: after[name] && Base64.strict_encode64(File.binread(File.join(path, name))) }
+    end
+  end
+
+  def json(path, value)
+    File.write(path, JSON.pretty_generate(value) + "\n")
+  end
+
+  def copy(source, destination)
+    FileUtils.mkdir_p(destination)
+    files(source).each do |name|
+      target = File.join(destination, name)
+      FileUtils.mkdir_p(File.dirname(target))
+      FileUtils.cp(File.join(source, name), target, preserve: true)
+    end
+  end
+
+  def load_session(path)
+    root = File.realpath(path)
+    data = JSON.parse(File.read(File.join(root, "session.json")))
+    raise "Not an upgrade-lab session" unless data["format"] == 1
+    raise "Original application changed since create; start a new session" unless hashes(data.fetch("source")) == data.fetch("hashes")
+    [root, data]
+  end
+
+  def create(app, destination)
+    app = File.realpath(app)
+    root = File.expand_path(destination)
+    # Resolve parent symlinks before checking whether the destination is in APP.
+    root = File.join(File.realpath(File.dirname(root)), File.basename(root))
+    raise "Session must be outside the application" if root == app || root.start_with?(app + "/")
+    raise "Destination already exists" if File.exist?(root)
+    raise "Gemfile and Gemfile.lock are required" unless %w[Gemfile Gemfile.lock].all? { |f| File.file?(File.join(app, f)) }
+    FileUtils.mkdir_p(root, mode: 0o700)
+    copy(app, File.join(root, "snapshot"))
+    json(File.join(root, "session.json"), { format: 1, source: app, hashes: hashes(app) })
+    database_config = File.join(app, "config", "database.yml")
+    adapters = File.file?(database_config) ? File.read(database_config).scan(/^\s*adapter:\s*["']?(\w+)/).flatten.uniq : []
+    json(File.join(root, "isolation.json"), {
+      reviewed: false, notes: "Review inventory.md and connection code before setting reviewed to true.",
+      databases: ["primary"], storage_services: %w[local test], env: {}, test_command: nil,
+      database_adapter: adapters == ["postgresql"] ? "postgresql" : nil, database_options: {},
+      timeout_seconds: 300, pg_bin: ENV["PG_BIN"] || Dir.glob("/usr/lib/postgresql/*/bin").sort.last || ""
+    })
+    inventory = ["# Isolation review", "", "The copy is not a security sandbox. Do not execute untrusted application code.",
+                 "Review all connection code before running it. Replace or disable external services in the snapshot.",
+                 "isolation.json must list every database role and disk storage service name.",
+                 "env values can use {redis_url}, {database_url}, {storage_root}, and {variant_root}.",
+                 "Remove hardcoded endpoints, dotenv loaders, credentials access, network jobs and external storage.",
+                 "Default environment is test. No source environment secrets or local bundle config are copied.",
+                 "Database configuration and storage configuration will be replaced in each variant.", "", "## Files to read"]
+    files(app).each do |name|
+      next unless name.match?(/\A(?:config\/|app\/jobs\/|lib\/|Gemfile|\.ruby-version|\.rspec|test\/test_helper|spec\/.*helper|Rakefile)/)
+      inventory << "- #{name}"
+    end
+    inventory += ["", "## Connection and environment references (text search, not a safety proof)"]
+    files(app).grep(/\.(?:rb|ya?ml|rake|ru)\z|\AGemfile\z/).each do |name|
+      File.foreach(File.join(app, name)).with_index(1) do |line, number|
+        next unless line.match?(/ENV\[|ENV\.fetch|redis|postgres|mysql|sqlite|https?:|DATABASE|cache_store|queue_adapter|storage|credentials|dotenv/i)
+        inventory << "#{name}:#{number}: #{line.strip}"
+      end
+    end
+    File.write(File.join(root, "inventory.md"), inventory.join("\n") + "\n")
+    puts "Created #{root}. Read inventory.md; edit snapshot connection code and isolation.json before executing."
+  end
+
+  def add(root, name, gem_name = nil, version = nil)
+    raise "Invalid variant name" unless name&.match?(/\A[a-zA-Z0-9_-]+\z/)
+    path = File.join(root, "variants", name)
+    raise "Variant exists" if File.exist?(path)
+    if gem_name
+      raise "Give a gem and exact version" unless gem_name.match?(/\A[\w-]+\z/) && version&.match?(/\A\d+(?:\.[0-9A-Za-z]+)+\z/)
+    end
+    copy(File.join(root, "snapshot"), path)
+    # Keep a usable variant when a complex Gemfile needs a manual edit in the copy.
+    json(File.join(path, ".upgrade-variant.json"), { gem: gem_name, version: version })
+    if gem_name
+      gemfile = File.join(path, "Gemfile")
+      lines = File.readlines(gemfile)
+      declarations = lines.each_index.select { |i| lines[i].match?(/\A\s*gem\s+["']#{Regexp.escape(gem_name)}["']/) }
+      raise "Multiple declarations; edit only the copied Gemfile manually" if declarations.size > 1
+      if declarations.empty?
+        # A transitive dependency can be constrained by adding a direct declaration.
+        raise "Nonstandard declaration; edit only the copied Gemfile manually" if lines.any? { |line| line.match?(/gem.*["']#{Regexp.escape(gem_name)}["']/) }
+        lines << "\ngem #{gem_name.dump}, #{("= " + version).dump}\n"
+      else
+        i = declarations.first
+        match = lines[i].match(/\A(\s*gem\s+["']#{Regexp.escape(gem_name)}["'])(.*)\n?\z/)
+        tail = match[2].sub(/\A(?:,\s*["'][^"']*["'])+/, "")
+        unless tail.strip.empty? || tail.match?(/\A\s*#/) || tail.match?(/\A,\s*\w+:.*[^,\\]\s*\z/)
+          raise "Multiline or nonstandard declaration; edit only the copied Gemfile manually"
+        end
+        lines[i] = "#{match[1]}, #{("= " + version).dump}#{tail}\n"
+      end
+      File.write(gemfile, lines.join)
+    end
+    puts path
+  end
+
+  def execute(argv, env, cwd, log, seconds)
+    started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    status = nil
+    File.open(log, "w", 0o600) do |output|
+      pid = Process.spawn(env, *argv, chdir: cwd, out: output, err: output, unsetenv_others: true, pgroup: true)
+      begin
+        Timeout.timeout(seconds) { _, status = Process.wait2(pid) }
+      rescue Timeout::Error, Interrupt
+        Process.kill("TERM", -pid) rescue nil
+        sleep 1
+        Process.kill("KILL", -pid) rescue nil
+        Process.wait(pid) rescue nil
+      end
+    end
+    highlights = File.foreach(log).lazy.grep(/Error|Exception|aborted!|Could not (?:find|resolve)|\d+ (?:runs|examples),|EAGER_LOAD_OK/).take(4).map(&:strip).force
+    { command: argv, exit: status ? (status.exitstatus || 128 + status.termsig) : 124,
+      seconds: (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started).round(2), log: log, highlights: highlights }
+  end
+
+  def with_services(root, path, config, env)
+    raise "The lab supports PostgreSQL only; confirm the original adapter" unless config["database_adapter"] == "postgresql"
+    services = File.join(path, ".upgrade-services")
+    FileUtils.mkdir_p(services)
+    pg = ->(name) { config.fetch("pg_bin").empty? ? name : File.join(config.fetch("pg_bin"), name) }
+    data = File.join(services, "pg")
+    unless File.file?(File.join(data, "PG_VERSION"))
+      result = execute([pg.call("initdb"), "-D", data, "-A", "trust", "--no-locale", "--encoding=UTF8", "-U", "upgrade_lab"], env, path, File.join(services, "initdb.log"), 60)
+      raise "initdb failed: #{result[:log]}" unless result[:exit] == 0
+    end
+    # Short private socket path avoids PostgreSQL's Unix socket path length limit.
+    socket = Dir.mktmpdir("upgrade-pg-")
+    pg_started = false
+    redis_pid = nil
+    begin
+      result = execute([pg.call("pg_ctl"), "-D", data, "-l", File.join(services, "postgres.log"),
+                        "-o", "-h '' -k #{socket} -p 5432", "-w", "start"], env, path, File.join(services, "pg-start.log"), 60)
+      raise "PostgreSQL failed: #{result[:log]}" unless result[:exit] == 0
+      pg_started = true
+      names = config.fetch("databases")
+      raise "databases must include primary" unless names.include?("primary")
+      names.each { |name| raise "Invalid database role" unless name.match?(/\A[a-zA-Z0-9_]+\z/) }
+      env.merge!("PGHOST" => socket, "PGPORT" => "5432", "PGUSER" => "upgrade_lab")
+      names.each do |name|
+        db = "upgrade_#{name.downcase}"
+        query = execute([pg.call("psql"), "-d", "postgres", "-Atc", "SELECT 1 FROM pg_database WHERE datname = '#{db}'"], env, path, File.join(services, "exists-#{name}.log"), 30)
+        raise "Cannot inspect isolated databases" unless query[:exit] == 0
+        next if File.read(query[:log]).strip == "1"
+        result = execute([pg.call("createdb"), db], env, path, File.join(services, "create-#{name}.log"), 30)
+        raise "createdb failed: #{result[:log]}" unless result[:exit] == 0
+      end
+      redis_socket = File.join(socket, "redis.sock")
+      redis_dir = File.join(services, "redis")
+      FileUtils.mkdir_p(redis_dir)
+      redis_log = File.open(File.join(services, "redis.log"), "a")
+      redis_pid = Process.spawn(env, "redis-server", "--port", "0", "--unixsocket", redis_socket, "--unixsocketperm", "700",
+                                "--dir", redis_dir, "--save", "", "--appendonly", "yes",
+                                out: redis_log, err: redis_log, unsetenv_others: true, pgroup: true)
+      Timeout.timeout(15) do
+        loop do
+          begin
+            UNIXSocket.open(redis_socket) { |s| s.write("PING\r\n"); raise "Redis did not answer PONG" unless s.gets == "+PONG\r\n" }
+            break
+          rescue Errno::ECONNREFUSED, Errno::ENOENT
+            sleep 0.1
+          end
+        end
+      end
+      database_url = "postgresql:///upgrade_primary?host=#{socket}&user=upgrade_lab"
+      substitutions = { "redis_url" => "unix://#{redis_socket}?db=0", "database_url" => database_url,
+                        "storage_root" => File.join(path, "storage"), "variant_root" => path }
+      env.merge!("DATABASE_URL" => database_url, "REDIS_URL" => substitutions["redis_url"])
+      config.fetch("env").each do |key, value|
+        raise "Cannot override isolation variable #{key}" if %w[DATABASE_URL PGHOST PGPORT PGUSER RAILS_ENV RACK_ENV BUNDLE_GEMFILE RUBYOPT].include?(key)
+        env[key] = value.gsub(/\{(\w+)\}/) { substitutions.fetch(Regexp.last_match(1)) }
+      end
+      roles = names.to_h do |name|
+        options = config.fetch("database_options", {}).fetch(name, {})
+        allowed = %w[encoding collation ctype pool timeout schema_search_path migrations_paths schema_dump database_tasks replica variables]
+        raise "Unsupported database options for #{name}" unless (options.keys - allowed).empty?
+        [name, options.merge(adapter: "postgresql", host: socket, port: 5432, username: "upgrade_lab", database: "upgrade_#{name.downcase}")]
+      end
+      databases = %w[test development production].to_h { |environment| [environment, roles] }
+      json(File.join(path, "config", "database.yml"), databases)
+      storage = config.fetch("storage_services").to_h do |name|
+        raise "Invalid storage service name" unless name.match?(/\A[a-zA-Z0-9_-]+\z/)
+        [name, { service: "Disk", root: File.join(path, "storage", name) }]
+      end
+      json(File.join(path, "config", "storage.yml"), storage)
+      yield env
+    ensure
+      if redis_pid
+        Process.kill("TERM", redis_pid) rescue nil
+        Process.wait(redis_pid) rescue nil
+      end
+      redis_log&.close
+      if pg_started
+        execute([pg.call("pg_ctl"), "-D", data, "-m", "fast", "-w", "stop"], env, path, File.join(services, "pg-stop.log"), 30)
+      end
+      FileUtils.remove_entry(socket) if File.directory?(socket)
+    end
+  end
+
+  def run(root, session, name, action, arguments)
+    raise "Invalid variant" unless name&.match?(/\A[a-zA-Z0-9_-]+\z/)
+    path = File.join(root, "variants", name)
+    variant = JSON.parse(File.read(File.join(path, ".upgrade-variant.json")))
+    config = JSON.parse(File.read(File.join(root, "isolation.json")))
+    raise "Review inventory.md and isolation.json first" unless config["reviewed"] == true
+    env = ENV.to_h.select { |key, _| %w[PATH LANG LC_ALL SSL_CERT_FILE SSL_CERT_DIR GEM_HOME GEM_PATH].include?(key) }
+    home = File.join(path, ".upgrade-home")
+    FileUtils.mkdir_p(home)
+    env.merge!("HOME" => home, "RAILS_ENV" => "test", "RACK_ENV" => "test", "DISABLE_SPRING" => "1",
+               "BUNDLE_GEMFILE" => File.join(path, "Gemfile"), "BUNDLE_PATH" => File.join(root, "bundle"),
+               "BUNDLE_USER_HOME" => File.join(home, ".bundle"), "BUNDLE_IGNORE_CONFIG" => "1",
+               "SECRET_KEY_BASE" => Digest::SHA256.hexdigest(root))
+    commands = {
+      "resolve" => variant["gem"] ? ["bundle", "update", variant["gem"], "--conservative"] : ["bundle", "install"],
+      "prepare" => %w[bundle exec rails db:prepare],
+      "boot" => ["bundle", "exec", "rails", "runner", "puts({rails: Rails.version, environment: Rails.env}.inspect)"],
+      "eager" => ["bundle", "exec", "rails", "runner", "Rails.application.eager_load!; puts 'EAGER_LOAD_OK'"],
+      "routes" => %w[bundle exec rails routes],
+      "tests" => config["test_command"] || (File.directory?(File.join(path, "spec")) ? %w[bundle exec rspec] : %w[bundle exec rails test])
+    }
+    stages = action == "check" ? commands.keys : [action]
+    raise "Unknown action #{action}" unless action == "exec" || stages.all? { |s| commands.key?(s) }
+    log_root = File.join(root, "runs", "#{Time.now.utc.strftime('%Y%m%dT%H%M%S')}-#{name}-#{SecureRandom.hex(3)}")
+    FileUtils.mkdir_p(log_root)
+    results = []
+    with_services(root, path, config, env) do |isolated|
+      # Includes all overrides, but no inherited credentials. Treat logs as private.
+      json(File.join(log_root, "environment.json"), isolated)
+      json(File.join(log_root, "changes-before.json"), changes(File.join(root, "snapshot"), path))
+      stages.each do |stage|
+        command = stage == "exec" ? arguments : commands.fetch(stage)
+        raise "Expected argv after exec --" unless command.is_a?(Array) && !command.empty?
+        inputs = command.select { |arg| arg.end_with?(".rb") && File.file?(File.expand_path(arg, path)) }.to_h do |arg|
+          input = File.expand_path(arg, path)
+          [input, { sha256: Digest::SHA256.file(input).hexdigest, content_base64: Base64.strict_encode64(File.binread(input)) }]
+        end
+        json(File.join(log_root, "inputs-#{stage}.json"), inputs) unless inputs.empty?
+        result = execute(command, isolated, path, File.join(log_root, "#{stage}.log"), config.fetch("timeout_seconds"))
+        if stage == "resolve" && result[:exit] == 0 && variant["gem"]
+          locked = File.read(File.join(path, "Gemfile.lock"))
+          expected = /^    #{Regexp.escape(variant['gem'])} \(#{Regexp.escape(variant['version'])}(?:-[^)]+)?\)$/
+          unless locked.match?(expected)
+            File.open(result[:log], "a") { |file| file.puts "Requested exact gem version was not resolved" }
+            result[:validation_error] = "Requested exact gem version was not resolved"
+          end
+        end
+        if stage == "tests" && File.read(result[:log]).match?(/\b0 (?:runs|examples)\b|No examples found/i)
+          result[:coverage] = "empty suite; exit zero is not validation"
+        end
+        results << result.merge(stage: stage)
+        puts "#{name} #{stage}: exit #{result[:exit]} (#{result[:seconds]}s), #{result[:log]}"
+        result[:highlights].each { |line| puts "  #{line}" }
+        puts "  #{result[:coverage] || result[:validation_error]}" if result[:coverage] || result[:validation_error]
+        # Do not attribute checks to the target when resolution failed.
+        break if stage == "resolve" && (result[:exit] != 0 || result[:validation_error])
+      end
+    end
+    json(File.join(log_root, "changes-after.json"), changes(File.join(root, "snapshot"), path))
+    %w[Gemfile Gemfile.lock].each { |f| FileUtils.cp(File.join(path, f), log_root) if File.file?(File.join(path, f)) }
+    json(File.join(log_root, "result.json"), { variant: variant, ruby: RUBY_DESCRIPTION, results: results,
+      configuration: config, files: hashes(path), source_unchanged: hashes(session.fetch("source")) == session.fetch("hashes") })
+    raise "Original source changed during experiment" unless hashes(session.fetch("source")) == session.fetch("hashes")
+    results.all? { |result| result[:exit] == 0 && !result[:coverage] && !result[:validation_error] } ? 0 : 1
+  end
+
+  def main(args)
+    command = args.shift
+    if command == "create" && args.size == 2
+      create(*args)
+      return 0
+    end
+    root, session = load_session(args.shift || raise("Missing session"))
+    File.open(File.join(root, ".lock"), "w") do |lock|
+      raise "Another experiment is running" unless lock.flock(File::LOCK_EX | File::LOCK_NB)
+      case command
+      when "add"
+        raise "add SESSION NAME [GEM VERSION]" unless [1, 3].include?(args.size)
+        add(root, *args)
+        0
+      when "run"
+        name, action, *arguments = args
+        arguments.shift if arguments.first == "--"
+        run(root, session, name, action, arguments)
+      else
+        raise "Usage: upgrade-lab create APP SESSION | add SESSION NAME [GEM VERSION] | run SESSION NAME check|resolve|prepare|boot|eager|routes|tests|exec [-- ARGV...]"
+      end
+    end
+  end
+end
+
+if $PROGRAM_NAME == __FILE__
+  begin
+    exit UpgradeLab.main(ARGV)
+  rescue StandardError => error
+    warn "upgrade-lab: #{error.message}"
+    exit 1
+  end
+end

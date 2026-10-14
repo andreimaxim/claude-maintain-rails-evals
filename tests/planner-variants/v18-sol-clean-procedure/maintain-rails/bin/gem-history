@@ -1,0 +1,162 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Release-tag history and repository upgrade guides. Requires git, not Ruby gems.
+require "json"
+require "net/http"
+require "fileutils"
+require "open3"
+require "timeout"
+require "digest"
+
+module GemHistory
+  extend self
+
+  def get(url)
+    uri = URI(url)
+    6.times do
+      raise "Only public HTTPS sources are supported" unless uri.is_a?(URI::HTTPS)
+      response = Net::HTTP.start(uri.host, uri.port, use_ssl: true, open_timeout: 15, read_timeout: 60) do |http|
+        http.request(Net::HTTP::Get.new(uri.request_uri, "User-Agent" => "maintain-rails"))
+      end
+      return response.body if response.is_a?(Net::HTTPSuccess)
+      raise "HTTP #{response.code} at #{uri}" unless response.is_a?(Net::HTTPRedirection)
+      uri = URI.join(uri, response.fetch("location"))
+    end
+    raise "Too many redirects"
+  end
+
+  def git(*args)
+    out = err = status = nil
+    Open3.popen3({ "GIT_TERMINAL_PROMPT" => "0" }, "git", *args, pgroup: true) do |input, output, errors, waiter|
+      input.close
+      readers = [Thread.new { output.read }, Thread.new { errors.read }]
+      begin
+        Timeout.timeout(180) { status = waiter.value; out, err = readers.map(&:value) }
+      rescue Timeout::Error
+        Process.kill("TERM", -waiter.pid) rescue nil
+        sleep 0.5
+        Process.kill("KILL", -waiter.pid) rescue nil
+        raise "git timed out: #{args.first}"
+      end
+    end
+    raise "git failed: #{err.to_s.lines.last(5).join}" unless status.success?
+    out
+  end
+
+  def collect(name, from, to, directory, cache)
+    FileUtils.mkdir_p(directory)
+    result = { gem: name, from: from.to_s, to: to.to_s, gaps: [] }
+    begin
+      spec = JSON.parse(get("https://rubygems.org/api/v2/rubygems/#{name}/versions/#{to}.json"))
+      result[:requirements] = spec.slice("ruby_version", "rubygems_version", "dependencies")
+      metadata = spec.merge(spec["metadata"].to_h)
+      url = metadata.values_at("source_code_uri", "homepage_uri", "changelog_uri").compact.find { |s| s.match?(%r{https://github\.com/[\w.-]+/[\w.-]+}) }
+      raise "No supported GitHub repository in gem metadata; inspect the upstream repository manually" unless url
+      owner, repo = url.match(%r{github\.com/([\w.-]+)/([\w.-]+)})[1, 2]
+      repo = repo.delete_suffix(".git")
+      remote = "https://github.com/#{owner}/#{repo}.git"
+      result[:repository] = remote
+      tags = git("ls-remote", "--tags", remote).lines.filter_map { |l| l.split.last&.delete_prefix("refs/tags/") }.reject { |t| t.end_with?("^{}") }
+      find_tag = lambda do |version|
+        ["v#{version}", version.to_s, "#{name}-v#{version}", "#{name}-#{version}", "#{name}/v#{version}", "#{name}/#{version}"].find { |candidate| tags.include?(candidate) } ||
+          raise("No exact release tag for #{name} #{version}; do not substitute a branch")
+      end
+      first, last = find_tag.call(from), find_tag.call(to)
+      result[:tags] = [first, last]
+      # Separate interval caches prevent a later shallow fetch from changing an earlier interval.
+      repository = File.join(cache, "history-#{Digest::SHA256.hexdigest([remote, first, last].join(':'))[0, 24]}")
+      FileUtils.mkdir_p(repository)
+      File.open(repository + ".lock", "w") do |lock|
+        lock.flock(File::LOCK_EX)
+        unless File.file?(File.join(repository, "complete"))
+          git("init", "--bare", repository)
+          git("-C", repository, "config", "remote.origin.url", remote)
+          git("-C", repository, "config", "remote.origin.promisor", "true")
+          git("-C", repository, "config", "remote.origin.partialclonefilter", "blob:none")
+          # Fetch the entire ancestry after FROM, not an arbitrary last N commits.
+          git("-C", repository, "fetch", "--no-tags", "--filter=blob:none", "--shallow-exclude=refs/tags/#{first}", "origin",
+              "refs/tags/#{last}:refs/tags/#{last}")
+          git("-C", repository, "fetch", "--no-tags", "--filter=blob:none", "--depth=1", "origin",
+              "refs/tags/#{first}:refs/tags/#{first}")
+          File.write(File.join(repository, "complete"), "#{first}\n#{last}\n")
+        end
+        result[:git_dir] = repository
+        result[:revisions] = [first, last].map { |tag| git("-C", repository, "rev-parse", "#{tag}^{commit}").strip }
+        commits = git("-C", repository, "log", "--reverse", "--format=%H%x09%s", "#{first}..#{last}").lines.map do |line|
+          sha, subject = line.strip.split("\t", 2)
+          { sha: sha, subject: subject, url: "https://github.com/#{owner}/#{repo}/commit/#{sha}" }
+        end
+        touched = git("-C", repository, "log", "--reverse", "--format=@@%H", "--name-only", "#{first}..#{last}")
+        paths = {}
+        sha = nil
+        touched.each_line do |line|
+          line = line.strip
+          if line.start_with?("@@")
+            sha = line.delete_prefix("@@")
+            paths[sha] = []
+          elsif sha && !line.empty?
+            paths[sha] << line
+          end
+        end
+        commits.each { |commit| commit[:paths] = paths.fetch(commit[:sha], []) }
+        result[:commit_count] = commits.size
+        result[:commits] = commits
+        File.write(File.join(directory, "commits.tsv"), commits.map { |c| "#{c[:sha]}\t#{c[:subject]}\n" }.join)
+        File.write(File.join(directory, "paths.txt"), git("-C", repository, "diff", "--name-status", first, last))
+        if commits.size <= 80
+          FileUtils.mkdir_p(File.join(directory, "patches"))
+          commits.each do |commit|
+            File.write(File.join(directory, "patches", commit[:sha] + ".patch"), git("-C", repository, "show", "--format=fuller", "--no-ext-diff", commit[:sha]))
+          end
+          result[:review] = "Read every patch in patches/ in commits.tsv order."
+        else
+          groups = {}
+          commits.each do |commit|
+            components = commit[:paths].map { |path| path.split('/').first }.uniq
+            components = ["other"] if components.empty?
+            components.each { |component| (groups[component] ||= []) << commit }
+          end
+          FileUtils.mkdir_p(File.join(directory, "groups"))
+          index = ["# Commit groups", "", "Ranking is a heuristic, not coverage of all behavior changes."]
+          groups.each do |group, changes|
+            filename = group.gsub(/[^\w.-]/, "_") + ".tsv"
+            candidates = changes.select { |c| c[:subject].match?(/remov|break|deprecat|no longer|rename|default|serializ|encrypt|marshal|cookie|cache|dependenc|autoload|eager|require/i) }
+            File.write(File.join(directory, "groups", filename), "sha\tstatus\tsubject\n" + candidates.map { |c| "#{c[:sha]}\tpending\t#{c[:subject]}\n" }.join)
+            index << "- #{group}: #{changes.size} commits, #{candidates.size} risk candidates in groups/#{filename}."
+          end
+          File.write(File.join(directory, "commit-index.md"), index.join("\n") + "\n")
+          result[:review] = "Read commit-index.md, then each group's risk candidates. Inspect candidate patches with git --git-dir=PATH show SHA. Full history is in commits.tsv and history.json; unselected commits are not proven safe."
+        end
+        old_paths, new_paths = [first, last].map { |tag| git("-C", repository, "ls-tree", "-r", "--name-only", tag).lines.map(&:strip) }
+        guides = (old_paths | new_paths).select do |path|
+          path.match?(/upgrad|migrat|release.?notes|changelog|(?:\A|\/)changes|new_framework_defaults/i) &&
+            path.match?(/\.(?:md|markdown|rdoc|rst|txt|html|tt)\z|(?:CHANGELOG|CHANGES)\z/i) &&
+            !path.match?(%r{(?:\A|/)(?:vendor|node_modules)/})
+        end
+        result[:guides] = guides
+        guides.each do |path|
+          tag = new_paths.include?(path) ? last : first
+          destination = File.join(directory, tag == last ? "guides" : "guides-removed", path)
+          FileUtils.mkdir_p(File.dirname(destination))
+          File.write(destination, git("-C", repository, "show", "#{tag}:#{path}"))
+        end
+        File.write(File.join(directory, "guides.diff"), git("-C", repository, "diff", first, last, "--", *guides)) unless guides.empty?
+      end
+    rescue StandardError => error
+      result[:gaps] << error.message
+    end
+    File.write(File.join(directory, "history.json"), JSON.pretty_generate(result) + "\n")
+    result
+  end
+end
+
+if $PROGRAM_NAME == __FILE__
+  name, from, to, out = ARGV
+  abort "Usage: gem-history GEM FROM TO OUTPUT" unless name&.match?(/\A[\w-]+\z/) && from && to && out
+  abort "FROM must be less than TO" unless Gem::Version.new(from) < Gem::Version.new(to)
+  cache = File.join(ENV.fetch("XDG_CACHE_HOME", File.join(Dir.home, ".cache")), "gem-changes")
+  result = GemHistory.collect(name, Gem::Version.new(from), Gem::Version.new(to), File.expand_path(out), cache)
+  puts JSON.pretty_generate(result.reject { |key, _| key == :commits })
+  exit(result[:gaps].empty? ? 0 : 2)
+end
