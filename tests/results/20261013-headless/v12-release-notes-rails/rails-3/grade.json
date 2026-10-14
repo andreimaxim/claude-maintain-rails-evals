@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Keyword-style `enum` (`app/models/note.rb:10`). `ArgumentError: wrong number of arguments (given 0, expected 1..2)`. Repair (works on 7.0): `enum :status, { draft: 0, ready: 1 }, prefix: true`.",
+      "reasons": "Impact gives only the error class, not that the Note model no longer loads. Validation rests only on the overall suite result, with no persisted draft/ready filter or helper checks.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `serialize :tags, coder: JSON`. Do not ship this on 7.0. There `coder:` is silently ignored",
+      "reasons": "Impact on 8.1 is stated only as an ArgumentError, not as a concrete application consequence. Validation is a generic both-versions read/write check, with no unequal tags, comma-separated edit or stored-representation verification.",
+      "actionable": false
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "This hits every Note load. Repair (works on 7.0): `alias_method :highlight_color, :color` and `alias_method :highlight_color=, :color=`.",
+      "reasons": "Validation covers only the create/update tests, with no reload of existing settings or form/error rendering.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The notebook filter fails with `PG::UndefinedColumn: column notes.notebooks does not exist`. Repair (works on 7.0): `where(notebook: @notebook)`.",
+      "reasons": "Only the general suite result is given, with no unequal-population, exclusion or foreign-owner checks.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`citation[:id]` no longer returns the custom primary key, so the receipt became `On idleness,` instead of `On idleness,10.1000/Essays.1`. Repair (works on 7.0): `note.citation_doi`.",
+      "reasons": "It shows one observed receipt line but does not compare multiple distinct DOIs against the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "Record counts went from `[0, 3, 0, 1]` to `[1, 4, 1, 2]` ... raise ActiveRecord::Rollback unless rows.all? ... Check: the invalid-rows test (counts unchanged) plus the valid-import test as control.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: String can't be coerced into Integer`. Every export job fails and the export is left in \"working\" status. Repair (works on 7.0): `fragments.join`.",
+      "reasons": "There is no explicit real-worker check of exact ordered Markdown bytes or of the failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`HashWithIndifferentAccess#stringify_keys` now turns the integer line keys into strings, so `annotations[row.line]` misses ... Repair (works on 7.0): use `@import.annotations` without `.stringify_keys`.",
+      "reasons": "Validation is a single observed mismatch, with no unequal line-2/line-4 annotations, multiline CSV row or no-save check.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`raise_on_invalid_cache_expiration_time` — \"Cache expiration time is invalid, cannot be negative: -60.0\" on the exports page. A past `expires_at` raises too. Repair (works on 7.0): `expires_in: [export.expires_at - Time.current, 1.second].max`.",
+      "reasons": "Only the ladder suite run is given, with no before/after-deadline, cached/fresh or download expiry/ownership tests.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The preview changed from `2026-11-01T09:00:00-04:00` to `2026-11-01T08:00:00-05:00`; the epoch is unchanged ... Repair (works on 7.0): `Time.at(reminder_epoch + 86_400, in: reminder_at.formatted_offset)`.",
+      "reasons": "It compares across the DST boundary but has no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Since 7.1, Active Job keeps the time zone of a `TimeWithZone` argument. The subject came out as \"October 04\" instead of \"October 05\" ... Repair (works on 7.0): `requested_at = params[:requested_at].in_time_zone(Time.zone)`.",
+      "reasons": "It reports only the subject observation, with no real queue matrix crossing each midnight or inspection of reservation keys and note membership.",
+      "actionable": true
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0 worker given an 8.1 DigestJob failed with `ActiveJob::DeserializationError` ... Repair (works on 7.0): `DigestJob.perform_later(self, requested_at, reading_completion.to_s)` ... A 7.0 worker processed it and sent \"25% of your notes were ready\".",
+      "reasons": "The matrix lacks explicit same-version controls and a post-repair check in every direction with the exact percentage.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "``NoMethodError: undefined method `utc' for an instance of Integer``. This breaks scheduling ... Repair (works on 7.0): `set(wait_until: Time.at(reminder_epoch))`. Check: the job's `:at` still equals the exact epoch",
+      "reasons": "It checks the payload's :at but not the persisted schedule time or the replacement and ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The `fail_enrichment` block never runs, so the citation stays \"pending\" ... Repair: `:polynomially_longer` ... Not portable: 7.0 raises the same error for the new name.",
+      "reasons": "It names the stays-unavailable test but gives no request/attempt counts and no 503->200 or 401 controls.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`ActionView::Template::Error: Passed nil to the :model argument`, so the whole note list fails. Repair (works on 7.0): drop `model: nil`.",
+      "reasons": "There is no specific render/submit check of field names, method or resulting membership, only the suite result.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Wrong number of arguments (expect 1, got 2)` when routes load. Repair (works on 7.0): split into two `get` lines. Check: `/notes` and `/journal` both return 200",
+      "reasons": "It checks 200 responses but not identical authorized list behavior or the helpers.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 8.1, `false` makes error pages render, so 7 `assert_raises(RecordNotFound)` tests failed ... Repair: `:none`. Not portable: on 7.0, `:none` broke",
+      "reasons": "It relies on the suite and does not explicitly exercise the CI eager-loading mode.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Boot aborts with ``NoMethodError: undefined method `+' for nil`` ... defaults = helper.allowed_tags || (helper.sanitizer.class.allowed_tags + [ ActionText::Attachment.tag_name, \"figure\", \"figcaption\" ])",
+      "reasons": "One named test covers excerpts and unsafe markup, but attachment rendering, event handlers and javascript URLs are not explicitly checked.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "In `config/application.rb`, add `config.x.citation_provider = config_for(:citation_provider)` ... Check: the \"credentials from the environment reach the server unchanged\" test, which boots a fresh process.",
+      "reasons": "It does not specify special-character credentials, verification of the actual Basic header, or bounded failure behavior.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`default_column_serializer nil` — blocks boot: ``missing keyword: :coder``. Repair: `serialize :preferences, coder: YAML`",
+      "reasons": "Only the ladder suite run is given, with no create/edit/reload of unequal preferences and export heading under the gate off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`raise_on_assign_to_attr_readonly` — `ReadonlyAttributeError: slug` on notebook update. Repair (works on 7.0): drop `:slug` from `notebook_params`; create still derives the slug.",
+      "reasons": "There are no explicit attempted-slug-change or persisted-slug checks beyond the ladder suite.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`postgresql_adapter_decode_dates` — `TypeError: no implicit conversion of Date into String` in `Notebook#daily_note_counts`. Repair (works on 7.0): `Date.iso8601(day.to_s)`.",
+      "reasons": "There are no asymmetric-date, empty-report or ownership tests with decoding off and on.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "supported",
+      "applicability": "partial",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "`strict_freshness`: only an If-None-Match match combined with an old If-Modified-Since would change (200 becomes 304). Not executed.",
+      "reasons": "Applicability is partial because the plan names the gate but not the affected export downloads controller. Recommendation is missing because the plan makes no explicit keep/adopt decision. Validation is missing because the plan says the case was not executed and proposes no tests.",
+      "actionable": false
+    }
+  },
+  "actionable": 20,
+  "cost_usd": 0.34435380000000004,
+  "duration_ms": 82993
+}

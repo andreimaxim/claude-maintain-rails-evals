@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "It is raised on every lookup, and the rescue in `lookup` doesn't catch it. The job therefore fails with a generic error instead of recording \"unavailable\", and no enrichment ever completes. ... add `gem \"faraday-retry\", \"~> 2.2\"` ... Both send 2 GET requests ... expects 6 requests (3 job attempts x 2), and expects a single request for a 401.",
+      "reasons": "Validation: the plan covers persistent 503 with 2 requests per lookup, 6 requests over 3 attempts in a test, and one request for 401. It is missing four parts of the key's scenario: a 503-then-200 run that makes exactly two requests and completes; a real queue and worker with empty scheduled, retry and dead sets (the plan used the test queue adapter); a check that the raw target makes zero requests; and an isolated FD1 check with FD2 repaired.",
+      "actionable": true
+    },
+    "FD2": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "replace that line with `faraday.request :authorization, :basic, @user, @password`. ... the test server recorded `Authorization: Basic dTpw` for user `u` and password `p`, identical to 1.10.4. ... Ship it with the upgrade, not before.",
+      "reasons": "Impact: the plan names only the registration error for basic_auth. It does not say that this failure happens before any provider request or that citations stay pending. Validation: the plan checks the Basic header and the credentials test. It is missing four controls from the key: a zero-request failure reproduced with FD1 repaired, fresh-process numeric/colon/hash credentials, a real wrong-password 401, and the ownership, no-DOI and refresh controls.",
+      "actionable": false
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.11881560000000001,
+  "duration_ms": 21660
+}

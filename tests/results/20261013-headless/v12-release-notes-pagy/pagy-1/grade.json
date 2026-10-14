@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "require `pagy/extras/limit` and set `Pagy::DEFAULT[:limit] = 10`, `[:limit_param] = :per_page`, `[:limit_max] = 50`... If you leave `:items_param` or `:max_items` in place, the `per_page` parameter stops working and the cap falls back to 100... use `@pagy.limit`. Same deploy as R1.",
+      "reasons": "Validation covers the per_page cap, link retention and the selected option, but not the key's asymmetric owned, filter-excluded and foreign dataset. It also omits page-2 positions 6–10, following the actual Next href, the size-25 last page, exact filter queries, /journal, empty search, foreign 404 and anonymous redirect.",
+      "actionable": true
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`?page=`, `?page=0`, `?page=-1` and `?page=two` raise `Pagy::VariableError`... `@pagy, @notes = pagy(@notes, page: [params[:page].to_i, 1].max)`. This also works on 8.6.3 (`test8-prep.log`: 13 runs, 0 failures)",
+      "reasons": "Validation checks the four invalid inputs, page 2 with filters, stale page 999 and the baseline prep patch, but leaves out ownership checks, valid first and last page controls, and a precise comparison against page-one content.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.094584,
+  "duration_ms": 18609
+}

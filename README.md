@@ -374,6 +374,21 @@ $2.65 (v10: $2.96), but five runs scored 15, 18, 20, 19 and 22 (mean 18.8; v10
 21.4). The [v11 record](tests/results/20261013-headless/v11-batched-steps-rails/summary.json)
 keeps each run's plan, receipt and grade.
 
+**Reading release notes outside the gem helps gems that do not package
+changelogs.** [Variant v12](tests/planner-variants/v12-release-notes) keeps v10's
+prompt and extends `bin/gem-changes`. When a component's packaged changelog does
+not reach the target's minor series, the script reads the changelog named in its
+RubyGems metadata or its GitHub release notes; Pagy packages none and Faraday's
+stops at 2.2.0. It also takes code names from plain-text release notes (symbols,
+quoted words, snake_case names) and treats "breaking" and "rename" as breaking
+changes, so Pagy's "Rename ... "items" to "limit"" now points at `@pagy.items` in
+the notes view. Five runs per case scored 21, 22, 20, 21 and 21 on Rails (mean
+21.0; v10 21.4) at a median of 15.0 minutes and $2.97; 2, 2, 2, 1 and 2 on Pagy
+(mean 1.8; v9 1.6); 1, 2, 2, 2 and 2 on Faraday (mean 1.8; v9 1.8); 1 of 2 in every
+patch-bump run; and 1 of 1 in every no-op run. Its records are under
+[`tests/results/20261013-headless/`](tests/results/20261013-headless/), one
+directory per case.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

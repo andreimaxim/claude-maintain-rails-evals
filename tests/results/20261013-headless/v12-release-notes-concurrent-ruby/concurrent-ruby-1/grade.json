@@ -1,0 +1,28 @@
+{
+  "case": "concurrent-ruby",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "CR1": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Then change the Gemfile to \"1.3.8\" and run `bundle update concurrent-ruby --conservative`.",
+      "reasons": "Impact: the plan says the Gemfile must be changed but never says that the exact `\"1.3.4\"` pin stops 1.3.8 from resolving. Applicability: it names the Gemfile but not the exact-pin condition that blocks resolution. Validation: it says the lockfile diff is only the two concurrent-ruby lines and that all other gems are unchanged, but it never runs or proposes `bundle check`.",
+      "actionable": false
+    },
+    "CR2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Without the repair it fails with the NameError above. With it, it prints `1.3.8` and `ActiveSupport::Logger`.",
+      "reasons": "Validation: the plan runs the boot check with and without the fix, runs zeitwerk:check, and proposes the full suite in normal mode, but it never runs or proposes the suite in eager-loading CI mode.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.0651356,
+  "duration_ms": 14004
+}
