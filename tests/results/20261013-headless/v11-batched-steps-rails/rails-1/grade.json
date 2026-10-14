@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "enum status: {...}, _prefix: true (note.rb) uses keyword syntax, removed in 8.0. Error: wrong number of arguments (given 0, expected 1..2). Fix: enum :status, { draft: 0, ready: 1 }, prefix: true.",
+      "reasons": "Impact: the plan gives only the error text and never says that the Note model fails to load. Validation: the only check is the general prep70 suite pass; there is no draft/ready persistence or helper/scope check after reload.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "serialize :tags, JSON. Error: serialize: wrong number of arguments (given 2, expected 1). Fix: serialize :tags, coder: JSON. The stored JSON text format does not change.",
+      "reasons": "Impact: the plan names only the error, not what breaks in the app. Validation: the plan asserts that the format is unchanged but gives no reload or edit check on existing unequal tags.",
+      "actionable": false
+    },
+    "R03": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Error: Note model aliases color, but color is not an attribute. Fix: alias_method :highlight_color, :color and alias_method :highlight_color=, :color=.",
+      "reasons": "Impact: the plan gives only the error message, without the consequence for the app. Validation: the only check is the general suite; there is no edit/reload/form-rendering check.",
+      "actionable": false
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Without a fix, the notebook filter fails: PG::UndefinedColumn: column notes.notebooks does not exist. Fix: where(notebook: @notebook).",
+      "reasons": "Validation: the plan has no unequal-population, exclusion or foreign-owner check, only the general suite.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the downloaded receipt silently loses its DOI column. Fix: note.citation_doi.",
+      "reasons": "Validation: the plan shows one observed value but no systematic check of receipt fields against persisted citations with distinct DOIs.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "Observed: record_counts changed, expected [0, 3, 0, 1], got [1, 4, 1, 2]. ... raise ActiveRecord::Rollback ... As a control, a valid import still adds 2 notes, 1 citation and 1 import.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Without a fix, ExportJob fails with TypeError: String can't be coerced into Integer. The export stays working and Sidekiq keeps retrying. Fix: fragments.join.",
+      "reasons": "Validation: the plan has no real-worker check of the exact ordered Markdown bytes, only the general suite.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Without a fix, annotations silently disappear from the preview. Fix: use row.annotation. HTML escaping is unchanged, and the test still checks for literal b tags.",
+      "reasons": "Validation: the plan does not check unequal annotations on lines 2 and 4 with a multiline CSV row, and does not verify that nothing is saved.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "It is the same instant, so the postpone epoch does not change. Fix: Time.at(reminder_epoch + 86_400, in: reminder_at.formatted_offset).",
+      "reasons": "Validation: the plan has a DST test but no non-boundary control and no explicit comparison of epoch, wall-clock time and offset.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the subject says October 04 where October 05 was expected, and the note window moves to the reader's local day. Fix: requested_at = requested_at.utc.",
+      "reasons": "Validation: the plan does not cross each midnight separately and does not inspect reservation keys or delivered note membership.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: wait_until: Time.zone.at(reminder_epoch). Check: the reminder test confirms the job's :at is still the exact epoch.",
+      "reasons": "Validation: the plan checks the scheduled payload but not the persisted schedule time, and has no replacement or ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "retry_on wait: :exponentially_longer, removed in 7.2. Change to :polynomially_longer. The real 8.1 worker retried CitationEnrichmentJob correctly with the fix.",
+      "reasons": "Impact: the plan names only the removal, not the loss of bounded retry and the fallback to Sidekiq retries. Validation: the plan has no persistent-503 request count, no recorded failure and no 503-to-200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Without a fix, /notes, /journal and the redirect after sign-in return 500. Fix: drop model: nil.",
+      "reasons": "Validation: the plan has no check of form names, method or resulting membership, only the general suite.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: two separate get lines. I checked that the route names notes and journal are identical before and after.",
+      "reasons": "Impact: the plan gives only the error and does not say that route drawing fails. Validation: the plan checks route names but does not request both URLs as an owner.",
+      "actionable": false
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 8.1, the cannot be reached tests fail with RecordNotFound expected but nothing was raised. This must not ship on 7.0.",
+      "reasons": "Validation: the plan does not check CI eager-loading mode or a raised-request-exception case separately.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: assign inside config.after_initialize: the sanitizer's own allowed tags plus ActionText::Attachment.tag_name, figure, figcaption, details and summary.",
+      "reasons": "Validation: the plan does not explicitly check rendering of attachment markup.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Add config.x.citation_provider = config_for(:citation_provider) and read Rails.configuration.x.citation_provider.to_h.",
+      "reasons": "Validation: the plan does not mention special-character credentials, the actual Basic header or bounded failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "incorrect",
+      "validation": "missing",
+      "quote": "Proposed fix, not run: cache_if export.downloadable?, [export, availability], expires_in: ...",
+      "reasons": "Recommendation: the key says the cache_if alternative breaks the stale-link contract; the valid repair clamps expiry to zero. Validation: the fix was not run and no checks are proposed.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Change to serialize :preferences, coder: YAML now; the stored YAML does not change. It is required before adopting the 7.1 defaults.",
+      "reasons": "Validation: the plan has no create/edit/reload check of unequal preferences or export heading with the gate both off and on, only the suite/probe sweep.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "Every notebook update fails with ActiveRecord::ReadonlyAttributeError: slug. Fix before adopting: remove :slug from notebook_params and drop the hidden field. Proposed, not run.",
+      "reasons": "Recommendation: the plan removes slug from the shared params entirely rather than only on updates, and does not show that creation is preserved. Validation: the plan specifies no test of creation, updates or the persisted slug.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "postgresql_adapter_decode_dates: breaks the activity report. Proposed fix, works on 7.0, not run: Date.iso8601(day.to_s).",
+      "reasons": "Validation: the fix was not run and the plan proposes no off/on, asymmetric-count, empty-report or ownership checks.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "incorrect",
+      "applicability": "incorrect",
+      "recommendation": "missing",
+      "validation": "partial",
+      "quote": "strict_freshness: no observed difference. A matching ETag with an old If-Modified-Since returned 304 under every setting",
+      "reasons": "Impact and applicability: the plan says the gate has no effect, but the key says it changes 200-with-bytes to 304 in the export download controller. Recommendation: the plan makes no keep/adopt decision. Validation: the plan has one ETag/IMS probe but no ETag-list order, expired-link or foreign-owner controls.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Fix: pass reading_completion.to_s; the mailer already calls BigDecimal(...) on it. Check: tested in both directions.",
+      "reasons": "Validation: the plan does not state same-version producer/consumer controls.",
+      "actionable": true
+    }
+  },
+  "actionable": 15,
+  "cost_usd": 0.5822218,
+  "duration_ms": 139670
+}

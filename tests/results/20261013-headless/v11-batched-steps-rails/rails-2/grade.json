@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "R3. Note enum at app/models/note.rb:10 (executed). Boot fails with ArgumentError ... Repair: enum :status, { draft: 0, ready: 1 }, prefix: true. Also works on 7.0, and the stored integers are unchanged.",
+      "reasons": "Validation: the plan gives no enum-specific check, only the overall suite result; it does not persist draft and ready notes or exercise filters and prefixed helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "R4. Note tags column (executed). Deprecated in 7.1 and gone in 7.2. Repair: serialize :tags, coder: JSON. Make this change in the same commit as the Rails bump. On 7.0 ... do not ship it early",
+      "reasons": "Impact: the plan names only the deprecation and removal, without saying what breaks for tags. Validation: the only check is a reload of a single tags array under the json pin item; there is no comma-separated edit and no comparison of unequal stored data.",
+      "actionable": false
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "From 7.2, creating a note fails with ArgumentError: Note model aliases 'color', but 'color' is not an attribute. Repair: alias_method :highlight_color, :color and alias_method :highlight_color=, :color=",
+      "reasons": "Validation: the PATCH and error checks are relevant, but the plan admits form-value rendering after a validation error was not checked, and it does not show that existing settings are preserved.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "R11. @notes.where(notebooks: @notebook) at notes_controller.rb (deprecation seen on 7.1). It uses the plural name for a singular association, which is removed in 7.2. Repair: where(notebook: @notebook).",
+      "reasons": "Impact: the plan names only the deprecation and removal, not the invalid predicate or broken filtering. Validation: no check is given for notebook filtering or ownership.",
+      "actionable": false
+    },
+    "R05": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "It uses citation[:id], which is deprecated in 7.1. Use citation&.doi. ... Check: the receipt is title,doi\\nT,10.1234/abc on both versions.",
+      "reasons": "Impact and applicability: the plan calls it only a deprecation; it never explains that DOI is the primary key or that receipt DOIs are lost. Validation: a single-row receipt check, not distinct DOIs compared with persisted citations.",
+      "actionable": false
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "On 8.1, return false inside transaction commits instead of rolling back. ... record_counts expected [0, 3, 0, 1], got [1, 4, 1, 2] ... Repair: transaction { save!; raise ActiveRecord::Rollback unless ... } ... Control: the valid-CSV test imports 2 notes and 1 citation.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "It fails from 7.1 with TypeError: String can't be coerced into Integer, so every export job fails. Repair: fragments.join. ... the Markdown output is byte-identical",
+      "reasons": "Validation: there is a byte check, but no stated real-worker run and no failed-export control showing no artifact.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "HashWithIndifferentAccess#stringify_keys turns the integer keys into strings, so annotations[row.line] finds nothing ... Repair: use @import.annotations without .stringify_keys.",
+      "reasons": "Validation: only a failing test output is cited; there are no unequal annotations at lines 2 and 4, no multiline CSV row and no no-save check.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 8.1, to_time always keeps the zone, so the next-day reminder is shown with the new offset ... Repair: reminder_at.to_time.getlocal(reminder_at.utc_offset) + 86_400 ... The epoch is unchanged",
+      "reasons": "Validation: the DST case and the epoch are checked, but there is no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "From 7.1, Active Job keeps the time zone of a TimeWithZone argument ... contradicting the \"today (UTC)\" contract ... Repair: requested_at = requested_at.in_time_zone in the mailer.",
+      "reasons": "Validation: only a test result and a cross-version probe; neither midnight is crossed separately and reservation keys and delivered note membership are not checked.",
+      "actionable": true
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0 worker cannot read it: ActiveJob::DeserializationError ... Repair: pass reading_completion.to_s from User#request_digest. The mailer already calls BigDecimal(...) on it. ... in either direction (verified).",
+      "reasons": "Validation: both directions are checked, but there are no same-version controls and no exact delivered completion percentage.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "on 8.1 the reminder request returns 500. Repair: wait_until: Time.at(reminder_epoch). ... Check: the Sidekiq scheduled time equals the epoch (probe schedule_reminder)",
+      "reasons": "Validation: the scheduled time is checked, but there are no replacement or ownership controls and no check of the persisted schedule time.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "From 7.2 the retry fails with RuntimeError: Couldn't determine a delay based on :exponentially_longer ... the citation is never marked failed ... Repair: wait: ->(executions) { executions**4 + 2 } ... :polynomially_longer only exists from 7.1",
+      "reasons": "Validation: no retry scenario is specified (persistent 503 request count, 503->200 or 401 controls), only the overall suite result.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 8.1, the notes list and sign-in landing fail with ActionView::Template::Error: Passed nil to the :model argument. Repair: remove model: nil. The field names are unchanged.",
+      "reasons": "Validation: the only check is that field names are unchanged; there is no submit check of method or resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 8.1, get \"/notes\", \"/journal\", to: fails with ArgumentError ... Repair: two get lines. bin/rails routes gives the same names (notes, journal) on 7.0 and 8.1.",
+      "reasons": "Validation: route names are compared, but neither URL is requested as an owner.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "From 7.2, show_exceptions = false no longer means \"raise\", so errors render 500 pages and the assert_raises checks fail. Set config.action_dispatch.show_exceptions = :none ... it is accepted from 7.1.",
+      "reasons": "Validation: assert_raises tests are implied, but there is no missing-record policy check and no CI eager-loading mode check.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "It fails to boot on 7.1 and later with NoMethodError: undefined method '+' for nil ... sets the list to the existing value (or the sanitizer's defaults plus action-text-attachment, figure and figcaption) plus details and summary ... Do not set allowed_tags = %w[details summary] on its own",
+      "reasons": "Validation: details, scripts and attachments are checked, but event handlers and javascript URLs are not.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Citation::Provider.new fails with NoMethodError: undefined method 'secrets', so every citation lookup fails. Repair: ... config.x.citation_provider = config_for(:citation_provider)",
+      "reasons": "Validation: existing tests only; there is no fresh-process check with special-character credentials, no Basic header inspection and no bounded-failure check.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "raise_on_invalid_cache_expiration_time = true (executed): an expired export makes the exports page fail ... D3: expires_in: [export.expires_at - Time.current, 1.second].max",
+      "reasons": "Validation: only the v81def suite pass; there are no before/after-deadline, cached versus fresh, or download expiry and ownership checks.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "default_column_serializer = nil (executed): boot fails with missing keyword: :coder because of serialize :preferences in notebook.rb. D1: serialize :preferences, coder: YAML. The stored YAML is unchanged.",
+      "reasons": "Validation: only the suite pass; there is no create/edit/reload of unequal preferences with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "raise_on_assign_to_attr_readonly = true (executed): notebook settings PATCH returns 500 ActiveRecord::ReadonlyAttributeError: slug ... D2: remove :slug from notebook_params.",
+      "reasons": "Recommendation: removing slug from the shared notebook_params does not explicitly keep slug assignment on creation. Validation: there are no specific creation, attempted slug change or persisted slug checks.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "postgresql_adapter_decode_dates = true (executed): the activity report returns 500 with TypeError ... D4: Date.iso8601(day.to_s). Also works on 7.0.",
+      "reasons": "Validation: only the suite pass; there are no off/on runs with asymmetric UTC counts, empty-report or ownership checks.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "strict_freshness = true (source-based; the probe did not distinguish the two settings): ... When a client sends a matching ETag with an older If-Modified-Since, it now gets 304 instead of 200. Export files never change, so this is harmless.",
+      "reasons": "Recommendation: the plan calls the change harmless rather than making an explicit keep/adopt decision. Validation: the plan says the probe did not distinguish the settings and proposes no ETag or validator tests.",
+      "actionable": false
+    }
+  },
+  "actionable": 18,
+  "cost_usd": 0.237612,
+  "duration_ms": 69395
+}

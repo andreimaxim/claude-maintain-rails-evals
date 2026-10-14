@@ -365,6 +365,15 @@ The [patch-bump](tests/results/20261013-headless/v10-discriminating-checks-concu
 and [no-op](tests/results/20261013-headless/v10-discriminating-checks-noop/summary.json)
 records keep each run's plan, receipt and grade.
 
+**Batching experiment steps saved a tenth of the cost and lost recall; v10
+remains the best variant.** The planner is about 92% of v10's cost, mostly cache
+reads over 47 to 79 requests. [Variant v11](tests/planner-variants/v11-batched-steps)
+asks v10's planner to run each experiment step as one script that prints a short
+summary. Planner requests fell to a median of 48 (v10: 67) and the median run cost
+$2.65 (v10: $2.96), but five runs scored 15, 18, 20, 19 and 22 (mean 18.8; v10
+21.4). The [v11 record](tests/results/20261013-headless/v11-batched-steps-rails/summary.json)
+keeps each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:
