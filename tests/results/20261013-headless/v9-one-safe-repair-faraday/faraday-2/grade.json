@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The job's `retry_on` never runs and `fail_enrichment` never records the failure. Citations would stay \"Pending\" while Sidekiq retries the job until it gives up. ... add `gem \"faraday-retry\", \"~> 2.2\"`. Bundler's auto-require loaded it ... Keep `max: 1, retry_statuses: [503]` as is.",
+      "reasons": "Validation: the only checks are existing tests using the :test adapter (2 and 6 requests). The plan does not check a real HTTP provider through a Sidekiq worker, a 401 that makes one request, a visible failure with empty scheduled/retry/dead sets, or zero requests on the raw target.",
+      "actionable": true
+    },
+    "FD2": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`:basic_auth is not registered on Faraday::Request (Faraday::Error)`. ... faraday.request :authorization, :basic, @user, @password ... Not a preparatory change: on 1.10.4 this line fails with `wrong number of arguments`",
+      "reasons": "Impact: the plan gives only the registration error for this finding and does not say that it fails before any I/O and leaves citations pending with fallback retries. Validation: the credential and nil-header checks use the :test adapter. The plan does not inspect the Basic header on real HTTP or check a real wrong-password 401, refresh success and failure, owner/no-DOI denial, or unsafe-metadata controls.",
+      "actionable": false
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.07598,
+  "duration_ms": 11247
+}

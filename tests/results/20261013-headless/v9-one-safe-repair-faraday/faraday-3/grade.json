@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "a direct probe printed `Faraday::Error: :retry is not registered on Faraday::Request` with 0 requests sent. That error is not one of the exceptions the provider rescues, so `CitationEnrichmentJob` would fail on every lookup instead of recording the failure. ... **Fix:** add `gem \"faraday-retry\", \"~> 2.2\"` (it resolved to 2.4.0). No `require` is needed ... this is not a preparatory change. faraday-retry 2.x depends on `faraday ~> 2.0`.",
+      "reasons": "Validation is partial: the plan relies on the named 'retrying one unavailable response' and 'stays unavailable' tests and a proposed production lookup. It never counts requests for 503→200 (two), persistent 503 (six requests over three attempts, with visible failure and empty scheduled/retry/dead sets) or 401 (one), and it does not isolate FD1 with FD2 repaired through a real queue/worker.",
+      "actionable": true
+    },
+    "FD2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Faraday::Error: :basic_auth is not registered on Faraday::Request`. Lookups fail the same way as in R1. ... **Recommended fix:** `faraday.request :authorization, \"Basic\", [\"#{@user}:#{@password}\"].pack(\"m0\")`. Tested on both 1.10.4 and 2.12.2 ... the test that checks the exact `Authorization` header for the credentials `\"00123\"` / `\"sample: value # keep\"`.",
+      "reasons": "Validation is partial: the plan checks the exact Basic header with numeric/colon/hash credentials and probes the registration failure. It does not include a real wrong-password 401, successful/failed refresh, owner/no-DOI denial, unsafe-metadata controls or a fresh-process run.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.09494,
+  "duration_ms": 17713
+}

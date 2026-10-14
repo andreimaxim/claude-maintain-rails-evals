@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "supported",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "if only the `require` line is changed, the old keys are ignored without warning. 9.3.5 would then default to 20 per page, read the page size from `limit` instead of `per_page`, and cap it at 100.",
+      "reasons": "Applicability: the plan names the right code and correctly says the renames must ship with the bump, but it places the silent drift at the require-only stage. In its own experiment that stage fails with the `@pagy.items` render error, and the drift only appears once the `@pagy.limit` reader is also fixed. Validation: the plan cites existing tests for default 10, `per_page` retention and the 50 cap, plus probes. It lacks the asymmetric dataset, the page 2 at five check (positions 6–10), following the actual Next href, the size 25 last page, filtered queries, `/journal`, empty search, foreign 404 and anonymous redirect checks.",
+      "actionable": false
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`?page=`, `?page=0`, `?page=-1` and `?page=two` raise `Pagy::VariableError: expected :page >= 1; got 0` from `notes_controller.rb:18`. This is the only failure left after fixes 1 and 2",
+      "reasons": "Validation: the plan tests the four invalid inputs after the PG1 fixes, verifies the override on 8.6.3 and probes stale page 99. It does not explicitly compare invalid-page output to page-one content, and it omits valid first/next/last controls and filtering and ownership checks.",
+      "actionable": true
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.084452,
+  "duration_ms": 14474
+}

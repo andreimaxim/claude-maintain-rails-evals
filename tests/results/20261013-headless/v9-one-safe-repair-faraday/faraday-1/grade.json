@@ -1,0 +1,28 @@
+{
+  "case": "faraday",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "FD1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`faraday.request :retry, max: 1, retry_statuses: [503]` raises the error above at connection build... It goes to the queue's own retries instead, and `fail_enrichment` is never called. Fix: add `gem \"faraday-retry\", \"~> 2.4\"`",
+      "reasons": "Validation: the plan ran only an out-of-Rails stub check (503→200 gives two requests; persistent 503 gives two requests). It does not show a real queue or worker run with six requests over three attempts, a visible recorded failure, and empty scheduled/retry/dead sets. The 401 case and the real-app run are only proposed.",
+      "actionable": true
+    },
+    "FD2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Retry gem required but auth line unchanged: every lookup fails with `Faraday::Error: :basic_auth is not registered on Faraday::Request`... Replace ... with `faraday.request :authorization, :basic, @user, @password`. Validated: the header is identical, including a password with a space.",
+      "reasons": "Validation: the plan isolates the failure with FD1 fixed and compares the header, but it does not cover a fresh process with numeric, colon or hash credentials, a real wrong-password 401, successful and failed refresh, owner and no-DOI denial, or unsafe-metadata controls.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.068904,
+  "duration_ms": 9524
+}

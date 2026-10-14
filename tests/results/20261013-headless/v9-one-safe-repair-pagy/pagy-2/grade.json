@@ -1,0 +1,28 @@
+{
+  "case": "pagy",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "PG1": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Variant D ... `Expected exactly 10 elements matching \".note\", found 20.` The `per_page` option is ignored. ... Pages show 20 notes instead of 10. `?per_page=` is ignored ... The cap goes up from 50 to 100. ... `Pagy::DEFAULT[:limit] = 10` `Pagy::DEFAULT[:limit_param] = :per_page` `Pagy::DEFAULT[:limit_max] = 50` ... use `@pagy.limit`. Only works on 9.",
+      "reasons": "Validation is partial: the plan relies on the suite plus a proposed per_page=5 test and a link-parameter check. It lacks the key's asymmetric owned, filter-excluded and foreign dataset, the page-2 positions 6–10 check, following the actual Next href, the size-25 last page, the 500→50 cap, selection/range, /journal, empty search, the foreign 404 and the anonymous-redirect controls.",
+      "actionable": true
+    },
+    "PG2": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`?page=`, `0`, `-1` or `two` raises `Pagy::VariableError` ... so users get a 500 instead of page 1. ... Fix: `@pagy, @notes = pagy(@notes, page: [params[:page].to_i, 1].max)`. ... Works on the current version too: passes on 8.6.3",
+      "reasons": "Validation is partial: the plan checks baseline and gives the missing-page, past-end and filter-retention paths. It does not specify comparing all four invalid inputs to page-one content after the PG1 repair, and it does not include ownership controls.",
+      "actionable": true
+    }
+  },
+  "actionable": 2,
+  "cost_usd": 0.07664399999999999,
+  "duration_ms": 11534
+}

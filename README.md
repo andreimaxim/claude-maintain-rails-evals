@@ -330,6 +330,15 @@ after the reset. Run 2 is the original attempt. The
 [v9 record](tests/results/20261013-headless/v9-one-safe-repair-rails/summary.json)
 keeps each run's plan, receipt and grade.
 
+**v9 also improves the training cases, so the Rails tuning has not overfit.**
+Five v9 runs per case scored 1, 2, 1, 2 and 2 of 2 on Pagy (October 12 Opus low
+under the same grader: mean 1.2) and 2, 1, 2, 2 and 2 on Faraday (mean 0.8), at a
+median of about 2.3 minutes and $0.40 per run. The misses are PG1 applicability
+in two runs (placing Pagy's silent drift at the require-only stage) and FD2 impact
+in one. The [Pagy](tests/results/20261013-headless/v9-one-safe-repair-pagy/summary.json)
+and [Faraday](tests/results/20261013-headless/v9-one-safe-repair-faraday/summary.json)
+records keep each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:
