@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum :status, { draft: 0, ready: 1 }, prefix: true`. The stored integers and the `status_ready` scope stay the same.",
+      "reasons": "Validation: the plan cites only boot/zeitwerk failure and the overall suite. It does not persist different draft and ready notes and then exercise the filters and helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Does not work on 7.0: 7.0 accepts no `coder:` keyword (it only has `**options`). Ship this in the same deploy as Rails 7.1 or later.",
+      "reasons": "Validation: the plan relies on the existing notes create and edit tests. It does not reload existing unequal JSON tags or check the stored representation.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`alias_method :highlight_color, :color` plus `alias_method :highlight_color=, :color=`",
+      "reasons": "Validation: the plan gives no check that edits highlight color, reloads the JSON settings, and renders the form and errors.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`PG::UndefinedColumn: column notes.notebooks does not exist` whenever the list is filtered by notebook. Fix: `where(notebook: @notebook)`.",
+      "reasons": "Validation: the plan gives no inclusion, exclusion, or foreign-owner check with unequal notebook populations.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`citation[:id]` returns nil when the primary key is `doi` ... the receipt CSV loses every DOI. Fix: `citation&.doi`.",
+      "reasons": "Validation: the plan gives no check that compares receipt fields against the persisted DOIs.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "with an invalid row, `record_counts` changed from `[0, 3, 0, 1]` to `[1, 4, 1, 2]`",
+      "reasons": "Validation: the plan has record counts and a success-path test. It does not say this was a real apply request with a valid row followed by an invalid row, checked against fresh PostgreSQL counts.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the `ExportJob` (status completed, file attached)",
+      "reasons": "Validation: the real worker completed an export, but the plan does not compare the exact ordered Markdown bytes. It also has no failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "the template looks up `annotations[row.line]` with an Integer, so the import preview shows the wrong row's value",
+      "reasons": "Validation: the plan gives no scenario with unequal annotations on lines 2 and 4, a multiline row, and no save.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The epoch stays the same (1793538000 on both versions), but the \"24 hours later\" label goes from `2026-11-01T09:00:00-04:00` to `08:00:00-05:00`.",
+      "reasons": "Validation: the plan compares epoch and offset across the DST boundary but has no control case away from the boundary.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`DigestMailer` then uses the reader's local day, while the Redis reservation key still uses the UTC day.",
+      "reasons": "Validation: the plan has a single date mismatch in a test. It does not cross each midnight separately through a real queue and worker, or inspect reservation keys and which notes are delivered.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`wait_until: Time.at(reminder_epoch)`. The test still asserts the exact `at` timestamp.",
+      "reasons": "Validation: the plan asserts the `at` timestamp only. It does not check the persisted schedule time or the replacement and ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The `retry_on` block never records the failure, and the test asserting 6 provider calls saw 2.",
+      "reasons": "Validation: the plan has no 503-then-200 or 401 control cases.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`Passed nil to the :model argument`, so the note list is a 500. Fix: remove `model: nil`.",
+      "reasons": "Validation: the plan does not render and submit the search form or check field names, method, or which notes come back.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The route names are the same as on 7.0, which I checked with `bin/rails routes`.",
+      "reasons": "Validation: the plan checks route names only. It does not request both URLs as an owner and compare the list behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Four `assert_raises(RecordNotFound)` tests and one Redis error test failed. ... Change it in the 7.1 step.",
+      "reasons": "Validation: the plan does not cover CI eager-loading mode or the normal test mode explicitly.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "I also checked by hand that `<details>` is kept and `<script>` and `onerror` are stripped.",
+      "reasons": "Validation: the plan does not render attachment markup and does not check that javascript: URLs are excluded.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "In `application.rb`, set `config.x.citation_provider = config_for(:citation_provider)`.",
+      "reasons": "Validation: the plan has no fresh-process request with special-character credentials and does not verify the Basic header or the failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "incorrect",
+      "validation": "missing",
+      "quote": "Fix with `cache_if export.downloadable?, ...` (S).",
+      "reasons": "Recommendation: the key says the `cache_if` alternative breaks the stale-link contract; the plan should clamp the expiry to zero instead. Validation: the plan lists this fix as unverified and gives no test.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "`serialize :preferences` with no coder would raise. Add `coder: YAML` first. The stored data stays YAML.",
+      "reasons": "Validation: the plan gives no create/edit/reload check with the gate off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`notebooks/_form` posts a hidden `slug` and the controller permits it. Remove both first (works on 7.0).",
+      "reasons": "Recommendation: removing the slug from the permitted params outright does not say that slug assignment on creation is preserved. Validation: the plan gives none.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "Fix first with `day.is_a?(Date) ? day : Date.iso8601(day)`.",
+      "reasons": "Validation: the plan gives no real-PostgreSQL test with decoding off and on.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "`ExportDownloadsController#stale?` would honour only If-None-Match when both headers are sent. The download still works.",
+      "reasons": "Impact: the plan does not state the concrete change from a 200 with bytes to a 304. Recommendation: it makes no explicit keep-or-adopt decision. Validation: none is given.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A `DigestJob` queued by 8.1 and run on 7.0 failed ... Payloads from 7.0 ran fine on 8.1, and the new payload carries `\"1.0\"`.",
+      "reasons": "Validation: the plan tests both cross-version directions but has no explicit same-version controls and does not check the exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 20,
+  "cost_usd": 0.26850399999999996,
+  "duration_ms": 47682
+}

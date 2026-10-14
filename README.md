@@ -317,6 +317,19 @@ fully specified any validation. The
 [v8 record](tests/results/20261013-headless/v8-quote-observed-failure-rails/summary.json)
 keeps each run's plan, receipt and grade.
 
+**Recommending one safe repair fixes the remaining recommendation failures.**
+[Variant v9](tests/planner-variants/v9-one-safe-repair) adds one instruction to
+v8: recommend one repair per finding, check that it keeps every other path
+through the affected code working, and rank any alternatives. Five runs scored
+20, 20, 22, 21 and 21 (mean 20.8) at a median of 12.1 minutes and $2.86. R09 rose
+from 1/5 to 4/5 and R21 from 1/5 to 4/5; R25 stays at 0/5 and R14 at 2/5. One
+finding in one run had fully specified validation, the first in any run. The
+session limit ended four first attempts after about 9.5 minutes ("You've hit your
+session limit"); they cost $7.75, are excluded from the scores and were replaced
+after the reset. Run 2 is the original attempt. The
+[v9 record](tests/results/20261013-headless/v9-one-safe-repair-rails/summary.json)
+keeps each run's plan, receipt and grade.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:
