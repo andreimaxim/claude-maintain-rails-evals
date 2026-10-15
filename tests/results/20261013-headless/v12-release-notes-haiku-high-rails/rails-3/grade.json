@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F2. Enum keyword syntax (`app/models/note.rb:10`). Removed in 8.0: `ArgumentError: wrong number of arguments (given 0, expected 1..2)`. Repair: `enum :status, { draft: 0, ready: 1 }, prefix: true`. Dual: yes. ... Control: the status filter test.",
+      "reasons": "Validation: the plan cites only a zeitwerk log and the status filter test. It does not persist unequal draft and ready notes or exercise the prefixed helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `attribute :tags, :json` (dual). `serialize :tags, coder: JSON` works only on 8.1; on 7.0 it silently stores YAML ... so it must not ship before cutover. Validation: `tags-probe` identical dump/load on 7.0 and 8.1",
+      "reasons": "Validation: the plan checks dump/load and cross-version reads but does not check that comma-separated input edits keep the stored representation and the array values.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F6. `alias_attribute :highlight_color, :color` (`note.rb:14`). `color` is a `store_accessor`. ... Repair: `alias_method :highlight_color, :color` and `alias_method :highlight_color=, :color=` ... Control: the highlight radio test.",
+      "reasons": "Validation: the plan offers an ablation and the highlight radio test, but no check that JSON settings survive a reload or that form and error rendering still work.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F16. Notebook filter by table name (`app/controllers/notes_controller.rb`). On 8.1, `where(notebooks: @notebook)` fails: `PG::UndefinedColumn` ... Repair: `where(notebook: @notebook)`.",
+      "reasons": "Validation: only an ablation log is given. There are no unequal notebook populations, no other-owner exclusion and no foreign-notebook denial check.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F14. Receipt DOI (`app/models/import.rb:67`). `citation[:id]` returned the custom primary key on 7.x ... the DOI column is blank. Repair: `citation.doi`.",
+      "reasons": "Validation: the plan uses an ablation and title assertions. It does not compare downloaded receipt DOI values with the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F13. Import batch commits partially ... expected `[0, 3, 0, 1]`, actual `[1, 4, 1, 2]` ... Repair: `applied = rows.all? { |row| row.note.save }` followed by `raise ActiveRecord::Rollback unless applied`.",
+      "reasons": "Validation: the plan has record counts and a successful-import control, but it does not specify a real apply request with a valid row followed by an invalid row against fresh PostgreSQL counts.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F11. `fragments.sum` on strings (`app/models/export.rb:42`). ... `TypeError` ... so `ExportJob` fails and the export stays \"working\". ... Repair: `fragments.join`.",
+      "reasons": "Validation: the plan uses an ablation and an export contents assertion. It does not specify exact ordered Markdown bytes from the real worker, or the no-artifact check for an unrepaired failed export.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F15. Preview annotations (`app/views/imports/preview.html.erb:22`). `stringify_keys` in 8.0 turns integer line keys into strings, so `annotations[row.line]` misses silently ... Repair: remove `.stringify_keys`.",
+      "reasons": "Validation: the plan has an ablation and a DOI control. It does not test unequal annotations at lines 2 and 4 with a multiline CSV row, or confirm that preview saves nothing.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The unrepaired preview is `2026-11-01T08:00:00-05:00` on 8.1 versus `2026-11-01T09:00:00-04:00` on 7.0 ... Repair (recommended, keeps the documented offset behavior): `(reminder_at.to_time + 86_400).getlocal(reminder_at.utc_offset)`",
+      "reasons": "Validation: the plan checks offset and wall-clock time across DST with an epoch control, but it has no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F18. Digest day (`app/mailers/digest_mailer.rb`). Since 8.1, the request time keeps the reader's zone when deserialized ... This contradicts the UTC-day contract. Repair: `requested_at = requested_at.utc` in the mailer (dual).",
+      "reasons": "Validation: the plan has an ablation and a reservation test. It has no real JSON queue/worker run that crosses each midnight separately and inspects reservation keys and note membership.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F12. `NoteReminderJob.set(wait_until: <Integer>)` (`app/models/note.rb:61`). ... `NoMethodError: undefined method 'utc' for an instance of Integer`, so reminders return 500. Repair: `wait_until: Time.at(reminder_epoch)`.",
+      "reasons": "Validation: the plan has an exact-time assertion and an ablation. It does not inspect the real scheduled payload or score, and it lacks replacement and ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `wait: ->(executions) { (executions**4) + 2 }`, which passes on both 7.0 and 8.1 ... Alternative `:polynomially_longer` keeps jitter but is 8.x only.",
+      "reasons": "Applicability: the plan says `:polynomially_longer` is 8.x only, but it ships with Rails 7.1 and later. Validation: the plan checks six requests and a 404 control, not persistent 503 with a recorded failure plus 503->200 and 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F10. `form_with(model: nil, ...)` (`app/views/notes/index.html.erb:12`). ... making `/notes` a 500 and breaking sign-in. Repair: drop `model: nil`. ... Control: the \"unbound search form\" test.",
+      "reasons": "Validation: the plan names a test and an ablation but does not explicitly check field names, method and resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F5. Multi-path route (`config/routes.rb:18`). ... `bin/rails routes` exits 1 ... Repair: `get \"/notes\", to: \"notes#index\", as: :notes` and `get \"/journal\", to: \"notes#index\"`. ... Control: the \"both list paths\" test.",
+      "reasons": "Validation: the plan names the both-paths test but does not specify identical authorized list behavior for an owner at both URLs.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F9. `show_exceptions = false` ... On 8.1, `false` falls through to `:all` ... Repair: `:none` ... Not dual: on 7.0, `:none` is truthy. Test environment only.",
+      "reasons": "Validation: the plan has an ablation with RecordNotFound failures but does not cover the normal test and CI eager-loading modes.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F1. Action Text allowed tags (`config/initializers/action_text.rb:3`). Breaks: `NoMethodError: undefined method '+' for nil`. Repair: extend the effective list ... keeping `allowed_tags || sanitizer.class.allowed_tags + [...]`.",
+      "reasons": "Validation: the plan probes boot and details/summary with script and javascript: exclusion, but does not check attachment markup or event handlers.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "F7. `Rails.application.secrets` (`app/models/citation/provider.rb:13` ...). Removed in 7.2: `NoMethodError` ... Repair: `Rails.application.config_for(:secrets).citation_provider.to_h` ... Control: the environment-credentials child-process test.",
+      "reasons": "Validation: the plan has a child-process test but does not verify special-character credentials, the actual Basic header or bounded failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "D2. `raise_on_invalid_cache_expiration_time`: `Cache expiration time is invalid, cannot be negative: -60.0` on the exports page. ... `[export.expires_at - Time.current, 0].max` in the export partial (D2)",
+      "reasons": "Validation: the plan cites only a probe and the ld71 suite. It does not test before and after the deadline, cached versus fresh reads, or download expiry and ownership.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "D1. `load_defaults 7.1` requires an explicit coder for `preferences` (`ArgumentError: missing keyword: :coder`). ... `serialize :preferences, coder: YAML` (D1; the YAML dump is identical on 7.0)",
+      "reasons": "Validation: the plan has probes and cross-version reads but does not create, edit and reload unequal preferences or check the export heading with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "D3. `raise_on_assign_to_attr_readonly`: `ActiveRecord::ReadonlyAttributeError: slug` on any settings save. ... `permit(:name, :export_heading)` without `:slug` (D3)",
+      "reasons": "Recommendation: the plan removes slug from permit without saying that notebook creation keeps setting slug. Validation: only a probe is cited, with no creation, attempted slug change or persisted-slug checks.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "D4. `postgresql_adapter_decode_dates`: `TypeError: no implicit conversion of Date into String` in `daily_note_counts`. ... `Date.iso8601(day.to_s)` (D4)",
+      "reasons": "Validation: the plan cites a fix log and probes. It does not test decoding off and on with asymmetric UTC date counts, empty reports and ownership.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "8.0 | `strict_freshness = true`, `Regexp.timeout ||= 1` | Not exercised | none",
+      "reasons": "Impact: the plan names the gate but does not say how the export download controller's response would change. Applicability: the affected code is not identified. Recommendation: there is no keep/adopt decision. Validation: no validation is given.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "M1. BigDecimal payloads. An 8.1 `DigestJob` payload tags the BigDecimal ... A 7.0 Sidekiq worker fails with `ActiveJob::DeserializationError` ... Fix: ship the string-completion change on 7.0 first, then drain or delete any tagged jobs before rollback.",
+      "reasons": "Validation: the plan shows the 8.1-to-7.0 failure and string payload logs, but has no full producer/consumer matrix with same-version controls and the exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 20,
+  "cost_usd": 0.35404,
+  "duration_ms": 66953
+}

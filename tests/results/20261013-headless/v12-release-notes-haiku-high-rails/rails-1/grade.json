@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`enum` and `serialize` syntax",
+      "reasons": "Impact: the plan names the enum syntax repair but never says that the Note model fails to load. Applicability: it does not identify `note.rb` or the keyword-style declaration. Recommendation: it does not specify positional syntax with `prefix: true` that keeps values, helpers and scopes. Validation: the only evidence is a general suite pass, with no persisted draft/ready filter scenario.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`enum` and `serialize` syntax",
+      "reasons": "Impact: the plan mentions serialize syntax but not the removed positional JSON coder or what breaks. Applicability: it does not say that `coder: JSON` silently selects YAML on 7.0. Recommendation: it does not name the explicit `coder: JSON` repair. Validation: the only evidence is a general suite pass, with no reload check on existing JSON tags.",
+      "actionable": false
+    },
+    "R03": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan never mentions the `alias_attribute` on the `color` store accessor.",
+      "actionable": false
+    },
+    "R04": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "the notebook filter",
+      "reasons": "Impact: the plan does not describe the invalid column predicate. Applicability: it does not name the controller or the `where(notebooks:)` call. Recommendation: it does not specify the singular association key or keeping owner authorization. Validation: the only evidence is a suite pass.",
+      "actionable": false
+    },
+    "R05": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "import rollback and receipt",
+      "reasons": "Impact: the plan does not say that receipt DOI values are lost. Applicability: it does not identify `citation[:id]` versus the DOI primary key. Recommendation: it does not state the repair. Validation: the only evidence is a suite pass.",
+      "actionable": false
+    },
+    "R06": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "import rollback and receipt",
+      "reasons": "Impact: the plan does not say that partial commits survive a later row failure. Applicability: it does not identify the nonlocal return inside the transaction. Recommendation: it does not specify the rollback mechanism. Validation: the only evidence is a suite pass, with no check of database counts.",
+      "actionable": false
+    },
+    "R07": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "export `join`",
+      "reasons": "Impact: the plan does not say that string `sum` raises TypeError in the export worker. Applicability: it does not identify the `fragments.sum` site or the worker path. Validation: the only evidence is a suite pass, with no real worker byte-level check.",
+      "actionable": false
+    },
+    "R08": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "the import preview lookup",
+      "reasons": "Impact: the plan does not say that annotations are lost through key stringification. Applicability: it does not identify the view and model mismatch. Recommendation: it does not describe the normalization. Validation: the only evidence is a suite pass.",
+      "actionable": false
+    },
+    "R10": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "reminder DST display",
+      "reasons": "Impact: the plan mentions DST display but not the offset change with an unchanged instant. Applicability: it does not identify `to_time + 86_400`. Recommendation: it does not state the chosen display contract. Validation: the only evidence is a suite pass, with no DST boundary or control check.",
+      "actionable": false
+    },
+    "R11": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "the digest timezone",
+      "reasons": "Impact: the plan does not describe the mismatch between the content day and the UTC reservation day. Applicability: it does not identify the queued TimeWithZone zone retention. Recommendation: it does not specify which zone policy it adopts. Validation: the only evidence is a suite pass, with no real queue midnight scenario.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "missing",
+      "quote": "if any node still runs 7.0 while digest jobs are queued, the 8.1 digest payloads may fail to deserialize. Deploy all nodes together, or ship the planner's 7.0-compatible repairs first.",
+      "reasons": "Validation: the plan explicitly leaves mixed-version behavior unverified and gives no producer/consumer matrix.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "reminder `wait_until`",
+      "reasons": "Impact: the plan does not say that a numeric `wait_until` raises before enqueue. Applicability: it does not name `reminder_epoch`. Recommendation: it does not name `Time.at`. Validation: the only evidence is a suite pass, with no inspection of the scheduled payload.",
+      "actionable": false
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "the citation retry wait",
+      "reasons": "Impact: the plan does not say that bounded retry falls through to Sidekiq retries. Applicability: it does not name `:exponentially_longer` or the 7.1 requirement. Recommendation: it does not name `:polynomially_longer`. Validation: the only evidence is a suite pass, with no 503/401 scenarios.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "the search form",
+      "reasons": "Impact: the plan does not say that `form_with(model: nil)` raises. Applicability: it does not identify the nil model in the index view. Recommendation: it does not describe the repair or how the GET form is preserved. Validation: the only evidence is a suite pass.",
+      "actionable": false
+    },
+    "R16": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "the multi-path `/journal` route",
+      "reasons": "Impact: the plan does not state that route drawing fails, beyond a general boot failure. Recommendation: it does not specify separate declarations that keep the helpers. Validation: the only evidence is a suite pass, with no request to both URLs.",
+      "actionable": false
+    },
+    "R17": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`show_exceptions = :none` in test",
+      "reasons": "Impact: the plan does not say how the boolean value changes the exception policy. Applicability: it does not note that `:none` must ship with the upgrade rather than on 7.0. Validation: the only evidence is a suite pass, with no raised-exception or eager-load checks.",
+      "actionable": false
+    },
+    "R18": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "the `ActionText` allowlist",
+      "reasons": "Impact: the plan does not say that `+=` on a nil `allowed_tags` fails at boot. Applicability: it does not identify the initializer's inherited nil. Recommendation: it does not specify a complete safe allowlist. Validation: the only evidence is a suite pass, with no sanitization rendering checks.",
+      "actionable": false
+    },
+    "R19": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Rails.application.config_for(:secrets)`",
+      "reasons": "Impact: the plan does not say that provider requests fail because `Rails.application.secrets` was removed. Applicability: it does not identify the provider file. Validation: the only evidence is a suite pass, with no fresh-process Basic header check.",
+      "actionable": false
+    },
+    "R09": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan says only that defaults adoption is not applied and never discusses the cache expiry gate.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan never discusses the `default_column_serializer` gate or the notebook preferences coder.",
+      "actionable": false
+    },
+    "R21": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan never discusses the readonly slug gate.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan never discusses PostgreSQL date decoding in `daily_note_counts`.",
+      "actionable": false
+    },
+    "R25": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan never discusses the `strict_freshness` gate for export downloads.",
+      "actionable": false
+    }
+  },
+  "actionable": 1,
+  "cost_usd": 0.30668699999999993,
+  "duration_ms": 63685
+}

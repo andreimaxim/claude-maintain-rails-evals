@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `enum :status, { draft: 0, ready: 1 }, prefix: true`. Works on 7.0. Validation: `Note.statuses` and the notes status filter test",
+      "reasons": "Validation checks only the statuses mapping and one filter test. It does not persist distinct draft/ready notes and check helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "On 7.0 the keyword is silently ignored... Do not prepare it on 7.0. Validation: write `tag_list \"a, b\"`, assert the raw column is `[\"a\",\"b\"]`, and read a row containing `[\"x\",\"y\"]` back as an Array.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `alias_method :highlight_color, :color` and `alias_method :highlight_color=, :color=`... Validation: the note form radio `note[highlight_color]` is checked and a PATCH to `blue` persists `color`.",
+      "reasons": "Validation does not cover error rendering or show that other existing JSON settings are preserved after reload.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`GET /notes?notebook_id=…` raises `PG::UndefinedColumn: column notes.notebooks does not exist`. Repair: `where(notebook: @notebook)`... Validation: the \"filters by notebook\" test.",
+      "reasons": "Validation relies on one existing test. It has no unequal notebook populations, no exclusion check and no foreign-owner denial check.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Import#receipt` uses `citation[:id]`, which returns nil on 8.1... Repair: `citation.doi`. ... Validation: the receipt CSV test expects `10.1000/Essays.1`",
+      "reasons": "Validation checks one DOI. It does not compare distinct DOIs against the persisted citations after a real apply.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `applied = rows.all? { |row| row.note.save }`, then `raise ActiveRecord::Rollback unless applied`... Validation: POST a CSV with a blank title and no preview, expecting 422 and no change in `Import.count` or `Note.count`. Control: a valid CSV still imports every row.",
+      "reasons": "Validation does not check citation counts, and the planned request does not state the valid-row-then-invalid-row order (that order appears only in the probe).",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: String can't be coerced into Integer`. ... Repair: `fragments.join`. ... Without the repair, the job raises and the export stays `working`; this is inferred from the code, not observed.",
+      "reasons": "Validation is the unit export test, not a real worker run checking exact ordered bytes. The unrepaired failure state is inferred rather than tested.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "builds string keys, so integer-line lookups miss and the annotation `<dd>` disappears... Repair: remove `.stringify_keys`. ... Validation: preview probe P01 shows the annotation `dd`",
+      "reasons": "Validation lacks unequal annotations at lines 2 and 4, a multiline CSV row, and a no-save check.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "changes from \"Sun 1 Nov 2026, 09:00 (UTC-04:00)\" to \"08:00 (UTC-05:00)\". The stored epoch is unchanged... Validation: P03 matches the baseline, and the epoch stays 1793538017.",
+      "reasons": "Validation covers the DST boundary but has no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Probe P11 on 8.1: \"Your reading digest for October 04, 2026\" versus October 05 on 7.0. Repair: `requested_at = requested_at.in_time_zone(\"UTC\")` in `app/mailers/digest_mailer.rb`.",
+      "reasons": "Validation is a probe, not a real JSON queue/worker. It does not cross each midnight separately or inspect reservation keys and delivered note membership.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `wait_until: Time.at(reminder_epoch)`. ... Validation: the reminders test asserts the enqueued `at` equals 1793451617.",
+      "reasons": "Validation checks the test adapter's enqueued time, not the real scheduled payload/score and persisted schedule time. It has no replacement or ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`RuntimeError: Couldn't determine a delay based on :exponentially_longer`. Repair: `:polynomially_longer`, which 7.0 does not know.",
+      "reasons": "Impact names the error but not the result for the app: bounded retry is lost and the job falls into Sidekiq retries. Validation omits the six-request count, the recorded failure, and the 503->200 and 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: drop `model: nil`. ... Validation: `GET /notes` returns 200 with `form[role=search][action=\"/notes\"][method=get]`.",
+      "reasons": "Validation renders the form but does not submit it or check field names and resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: two `get` lines with explicit names, `as: :notes` and `as: :journal`. ... Validation: `notes_path` and `journal_path` resolve",
+      "reasons": "Validation checks helpers and the route table, not owner requests to both URLs with identical list behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "8.1 requires `:none`. Without it, tests that expect exceptions see 500s... On 7.0, `:none` breaks 8 controller tests, so it cannot be prepared.",
+      "reasons": "There is no explicit check of the raised-exception and missing-record policy, and no check of normal and CI eager-loading modes, beyond the passing suite.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "assign the explicit list derived from `ActionText::ContentHelper.sanitizer.class.allowed_tags` plus `details`, `summary`, the attachment tag... probe P09 keeps `<details><summary>` and `<mark>`, and strips `javascript:` from links.",
+      "reasons": "Validation does not render attachment markup or check that scripts and event handlers are excluded.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `Rails.application.config_for(:secrets)[:citation_provider].to_h`. ... Validation: CitationEnrichmentsControllerTest records the request and its Basic auth header against a local stub provider",
+      "reasons": "Validation stubs config_for inside the test. It is not a fresh-process request with special-character credentials.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "incorrect",
+      "validation": "partial",
+      "quote": "The expired-export partial raises `Cache expiration time is invalid, cannot be negative: -60.0…` (probe P06). Keep off, or guard the `cache` block with `expires_at.future?` (proposed).",
+      "reasons": "Guarding the cache block with `expires_at.future?` is the cache_if-style alternative that the key says broke the stale-link contract; the safe repair is to clamp expiry to zero. Validation is one probe and lacks before/after-deadline, cached/fresh and download controls.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`default_column_serializer = nil`: **executed**; boots because the repaired `Notebook` serializes `preferences` with `coder: YAML`. The bare form would raise a missing coder error.",
+      "reasons": "Validation is boot only. It does not create, edit and reload unequal preferences or check the export heading with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The notebook settings form resubmits `slug`... so adoption would 500 on save. Keep off, or stop permitting `slug` on update (proposed).",
+      "reasons": "Validation is a single probe (P12). It does not test creation, editable field changes, an attempted slug change and the persisted slug.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`postgresql_adapter_decode_dates = true`: **executed**. `Notebook#daily_note_counts` raises `TypeError: no implicit conversion of Date into String` (P04). ... If adopted, `Date.iso8601(day.to_s)` is the proposed fix",
+      "reasons": "Validation is one probe with no off/on comparison of the fix, no asymmetric date counts, no empty-report case and no ownership check.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "missing",
+      "validation": "partial",
+      "quote": "`strict_freshness = true`: default is false under `load_defaults 7.0` in the 8.1 railtie. Not discriminated: probe P07 gave 304 on both versions. Source only.",
+      "reasons": "The plan names the gate but not the affected download controller or the ETag-list change from 200 to 304. It makes no keep/adopt decision, and its probe failed to discriminate between versions.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0 worker raises `ActiveJob::DeserializationError: … BigDecimalSerializer is not known`. Repair: `reading_completion.to_s` in `User#request_digest`. ... `DigestMailer` already parses strings.",
+      "reasons": "Validation inspects the payload and one 7.0-to-8.1 deserialization. It is not a real JSON producer/consumer matrix in both directions with same-version controls and the delivered percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 20,
+  "cost_usd": 0.298036,
+  "duration_ms": 59500
+}
