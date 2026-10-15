@@ -1,0 +1,876 @@
+     1	require "test_helper"
+     2	
+     3	class AccountsControllerTest < ActionDispatch::IntegrationTest
+     4	  setup { sign_in_as users(:reader) }
+     5	
+     6	  test "a reader chooses their time zone" do
+     7	    get edit_account_path
+     8	    assert_select "select[name=?] option[selected]", "user[time_zone]", "(GMT+00:00) UTC"
+     9	
+    10	    patch account_path, params: { user: { time_zone: "Tokyo" } }
+    11	    assert_redirected_to edit_account_path
+    12	    assert_equal "Tokyo", users(:reader).reload.time_zone
+    13	
+    14	    patch account_path, params: { user: { time_zone: "Mars/Olympus Mons" } }
+    15	    assert_response :unprocessable_entity
+    16	    assert_select ".errors", /Time zone is not included in the list/
+    17	    assert_equal "Tokyo", users(:reader).reload.time_zone
+    18	    assert_equal "UTC", users(:other_reader).reload.time_zone
+    19	  end
+    20	end
+    21	require "test_helper"
+    22	
+    23	class ActivityReportsControllerTest < ActionDispatch::IntegrationTest
+    24	  setup do
+    25	    sign_in_as users(:reader)
+    26	  end
+    27	
+    28	  test "a notebook's notes are counted by UTC creation date, newest first" do
+    29	    # Bucharest is ahead of UTC, so the 23:30 note is on 11 October there.
+    30	    users(:reader).update!(time_zone: "Bucharest")
+    31	    notebook = notebooks(:novels)
+    32	    notebook.notes.create!(title: "Adam Bede", status: :ready, created_at: Time.utc(2026, 10, 10, 23, 30))
+    33	    notebook.notes.create!(title: "Romola", created_at: Time.utc(2026, 10, 11, 0, 30))
+    34	    notebook.notes.create!(title: "Silas Marner", status: :ready, created_at: Time.utc(2026, 10, 11, 18))
+    35	    notebooks(:essays).notes.create!(title: "Of experience", created_at: Time.utc(2026, 10, 10, 9))
+    36	    notebooks(:other_research).notes.create!(title: "Felix Holt", created_at: Time.utc(2026, 10, 11, 9))
+    37	
+    38	    get notebook_activity_report_path(notebook)
+    39	
+    40	    assert_response :success
+    41	    rows = css_select(".activity-report tbody tr").map { |row| row.css("td").map { |cell| cell.text.strip } }
+    42	    assert_equal [["11 October 2026", "2"], ["10 October 2026", "1"], ["1 September 2026", "1"]], rows
+    43	    assert_select ".activity-report time[datetime=?]", "2026-10-11"
+    44	    assert_select "p.empty", count: 0
+    45	  end
+    46	
+    47	  test "an empty notebook says so, and another reader's notebook is not found" do
+    48	    notebook = users(:reader).notebooks.create!(name: "Poetry")
+    49	
+    50	    get notebook_activity_report_path(notebook)
+    51	    assert_response :success
+    52	    assert_select ".activity-report", count: 0
+    53	    assert_select "p.empty", "This notebook has no notes yet."
+    54	
+    55	    assert_raises(ActiveRecord::RecordNotFound) { get notebook_activity_report_path(notebooks(:other_research)) }
+    56	  end
+    57	end
+    58	require "test_helper"
+    59	require "open3"
+    60	
+    61	class CitationEnrichmentsControllerTest < ActionDispatch::IntegrationTest
+    62	  setup { sign_in_as users(:reader) }
+    63	
+    64	  test "fetches a manually entered DOI's title and source URL, retrying one unavailable response" do
+    65	    note = notes(:middlemarch)
+    66	    patch note_path(note), params: { note: { title: note.title, doi: " 10.1000/eliot.1871 ", notebook_id: note.notebook_id } }
+    67	    assert_equal "10.1000/eliot.1871", note.reload.citation_doi
+    68	
+    69	    requests = with_provider([503, {}], [200, { title: "Middlemarch", url: "https://example.org/works/middlemarch" }]) do
+    70	      post note_citation_enrichment_path(note)
+    71	      assert_redirected_to note_path(note)
+    72	
+    73	      follow_redirect!
+    74	      assert_select "#citation_metadata", /Pending/
+    75	      assert_select "#citation_metadata button", count: 0
+    76	
+    77	      perform_enqueued_jobs
+    78	    end
+    79	
+    80	    assert_equal [["10.1000/eliot.1871", basic_auth("margin-notes", "local-only")]] * 2, requests
+    81	    citation = Citation.find("10.1000/eliot.1871")
+    82	    assert_equal ["completed", "Middlemarch", "https://example.org/works/middlemarch"],
+    83	      [citation.enrichment_status, citation.title, citation.source_url]
+    84	
+    85	    get note_path(note)
+    86	    assert_select ".citation dd", "Middlemarch"
+    87	    assert_select ".citation a[href=?]", "https://example.org/works/middlemarch"
+    88	    assert_select "#citation_metadata", /Completed/
+    89	
+    90	    # A worker can load the citation before the request that queued it commits.
+    91	    loaded_early = Citation.find("10.1000/eliot.1871")
+    92	    post note_citation_enrichment_path(note)
+    93	    with_provider([200, { title: "Middlemarch", url: "https://example.org/works/middlemarch" }]) { loaded_early.enrich }
+    94	    assert citation.reload.enrichment_completed?
+    95	  end
+    96	
+    97	  test "provider credentials from the environment reach the server unchanged" do
+    98	    user, password = "00123", "sample: value # keep"
+    99	
+   100	    requests = with_provider([200, { title: "Configured work", url: "https://example.org/configured" }]) do
+   101	      env = {
+   102	        "CITATION_PROVIDER_URL" => Rails.application.secrets.citation_provider[:url],
+   103	        "CITATION_PROVIDER_USER" => user,
+   104	        "CITATION_PROVIDER_PASSWORD" => password
+   105	      }
+   106	      # A fresh boot reads ENV instead of this process's cached settings.
+   107	      output, error, status = Open3.capture3(env, Rails.root.join("bin/rails").to_s, "runner",
+   108	        'puts Citation::Provider.new.lookup("10.1000/configured").title')
+   109	
+   110	      assert status.success?, error
+   111	      assert_equal "Configured work\n", output
+   112	    end
+   113	
+   114	    assert_equal [["10.1000/configured", basic_auth(user, password)]], requests
+   115	  end
+   116	
+   117	  test "a provider that stays unavailable or refuses the request leaves a visible failure" do
+   118	    note = notes(:montaigne)
+   119	    note.update!(doi: "10.1000/essais")
+   120	
+   121	    requests = with_provider([503, {}]) do
+   122	      perform_enqueued_jobs { post note_citation_enrichment_path(note) }
+   123	    end
+   124	
+   125	    assert_equal 6, requests.size, "three job attempts, each retrying one 503"
+   126	    get note_path(note)
+   127	    assert_select "#citation_metadata", /Failed: The provider is unavailable \(HTTP 503\)/
+   128	    assert_select "#citation_metadata button", "Fetch again"
+   129	
+   130	    requests = with_provider([401, {}]) do
+   131	      perform_enqueued_jobs { post note_citation_enrichment_path(note) }
+   132	    end
+   133	
+   134	    assert_equal 1, requests.size
+   135	    assert_equal "The provider rejected the configured credentials (HTTP 401)", note.citation.reload.enrichment_error
+   136	    assert_nil note.citation.title
+   137	
+   138	    with_provider([200, { title: "Essais", url: "javascript:alert(1)" }]) do
+   139	      perform_enqueued_jobs { post note_citation_enrichment_path(note) }
+   140	    end
+   141	
+   142	    assert_equal ["failed", nil], [note.citation.reload.enrichment_status, note.citation.source_url]
+   143	    get note_path(note)
+   144	    assert_select ".citation a", count: 0
+   145	  end
+   146	
+   147	  test "readers can only request metadata through their own cited notes" do
+   148	    other_note = notes(:other_secret)
+   149	    other_note.update!(doi: "10.1000/private")
+   150	
+   151	    assert_raises(ActiveRecord::RecordNotFound) { post note_citation_enrichment_path(other_note) }
+   152	    assert_raises(ActiveRecord::RecordNotFound) { post note_citation_enrichment_path(notes(:montaigne)) }
+   153	
+   154	    assert_no_enqueued_jobs
+   155	    assert_nil other_note.citation.reload.enrichment_status
+   156	  end
+   157	
+   158	  private
+   159	    # Serves the given [status, JSON] responses in order from a loopback HTTP
+   160	    # server, repeating the last, and returns each request's DOI and
+   161	    # Authorization header.
+   162	    def with_provider(*responses)
+   163	      requests = []
+   164	      app = lambda do |env|
+   165	        requests << [Rack::Request.new(env).params["doi"], env["HTTP_AUTHORIZATION"]]
+   166	        status, body = responses.size > 1 ? responses.shift : responses.first
+   167	        [status, { "Content-Type" => "application/json" }, [body.to_json]]
+   168	      end
+   169	
+   170	      server = Puma::Server.new(app, Puma::Events.strings)
+   171	      server.add_tcp_listener("127.0.0.1", 0)
+   172	      server.run
+   173	
+   174	      settings = Rails.application.secrets.citation_provider
+   175	      Rails.application.secrets.citation_provider = settings.merge(url: "http://127.0.0.1:#{server.connected_ports.first}")
+   176	      yield
+   177	      requests
+   178	    ensure
+   179	      Rails.application.secrets.citation_provider = settings if settings
+   180	      server&.stop(true)
+   181	    end
+   182	
+   183	    def basic_auth(user, password)
+   184	      "Basic #{Base64.strict_encode64("#{user}:#{password}")}"
+   185	    end
+   186	end
+   187	require "test_helper"
+   188	require "minitest/mock"
+   189	
+   190	class DigestsControllerTest < ActionDispatch::IntegrationTest
+   191	  test "a reader can request one digest per UTC day, listing ready notes updated that day" do
+   192	    release_digest_reservations "2026-10-04", "2026-10-05", "2026-10-06"
+   193	    users(:reader).update!(time_zone: "Eastern Time (US & Canada)")
+   194	    notes(:montaigne).update_columns(updated_at: Time.utc(2026, 10, 4, 16))
+   195	
+   196	    travel_to Time.utc(2026, 10, 5, 3, 30) do
+   197	      notebooks(:essays).notes.create!(title: "Bacon on studies", status: :ready)
+   198	      notebooks(:novels).notes.create!(title: "Adam Bede, unfinished", status: :draft)
+   199	
+   200	      sign_in_as users(:reader)
+   201	      post digest_path
+   202	      assert_redirected_to notes_path
+   203	      assert_equal "Today's reading digest is on its way.", flash[:notice]
+   204	
+   205	      travel 9.hours + 30.minutes
+   206	      post digest_path
+   207	      assert_equal "You have already requested today's reading digest.", flash[:notice]
+   208	
+   209	      sign_in_as users(:other_reader)
+   210	      post digest_path
+   211	      assert_equal "Today's reading digest is on its way.", flash[:notice]
+   212	    end
+   213	
+   214	    assert_equal [users(:reader), users(:other_reader)], enqueued_jobs.map { |job| GlobalID::Locator.locate(job[:args].first["_aj_globalid"]) }
+   215	    assert_equal "2026-10-04T23:30:00.000000000-04:00", enqueued_jobs.first[:args].second["value"], "the job carries the reader's local time"
+   216	
+   217	    perform_enqueued_jobs
+   218	    mail = ActionMailer::Base.deliveries.find { |delivery| delivery.to == ["reader@example.com"] }
+   219	    assert_equal "Your reading digest for October 05, 2026", mail.subject
+   220	    assert_includes mail.body.to_s, "- Bacon on studies (Essays)"
+   221	    assert_not_includes mail.body.to_s, "Montaigne"
+   222	    assert_not_includes mail.body.to_s, "Adam Bede"
+   223	    assert_includes mail.body.to_s, "50% of your notes were ready"
+   224	
+   225	    travel_to Time.utc(2026, 10, 6, 0, 30) do
+   226	      sign_in_as users(:reader)
+   227	      assert_enqueued_jobs(1, only: DigestJob) { post digest_path }
+   228	    end
+   229	  end
+   230	
+   231	  test "a digest request is released when its job cannot be queued" do
+   232	    release_digest_reservations "2026-10-07"
+   233	    sign_in_as users(:reader)
+   234	
+   235	    travel_to Time.utc(2026, 10, 7, 12) do
+   236	      DigestJob.stub(:perform_later, ->(*) { raise Redis::CannotConnectError }) do
+   237	        assert_raises(Redis::CannotConnectError) { post digest_path }
+   238	      end
+   239	      assert_no_enqueued_jobs
+   240	
+   241	      post digest_path
+   242	      assert_equal "Today's reading digest is on its way.", flash[:notice]
+   243	      assert_enqueued_jobs 1, only: DigestJob
+   244	    end
+   245	  end
+   246	
+   247	  private
+   248	    # Reservations are kept in Redis, outside the test database's transactions.
+   249	    def release_digest_reservations(*dates)
+   250	      readers = [users(:reader).id, users(:other_reader).id]
+   251	      Sidekiq.redis { |redis| dates.each { |date| redis.srem("digest_requests:#{date}", readers) } }
+   252	    end
+   253	end
+   254	require "test_helper"
+   255	
+   256	class ExportsControllerTest < ActionDispatch::IntegrationTest
+   257	  setup do
+   258	    ExportJob.clear
+   259	    sign_in_as users(:reader)
+   260	  end
+   261	
+   262	  test "a reader exports a notebook as Markdown and downloads it until it expires" do
+   263	    notebook = notebooks(:novels)
+   264	    notebook.update!(export_heading: "Victorian reading")
+   265	    notebook.notes.create!(title: "Daniel Deronda", body: "<div>Gwendolen at the <strong>roulette</strong> table.</div>",
+   266	      created_at: Time.utc(2026, 9, 5))
+   267	
+   268	    post notebook_exports_path(notebook)
+   269	    assert_redirected_to notebook_exports_path(notebook)
+   270	
+   271	    export = notebook.exports.sole
+   272	    job = ExportJob.jobs.sole
+   273	    assert_equal [export.id, { "format" => "markdown" }], job["args"]
+   274	    assert_equal job["jid"], export.job_id
+   275	
+   276	    get notebook_exports_path(notebook)
+   277	    assert_select "##{dom_id(export)}", /Queued/
+   278	    assert_select "##{dom_id(export)} code", export.job_id
+   279	    assert_select "##{dom_id(export)} button", "Cancel export"
+   280	
+   281	    completed_at = Time.utc(2026, 10, 11, 9)
+   282	    travel_to(completed_at) do
+   283	      ExportJob.drain
+   284	
+   285	      get notebook_exports_path(notebook)
+   286	      assert_select "##{dom_id(export)}", /Complete\s+· 2 of 2 notes processed/
+   287	      assert_select "##{dom_id(export)} button", count: 0
+   288	      assert_select "##{dom_id(export)} a[href=?]", notebook_export_download_path(notebook, export), "Download novels.md"
+   289	    end
+   290	
+   291	    travel_to(completed_at + 24.hours - 1.second) do
+   292	      get notebook_export_download_path(notebook, export)
+   293	      assert_response :success
+   294	      assert_equal "# Victorian reading\n\n## Middlemarch chapter notes\n\nDorothea and Casaubon.\n\n## Daniel Deronda\n\nGwendolen at the roulette table.\n",
+   295	        response.body
+   296	      assert_equal "text/markdown; charset=utf-8", response.content_type
+   297	      assert_match(/attachment; filename="novels.md"/, response.headers["Content-Disposition"])
+   298	      etag, last_modified = response.headers.values_at("ETag", "Last-Modified")
+   299	      assert last_modified
+   300	
+   301	      get notebook_export_download_path(notebook, export), headers: { "If-None-Match" => etag }
+   302	      assert_response :not_modified
+   303	      assert_empty response.body
+   304	
+   305	      travel 1.second
+   306	      get notebook_export_download_path(notebook, export), headers: { "If-None-Match" => etag, "If-Modified-Since" => last_modified }
+   307	      assert_redirected_to notebook_exports_path(notebook)
+   308	      assert_equal "That export is not available to download.", flash[:alert]
+   309	    end
+   310	  end
+   311	
+   312	  test "the cached availability indicator does not authorize a download" do
+   313	    store, caching = ActionController::Base.cache_store, ActionController::Base.perform_caching
+   314	    ActionController::Base.cache_store = ActiveSupport::Cache::MemoryStore.new
+   315	    ActionController::Base.perform_caching = true
+   316	
+   317	    notebook = notebooks(:novels)
+   318	    export = notebook.request_export
+   319	    travel_to(Time.utc(2026, 10, 11, 9)) { ExportJob.drain }
+   320	    download_link = "##{dom_id(export)} a[href=?]"
+   321	
+   322	    travel_to Time.utc(2026, 10, 11, 10) do
+   323	      get notebook_exports_path(notebook)
+   324	      assert_select download_link, notebook_export_download_path(notebook, export)
+   325	
+   326	      # Expire the export without changing its cache key, as if the cached
+   327	      # indicator had outlived the authoritative deadline.
+   328	      export.update_columns(expires_at: 1.minute.ago)
+   329	
+   330	      get notebook_exports_path(notebook)
+   331	      assert_select download_link, notebook_export_download_path(notebook, export)
+   332	
+   333	      get notebook_export_download_path(notebook, export)
+   334	      assert_redirected_to notebook_exports_path(notebook)
+   335	    end
+   336	
+   337	    # The indicator was cached until the original deadline; read it again after that.
+   338	    travel_to Time.utc(2026, 10, 12, 9, 1) do
+   339	      get notebook_exports_path(notebook)
+   340	      assert_select "##{dom_id(export)} a", count: 0
+   341	      assert_select "##{dom_id(export)} .availability", /Expired/
+   342	    end
+   343	  ensure
+   344	    ActionController::Base.cache_store, ActionController::Base.perform_caching = store, caching
+   345	  end
+   346	
+   347	  test "cancelling a queued export means the worker writes no file" do
+   348	    notebook = notebooks(:novels)
+   349	    post notebook_exports_path(notebook)
+   350	    export = notebook.exports.sole
+   351	
+   352	    post notebook_export_cancellation_path(notebook, export)
+   353	    assert_redirected_to notebook_exports_path(notebook)
+   354	    assert_equal "Export cancelled.", flash[:notice]
+   355	
+   356	    ExportJob.drain
+   357	
+   358	    export.reload
+   359	    assert export.cancelled?
+   360	    assert_equal [0, nil], [export.processed_notes_count, export.total_notes_count]
+   361	    assert_not export.file.attached?
+   362	
+   363	    get notebook_exports_path(notebook)
+   364	    assert_select "##{dom_id(export)}", /Cancelled/
+   365	    assert_select "##{dom_id(export)} button", count: 0
+   366	
+   367	    get notebook_export_download_path(notebook, export)
+   368	    assert_redirected_to notebook_exports_path(notebook)
+   369	  end
+   370	
+   371	  test "another reader's exports cannot be requested, seen, cancelled, or downloaded" do
+   372	    other_notebook = notebooks(:other_research)
+   373	    finished = other_notebook.exports.create!.tap(&:generate)
+   374	    queued = other_notebook.exports.create!
+   375	
+   376	    assert_raises(ActiveRecord::RecordNotFound) { get notebook_exports_path(other_notebook) }
+   377	    assert_raises(ActiveRecord::RecordNotFound) { post notebook_exports_path(other_notebook) }
+   378	    assert_raises(ActiveRecord::RecordNotFound) { post notebook_export_cancellation_path(other_notebook, queued) }
+   379	    assert_raises(ActiveRecord::RecordNotFound) { get notebook_export_download_path(other_notebook, finished) }
+   380	    assert_raises(ActiveRecord::RecordNotFound) { get notebook_export_download_path(notebooks(:novels), finished) }
+   381	
+   382	    assert_equal 2, other_notebook.exports.count
+   383	    assert_empty ExportJob.jobs
+   384	    assert queued.reload.queued?
+   385	  end
+   386	end
+   387	require "test_helper"
+   388	
+   389	class ImportsControllerTest < ActionDispatch::IntegrationTest
+   390	  setup { sign_in_as users(:reader) }
+   391	
+   392	  test "previews a CSV without saving, then imports every row and offers a receipt" do
+   393	    notebook = notebooks(:essays)
+   394	    csv = <<~CSV
+   395	      title,body_html,doi,annotation,reminder_epoch
+   396	      On idleness,<p>Idle <b>minds</b></p>,10.1000/Essays.1,Read <b>twice</b> & reflect,1767225600
+   397	
+   398	      "Of experience","<p>Long
+   399	      essay</p>",10.1000/Essays.1,Compare with Bacon,
+   400	    CSV
+   401	
+   402	    assert_no_changes -> { record_counts } do
+   403	      post notebook_import_preview_path(notebook), params: { import: { file: upload(csv) } }
+   404	    end
+   405	
+   406	    assert_response :success
+   407	    assert_select "#line_2 h2", "Line 2: On idleness"
+   408	    assert_select "#line_2 dd", "Read <b>twice</b> & reflect"
+   409	    assert_select "#line_4 h2", "Line 4: Of experience"
+   410	    assert_select "#line_4 dd", "Compare with Bacon"
+   411	    assert_select "#line_2 time[datetime=?]", "2026-01-01T00:00:00Z"
+   412	    csv_field = css_select("input[type=hidden][name='import[csv]']").first["value"]
+   413	
+   414	    assert_difference -> { Note.count } => 2, -> { Citation.count } => 1, -> { Import.count } => 1 do
+   415	      post notebook_imports_path(notebook), params: { import: { csv: csv_field } }
+   416	    end
+   417	
+   418	    import = Import.last
+   419	    assert_redirected_to notebook_import_path(notebook, import)
+   420	    idleness, experience = import.notes.order(:id)
+   421	    assert_equal [notebook, notebook], [idleness.notebook, experience.notebook]
+   422	    assert_equal ["Read <b>twice</b> & reflect", 1767225600], [idleness.annotation, idleness.reminder_epoch]
+   423	    assert_equal ["Compare with Bacon", nil], [experience.annotation, experience.reminder_epoch]
+   424	
+   425	    get note_path(idleness)
+   426	    assert_select ".trix-content b", "minds"
+   427	    assert_select ".citation dd", text: "Read <b>twice</b> & reflect"
+   428	
+   429	    get notebook_import_path(notebook, import, format: :csv)
+   430	    assert_equal "text/csv", response.media_type
+   431	    assert_equal "title,doi\nOn idleness,10.1000/Essays.1\nOf experience,10.1000/Essays.1\n", response.body
+   432	  end
+   433	
+   434	  test "invalid rows are shown with their errors, and applying them saves nothing" do
+   435	    notebook = notebooks(:novels)
+   436	    csv = <<~CSV
+   437	      title,body_html,doi,annotation,reminder_epoch
+   438	      Adam Bede,<p>Hayslope</p>,10.1000/bede,First reading,
+   439	      ,<p>Untitled</p>,not-a-doi,Second reading,tomorrow
+   440	    CSV
+   441	
+   442	    post notebook_import_preview_path(notebook), params: { import: { file: upload(csv) } }
+   443	
+   444	    assert_response :unprocessable_entity
+   445	    assert_select "#line_3 .row-errors li", "Title can't be blank"
+   446	    assert_select "#line_3 .row-errors li", "DOI is invalid"
+   447	    assert_select "#line_3 .row-errors li", "Reminder epoch is not a number"
+   448	    assert_select "#line_3 dd", "Second reading"
+   449	    assert_select "input[name='import[csv]']", count: 0
+   450	
+   451	    assert_no_changes -> { record_counts } do
+   452	      post notebook_imports_path(notebook), params: { import: { csv: csv } }
+   453	    end
+   454	
+   455	    assert_response :unprocessable_entity
+   456	    assert_select "#line_2 .row-errors", count: 0
+   457	    assert_select "#line_3 .row-errors li", "Title can't be blank"
+   458	    assert_nil Note.find_by(title: "Adam Bede")
+   459	  end
+   460	
+   461	  test "rejects a missing CSV or one without the documented header row" do
+   462	    post notebook_import_preview_path(notebooks(:novels)), params: { import: { file: upload("name,doi\nAdam Bede,10.1000/bede\n") } }
+   463	
+   464	    assert_response :unprocessable_entity
+   465	    assert_select ".errors li", "CSV file must start with the header row title,body_html,doi,annotation,reminder_epoch"
+   466	
+   467	    post notebook_import_preview_path(notebooks(:novels)), params: { import: { file: upload("") } }
+   468	
+   469	    assert_response :unprocessable_entity
+   470	    assert_select ".errors li", "CSV file can't be blank"
+   471	
+   472	    post notebook_imports_path(notebooks(:novels)), params: { import: { csv: "" } }
+   473	
+   474	    assert_response :unprocessable_entity
+   475	    assert_select ".errors li", "CSV file can't be blank"
+   476	  end
+   477	
+   478	  test "another reader's notebook cannot receive or reveal imports" do
+   479	    other_notebook = notebooks(:other_research)
+   480	    other_import = other_notebook.imports.create!(csv: "title,body_html,doi,annotation,reminder_epoch\nPrivate,,,,\n")
+   481	    csv = "title,body_html,doi,annotation,reminder_epoch\nIntruder,,,,\n"
+   482	
+   483	    assert_no_changes -> { record_counts } do
+   484	      assert_raises(ActiveRecord::RecordNotFound) { get new_notebook_import_path(other_notebook) }
+   485	      assert_raises(ActiveRecord::RecordNotFound) do
+   486	        post notebook_import_preview_path(other_notebook), params: { import: { file: upload(csv) } }
+   487	      end
+   488	      assert_raises(ActiveRecord::RecordNotFound) do
+   489	        post notebook_imports_path(other_notebook), params: { import: { csv: csv } }
+   490	      end
+   491	    end
+   492	    assert_raises(ActiveRecord::RecordNotFound) { get notebook_import_path(other_notebook, other_import, format: :csv) }
+   493	    assert_raises(ActiveRecord::RecordNotFound) { get notebook_import_path(notebooks(:novels), other_import) }
+   494	  end
+   495	
+   496	  private
+   497	    def record_counts
+   498	      [Import.count, Note.count, Citation.count, ActionText::RichText.count]
+   499	    end
+   500	
+   501	    def upload(csv)
+   502	      Rack::Test::UploadedFile.new(StringIO.new(csv), "text/csv", original_filename: "notes.csv")
+   503	    end
+   504	end
+   505	require "test_helper"
+   506	
+   507	class NotebooksControllerTest < ActionDispatch::IntegrationTest
+   508	  setup { sign_in_as users(:reader) }
+   509	
+   510	  test "lists only the reader's notebooks" do
+   511	    get notebooks_path
+   512	
+   513	    assert_select "li a", text: "Novels"
+   514	    assert_select "li a", text: "Private research", count: 0
+   515	  end
+   516	
+   517	  test "creates a notebook owned by the reader with a slug from its name" do
+   518	    assert_difference -> { users(:reader).notebooks.count } do
+   519	      post notebooks_path, params: { notebook: { name: "Poetry & Verse", slug: "chosen" } }
+   520	    end
+   521	
+   522	    assert_redirected_to notebooks_path
+   523	    assert_equal "poetry-verse", users(:reader).notebooks.find_by!(name: "Poetry & Verse").slug
+   524	  end
+   525	
+   526	  test "settings update the name and export heading but keep the slug" do
+   527	    notebook = notebooks(:novels)
+   528	
+   529	    get edit_notebook_path(notebook)
+   530	    assert_select "input[type=hidden][name='notebook[slug]'][value=novels]"
+   531	    assert_select "input[type=text][name='notebook[slug]']", count: 0
+   532	
+   533	    patch notebook_path(notebook), params: { notebook: { name: "Victorian novels", slug: "novels", export_heading: "Reading notes" } }
+   534	
+   535	    assert_redirected_to notebooks_path
+   536	    notebook.reload
+   537	    assert_equal "Victorian novels", notebook.name
+   538	    assert_equal "Reading notes", notebook.export_heading
+   539	    assert_equal "novels", notebook.slug
+   540	
+   541	    patch notebook_path(notebook), params: { notebook: { name: "Novels", slug: "renamed" } }
+   542	    assert_equal "novels", notebook.reload.slug
+   543	  end
+   544	
+   545	  test "another reader's notebook settings cannot be reached" do
+   546	    other_notebook = notebooks(:other_research)
+   547	
+   548	    assert_raises(ActiveRecord::RecordNotFound) { get edit_notebook_path(other_notebook) }
+   549	    assert_raises(ActiveRecord::RecordNotFound) do
+   550	      patch notebook_path(other_notebook), params: { notebook: { name: "Taken" } }
+   551	    end
+   552	
+   553	    assert_equal "Private research", other_notebook.reload.name
+   554	  end
+   555	
+   556	  test "rejects a blank name" do
+   557	    assert_no_difference -> { Notebook.count } do
+   558	      post notebooks_path, params: { notebook: { name: "" } }
+   559	    end
+   560	
+   561	    assert_response :unprocessable_entity
+   562	    assert_select ".errors li", "Name can't be blank"
+   563	  end
+   564	end
+   565	require "test_helper"
+   566	
+   567	class NotesControllerTest < ActionDispatch::IntegrationTest
+   568	  setup { sign_in_as users(:reader) }
+   569	
+   570	  test "lists the reader's notes newest first at both list paths" do
+   571	    [notes_path, journal_path].each do |path|
+   572	      get path
+   573	
+   574	      assert_response :success
+   575	      assert_select ".note h2", count: 2
+   576	      assert_select ".note:first-child h2", "Montaigne on friendship"
+   577	      assert_select ".note h2", text: "Middlemarch private draft", count: 0
+   578	    end
+   579	  end
+   580	
+   581	  test "renders an unbound search form" do
+   582	    get notes_path
+   583	
+   584	    assert_select "form[role=search][action=?][method=get]", notes_path do
+   585	      assert_select "input[type=search][name=query]"
+   586	      assert_select "select[name=notebook_id] option", text: "Private research", count: 0
+   587	      assert_select "select[name=status] option[value=ready]", "Ready"
+   588	    end
+   589	  end
+   590	
+   591	  test "filters by notebook, status, and title" do
+   592	    get notes_path, params: { notebook_id: notebooks(:novels).id }
+   593	    assert_select ".note h2", text: "Middlemarch chapter notes"
+   594	    assert_select ".note h2", text: "Montaigne on friendship", count: 0
+   595	
+   596	    get notes_path, params: { status: "ready" }
+   597	    assert_select ".note h2", text: "Montaigne on friendship"
+   598	    assert_select ".note h2", text: "Middlemarch chapter notes", count: 0
+   599	
+   600	    get notes_path, params: { query: "middlemarch" }
+   601	    assert_select ".note h2", count: 1
+   602	    assert_select ".note h2", text: "Middlemarch chapter notes"
+   603	  end
+   604	
+   605	  test "shows an empty state when nothing matches" do
+   606	    get notes_path, params: { query: "Proust" }
+   607	
+   608	    assert_select ".note", count: 0
+   609	    assert_select ".empty", "No notes match these filters."
+   610	  end
+   611	
+   612	  test "pages through filtered notes newest first, keeping the filters and page size" do
+   613	    essays = notebooks(:essays)
+   614	    # Created newest first, so ID order is the reverse of the promised order.
+   615	    13.downto(1) { |n| essays.notes.create!(title: format("Reading %02d", n), status: "ready", created_at: Time.utc(2026, 10, 1, n)) }
+   616	    essays.notes.create!(title: "Reading draft", status: "draft", created_at: Time.utc(2026, 10, 2))
+   617	    notebooks(:novels).notes.create!(title: "Reading elsewhere", status: "ready", created_at: Time.utc(2026, 10, 2))
+   618	    filters = { "query" => "reading", "notebook_id" => essays.id.to_s, "status" => "ready", "per_page" => "5" }
+   619	
+   620	    get notes_path, params: filters.merge("page" => "2")
+   621	
+   622	    assert_equal ["Reading 08", "Reading 07", "Reading 06", "Reading 05", "Reading 04"], css_select(".note h2").map { _1.text.strip }
+   623	    assert_select ".range", "Displaying notes 6-10 of 13 in total"
+   624	    assert_select "select[name=per_page] option[selected]", "5"
+   625	    assert_equal filters.merge("page" => "1"), Rack::Utils.parse_query(URI(css_select("a[rel=prev]").first["href"]).query)
+   626	    next_url = URI(css_select("a[rel=next]").first["href"])
+   627	    assert_equal notes_path, next_url.path
+   628	    assert_equal filters.merge("page" => "3"), Rack::Utils.parse_query(next_url.query)
+   629	
+   630	    get next_url.to_s
+   631	
+   632	    assert_equal ["Reading 03", "Reading 02", "Reading 01"], css_select(".note h2").map { _1.text.strip }
+   633	    assert_select ".range", "Displaying notes 11-13 of 13 in total"
+   634	    assert_select "a[rel=prev]"
+   635	    assert_select "a[rel=next]", count: 0
+   636	  end
+   637	
+   638	  test "invalid pages show the first page and page size is capped at 50" do
+   639	    50.times { |n| notebooks(:novels).notes.create!(title: format("Chapter %02d", n + 1), created_at: Time.utc(2026, 10, 1) + n.hours) }
+   640	    notebooks(:other_research).notes.create!(title: "Another reader's newest", created_at: Time.utc(2026, 11, 1))
+   641	
+   642	    ["", "0", "-1", "two"].each do |page|
+   643	      get notes_path, params: { page: page }
+   644	
+   645	      assert_response :success
+   646	      assert_select ".note", count: 10
+   647	      assert_select ".note:first-child h2", "Chapter 50"
+   648	      assert_select ".range", "Displaying notes 1-10 of 52 in total"
+   649	    end
+   650	
+   651	    get notes_path, params: { per_page: "500", page: "2" }
+   652	
+   653	    assert_equal ["Montaigne on friendship", "Middlemarch chapter notes"], css_select(".note h2").map { _1.text.strip }
+   654	    assert_select ".range", "Displaying notes 51-52 of 52 in total"
+   655	    assert_equal({ "per_page" => "50", "page" => "1" }, Rack::Utils.parse_query(URI(css_select("a[rel=prev]").first["href"]).query))
+   656	
+   657	    get notes_path, params: { per_page: "50", page: "9" }
+   658	
+   659	    assert_select ".range", "Displaying notes 51-52 of 52 in total"
+   660	  end
+   661	
+   662	  test "creates a note in an owned notebook" do
+   663	    post notes_path, params: { note: { title: "Woolf on reading", body: "Common reader.", status: "ready", notebook_id: notebooks(:essays).id } }
+   664	
+   665	    assert_redirected_to notes_path
+   666	    note = Note.find_by!(title: "Woolf on reading")
+   667	    assert_equal notebooks(:essays), note.notebook
+   668	    assert note.status_ready?
+   669	  end
+   670	
+   671	  test "edits a note's rich body, tags, highlight, and status" do
+   672	    note = notes(:middlemarch)
+   673	    blob = ActiveStorage::Blob.create_and_upload!(io: file_fixture("page.png").open, filename: "page.png", content_type: "image/png")
+   674	
+   675	    get edit_note_path(note)
+   676	    assert_select "input[type=radio][name='note[status]'][value=draft][checked]"
+   677	    assert_select "input[name='note[tag_list]'][value=?]", "Victorian, marriage"
+   678	    assert_select "input[type=radio][name='note[highlight_color]'][value=yellow][checked]"
+   679	    assert_select "input[type=hidden][name='note[body]'][value*=?]", "Dorothea and Casaubon."
+   680	
+   681	    patch note_path(note), params: { note: {
+   682	      title: "Middlemarch, book one", status: "ready", notebook_id: note.notebook_id,
+   683	      tag_list: "provincial life, Victorian, , Victorian, reform", highlight_color: "green",
+   684	      body: %(<div>Lydgate arrives.</div><action-text-attachment sgid="#{blob.attachable_sgid}"></action-text-attachment>)
+   685	    } }
+   686	
+   687	    assert_redirected_to notes_path
+   688	    note.reload
+   689	    assert_equal "Middlemarch, book one", note.title
+   690	    assert note.status_ready?
+   691	    assert_equal ["provincial life", "Victorian", "reform"], note.tags
+   692	    assert_equal({ "color" => "green" }, note.settings)
+   693	    assert_equal [blob], note.body.embeds.blobs
+   694	
+   695	    get note_path(note)
+   696	    assert_select ".tags li", count: 3
+   697	    assert_select ".trix-content", text: /Lydgate arrives\./
+   698	    assert_select ".trix-content figure.attachment img[src*='page.png']"
+   699	  end
+   700	
+   701	  test "rich text keeps collapsible excerpts and drops unsafe markup" do
+   702	    note = notes(:middlemarch)
+   703	
+   704	    patch note_path(note), params: { note: { title: note.title, notebook_id: note.notebook_id,
+   705	      body: %(<details><summary>Prelude</summary><p>Saint Theresa</p></details><script>alert("x")</script><a href="javascript:alert(1)" onclick="steal()">Link</a>) } }
+   706	    get note_path(note)
+   707	
+   708	    assert_select ".trix-content details summary", "Prelude"
+   709	    assert_select ".trix-content details p", "Saint Theresa"
+   710	    assert_select "main script", count: 0
+   711	    assert_select "main [onclick]", count: 0
+   712	    assert_select "main a[href^=javascript]", count: 0
+   713	  end
+   714	
+   715	  test "a blank title re-renders the form with the submitted values" do
+   716	    note = notes(:middlemarch)
+   717	
+   718	    patch note_path(note), params: { note: { title: "", body: "Revised body", tag_list: "reform, medicine", highlight_color: "blue", notebook_id: note.notebook_id } }
+   719	
+   720	    assert_response :unprocessable_entity
+   721	    assert_select ".errors li", "Title can't be blank"
+   722	    assert_select "input[type=hidden][name='note[body]'][value=?]", "Revised body"
+   723	    assert_select "input[name='note[tag_list]'][value=?]", "reform, medicine"
+   724	    assert_select "input[type=radio][name='note[highlight_color]'][value=blue][checked]"
+   725	    note.reload
+   726	    assert_equal "Middlemarch chapter notes", note.title
+   727	    assert_equal ["Victorian", "marriage"], note.tags
+   728	  end
+   729	
+   730	  test "deletes a note" do
+   731	    assert_difference -> { Note.count }, -1 do
+   732	      delete note_path(notes(:middlemarch))
+   733	    end
+   734	
+   735	    assert_redirected_to notes_path
+   736	  end
+   737	
+   738	  test "another reader's notes and notebooks cannot be reached" do
+   739	    other_note = notes(:other_secret)
+   740	
+   741	    assert_raises(ActiveRecord::RecordNotFound) { get note_path(other_note) }
+   742	    assert_raises(ActiveRecord::RecordNotFound) { get edit_note_path(other_note) }
+   743	    assert_raises(ActiveRecord::RecordNotFound) do
+   744	      patch note_path(other_note), params: { note: { title: "Taken" } }
+   745	    end
+   746	    assert_raises(ActiveRecord::RecordNotFound) { delete note_path(other_note) }
+   747	    assert_raises(ActiveRecord::RecordNotFound) do
+   748	      get notes_path, params: { notebook_id: notebooks(:other_research).id }
+   749	    end
+   750	
+   751	    assert_equal "Middlemarch private draft", other_note.reload.title
+   752	  end
+   753	
+   754	  test "a note cannot be filed in another reader's notebook" do
+   755	    assert_no_difference -> { Note.count } do
+   756	      post notes_path, params: { note: { title: "Intruder", notebook_id: notebooks(:other_research).id } }
+   757	    end
+   758	
+   759	    assert_response :unprocessable_entity
+   760	    assert_select ".errors li", "Notebook must exist"
+   761	  end
+   762	end
+   763	require "test_helper"
+   764	
+   765	class RemindersControllerTest < ActionDispatch::IntegrationTest
+   766	  setup { sign_in_as users(:reader) }
+   767	
+   768	  test "a reader schedules a reminder in their time zone and is emailed once it is due" do
+   769	    users(:reader).update!(time_zone: "Eastern Time (US & Canada)")
+   770	    note = notes(:montaigne)
+   771	
+   772	    post note_reminder_path(note), params: { reminder: { at: "2026-10-31T09:00" } }
+   773	    assert_redirected_to note_path(note)
+   774	
+   775	    nine_eastern = Time.utc(2026, 10, 31, 13).to_i
+   776	    job = enqueued_jobs.sole
+   777	    assert_equal [NoteReminderJob, nine_eastern], job.values_at(:job, :at)
+   778	    assert_equal nine_eastern, note.reload.reminder_epoch
+   779	
+   780	    follow_redirect!
+   781	    assert_select "#reminder", /Scheduled\s+for\s+Sat 31 Oct 2026, 09:00 \(UTC-04:00\)/
+   782	    # Daylight saving time ends before the next day; the preview keeps the offset.
+   783	    assert_select "#next_day_reminder time[datetime=?]", "2026-11-01T09:00:00-04:00"
+   784	
+   785	    perform_enqueued_jobs
+   786	    mail = ActionMailer::Base.deliveries.sole
+   787	    assert_equal ["reader@example.com"], mail.to
+   788	    assert_equal "Reminder: Montaigne on friendship", mail.subject
+   789	    assert_includes mail.body.to_s, %(about "Montaigne on friendship" in Essays at Sat 31 Oct 2026, 09:00 (UTC-04:00))
+   790	    assert_includes mail.body.to_s, note_url(note)
+   791	
+   792	    # A repeated delivery of the same job sends nothing more.
+   793	    assert_no_emails { note.reload.send_reminder(job["job_id"]) }
+   794	
+   795	    get note_path(note)
+   796	    assert_select "#reminder", /Sent\.\s+The reminder for\s+Sat 31 Oct 2026, 09:00/
+   797	    assert_select "#reminder form[action=?]", note_reminder_postponement_path(note), count: 0
+   798	  end
+   799	
+   800	  test "an imported reminder is scheduled at its exact time, and postponing replaces it" do
+   801	    note = notes(:montaigne)
+   802	    note.update!(reminder_epoch: 1_793_451_617)
+   803	
+   804	    get note_path(note)
+   805	    assert_select "#reminder", /Imported for\s+Sat 31 Oct 2026, 13:00 \(UTC\+00:00\)/
+   806	
+   807	    post note_reminder_path(note)
+   808	    assert_redirected_to note_path(note)
+   809	    assert_equal 1_793_451_617, enqueued_jobs.sole[:at]
+   810	
+   811	    post note_reminder_postponement_path(note)
+   812	    assert_redirected_to note_path(note)
+   813	    assert_equal "Reminder postponed a day.", flash[:notice]
+   814	    assert_equal [1_793_451_617, 1_793_538_017], enqueued_jobs.map { |job| job[:at] }
+   815	    assert_equal 1_793_538_017, note.reload.reminder_epoch
+   816	
+   817	    # Both jobs run, but only the reminder that replaced the first one is sent.
+   818	    assert_emails(1) { perform_enqueued_jobs }
+   819	    assert_includes ActionMailer::Base.deliveries.sole.body.to_s, "Sun 1 Nov 2026, 13:00"
+   820	  end
+   821	
+   822	  test "a reminder needs a time, and another reader's notes cannot be reminded" do
+   823	    note = notes(:montaigne)
+   824	
+   825	    post note_reminder_path(note), params: { reminder: { at: "" } }
+   826	    assert_response :unprocessable_entity
+   827	    assert_select "#reminder .errors", /Choose a date and time for the reminder/
+   828	
+   829	    other_note = notes(:other_secret)
+   830	    other_note.update!(reminder_epoch: 1_793_451_617)
+   831	    assert_raises(ActiveRecord::RecordNotFound) { post note_reminder_path(other_note) }
+   832	    assert_raises(ActiveRecord::RecordNotFound) { post note_reminder_postponement_path(other_note) }
+   833	
+   834	    assert_no_enqueued_jobs
+   835	    assert_nil note.reload.reminder_epoch
+   836	    assert_nil other_note.reload.reminder_job_id
+   837	  end
+   838	end
+   839	require "test_helper"
+   840	
+   841	class SessionsControllerTest < ActionDispatch::IntegrationTest
+   842	  test "signed-out readers are sent to sign in" do
+   843	    get notes_path
+   844	
+   845	    assert_redirected_to new_session_path
+   846	  end
+   847	
+   848	  test "signing in with the correct password opens the note list" do
+   849	    post session_path, params: { email: " Reader@Example.com ", password: "password" }
+   850	
+   851	    assert_redirected_to notes_path
+   852	    follow_redirect!
+   853	    assert_select "h1", "Notes"
+   854	  end
+   855	
+   856	  test "a wrong password re-renders the form without signing in" do
+   857	    post session_path, params: { email: users(:reader).email, password: "wrong" }
+   858	
+   859	    assert_response :unprocessable_entity
+   860	    assert_select "[role=alert]", "Email or password is incorrect."
+   861	    assert_select "input[name=email][value=?]", users(:reader).email
+   862	
+   863	    get notes_path
+   864	    assert_redirected_to new_session_path
+   865	  end
+   866	
+   867	  test "signing out ends the session" do
+   868	    sign_in_as users(:reader)
+   869	
+   870	    delete session_path
+   871	    assert_redirected_to new_session_path
+   872	
+   873	    get notes_path
+   874	    assert_redirected_to new_session_path
+   875	  end
+   876	end

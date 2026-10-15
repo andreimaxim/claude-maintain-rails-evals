@@ -1,0 +1,393 @@
+7-2-stable activesupport: *   Improve `number_to_delimited` performance when `delimiter_pattern` is not specified.
+7-2-stable activesupport: *   Silence Dalli 4.0+ warning when using `ActiveSupport::Cache::MemCacheStore`.
+7-2-stable activesupport: *   Fix `ActiveSupport::Inflector.humanize` with international characters.
+7-2-stable activesupport: *   Reject scientific notation in NumberConverter
+7-2-stable activesupport: *   Fix `SafeBuffer#%` to preserve unsafe status
+7-2-stable activesupport: *   Improve performance of NumberToDelimitedConverter
+7-2-stable activesupport: *   Fix `Enumerable#sole` to return the full tuple instead of just the first element of the tuple.
+7-2-stable activesupport: *   Fix parallel tests hanging when worker processes die abruptly.
+7-2-stable activesupport: *   `ActiveSupport::FileUpdateChecker` does not depend on `Time.now` to prevent unnecessary reloads with time travel test helpers
+7-2-stable activesupport: *   Fix `ActiveSupport::BroadcastLogger` from executing a block argument for each logger (tagged, info, etc.).
+7-2-stable activesupport: *   Fix `ActiveSupport::HashWithIndifferentAccess#transform_keys!` removing defaults.
+7-2-stable activesupport: *   Fix `ActiveSupport::HashWithIndifferentAccess#tranform_keys!` to handle collisions.
+7-2-stable activesupport: *   Fix `ActiveSupport::Cache::MemCacheStore#read_multi` to handle network errors.
+7-2-stable activesupport: *   Fix Active Support Cache `fetch_multi` when local store is active.
+7-2-stable activesupport: *   Fix execution wrapping to report all exceptions, including `Exception`.
+7-2-stable activesupport: *   Fix `RedisCacheStore` and `MemCacheStore` to also handle connection pool related errors.
+7-2-stable activesupport: *   Fix `ActiveSupport::Cache#read_multi` to respect version expiry when using local cache.
+7-2-stable activesupport: *   Fix `ActiveSupport::MessageVerifier` and `ActiveSupport::MessageEncryptor` configuration of `on_rotation` callback.
+7-2-stable activesupport: *   Fix `ActiveSupport::MessageVerifier` to always be able to verify both URL-safe and URL-unsafe payloads.
+7-2-stable activesupport: *   Fix `cache.fetch` to honor the provided expiry when `:race_condition_ttl` is used.
+7-2-stable activesupport: *   Better handle procs with splat arguments in `set_callback`.
+7-2-stable activesupport: *   Fix `String#mb_chars` to not mutate the receiver.
+7-2-stable activesupport: *   Improve `ErrorSubscriber` to also mark error causes as reported.
+7-2-stable activesupport: *   Fix `Module#module_parent_name` to return the correct name after the module has been named.
+7-2-stable activesupport: *   Fix a bug in `ERB::Util.tokenize` that causes incorrect tokenization when ERB tags are preceeded by multibyte characters.
+7-2-stable activesupport: *   Include options when instrumenting `ActiveSupport::Cache::Store#delete` and `ActiveSupport::Cache::Store#delete_multi`.
+7-2-stable activesupport: *   Print test names when running `rails test -v` for parallel tests.
+7-2-stable activesupport: *   Fix `delegate_missing_to allow_nil: true` when called with implict self
+7-2-stable activesupport: *   Add `logger` as a dependency since it is a bundled gem candidate for Ruby 3.5
+7-2-stable activesupport: *   Define `Digest::UUID.nil_uuid`, which returns the so-called nil UUID.
+7-2-stable activesupport: *   Support `duration` type in `ActiveSupport::XmlMini`.
+7-2-stable activesupport: *   Remove deprecated `ActiveSupport::Notifications::Event#children` and  `ActiveSupport::Notifications::Event#parent_of?`.
+7-2-stable activesupport: *   Remove deprecated support to call the following methods without passing a deprecator:
+7-2-stable activesupport: *   Remove deprecated `ActiveSupport::Deprecation` delegation to instance.
+7-2-stable activesupport: *   Remove deprecated `SafeBuffer#clone_empty`.
+7-2-stable activesupport: *   Remove deprecated `#to_default_s` from `Array`, `Date`, `DateTime` and `Time`.
+7-2-stable activesupport: *   Remove deprecated support to passing `Dalli::Client` instances to `MemCacheStore`.
+7-2-stable activesupport: *   Remove deprecated `config.active_support.use_rfc4122_namespaced_uuids`.
+7-2-stable activesupport: *   Remove deprecated `config.active_support.remove_deprecated_time_with_zone_name`.
+7-2-stable activesupport: *   Remove deprecated `config.active_support.disable_to_s_conversion`.
+7-2-stable activesupport: *   Remove deprecated support to bolding log text with positional boolean in `ActiveSupport::LogSubscriber#color`.
+7-2-stable activesupport: *   Remove deprecated constants `ActiveSupport::LogSubscriber::CLEAR` and `ActiveSupport::LogSubscriber::BOLD`.
+7-2-stable activesupport: *   Remove deprecated support for `config.active_support.cache_format_version = 6.1`.
+7-2-stable activesupport: *   Remove deprecated `:pool_size` and `:pool_timeout` options for the cache storage.
+7-2-stable activesupport: *   Warn on tests without assertions.
+7-2-stable activesupport: *   Support `hexBinary` type in `ActiveSupport::XmlMini`.
+7-2-stable activesupport: *   Deprecate `ActiveSupport::ProxyObject` in favor of Ruby's built-in `BasicObject`.
+7-2-stable activesupport: *   `stub_const` now accepts a `exists: false` parameter to allow stubbing missing constants.
+7-2-stable activesupport: *   Make `ActiveSupport::BacktraceCleaner` copy filters and silencers on dup and clone.
+7-2-stable activesupport: *   Updating Astana with Western Kazakhstan TZInfo identifier.
+7-2-stable activesupport: *   Add filename support for `ActiveSupport::Logger.logger_outputs_to?`.
+7-2-stable activesupport: *   Include `IPAddr#prefix` when serializing an `IPAddr` using the
+7-2-stable activesupport: *   Add `default:` support for `ActiveSupport::CurrentAttributes.attribute`.
+7-2-stable activesupport: *   Yield instance to `Object#with` block.
+7-2-stable activesupport: *   Use logical core count instead of physical core count to determine the
+7-2-stable activesupport: *   Fix `Time.now/DateTime.now/Date.today` to return results in a system timezone after `#travel_to`.
+7-2-stable activesupport: *   Add `ErrorReported#unexpected` to report precondition violations.
+7-2-stable activesupport: *   Make the order of read_multi and write_multi notifications for `Cache::Store#fetch_multi` operations match the order they are executed in.
+7-2-stable activesupport: *   Make return values of `Cache::Store#write` consistent.
+7-2-stable activesupport: *   Fix logged cache keys not always matching actual key used by cache action.
+7-2-stable activesupport: *   Improve error messages of `assert_changes` and `assert_no_changes`.
+7-2-stable activesupport: *   Fix `#to_fs(:human_size)` to correctly work with negative numbers.
+7-2-stable activesupport: *   Fix `BroadcastLogger#dup` so that it duplicates the logger's `broadcasts`.
+7-2-stable activesupport: *   Fix issue where `bootstrap.rb` overwrites the `level` of a `BroadcastLogger`'s `broadcasts`.
+7-2-stable activesupport: *   Fix compatibility with the `semantic_logger` gem.
+7-2-stable activesupport: *   Fix MemoryStore to prevent race conditions when incrementing or decrementing.
+7-2-stable activesupport: *   Implement `HashWithIndifferentAccess#to_proc`.
+8-0-stable activesupport: *   Fix `String#parameterize` raising `TypeError` when `separator` is `nil`.
+8-0-stable activesupport: *   Add `RedisClient::Error` to `ActiveSupport::Cache::RedisCacheStore`'s failsafe rescue list.
+8-0-stable activesupport: *   Fix `ActiveSupport::Duration#in_minutes`, `#in_hours`, `#in_days`,
+8-0-stable activesupport: *   Fix `number_to_phone` dropping only the first character of a
+8-0-stable activesupport: *   Fix `titleize` inflector to consider Unicode characters
+8-0-stable activesupport: *   Fix inflections to better handle overlapping acronyms.
+8-0-stable activesupport: *   Silence Dalli 4.0+ warning when using `ActiveSupport::Cache::MemCacheStore`.
+8-0-stable activesupport: *   Make `delegate` and `delegate_missing_to` work in BasicObject subclasses.
+8-0-stable activesupport: *   Fix `ActiveSupport::Inflector.humanize` with international characters.
+8-0-stable activesupport: *   Reject scientific notation in NumberConverter
+8-0-stable activesupport: *   Fix `SafeBuffer#%` to preserve unsafe status
+8-0-stable activesupport: *   Improve performance of NumberToDelimitedConverter
+8-0-stable activesupport: *   Fix `Enumerable#sole` to return the full tuple instead of just the first element of the tuple.
+8-0-stable activesupport: *   Fix parallel tests hanging when worker processes die abruptly.
+8-0-stable activesupport: *   Fix `NameError` when `class_attribute` is defined on instance singleton classes.
+8-0-stable activesupport: *   `ActiveSupport::FileUpdateChecker` does not depend on `Time.now` to prevent unnecessary reloads with time travel test helpers
+8-0-stable activesupport: *   Fix `ActiveSupport::BroadcastLogger` from executing a block argument for each logger (tagged, info, etc.).
+8-0-stable activesupport: *   Make `ActiveSupport::Logger` `#freeze`-friendly.
+8-0-stable activesupport: *   Fix `ActiveSupport::HashWithIndifferentAccess#transform_keys!` removing defaults.
+8-0-stable activesupport: *   Fix `ActiveSupport::HashWithIndifferentAccess#tranform_keys!` to handle collisions.
+8-0-stable activesupport: *   Fix `ActiveSupport::Cache::MemCacheStore#read_multi` to handle network errors.
+8-0-stable activesupport: *   Fix configuring `RedisCacheStore` with `raw: true`.
+8-0-stable activesupport: *   Fix `Enumerable#sole` for infinite collections.
+8-0-stable activesupport: *   Fix setting `to_time_preserves_timezone` from `new_framework_defaults_8_0.rb`.
+8-0-stable activesupport: *   Fix Active Support Cache `fetch_multi` when local store is active.
+8-0-stable activesupport: *   Fix execution wrapping to report all exceptions, including `Exception`.
+8-0-stable activesupport: *   Fix `RedisCacheStore` and `MemCacheStore` to also handle connection pool related errors.
+8-0-stable activesupport: *   Fix `ActiveSupport::Cache#read_multi` to respect version expiry when using local cache.
+8-0-stable activesupport: *   Fix `ActiveSupport::MessageVerifier` and `ActiveSupport::MessageEncryptor` configuration of `on_rotation` callback.
+8-0-stable activesupport: *   Fix `ActiveSupport::MessageVerifier` to always be able to verify both URL-safe and URL-unsafe payloads.
+8-0-stable activesupport: *   Fix `cache.fetch` to honor the provided expiry when `:race_condition_ttl` is used.
+8-0-stable activesupport: *   Better handle procs with splat arguments in `set_callback`.
+8-0-stable activesupport: *   Fix `String#mb_chars` to not mutate the receiver.
+8-0-stable activesupport: *   Improve `ErrorSubscriber` to also mark error causes as reported.
+8-0-stable activesupport: *   Fix `Module#module_parent_name` to return the correct name after the module has been named.
+8-0-stable activesupport: *   Fix a bug in `ERB::Util.tokenize` that causes incorrect tokenization when ERB tags are preceeded by multibyte characters.
+8-0-stable activesupport: *   Restore the ability to decorate methods generated by `class_attribute`.
+8-0-stable activesupport: *   Remove deprecated support to passing an array of strings to `ActiveSupport::Deprecation#warn`.
+8-0-stable activesupport: *   Remove deprecated support to setting `attr_internal_naming_format` with a `@` prefix.
+8-0-stable activesupport: *   Remove deprecated `ActiveSupport::ProxyObject`.
+8-0-stable activesupport: *   Don't execute i18n watcher on boot. It shouldn't catch any file changes initially,
+8-0-stable activesupport: *   Fix `ActiveSupport::HashWithIndifferentAccess#stringify_keys` to stringify all keys not just symbols.
+8-0-stable activesupport: *   Include options when instrumenting `ActiveSupport::Cache::Store#delete` and `ActiveSupport::Cache::Store#delete_multi`.
+8-0-stable activesupport: *   Print test names when running `rails test -v` for parallel tests.
+8-0-stable activesupport: *   Deprecate `Benchmark.ms` core extension.
+8-0-stable activesupport: *   `ActiveSupport::TimeWithZone#inspect` now uses ISO 8601 style time like `Time#inspect`
+8-0-stable activesupport: *   `ActiveSupport::ErrorReporter#report` now assigns a backtrace to unraised exceptions.
+8-0-stable activesupport: *   Add `escape_html_entities` option to `ActiveSupport::JSON.encode`.
+8-0-stable activesupport: *   Raise when using key which can't respond to `#to_sym` in `EncryptedConfiguration`.
+8-0-stable activesupport: *   Deprecate addition and since between two `Time` and `ActiveSupport::TimeWithZone`.
+8-0-stable activesupport: *   Support rfc2822 format for Time#to_fs & Date#to_fs.
+8-0-stable activesupport: *   Optimize load time for `Railtie#initialize_i18n`. Filter `I18n.load_path`s passed to the file watcher to only those
+8-0-stable activesupport: *   Add a `filter` option to `in_order_of` to prioritize certain values in the sorting without filtering the results
+8-0-stable activesupport: *   Improve error message when using `assert_difference` or `assert_changes` with a
+8-0-stable activesupport: *   Add a new configuration value `:zone` for `ActiveSupport.to_time_preserves_timezone` and rename the previous `true` value to `:offset`. The new de
+8-0-stable activesupport: *   Align instrumentation `payload[:key]` in ActiveSupport::Cache to follow the same pattern, with namespaced and normalized keys.
+8-0-stable activesupport: *   Fix `travel_to` to set usec 0 when `with_usec` is `false` and the given argument String or DateTime.
+7-2-stable railties: *   Fixed the default Dockerfile to properly include the `vendor/` directory during `bundle install`.
+7-2-stable railties: *   Use `secret_key_base` from ENV or credentials when present locally.
+7-2-stable railties: *   Fix `rails console` for application with non default application constant.
+7-2-stable railties: *   Fix the default Dockerfile to include the full sqlite3 package.
+7-2-stable railties: *   Don't update public directory during `app:update` command for API-only Applications.
+7-2-stable railties: *   Don't add bin/brakeman if brakeman is not in bundle when upgrading an application.
+7-2-stable railties: *   Remove PWA views and routes if its an API only project.
+7-2-stable railties: *   Simplify generated Puma configuration
+7-2-stable railties: *   The new `bin/rails boot` command boots the application and exits. Supports the
+7-2-stable railties: *   Create a Dev Container Generator that generates a Dev Container setup based on the current configuration
+7-2-stable railties: *   Add Rubocop and GitHub Actions to plugin generator.
+7-2-stable railties: *   Remove support for `oracle`, `sqlserver` and JRuby specific database adapters from the
+7-2-stable railties: *   Add options to `bin/rails app:update`.
+7-2-stable railties: *   Implement Rails console commands and helpers with IRB v1.13's extension APIs.
+7-2-stable railties: *   Remove deprecated `Rails::Generators::Testing::Behaviour`.
+7-2-stable railties: *   Remove deprecated `find_cmd_and_exec` console helper.
+7-2-stable railties: *   Remove deprecated `Rails.config.enable_dependency_loading`.
+7-2-stable railties: *   Remove deprecated `Rails.application.secrets`.
+7-2-stable railties: *   Generated Gemfile will include `require: "debug/prelude"` for the `debug` gem.
+7-2-stable railties: *   Skip generating a `test` job in ci.yml when a new application is generated with the
+7-2-stable railties: *   Update the `.node-version` file conditionally generated for new applications to 20.11.1
+7-2-stable railties: *   Fix sanitizer vendor configuration in 7.1 defaults.
+7-2-stable railties: *   Set `action_mailer.default_url_options` values in `development` and `test`.
+7-2-stable railties: *   Introduce `Rails::Generators::Testing::Assertions#assert_initializer`.
+7-2-stable railties: *   Generate a .devcontainer folder and its contents when creating a new app.
+7-2-stable railties: *   Introduce `SystemTestCase#served_by` for configuring the System Test application server.
+7-2-stable railties: *   `bin/rails test` will no longer load files named `*_test.rb` if they are located in the `fixtures` folder.
+7-2-stable railties: *   Ensure logger tags configured with `config.log_tags` are still active in `request.action_dispatch` handlers.
+7-2-stable railties: *   Setup jemalloc in the default Dockerfile for memory optimization.
+7-2-stable railties: *   Commented out lines in .railsrc file should not be treated as arguments when using
+7-2-stable railties: *   Skip CSS when generating APIs.
+7-2-stable railties: *   Rails console now indicates application name and the current Rails environment:
+7-2-stable railties: *   Ensure `autoload_paths`, `autoload_once_paths`, `eager_load_paths`, and
+7-2-stable railties: *   Prevent unnecessary application reloads in development.
+7-2-stable railties: *   Use `oven-sh/setup-bun` in GitHub CI when generating an app with Bun.
+7-2-stable railties: *   Disable `pidfile` generation in the `production` environment.
+7-2-stable railties: *   Set `config.action_view.annotate_rendered_view_with_filenames` to `true` in
+7-2-stable railties: *   Support the `BACKTRACE` environment variable to turn off backtrace cleaning.
+7-2-stable railties: *   Raise `ArgumentError` when reading `config.x.something` with arguments:
+7-2-stable railties: *   Add default PWA files for manifest and service-worker that are served from `app/views/pwa` and can be dynamically rendered through ERB. Mount thes
+7-2-stable railties: *   Updated system tests to now use headless Chrome by default for the new applications.
+7-2-stable railties: *   Add GitHub CI files for Dependabot, Brakeman, RuboCop, and running tests by default. Can be skipped with `--skip-ci`.
+7-2-stable railties: *   Add Brakeman by default for static analysis of security vulnerabilities. Allow skipping with `--skip-brakeman option`.
+7-2-stable railties: *   Add RuboCop with rules from `rubocop-rails-omakase` by default. Skip with `--skip-rubocop`.
+7-2-stable railties: *   Use `bin/rails runner --skip-executor` to not wrap the runner script with an
+7-2-stable railties: *   Fix isolated engines to take `ActiveRecord::Base.table_name_prefix` into consideration.
+7-2-stable railties: *   Fix running `db:system:change` when the app has no Dockerfile.
+7-2-stable railties: *   In Action Mailer previews, list inline attachments separately from normal
+7-2-stable railties: *   In mailer preview, only show SMTP-To if it differs from the union of To, Cc and Bcc.
+7-2-stable railties: *   Enable YJIT by default on new applications running Ruby 3.3+.
+7-2-stable railties: *   In Action Mailer previews, show date from message `Date` header if present.
+7-2-stable railties: *   Exit with non-zero status when the migration generator fails.
+7-2-stable railties: *   Use numeric UID and GID in Dockerfile template.
+7-2-stable railties: *   Disallow invalid values for rails new options.
+7-2-stable railties: *   Conditionally print `$stdout` when invoking `run_generator`.
+7-2-stable railties: *   Remove the option `config.public_file_server.enabled` from the generators
+8-0-stable railties: *   Make lazy route loading thread-safe.
+8-0-stable railties: *   Prevent the internal development welcome route from being duplicated on route reloads.
+8-0-stable railties: *   Fixed the `rails notes` command to properly extract notes in CSS files.
+8-0-stable railties: *   Fixed the default Dockerfile to properly include the `vendor/` directory during `bundle install`.
+8-0-stable railties: *   Fix `polymorphic_url` and `polymorphic_path` not working when routes are not loaded.
+8-0-stable railties: *   Fix Rails console to not override user defined IRB_NAME.
+8-0-stable railties: *   Fix Rails console to load routes.
+8-0-stable railties: *   Update `rails new --minimal` option
+8-0-stable railties: *   Use `secret_key_base` from ENV or credentials when present locally.
+8-0-stable railties: *   Skip generation system tests related code for CI when `--skip-system-test` is given.
+8-0-stable railties: *   Don't add bin/thrust if thruster is not in Gemfile.
+8-0-stable railties: *   Don't install a package for system test when applications don't use it.
+8-0-stable railties: *   Fix incorrect database.yml with `skip_solid`.
+8-0-stable railties: *   Set `Regexp.timeout` to `1`s by default to improve security over Regexp Denial-of-Service attacks.
+8-0-stable railties: *   Remove deprecated support to extend Rails console through `Rails::ConsoleMethods`.
+8-0-stable railties: *   Remove deprecated file `rails/console/helpers`.
+8-0-stable railties: *   Remove deprecated file `rails/console/app`.
+8-0-stable railties: *   Remove deprecated `config.read_encrypted_secrets`.
+8-0-stable railties: *   Add Kamal support for devcontainers
+8-0-stable railties: *   Exit `rails g` with code 1 if generator could not be found.
+8-0-stable railties: *   Remove `require_*` statements from application.css to align with the transition from Sprockets to Propshaft.
+8-0-stable railties: *   Do not include redis by default in generated Dev Containers.
+8-0-stable railties: *   Use [Solid Cable](https://github.com/rails/solid_cable) as the default Action Cable adapter in production, configured as a separate queue database
+8-0-stable railties: *   Use [Solid Queue](https://github.com/rails/solid_queue) as the default Active Job backend in production, configured as a separate queue database i
+8-0-stable railties: *   Use [Solid Cache](https://github.com/rails/solid_cache) as the default Rails.cache backend in production, configured as a separate cache database 
+8-0-stable railties: *   Add Rails::Rack::SilenceRequest middleware and use it via `config.silence_healthcheck_path = path`
+8-0-stable railties: *   Introduce `mariadb-mysql` and `mariadb-trilogy` database options for `rails new`
+8-0-stable railties: *   Deprecate `::STATS_DIRECTORIES`.
+8-0-stable railties: *   Enable query log tags by default on development env
+8-0-stable railties: *   Defer route drawing to the first request, or when url_helpers are called
+8-0-stable railties: *   Generate form helpers to use `textarea*` methods instead of `text_area*` methods
+8-0-stable railties: *   Add authentication generator to give a basic start to an authentication system using database-tracked sessions and password reset.
+8-0-stable railties: *   Add not-null type modifier to migration attributes.
+8-0-stable railties: *   Add a `script` folder to applications, and a scripts generator.
+8-0-stable railties: *   Deprecate `bin/rake stats` in favor of `bin/rails stats`.
+8-0-stable railties: *   Add internal page `/rails/info/notes`, that displays the same information as `bin/rails notes`.
+8-0-stable railties: *   Add Rubocop and GitHub Actions to plugin generator.
+8-0-stable railties: *   Use Kamal for deployment by default, which includes generating a Rails-specific config/deploy.yml.
+7-2-stable activemodel: *   Fix `has_secure_password` to perform confirmation validation of the password even when blank.
+7-2-stable activemodel: *   Handle missing attributes for `ActiveModel::Translation#human_attribute_name`.
+7-2-stable activemodel: *   Fix `ActiveModel::AttributeAssignment#assign_attributes` to accept objects without `each`.
+7-2-stable activemodel: *   Fix regression in `alias_attribute` to work with user defined methods.
+7-2-stable activemodel: *   Fix a bug where type casting of string to `Time` and `DateTime` doesn't
+7-2-stable activemodel: *   Port the `type_for_attribute` method to Active Model. Classes that include
+8-0-stable activemodel: *   Fix `ActiveModel::Type::BigInteger` truncating strings longer than 16 bytes when casting.
+8-0-stable activemodel: *   Limit the size of strings `ActiveModel::Type::Integer` will coerce with `to_i`.
+8-0-stable activemodel: *   Fix `has_secure_password` to perform confirmation validation of the password even when blank.
+8-0-stable activemodel: *   Add `:except_on` option for validations. Grants the ability to _skip_ validations in specified contexts.
+8-0-stable activemodel: *   Make `ActiveModel::Serialization#read_attribute_for_serialization` public
+8-0-stable activemodel: *   Add a default token generator for password reset tokens when using `has_secure_password`.
+8-0-stable activemodel: *   Add a load hook `active_model_translation` for `ActiveModel::Translation`.
+8-0-stable activemodel: *   Add `raise_on_missing_translations` option to `ActiveModel::Translation`.
+8-0-stable activemodel: *   Introduce `ActiveModel::AttributeAssignment#attribute_writer_missing`
+7-2-stable activejob: *   Include the actual Active Job locale when serializing rather than I18n locale.
+7-2-stable activejob: *   Avoid crashing in Active Job logger when logging enqueueing errors
+7-2-stable activejob: *   All tests now respect the `active_job.queue_adapter` config.
+7-2-stable activejob: *   Make Active Job transaction aware when used conjointly with Active Record.
+7-2-stable activejob: *   Do not trigger immediate loading of `ActiveJob::Base` when loading `ActiveJob::TestHelper`.
+7-2-stable activejob: *   Preserve the serialized timezone when deserializing `ActiveSupport::TimeWithZone` arguments.
+7-2-stable activejob: *   Remove deprecated `:exponentially_longer` value for the `:wait` in `retry_on`.
+7-2-stable activejob: *   Remove deprecated support to set numeric values to `scheduled_at` attribute.
+7-2-stable activejob: *   Deprecate `Rails.application.config.active_job.use_big_decimal_serializer`.
+7-2-stable activejob: *   Remove deprecated primitive serializer for `BigDecimal` arguments.
+8-0-stable activejob: *   Include the actual Active Job locale when serializing rather than I18n locale.
+8-0-stable activejob: *   Fix `retry_job` instrumentation when using `:test` adapter for Active Job.
+8-0-stable activejob: *   Avoid crashing in Active Job logger when logging enqueueing errors
+8-0-stable activejob: *   Remove deprecated `config.active_job.use_big_decimal_serializer`.
+8-0-stable activejob: *   Deprecate `sucker_punch` as an adapter option.
+8-0-stable activejob: *   Use `RAILS_MAX_THREADS` in `ActiveJob::AsyncAdapter`. If it is not set, use 5 as default.
+7-2-stable actionmailer: *   Fix NoMethodError in `block_format` helper
+7-2-stable actionmailer: *   Avoid regex backtracking in `block_format` helper
+7-2-stable actionmailer: *   Remove deprecated params via `:args` for `assert_enqueued_email_with`.
+7-2-stable actionmailer: *   Remove deprecated `config.action_mailer.preview_path`.
+7-1 railties: *   Preserve `--asset-pipeline propshaft` when running `app:update`.
+7-1 railties: *   Allow string keys for SQLCommenter.
+7-1 railties: *   Fix derived foreign key to return correctly when association id is part of query constraints.
+7-1 railties: *   Show warning for `secret_key_base` in development too.
+7-1 railties: *   Fix sanitizer vendor configuration in 7.1 defaults.
+7-1 railties: *   Revert the use of `Concurrent.physical_processor_count` in default Puma config
+7-1 railties: *   Make sure `config.after_routes_loaded` hook runs on boot.
+7-1 railties: *   Fix `config.log_level` not being respected when using a `BroadcastLogger`
+7-1 railties: *   Fix isolated engines to take `ActiveRecord::Base.table_name_prefix` into consideration.
+7-1 railties: *   The `bin/rails app:template` command will no longer add potentially unwanted
+7-1 railties: *   If you accessed `config.eager_load_paths` and friends, later changes to
+7-1 railties: *   Always set the Rails logger to be an instance of `ActiveSupport::BroadcastLogger`.
+7-1 railties: *   Require `concurrent-ruby` in `config/puma.rb` so that Puma can boot in
+7-1 railties: *   Raise error when generating attribute with dangerous name.
+7-1 railties: *   Add ability to show slow tests to the test runner
+7-1 railties: *   bin/setup uses `bun` instead of `yarn` when generated an app with bun
+7-1 railties: *   `config/application.rb` now includes
+7-1 railties: *   Add an option to start rails console in sandbox mode by default
+7-1 railties: *   Omit `webdrivers` gem dependency from `Gemfile` template
+7-1 railties: *   Support filtering tests by line ranges
+7-1 railties: *   Update default scaffold templates to set 303 (See Other) as status code
+7-1 railties: *   The new `config.autoload_lib_once` is similar to `config.autoload_lib`,
+7-1 railties: *   Add `config.action_dispatch.debug_exception_log_level` to configure the log
+7-1 railties: *   Add `DATABASE` option to `railties:install:migrations`
+7-1 railties: *   The new method `config.autoload_lib(ignore:)` provides a simple way to
+7-1 railties: *   Don't show secret_key_base for `Rails.application.config#inspect`.
+7-1 railties: *   Deprecate calling `Rails.application.secrets`.
+7-1 railties: *   Store `secret_key_base` in `Rails.config` for local environments.
+7-1 railties: *   Enable force_ssl=true in production by default: Force all access to the app over SSL,
+7-1 railties: *   Add engine's draw paths to application route set, so that the application
+7-1 railties: *   Support `VISUAL` environment variable for commands which open an editor,
+7-1 railties: *   Add engine's `test/fixtures` path to `fixture_paths` in `on_load` hook if
+7-1 railties: *   `bin/rails app:template` now runs `bundle install` and any `after_bundle`
+7-1 railties: *   Trying to set a config key with the same name of a method now raises:
+7-1 railties: *   Deprecate `secrets:edit/show` and remove `secrets:setup`
+7-1 railties: *   `bin/rails --help` will now list only framework and plugin commands. Rake
+7-1 railties: *   Allow calling `bin/rails restart` outside of app directory.
+7-1 railties: *   Support prerelease rubies in Gemfile template if RubyGems version is 3.3.13 or higher.
+7-1 railties: *   Autoloading setup honors root directories manually set by the user.
+7-1 railties: *   Railties now requires the irb gem as a dependency, which means when you install Rails, irb will also
+7-1 railties: *   Use infinitive form for all rails command descriptions verbs.
+7-1 railties: *   Credentials commands (e.g. `bin/rails credentials:edit`) now respect
+7-1 railties: *   Add descriptions for non-Rake commands when running `rails -h`.
+7-1 railties: *   Show relevant commands when calling help
+7-1 railties: *   Add Rails::HealthController#show and map it to /up for newly generated applications.
+7-1 railties: *   Only use HostAuthorization middleware if `config.hosts` is not empty
+7-1 railties: *   Raise an exception when a `before_action`'s "only" or "except" filter
+7-1 railties: *   Use physical processor count as the default Puma worker count in production.
+7-1 railties: *   Add ENV["SECRET_KEY_BASE_DUMMY"] for starting production environment with a generated secret base key,
+7-1 railties: *   Show descriptions for all commands in Rails help
+7-1 railties: *   Always generate the storage/ directory with rails new to ensure there's a stable place to
+7-1 railties: *   Rails console now disables `IRB`'s autocompletion feature in production by default.
+7-1 railties: *   Add `config.precompile_filter_parameters`, which enables precompilation of
+7-1 railties: *   Add `after_routes_loaded` hook to `Rails::Railtie::Configuration` for
+7-1 railties: *   Send 303 See Other status code back for the destroy action on newly generated
+7-1 railties: *   Add `Rails.application.deprecators` as a central point to manage deprecators
+7-1 railties: *   Move dbconsole logic to Active Record connection adapter.
+7-1 railties: *   Add `Rails.application.message_verifiers` as a central point to configure
+7-1 railties: *   Support MySQL's ssl-mode option for the dbconsole command.
+7-1 railties: *   Show BCC recipients when present in Action Mailer previews.
+7-1 railties: *   Extend `routes --grep` to also filter routes by matching against path.
+7-1 railties: *   Improve `rails runner` output when given a file path that doesn't exist.
+7-1 railties: *   `config.allow_concurrency = false` now use a `Monitor` instead of a `Mutex`
+7-1 railties: *   Add `routes --unused` option to detect extraneous routes.
+7-1 railties: *   In-app custom credentials templates are now supported.  When a credentials
+7-1 railties: *   Except for `dev` and `test` environments, newly generated per-environment
+7-1 railties: *   Skip Active Storage and Action Mailer if Active Job is skipped.
+7-1 railties: *   Correctly check if frameworks are disabled when running app:update.
+7-1 railties: *   Execute `rails runner` scripts inside the executor.
+7-1 railties: *   Avoid booting in development then test for test tasks.
+7-1 railties: *   Allow configuration of logger size for local and test environments
+7-1 railties: *   Enroll new apps in decrypted diffs of credentials by default.  This behavior
+7-1 railties: *   Support declarative-style test name filters with `bin/rails test`.
+7-1 railties: *   Add `--js` and `--skip-javascript` options to `rails new`
+7-1 railties: *   Allow relative paths with leading dot slash to be passed to `rails test`.
+7-1 railties: *   Deprecate `config.enable_dependency_loading`. This flag addressed a limitation of the `classic` autoloader and has no effect nowadays. To fix this
+7-1 railties: *   Define `config.enable_reloading` to be `!config.cache_classes` for a more intuitive name. While `config.enable_reloading` and `config.reloading_en
+7-1 railties: *   Add JavaScript dependencies installation on bin/setup
+7-1 railties: *   No longer add autoloaded paths to `$LOAD_PATH`.
+7-1 railties: *   Remove default `X-Download-Options` header
+7-1 railties: *   Add .node-version files for Rails apps that use Node.js
+7-1 activemodel: *   Fix regression in `alias_attribute` to work with user defined methods.
+7-1 activemodel: *   Make `==(other)` method of AttributeSet safe.
+7-1 activemodel: *   Remove change in the typography of user facing error messages.
+7-1 activemodel: *   Support composite identifiers in `to_key`
+7-1 activemodel: *   Add `ActiveModel::Conversion.param_delimiter` to configure delimiter being used in `to_param`
+7-1 activemodel: *   `undefine_attribute_methods` undefines alias attribute methods along with attribute methods.
+7-1 activemodel: *   Error.full_message now strips ":base" from the message.
+7-1 activemodel: *   Add a load hook for `ActiveModel::Model` (named `active_model`) to match the load hook for
+7-1 activemodel: *   Improve password length validation in ActiveModel::SecurePassword to consider byte size for BCrypt
+7-1 activemodel: *   `has_secure_password` now generates an `#{attribute}_salt` method that returns the salt
+7-1 activemodel: *   Improve typography of user facing error messages. In English contractions,
+7-1 activemodel: *   Add class to `ActiveModel::MissingAttributeError` error message.
+7-1 activemodel: *   Raise `NoMethodError` in `ActiveModel::Type::Value#as_json` to avoid unpredictable
+7-1 activemodel: *   Custom attribute types that inherit from Active Model built-in types and do
+7-1 activemodel: *   `has_secure_password` now supports password challenges via a
+7-1 activemodel: *   Support infinite ranges for `LengthValidator`s `:in`/`:within` options
+7-1 activemodel: *   Add support for beginless ranges to inclusivity/exclusivity validators:
+7-1 activemodel: *   Make validators accept lambdas without record argument
+7-1 activemodel: *   Fix casting long strings to `Date`, `Time` or `DateTime`
+7-1 activemodel: *   Use different cache namespace for proxy calls
+7-1 activejob: *   Register autoload for `ActiveJob::Arguments`.
+7-1 activejob: *   Do not trigger immediate loading of `ActiveJob::Base` when loading `ActiveJob::TestHelper`.
+7-1 activejob: *   Preserve the serialized timezone when deserializing `ActiveSupport::TimeWithZone` arguments.
+7-1 activejob: *   Fix ActiveJob arguments serialization to correctly serialize String subclasses having custom serializers.
+7-1 activejob: *   Don't log enqueuing details when the job wasn't enqueued.
+7-1 activejob: *   Make sure `scheduled_at` is a Time object when asserting enqueued jobs.
+7-1 activejob: *   Set `scheduled_at` attribute as a Time object instead of epoch seconds, and serialize and deserialize the value
+7-1 activejob: *   Clarify the backoff strategy for the recommended `:wait` option when retrying jobs
+7-1 activejob: *   Fix Active Job log message to correctly report a job failed to enqueue
+7-1 activejob: *   Add `after_discard` method.
+7-1 activejob: *   Fix deserialization of ActiveSupport::Duration
+7-1 activejob: *   `perform_enqueued_jobs` is now compatible with all Active Job adapters
+7-1 activejob: *   Allow queue adapters to provide a custom name by implementing `queue_adapter_name`
+7-1 activejob: *   Log background job enqueue callers
+7-1 activejob: *   Set `provider_job_id` for Backburner jobs
+7-1 activejob: *   Add `perform_all_later` to enqueue multiple jobs at once
+7-1 activejob: *   Don't double log the `job` when using `ActiveRecord::QueryLog`
+7-1 activejob: *   Add support for Sidekiq's transaction-aware client
+7-1 activejob: *   Remove QueAdapter from Active Job.
+7-1 activejob: *   Fix BigDecimal (de)serialization for adapters using JSON.
+7-1 activejob: *   Preserve full-precision `enqueued_at` timestamps for serialized jobs,
+7-1 activejob: *   `perform.active_job` notification payloads now include `:db_runtime`, which
+7-1 activejob: *   Update `ActiveJob::QueueAdapters::QueAdapter` to remove deprecation warning.
+7-1 activejob: *   Add missing `bigdecimal` require in `ActiveJob::Arguments`
+7-1 activejob: *   Allow testing `discard_on/retry_on ActiveJob::DeserializationError`
+7-1 actionmailer: *   Fix NoMethodError in `block_format` helper
+7-1 actionmailer: *   Avoid regex backtracking in `block_format` helper
+7-1 actionmailer: *   Introduce `ActionMailer::FormBuilder`
+7-1 actionmailer: *   Mailers are listed in alphabetical order on the mailer preview page now.
+7-1 actionmailer: *   Deprecate passing params to `assert_enqueued_email_with` via the `:args`
+7-1 actionmailer: *   Accept procs for args and params in `assert_enqueued_email_with`
+7-1 actionmailer: *   Added `*_deliver` callbacks to `ActionMailer::Base` that wrap mail message delivery.
+7-1 actionmailer: *   Added `deliver_enqueued_emails` to `ActionMailer::TestHelper`. This method
+7-1 actionmailer: *   The `deliver_later_queue_name` used by the default mailer job can now be
+7-1 actionmailer: *   Email previews now include an expandable section to show all headers.
+7-1 actionmailer: *   Default `ActionMailer::Parameterized#params` to an empty `Hash`
+7-1 actionmailer: *   Introduce the `capture_emails` test helper.
+7-1 actionmailer: *   Added ability to download `.eml` file for the email preview.
+7-1 actionmailer: *   Support multiple preview paths for mailers.

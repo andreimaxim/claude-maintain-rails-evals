@@ -492,6 +492,76 @@ altogether. Haiku medium was not run. The records are under
 [`tests/results/20261013-headless/`](tests/results/20261013-headless/), in
 directories named `<variant>-<model>-<effort>-rails`.
 
+## The planner now reports changes by risk instead of validating a plan
+
+**The goal changed from a validated plan to a risk report.** Plans validated by
+experiments (v1 to v18) were slow and expensive, and the implementing agent can
+handle mechanical changes on its own. The planner now reads the gem's changelog,
+the pull requests and commits behind it, and the diff between the released
+versions. It learns what the application uses, leaves out changes to parts the
+application doesn't use, and rates each remaining change high, medium or low. It
+doesn't install, run or change the application.
+
+**Each planted finding has an expected risk level.**
+[`tests/risk-labels.md`](tests/risk-labels.md) labels them with the planner's
+definitions. High is a behavior change without an error in a part the
+application uses, or a change to stored data or queued jobs during a
+mixed-version rollout. Medium is an error whose fix needs a decision, and low is
+a mechanical change that booting or the tests would catch. The Rails labels are
+7 high, 6 medium and 10 low. R25 (`strict_freshness`) is low, because a 304 only
+happens when the client's ETag matches the blob checksum.
+
+**`scripts/grade-risk-report.ts` grades a report against the labels.** A
+headless Opus 5.5 session at high effort, with no tools, receives
+[the grading instructions](tests/risk-grader-instructions.md), the case's labels
+and answer key, and the report. For each labeled change, it records whether the
+report found it and named the affected file, the level the report gave it, and
+whether the report's account contradicts the key. The script compares the levels
+with the labels. The grader also lists the other gems the report says will move,
+and the high and medium findings that aren't labeled. A Rails report costs $0.11
+to $0.24 to grade. On ten Opus-high reports, the grader agreed with a hand
+reading on eight. On the other two, the hand reading had credited defaults that
+the reports left without a level. The grader flagged every wrong claim the hand
+reading found, plus one more.
+
+**Opus high finds almost every change, and Opus low finds two thirds of them.**
+[Variant v19](tests/planner-variants/v19-risk-report) is the baseline
+risk-report prompt, written as principles rather than steps.
+[Variant v20](tests/planner-variants/v20-changes-first) changes one paragraph so
+the planner starts from the changes and searches the application for each one.
+The table gives medians of five Rails runs each:
+
+| Variant and model | Found (of 23) | Same level as the label | High rated high (of 7) | Wrong claims in 5 runs | Median cost | Median time |
+|---|---|---|---|---|---|---|
+| v19, Opus 5.5 high | 23 | 18 | 6 | 1 | $6.80 | 17.1 min |
+| v20, Opus 5.5 high | 22 | 19 | 6 | 2 | $5.86 | 15.8 min |
+| v20, Opus 5.5 low | 16 | 12 | 4 | 6 | $0.82 | 3.4 min |
+
+- The v20 planners still read the whole application first. The application has
+  about 40 files, so it is too small to show whether the order matters.
+- None of the 15 reports says that the upgrade moves json to 3.x, which happens
+  because Active Support 8.1.0 adds a json dependency.
+- Opus low made 6 to 26 tool calls and never compared the released versions,
+  while the v20 Opus-high planners made about 90, including 5 to 10 diffs. Opus low never found
+  R04 or R08, which no changelog entry names.
+- Three of the ten Opus-high reports put the new defaults under "not relevant"
+  or in a section without a level, and all five v20 Opus-high reports rated R17
+  low.
+- The first Opus-low launch stopped two minutes in, when its worker threads were
+  archived by mistake, and the batch was rerun in new orbs.
+
+**[Variant v21](tests/planner-variants/v21-resolve-deps) has not run yet.** It
+asks the planner to resolve the upgrade on copies of the Gemfile and
+Gemfile.lock with `bundle lock --update <gem>`, and to compare the new lockfile
+with the current one, so the report covers the other gems that move.
+
+**Run records now include traces.** `scripts/record-batch.ts --grader risk`
+records each run's report, receipt and grade, and `scripts/export-trace.ts`
+writes the main session and planner transcripts to a `trace/` directory as JSONL.
+The traces keep messages, tool calls and tool results, and leave out thinking
+blocks, API request payloads and environment metadata. The records are under
+[`tests/results/20261015-risk-report/`](tests/results/20261015-risk-report/).
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

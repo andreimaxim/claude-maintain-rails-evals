@@ -1,0 +1,335 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`note.rb:10`: `enum status: ..., _prefix: true` raises `ArgumentError`. Use `enum :status, {...}, prefix: true`",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R02": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`note.rb:12`: `serialize :tags, JSON` raises `ArgumentError` at class load. Use `coder: JSON`",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": true
+    },
+    "R03": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`note.rb:14`: `alias_attribute :highlight_color, :color` raises when the first `Note` is created, because `color` is a store accessor and not an attribute.",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R04": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`notes_controller.rb:12`: `where(notebooks: @notebook)` used to be singularized to the `notebook` association. It now produces SQL against a `notes.notebooks` column that doesn't exist.",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R05": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`citation[:id]` no longer returns the `doi` primary key ... Where: `app/models/import.rb:68`. ... the receipt CSV's `doi` column comes out empty.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R06": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`return` inside a transaction now commits instead of rolling back ... Where: `app/models/import.rb:53-58`",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R07": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`export.rb:42`: `fragments.sum` over strings raises `TypeError`, because Rails' `Enumerable#sum` override was removed. Use `join`.",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R08": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`app/views/imports/preview.html.erb:22` calls `.stringify_keys`, then lines 42-44 look up `annotations[row.line]` with an integer.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R09": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`exports/_export.html.erb:26`: a negative `expires_in` is now dropped and logged, so an \"Expired\" fragment is cached with no expiry.",
+      "reason": "The report rates it low, but the label is high, and it never mentions the opt-in setting that makes the exports page raise.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:43-45` (`reminder_at.to_time + 86_400`) ... The epoch that actually gets scheduled is unchanged",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": true
+    },
+    "R11": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "Job time arguments now keep the reader's time zone ... digests would cover the reader's local day instead of the UTC day.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R12": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "during a rolling deploy, a digest queued by an 8.1 web process and picked up by a 7.0 worker fails to deserialize.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R13": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`note.rb:61`: `set(wait_until: <Integer>)` raises `NoMethodError` (`Integer#utc`) when the job is serialized. Use `Time.at(epoch)`",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R14": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`citation_enrichment_job.rb:7`: `wait: :exponentially_longer` raises \"Couldn't determine a delay\" only when the provider is unavailable",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R15": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`notes/index.html.erb:12`: `form_with(model: nil, ...)` raises `ArgumentError`. Drop `model: nil`",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R16": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`config/routes.rb:18`: `get \"/notes\", \"/journal\", to:` raises \"Wrong number of arguments\". Split it into two routes.",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R17": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`config/environments/test.rb:31`: `show_exceptions = false` is now treated as \"show all\", so the `assert_raises(RecordNotFound)` tests fail. Use `:none`",
+      "reason": "The report rates it low, but the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "`config/initializers/action_text.rb:3` does `allowed_tags += ...`. ... boot fails with `NoMethodError` on `nil`.",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R19": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "`Rails.application.secrets` was removed ... `app/models/citation/provider.rb:13` and `config/secrets.yml`",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R20": {
+      "found": "named",
+      "level": "not_relevant",
+      "accuracy": "accurate",
+      "quote": "`default_column_serializer = nil`: `serialize :preferences` would raise.",
+      "reason": "The report names no file (it never mentions notebook.rb) and puts this under \"Not relevant\", while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "named",
+      "level": "not_relevant",
+      "accuracy": "accurate",
+      "quote": "`raise_on_assign_to_attr_readonly`: the notebook form resubmits the read-only slug.",
+      "reason": "The report names no file for the controller or form and puts this under \"Not relevant\", while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "not_relevant",
+      "accuracy": "accurate",
+      "quote": "`postgresql_adapter_decode_dates`: `Date.iso8601(Date)` in `notebook.rb:40` would raise.",
+      "reason": "The report puts this under \"Not relevant\", while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "named",
+      "level": "not_relevant",
+      "accuracy": "accurate",
+      "quote": "Others with no breakage found: ... `strict_freshness` (affects ETag handling on the export download)",
+      "reason": "The report names no file (it never mentions export_downloads_controller.rb) and calls it not relevant, while the label is high.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "action_text-trix",
+      "quote": "Trix now comes from the `action_text-trix` gem (Trix 2.1.x) ... would load the Trix 2.1.19 stylesheet"
+    }
+  ],
+  "otherFindings": [
+    {
+      "level": "high",
+      "summary": "The \"Astana\" time zone now maps to Asia/Almaty (UTC+5) instead of UTC+6, which shifts reminders and displayed times."
+    },
+    {
+      "level": "high",
+      "summary": "Action Text plain-text conversion now drops script/style text and renumbers ordered lists, which changes exported Markdown."
+    },
+    {
+      "level": "medium",
+      "summary": "Rails' built-in Sidekiq adapter is deprecated (removal in 8.2); moving to Sidekiq 7.3.3+ brings redis-client behavior changes."
+    },
+    {
+      "level": "medium",
+      "summary": "Trix now comes from the action_text-trix gem (Trix 2), so its stylesheet may not match the vendored Trix 1.3.5 script."
+    }
+  ],
+  "located": 20,
+  "levelMatches": 17,
+  "inaccurate": 0,
+  "cost_usd": 0.236452,
+  "duration_ms": 29558
+}

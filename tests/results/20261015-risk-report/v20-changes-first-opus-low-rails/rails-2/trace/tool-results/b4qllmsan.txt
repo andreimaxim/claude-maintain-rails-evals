@@ -1,0 +1,765 @@
+development:
+  citation_provider: &local_citation_provider
+    url: <%= ENV.fetch("CITATION_PROVIDER_URL", "http://127.0.0.1:9393").to_json %>
+    user: <%= ENV.fetch("CITATION_PROVIDER_USER", "margin-notes").to_json %>
+    password: <%= ENV.fetch("CITATION_PROVIDER_PASSWORD", "local-only").to_json %>
+test:
+  citation_provider: *local_citation_provider
+production:
+  citation_provider:
+    url: <%= ENV["CITATION_PROVIDER_URL"].to_json %>
+    user: <%= ENV["CITATION_PROVIDER_USER"].to_json %>
+    password: <%= ENV["CITATION_PROVIDER_PASSWORD"].to_json %>
+ActionText::ContentHelper.allowed_tags += %w[ details summary ]
+Rails.application.config.assets.version = "1.0"
+Rails.application.config.filter_parameters += [
+  :passw, :secret, :token, :_key, :crypt, :salt, :certificate, :otp, :ssn
+]
+require "pagy/extras/items"
+require "pagy/extras/overflow"
+Pagy::DEFAULT[:items] = 10
+Pagy::DEFAULT[:items_param] = :per_page
+Pagy::DEFAULT[:max_items] = 50
+Pagy::DEFAULT[:overflow] = :last_page
+test:
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage") %>
+local:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
+development:
+  adapter: async
+test:
+  adapter: test
+production:
+  adapter: redis
+  url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" } %>
+  channel_prefix: margin_notes_production
+config/environments/test.rb:require "active_support/core_ext/integer/time"
+config/environments/test.rb:
+config/environments/test.rb:
+config/environments/test.rb:Rails.application.configure do
+config/environments/test.rb:
+config/environments/test.rb:  config.cache_classes = true
+config/environments/test.rb:
+config/environments/test.rb:  config.eager_load = ENV["CI"].present?
+config/environments/test.rb:
+config/environments/test.rb:  config.public_file_server.enabled = true
+config/environments/test.rb:  config.public_file_server.headers = {
+config/environments/test.rb:    "Cache-Control" => "public, max-age=#{1.hour.to_i}"
+config/environments/test.rb:  }
+config/environments/test.rb:
+config/environments/test.rb:  config.consider_all_requests_local       = true
+config/environments/test.rb:  config.action_controller.perform_caching = false
+config/environments/test.rb:  config.cache_store = :null_store
+config/environments/test.rb:
+config/environments/test.rb:  config.action_dispatch.show_exceptions = false
+config/environments/test.rb:
+config/environments/test.rb:  config.action_controller.allow_forgery_protection = false
+config/environments/test.rb:
+config/environments/test.rb:  config.active_job.queue_adapter = :test
+config/environments/test.rb:
+config/environments/test.rb:  config.active_storage.service = :test
+config/environments/test.rb:
+config/environments/test.rb:  config.action_mailer.perform_caching = false
+config/environments/test.rb:
+config/environments/test.rb:  config.action_mailer.delivery_method = :test
+config/environments/test.rb:  config.action_mailer.default_url_options = { host: "www.example.com" }
+config/environments/test.rb:
+config/environments/test.rb:  config.active_support.deprecation = :stderr
+config/environments/test.rb:
+config/environments/test.rb:  config.active_support.disallowed_deprecation = :raise
+config/environments/test.rb:
+config/environments/test.rb:  config.active_support.disallowed_deprecation_warnings = []
+config/environments/test.rb:
+config/environments/test.rb:
+config/environments/test.rb:end
+config/environments/development.rb:require "active_support/core_ext/integer/time"
+config/environments/development.rb:
+config/environments/development.rb:Rails.application.configure do
+config/environments/development.rb:
+config/environments/development.rb:  config.cache_classes = false
+config/environments/development.rb:
+config/environments/development.rb:  config.eager_load = false
+config/environments/development.rb:
+config/environments/development.rb:  config.consider_all_requests_local = true
+config/environments/development.rb:
+config/environments/development.rb:  config.server_timing = true
+config/environments/development.rb:
+config/environments/development.rb:  if Rails.root.join("tmp/caching-dev.txt").exist?
+config/environments/development.rb:    config.action_controller.perform_caching = true
+config/environments/development.rb:    config.action_controller.enable_fragment_cache_logging = true
+config/environments/development.rb:
+config/environments/development.rb:    config.cache_store = :memory_store
+config/environments/development.rb:    config.public_file_server.headers = {
+config/environments/development.rb:      "Cache-Control" => "public, max-age=#{2.days.to_i}"
+config/environments/development.rb:    }
+config/environments/development.rb:  else
+config/environments/development.rb:    config.action_controller.perform_caching = false
+config/environments/development.rb:
+config/environments/development.rb:    config.cache_store = :null_store
+config/environments/development.rb:  end
+config/environments/development.rb:
+config/environments/development.rb:  config.active_storage.service = :local
+config/environments/development.rb:
+config/environments/development.rb:  config.action_mailer.delivery_method = :file
+config/environments/development.rb:  config.action_mailer.file_settings = { location: Rails.root.join("tmp/mails") }
+config/environments/development.rb:  config.action_mailer.raise_delivery_errors = true
+config/environments/development.rb:  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+config/environments/development.rb:
+config/environments/development.rb:  config.action_mailer.perform_caching = false
+config/environments/development.rb:
+config/environments/development.rb:  config.active_support.deprecation = :log
+config/environments/development.rb:
+config/environments/development.rb:  config.active_support.disallowed_deprecation = :raise
+config/environments/development.rb:
+config/environments/development.rb:  config.active_support.disallowed_deprecation_warnings = []
+config/environments/development.rb:
+config/environments/development.rb:  config.active_record.migration_error = :page_load
+config/environments/development.rb:
+config/environments/development.rb:  config.active_record.verbose_query_logs = true
+config/environments/development.rb:
+config/environments/development.rb:  config.assets.quiet = true
+config/environments/development.rb:
+config/environments/development.rb:
+config/environments/development.rb:
+config/environments/development.rb:end
+class ApplicationRecord < ActiveRecord::Base
+  primary_abstract_class
+end
+# A work identified by its DOI, shared by every reader who cites it. Readers'
+# own annotations stay on their notes. Its metadata, and the state of the latest
+# request for it, are shared too.
+class Citation < ApplicationRecord
+  has_many :notes, foreign_key: :citation_doi
+
+  enum :enrichment_status, { pending: 0, completed: 1, failed: 2 }, prefix: :enrichment
+
+  validates :doi, format: { with: %r{\A10\.\d{4,9}/\S+\z} }
+
+  # Marks the citation pending and queues a metadata lookup, unless one is
+  # already pending. Returns whether a lookup was queued. The job is queued under
+  # the row lock, so a failed enqueue rolls back the pending state.
+  def request_enrichment
+    with_lock do
+      if enrichment_pending?
+        false
+      else
+        update!(enrichment_status: :pending, enrichment_error: nil)
+        CitationEnrichmentJob.perform_later(self)
+        true
+      end
+    end
+  end
+
+  # Asks the provider for this DOI's metadata. A permanent refusal marks the
+  # enrichment failed; an unavailable provider raises so the job can retry.
+  def enrich
+    metadata = Provider.new.lookup(doi)
+    record_enrichment(title: metadata.title, source_url: metadata.source_url, enrichment_status: :completed, enrichment_error: nil)
+  rescue Provider::Error => error
+    fail_enrichment(error.message)
+  end
+
+  def fail_enrichment(reason)
+    record_enrichment(enrichment_status: :failed, enrichment_error: reason)
+  end
+
+  private
+    # The job can load this citation before the request that queued it commits.
+    # Taking the row lock waits for that commit and reloads, so the result is
+    # written even when it equals the values loaded earlier.
+    def record_enrichment(attributes)
+      with_lock { update!(attributes) }
+    end
+end
+# A Markdown file of one notebook's notes, written by ExportJob. The reader can
+# cancel it while it is queued or working; the worker checks between notes and
+# stops. A completed file can be downloaded until it expires.
+class Export < ApplicationRecord
+  AVAILABLE_FOR = 24.hours
+
+  belongs_to :notebook
+  has_one_attached :file
+
+  enum :status, { queued: 0, working: 1, completed: 2, cancelled: 3 }
+
+  scope :newest_first, -> { order(created_at: :desc, id: :desc) }
+
+  def cancellable?
+    queued? || working?
+  end
+
+  # Cancels a queued or working export. Returns whether it was cancelled.
+  def cancel
+    with_lock do
+      if cancellable?
+        update!(status: :cancelled)
+      else
+        false
+      end
+    end
+  end
+
+  # Writes the notebook's notes, oldest first, under its export heading. Progress
+  # is saved after each note. A cancelled export stops before the next note and
+  # keeps no file.
+  def generate
+    notes = notebook.notes.with_rich_text_body.order(:created_at, :id).to_a
+    return unless start(notes.size)
+
+    fragments = ["# #{notebook.export_heading || notebook.name}\n"]
+    notes.each_with_index do |note, index|
+      fragments << markdown_for(note)
+      return unless record_progress(index + 1)
+    end
+
+    finish(fragments.sum)
+  end
+
+  # The authoritative check for downloading the file.
+  def downloadable?
+    completed? && expires_at.future?
+  end
+
+  private
+    # A retried job starts again from the first note.
+    def start(total)
+      with_lock do
+        update!(status: :working, processed_notes_count: 0, total_notes_count: total) if cancellable?
+      end
+    end
+
+    def record_progress(count)
+      with_lock do
+        update!(processed_notes_count: count) unless cancelled?
+      end
+    end
+
+    # The file is stored before the export is marked completed, so a completed
+    # export always has one.
+    def finish(markdown)
+      blob = ActiveStorage::Blob.create_and_upload!(io: StringIO.new(markdown),
+        filename: "#{notebook.slug}.md", content_type: "text/markdown")
+
+      completed = with_lock do
+        update!(file: blob, status: :completed, expires_at: AVAILABLE_FOR.from_now) unless cancelled?
+      end
+
+      blob.purge unless completed
+    end
+
+    def markdown_for(note)
+      body = note.body.to_plain_text.strip
+      markdown = "\n## #{note.title.squish}\n"
+      markdown += "\n#{body}\n" if body.present?
+      markdown
+    end
+end
+require "csv"
+
+# A CSV of notes for one notebook. A preview reads and validates the rows without
+# saving anything. Applying validates them again and saves the import with every
+# row's note, or saves nothing.
+class Import < ApplicationRecord
+  HEADERS = %w[ title body_html doi annotation reminder_epoch ]
+  MAXIMUM_SIZE = 100.kilobytes
+  MAXIMUM_ROWS = 100
+
+  Row = Struct.new(:line, :note, :annotation)
+
+  belongs_to :notebook
+  has_many :notes, dependent: :nullify
+
+  validate :csv_is_importable, on: :create
+
+  # Reads one byte past the limit, which is enough to reject a larger file.
+  def file=(upload)
+    self.csv = String.new(upload.read(MAXIMUM_SIZE + 1).to_s, encoding: Encoding::UTF_8)
+  end
+
+  def csv
+    @csv.to_s
+  end
+
+  def csv=(text)
+    @csv = text.to_s
+    @rows = nil
+  end
+
+  def rows
+    parse unless @rows
+    @rows
+  end
+
+  # The reader's annotations by source line.
+  def annotations
+    rows.each_with_object(ActiveSupport::HashWithIndifferentAccess.new) do |row, annotations|
+      annotations[row.line] = row.annotation
+    end
+  end
+
+  # Validates the file and every row without saving. Returns whether the import
+  # can be applied, leaving the errors on the import and each row's note.
+  def preview
+    valid? && rows.map { |row| row.note.valid? }.all?
+  end
+
+  def apply
+    return false if invalid?
+
+    transaction do
+      save!
+      rows.each do |row|
+        return false unless row.note.save
+      end
+    end
+
+    true
+  end
+
+  def receipt
+    CSV.generate do |csv|
+      csv << %w[ title doi ]
+      notes.includes(:citation).order(:id).each do |note|
+        citation = note.citation
+        csv << [ note.title, citation && citation[:id] ]
+      end
+    end
+  end
+
+  private
+    def parse
+      @rows, @headers, @problem = [], nil, nil
+      return if csv.bytesize > MAXIMUM_SIZE || !csv.valid_encoding?
+
+      reader = CSV.new(csv.delete_prefix("\uFEFF").encode(universal_newline: true))
+      citations = {}
+      next_line = 1
+
+      reader.each do |fields|
+        line, next_line = next_line, next_line + reader.line.count("\n")
+
+        if @headers.nil?
+          @headers = fields.map { |field| field.to_s.strip }
+          break if @headers != HEADERS
+        elsif fields.size != HEADERS.size && fields.any?
+          @problem = "line #{line} has #{fields.size} fields instead of #{HEADERS.size}"
+          break
+        elsif fields.any?
+          @rows << build_row(line, fields, citations)
+          break if @rows.size > MAXIMUM_ROWS
+        end
+      end
+    rescue CSV::MalformedCSVError => error
+      @problem = "it is not valid CSV (#{error.message})"
+    end
+
+    # Rows naming the same DOI share one citation, so it is created only once.
+    def build_row(line, fields, citations)
+      title, body_html, doi, annotation, reminder_epoch = fields.map { |field| field.to_s.strip }
+      citation = citations[doi] ||= Citation.find_or_initialize_by(doi: doi) if doi.present?
+
+      note = Note.new(notebook: notebook, import: self, title: title, body: body_html, citation: citation,
+        annotation: annotation.presence, reminder_epoch: reminder_epoch.presence)
+
+      Row.new(line, note, annotation.presence)
+    end
+
+    def csv_is_importable
+      rows
+
+      if csv.empty?
+        errors.add(:csv, :blank)
+      elsif csv.bytesize > MAXIMUM_SIZE
+        errors.add(:csv, "must be #{ActiveSupport::NumberHelper.number_to_human_size(MAXIMUM_SIZE)} or smaller")
+      elsif !csv.valid_encoding?
+        errors.add(:csv, "must be UTF-8 text")
+      elsif @problem
+        errors.add(:csv, "cannot be read because #{@problem}")
+      elsif @headers != HEADERS
+        errors.add(:csv, "must start with the header row #{HEADERS.join(",")}")
+      elsif rows.empty?
+        errors.add(:csv, "must contain at least one note")
+      elsif rows.size > MAXIMUM_ROWS
+        errors.add(:csv, "must contain #{MAXIMUM_ROWS} notes or fewer")
+      end
+    end
+end
+class Note < ApplicationRecord
+  HIGHLIGHT_COLORS = %w[ yellow green blue pink ]
+  MAXIMUM_ATTACHMENT_SIZE = 1.megabyte
+
+  belongs_to :notebook
+  belongs_to :import, optional: true
+  belongs_to :citation, optional: true, foreign_key: :citation_doi, validate: true
+  has_rich_text :body
+
+  enum status: { draft: 0, ready: 1 }, _prefix: true
+
+  serialize :tags, JSON
+  store_accessor :settings, :color
+  alias_attribute :highlight_color, :color
+
+  validates :title, presence: true
+  validates :color, inclusion: { in: HIGHLIGHT_COLORS }, allow_blank: true
+  validates :reminder_epoch, numericality: { only_integer: true, greater_than: 0, less_than: 10_000_000_000 }, allow_nil: true
+  validate :attachments_are_small
+
+  scope :newest_first, -> { order(created_at: :desc, id: :desc) }
+  scope :titled_like, ->(query) { where("notes.title ILIKE ?", "%#{sanitize_sql_like(query)}%") }
+
+  def doi
+    citation_doi
+  end
+
+  # Cites the shared citation with this exact DOI, ignoring surrounding whitespace.
+  # A blank DOI removes the citation from the note.
+  def doi=(doi)
+    doi = doi.to_s.strip
+    self.citation = (Citation.find_or_initialize_by(doi: doi) if doi.present?)
+  end
+
+  # The reminder time in the reader's time zone.
+  def reminder_at
+    Time.find_zone!(notebook.user.time_zone).at(reminder_epoch) if reminder_epoch
+  end
+
+  # Twenty-four elapsed hours after the reminder time, for postponing it a day.
+  # The result keeps the reminder's UTC offset, so across a daylight saving
+  # change its wall-clock time differs from the reader's local time.
+  def next_day_reminder_at
+    reminder_at.to_time + 86_400
+  end
+
+  def reminder_scheduled?
+    reminder_job_id.present? && reminder_sent_at.nil?
+  end
+
+  # Schedules an email reminder at the given time in seconds since 1970, by
+  # default the stored one, such as an imported reminder. It replaces any
+  # earlier reminder for this note: the earlier job sends nothing when it runs.
+  # Returns whether the reminder was scheduled. The job is queued under the row
+  # lock, so a failed enqueue leaves the previous reminder in place.
+  def schedule_reminder(epoch = reminder_epoch)
+    with_lock do
+      self.reminder_epoch = epoch
+
+      if reminder_epoch && valid?
+        job = NoteReminderJob.set(wait_until: reminder_epoch).perform_later(self)
+        update!(reminder_job_id: job.job_id, reminder_sent_at: nil)
+      else
+        errors.add(:base, "Choose a date and time for the reminder") if reminder_epoch.nil?
+        restore_attributes([:reminder_epoch])
+        false
+      end
+    end
+  end
+
+  def postpone_reminder
+    reminder_scheduled? && schedule_reminder(next_day_reminder_at.to_i)
+  end
+
+  # Sends the reminder if the given job is still the one scheduled for it.
+  # Taking the row lock waits for the request that queued the job to commit.
+  def send_reminder(job_id)
+    with_lock do
+      if reminder_job_id == job_id && reminder_scheduled?
+        update!(reminder_sent_at: Time.current)
+        ReminderMailer.with(note: self).note_reminder.deliver_now
+      end
+    end
+  end
+
+  def tag_list
+    tags.join(", ")
+  end
+
+  def tag_list=(list)
+    self.tags = list.to_s.split(",").map(&:strip).reject(&:blank?).uniq
+  end
+
+  private
+    def attachments_are_small
+      if body.body&.attachables.to_a.grep(ActiveStorage::Blob).any? { |blob| blob.byte_size > MAXIMUM_ATTACHMENT_SIZE }
+        errors.add(:body, "attachments must be #{ActiveSupport::NumberHelper.number_to_human_size(MAXIMUM_ATTACHMENT_SIZE)} or smaller")
+      end
+    end
+end
+class Notebook < ApplicationRecord
+  belongs_to :user
+  has_many :notes, dependent: :destroy
+  has_many :imports, dependent: :destroy
+  has_many :exports, dependent: :destroy
+
+  serialize :preferences
+  attr_readonly :slug
+
+  before_validation :assign_slug, on: :create
+
+  validates :name, presence: true
+
+  def export_heading
+    preferences.to_h["export_heading"]
+  end
+
+  def export_heading=(heading)
+    self.preferences = preferences.to_h.merge("export_heading" => heading.to_s.strip.presence).compact
+  end
+
+  # Queues a Markdown export. The export is saved before its job is queued, so
+  # the worker can always load it, and removed again if Redis refuses the job.
+  def request_export
+    export = exports.create!
+    export.update!(job_id: ExportJob.perform_async(export.id, { format: "markdown" }))
+    export
+  rescue Redis::BaseError
+    export&.destroy
+    raise
+  end
+
+  # The number of notes, in any status, created on each UTC date, newest date
+  # first, as [date, count] pairs. Dates without notes are omitted. Only notes
+  # that still exist are counted, so deleting a note lowers its date's count.
+  # Timestamps are stored in UTC, so their date part is the UTC date. The raw
+  # select returns that date as PostgreSQL's ISO 8601 text.
+  def daily_note_counts
+    days = notes.select("DATE(notes.created_at) AS day, COUNT(*) AS notes_count").group("day").order("day DESC")
+    Note.connection.select_rows(days).map { |day, count| [Date.iso8601(day), count] }
+  end
+
+  private
+    def assign_slug
+      self.slug = name.to_s.parameterize.presence || "notebook"
+    end
+end
+class User < ApplicationRecord
+  # Keep digest reservations past the end of their UTC day.
+  DIGEST_RESERVATIONS_KEPT_FOR = 2.days
+
+  has_secure_password
+
+  has_many :notebooks, dependent: :destroy
+  has_many :notes, through: :notebooks
+
+  before_validation { self.email = email.to_s.strip.downcase }
+
+  validates :email, presence: true, uniqueness: true
+  validates :time_zone, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }
+
+  def self.authenticate(email, password)
+    find_by(email: email.to_s.strip.downcase)&.authenticate(password)
+  end
+
+  # Reads a date and time the reader entered, such as "2026-10-31T09:00", in
+  # their time zone. Returns nil when it is blank or not a valid time.
+  def local_time(text)
+    Time.find_zone!(time_zone).iso8601(text.to_s) if text.present?
+  rescue ArgumentError
+    nil
+  end
+
+  # Queues an email digest of ready notes updated today (UTC), unless the reader
+  # has already requested one for that UTC day. Returns whether a digest was queued.
+  #
+  # A Redis set of reader IDs for each day holds the reservations. If the job
+  # cannot be queued, the reservation is released and the error raised, so the
+  # reader can ask again. This prevents repeated requests, not repeated
+  # deliveries: a job that Sidekiq retries can send its digest more than once.
+  def request_digest
+    requested_at = Time.current.in_time_zone(time_zone)
+    key = "digest_requests:#{requested_at.utc.to_date.iso8601}"
+
+    if Sidekiq.redis { |redis| redis.sadd(key, id) }
+      begin
+        Sidekiq.redis { |redis| redis.expire(key, DIGEST_RESERVATIONS_KEPT_FOR.to_i) }
+        DigestJob.perform_later(self, requested_at, reading_completion)
+      rescue StandardError
+        Sidekiq.redis { |redis| redis.srem(key, id) }
+        raise
+      end
+
+      true
+    else
+      false
+    end
+  end
+
+  # The share of the reader's notes that are ready, from 0 to 1.
+  def reading_completion
+    total = notes.count
+    total.zero? ? BigDecimal("0") : (BigDecimal(notes.status_ready.count) / total).round(4)
+  end
+end
+# The configured citation metadata service. It answers GET /works?doi=... with a
+# JSON title and source URL, using HTTP basic authentication. Settings come from
+# config/secrets.yml, which reads them from the environment.
+class Citation::Provider
+  # The provider answered, but cannot supply metadata for this DOI.
+  class Error < StandardError; end
+
+  # The provider cannot answer now. Asking again later may succeed.
+  class Unavailable < StandardError; end
+
+  Metadata = Struct.new(:title, :source_url)
+
+  def initialize(settings = Rails.application.secrets.citation_provider.to_h)
+    @url, @user, @password = settings.values_at(:url, :user, :password)
+  end
+
+  def lookup(doi)
+    raise Error, "No citation provider is configured" if @url.blank?
+
+    response = connection.get("works", doi: doi)
+
+    case response.status
+    when 200 then metadata_from(response.body)
+    when 401, 403 then raise Error, "The provider rejected the configured credentials (HTTP #{response.status})"
+    when 404 then raise Error, "The provider has no record of this DOI"
+    when 429, 500..599 then raise Unavailable, "The provider is unavailable (HTTP #{response.status})"
+    else raise Error, "The provider gave an unexpected response (HTTP #{response.status})"
+    end
+  rescue Faraday::ConnectionFailed, Faraday::TimeoutError => error
+    raise Unavailable, "The provider could not be reached (#{error.message})"
+  end
+
+  private
+    # Retries a GET once on 503 before reporting the provider unavailable.
+    def connection
+      Faraday.new(url: @url, request: { open_timeout: 2, timeout: 5 }) do |faraday|
+        faraday.request :retry, max: 1, retry_statuses: [503]
+        faraday.request :basic_auth, @user, @password
+      end
+    end
+
+    def metadata_from(body)
+      attributes = JSON.parse(body)
+      title, source_url = attributes["title"], attributes["url"] if attributes.is_a?(Hash)
+
+      if title.is_a?(String) && title.present? && web_url?(source_url)
+        Metadata.new(title.strip, source_url)
+      else
+        raise Error, "The provider's response did not include a title and web address"
+      end
+    rescue JSON::ParserError
+      raise Error, "The provider's response was not valid JSON"
+    end
+
+    def web_url?(url)
+      uri = URI.parse(url.to_s)
+      uri.is_a?(URI::HTTP) && uri.host.present?
+    rescue URI::InvalidURIError
+      false
+    end
+end
+app/views/sessions/new.html.erb:5:<%= form_with url: session_path, class: "stacked-form" do |form| %>
+app/views/exports/index.html.erb:5:  <%= button_to "Export as Markdown", notebook_exports_path(@notebook) %>
+app/views/exports/_export.html.erb:22:    <%= button_to "Cancel export", notebook_export_cancellation_path(notebook, export), class: "secondary-button" %>
+app/views/imports/preview.html.erb:10:  <%= form_with model: @import, url: notebook_imports_path(@notebook), class: "actions" do |form| %>
+app/views/imports/preview.html.erb:52:              <time datetime="<%= Time.at(row.note.reminder_epoch).utc.iso8601 %>"><%= l Time.at(row.note.reminder_epoch).utc, format: :long %> UTC</time>
+app/views/imports/_form.html.erb:1:<%= form_with model: import, url: notebook_import_preview_path(notebook), class: "stacked-form", data: { turbo: false } do |form| %>
+app/views/notebooks/_form.html.erb:1:<%= form_with model: notebook, class: "stacked-form" do |form| %>
+app/views/active_storage/blobs/_blob.html.erb:4:    <%= image_tag rails_blob_path(blob), alt: blob.filename.to_s %>
+app/views/layouts/application.html.erb:13:    <%= javascript_include_tag "trix-1.3.5.js", "data-turbo-track": "reload" %>
+app/views/layouts/application.html.erb:27:          <%= button_to "Sign out", session_path, method: :delete %>
+app/views/notes/_citation_metadata.html.erb:21:    <%= button_to citation.enrichment_status ? "Fetch again" : "Fetch metadata", note_citation_enrichment_path(note) %>
+app/views/notes/edit.html.erb:7:<%= button_to "Delete note", note_path(@note), method: :delete, class: "danger",
+app/views/notes/index.html.erb:6:    <%= button_to "Email today's digest", digest_path, class: "secondary-button", aria: { describedby: "digest_hint" } %>
+app/views/notes/index.html.erb:12:<%= form_with(model: nil, url: notes_path, method: :get, class: "search", html: { role: "search" }) do |form| %>
+app/views/notes/_form.html.erb:1:<%= form_with model: note, class: "stacked-form" do |form| %>
+app/views/notes/_reminder.html.erb:17:      <%= button_to "Remind me a day later", note_reminder_postponement_path(note), class: "secondary-button", aria: { describedby: "next_day_reminder" } %>
+app/views/notes/_reminder.html.erb:28:    <%= button_to "Schedule this reminder", note_reminder_path(note), class: "secondary-button" %>
+app/views/notes/_reminder.html.erb:33:  <%= form_with url: note_reminder_path(note), scope: :reminder, class: "reminder-form" do |form| %>
+app/views/accounts/edit.html.erb:5:<%= form_with model: current_user, url: account_path, method: :patch, class: "stacked-form" do |form| %>
+app/controllers/import_previews_controller.rb:2:  before_action :set_notebook
+app/controllers/sessions_controller.rb:2:  skip_before_action :require_sign_in, only: [:new, :create]
+app/controllers/sessions_controller.rb:10:      redirect_to notes_path
+app/controllers/sessions_controller.rb:19:    redirect_to new_session_path, status: :see_other, notice: "Signed out."
+app/controllers/digests_controller.rb:9:    redirect_to notes_path, status: :see_other, notice: notice
+app/controllers/notebooks_controller.rb:2:  before_action :set_notebook, only: [:edit, :update]
+app/controllers/notebooks_controller.rb:16:      redirect_to notebooks_path, notice: "Notebook created."
+app/controllers/notebooks_controller.rb:27:      redirect_to notebooks_path, notice: "Notebook settings saved."
+app/controllers/notebooks_controller.rb:40:      params.require(:notebook).permit(:name, :slug, :export_heading)
+app/controllers/export_downloads_controller.rb:15:      redirect_to notebook_exports_path(notebook), alert: "That export is not available to download."
+app/controllers/accounts_controller.rb:7:      redirect_to edit_account_path, status: :see_other, notice: "Account settings saved."
+app/controllers/accounts_controller.rb:15:      params.require(:user).permit(:time_zone)
+app/controllers/imports_controller.rb:2:  before_action :set_notebook
+app/controllers/imports_controller.rb:13:      redirect_to notebook_import_path(@notebook, @import), status: :see_other,
+app/controllers/reminders_controller.rb:13:      redirect_to note_path(@note), status: :see_other, notice: "Reminder scheduled."
+app/controllers/export_cancellations_controller.rb:7:    redirect_to notebook_exports_path(notebook), status: :see_other, notice: notice
+app/controllers/citation_enrichments_controller.rb:13:    redirect_to note_path(note), status: :see_other, notice: notice
+app/controllers/reminder_postponements_controller.rb:6:    redirect_to note_path(note), status: :see_other, notice: notice
+app/controllers/application_controller.rb:2:  before_action :require_sign_in
+app/controllers/application_controller.rb:12:      redirect_to new_session_path unless current_user
+app/jobs/application_job.rb:3:  # retry_on ActiveRecord::Deadlocked
+app/jobs/application_job.rb:6:  # discard_on ActiveJob::DeserializationError
+app/controllers/notes_controller.rb:4:  before_action :set_note, only: [:show, :edit, :update, :destroy]
+app/controllers/notes_controller.rb:5:  before_action :set_notebooks, except: [:show, :destroy]
+app/controllers/notes_controller.rb:30:      redirect_to notes_path, notice: "Note created."
+app/controllers/notes_controller.rb:47:      redirect_to notes_path, notice: "Note updated."
+app/controllers/notes_controller.rb:55:    redirect_to notes_path, status: :see_other, notice: "Note deleted."
+app/controllers/notes_controller.rb:68:      params.require(:note).permit(:title, :body, :status, :doi, :tag_list, :highlight_color)
+app/mailers/digest_mailer.rb:3:  # Active Job deserializes the request time in the worker's time zone (UTC),
+app/controllers/exports_controller.rb:2:  before_action :set_notebook
+app/controllers/exports_controller.rb:10:    redirect_to notebook_exports_path(@notebook), status: :see_other, notice: "Export queued."
+app/models/note.rb:8:  has_rich_text :body
+app/models/note.rb:10:  enum status: { draft: 0, ready: 1 }, _prefix: true
+app/models/note.rb:12:  serialize :tags, JSON
+app/models/note.rb:37:    Time.find_zone!(notebook.user.time_zone).at(reminder_epoch) if reminder_epoch
+app/models/note.rb:44:    reminder_at.to_time + 86_400
+app/models/note.rb:55:  # lock, so a failed enqueue leaves the previous reminder in place.
+app/models/note.rb:61:        job = NoteReminderJob.set(wait_until: reminder_epoch).perform_later(self)
+app/models/note.rb:96:      if body.body&.attachables.to_a.grep(ActiveStorage::Blob).any? { |blob| blob.byte_size > MAXIMUM_ATTACHMENT_SIZE }
+app/models/citation.rb:7:  enum :enrichment_status, { pending: 0, completed: 1, failed: 2 }, prefix: :enrichment
+app/models/citation.rb:13:  # the row lock, so a failed enqueue rolls back the pending state.
+app/models/citation.rb:20:        CitationEnrichmentJob.perform_later(self)
+app/models/user.rb:41:        DigestJob.perform_later(self, requested_at, reading_completion)
+app/jobs/note_reminder_job.rb:5:  discard_on ActiveJob::DeserializationError
+app/jobs/citation_enrichment_job.rb:7:  retry_on Citation::Provider::Unavailable, wait: :exponentially_longer, attempts: 3 do |job, error|
+app/models/export.rb:8:  has_one_attached :file
+app/models/export.rb:10:  enum :status, { queued: 0, working: 1, completed: 2, cancelled: 3 }
+app/models/export.rb:67:      blob = ActiveStorage::Blob.create_and_upload!(io: StringIO.new(markdown),
+app/models/import.rb:53:    transaction do
+test/controllers/exports_controller_test.rb:29:    travel_to(completed_at) do
+test/controllers/exports_controller_test.rb:38:    travel_to(completed_at + 24.hours - 1.second) do
+test/controllers/exports_controller_test.rb:52:      travel 1.second
+test/controllers/exports_controller_test.rb:61:    ActionController::Base.cache_store = ActiveSupport::Cache::MemoryStore.new
+test/controllers/exports_controller_test.rb:66:    travel_to(Time.utc(2026, 10, 11, 9)) { ExportJob.drain }
+test/controllers/exports_controller_test.rb:69:    travel_to Time.utc(2026, 10, 11, 10) do
+test/controllers/exports_controller_test.rb:85:    travel_to Time.utc(2026, 10, 12, 9, 1) do
+app/models/notebook.rb:7:  serialize :preferences
+app/models/citation/provider.rb:3:# config/secrets.yml, which reads them from the environment.
+app/models/citation/provider.rb:13:  def initialize(settings = Rails.application.secrets.citation_provider.to_h)
+test/controllers/reminders_controller_test.rb:14:    job = enqueued_jobs.sole
+test/controllers/reminders_controller_test.rb:23:    perform_enqueued_jobs
+test/controllers/reminders_controller_test.rb:47:    assert_equal 1_793_451_617, enqueued_jobs.sole[:at]
+test/controllers/reminders_controller_test.rb:52:    assert_equal [1_793_451_617, 1_793_538_017], enqueued_jobs.map { |job| job[:at] }
+test/controllers/reminders_controller_test.rb:56:    assert_emails(1) { perform_enqueued_jobs }
+test/controllers/reminders_controller_test.rb:72:    assert_no_enqueued_jobs
+test/controllers/citation_enrichments_controller_test.rb:20:      perform_enqueued_jobs
+test/controllers/citation_enrichments_controller_test.rb:45:        "CITATION_PROVIDER_URL" => Rails.application.secrets.citation_provider[:url],
+test/controllers/citation_enrichments_controller_test.rb:65:      perform_enqueued_jobs { post note_citation_enrichment_path(note) }
+test/controllers/citation_enrichments_controller_test.rb:74:      perform_enqueued_jobs { post note_citation_enrichment_path(note) }
+test/controllers/citation_enrichments_controller_test.rb:82:      perform_enqueued_jobs { post note_citation_enrichment_path(note) }
+test/controllers/citation_enrichments_controller_test.rb:97:    assert_no_enqueued_jobs
+test/controllers/citation_enrichments_controller_test.rb:117:      settings = Rails.application.secrets.citation_provider
+test/controllers/citation_enrichments_controller_test.rb:118:      Rails.application.secrets.citation_provider = settings.merge(url: "http://127.0.0.1:#{server.connected_ports.first}")
+test/controllers/citation_enrichments_controller_test.rb:122:      Rails.application.secrets.citation_provider = settings if settings
+test/test_helper.rb:11:  # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
+test/test_helper.rb:12:  fixtures :all
+test/controllers/accounts_controller_test.rb:16:    assert_select ".errors", /Time zone is not included in the list/
+test/controllers/digests_controller_test.rb:10:    travel_to Time.utc(2026, 10, 5, 3, 30) do
+test/controllers/digests_controller_test.rb:19:      travel 9.hours + 30.minutes
+test/controllers/digests_controller_test.rb:28:    assert_equal [users(:reader), users(:other_reader)], enqueued_jobs.map { |job| GlobalID::Locator.locate(job[:args].first["_aj_globalid"]) }
+test/controllers/digests_controller_test.rb:29:    assert_equal "2026-10-04T23:30:00.000000000-04:00", enqueued_jobs.first[:args].second["value"], "the job carries the reader's local time"
+test/controllers/digests_controller_test.rb:31:    perform_enqueued_jobs
+test/controllers/digests_controller_test.rb:39:    travel_to Time.utc(2026, 10, 6, 0, 30) do
+test/controllers/digests_controller_test.rb:41:      assert_enqueued_jobs(1, only: DigestJob) { post digest_path }
+test/controllers/digests_controller_test.rb:49:    travel_to Time.utc(2026, 10, 7, 12) do
+test/controllers/digests_controller_test.rb:50:      DigestJob.stub(:perform_later, ->(*) { raise Redis::CannotConnectError }) do
+test/controllers/digests_controller_test.rb:53:      assert_no_enqueued_jobs
+test/controllers/digests_controller_test.rb:57:      assert_enqueued_jobs 1, only: DigestJob
+test/controllers/digests_controller_test.rb:62:    # Reservations are kept in Redis, outside the test database's transactions.
+test/models/export_test.rb:14:    assert_no_difference -> { ActiveStorage::Blob.count } do
+test/controllers/notes_controller_test.rb:109:    blob = ActiveStorage::Blob.create_and_upload!(io: file_fixture("page.png").open, filename: "page.png", content_type: "image/png")
+test/models/note_test.rb:21:    large = ActiveStorage::Blob.create_and_upload!(io: StringIO.new("x" * (1.megabyte + 1)), filename: "scan.pdf", content_type: "application/pdf")

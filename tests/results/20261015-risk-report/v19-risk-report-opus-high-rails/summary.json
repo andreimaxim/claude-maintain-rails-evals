@@ -1,0 +1,78 @@
+{
+  "configuration": "opus-5.5-high",
+  "case": "rails",
+  "request": "Upgrade the rails gem to 8.1.0",
+  "variant": "tests/planner-variants/v19-risk-report (Risk report: read changelog, PRs and diffs, judge relevance to the app, rate high/medium/low; no experiments)",
+  "harness": "claude -p --plugin-dir via scripts/run-worker.ts",
+  "grader": {
+    "script": "scripts/grade-risk-report.ts",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "inputs_sha256": {
+      "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+      "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de"
+    }
+  },
+  "runs": [
+    {
+      "run": 1,
+      "thread": "https://ampcode.com/threads/T-01a13eab-4c96-757a-be38-05dd4f1b88e7",
+      "archive_sha256": "3daa9622114474176f0c88809cee3e45ca0e7fa0f723f7bcda6e766880fa4dc9",
+      "wall_time_ms": 1183693,
+      "cost_usd": 9.643344800000001,
+      "grader_located": 20,
+      "grader_level_matches": 17,
+      "grader_inaccurate": 0,
+      "grading_cost_usd": 0.236452,
+      "checkout_unchanged": true
+    },
+    {
+      "run": 2,
+      "thread": "https://ampcode.com/threads/T-01a13eb1-ddf5-71ac-a1cb-a22e270ea4df",
+      "archive_sha256": "540393c24364c488a8149a36c6aa3d75ef4c85424f112dc6180cf0ee447c4dc1",
+      "wall_time_ms": 871594,
+      "cost_usd": 6.5089534,
+      "grader_located": 23,
+      "grader_level_matches": 18,
+      "grader_inaccurate": 0,
+      "grading_cost_usd": 0.1562294,
+      "checkout_unchanged": true
+    },
+    {
+      "run": 3,
+      "thread": "https://ampcode.com/threads/T-01a13eb1-e7b5-7778-bc07-c9f5ef8cdc23",
+      "archive_sha256": "083e16d3e13936f991f6d236cfba2de1dc8bf43cd14452e0610cb75ed5362824",
+      "wall_time_ms": 879457,
+      "cost_usd": 5.351426600000002,
+      "grader_located": 20,
+      "grader_level_matches": 18,
+      "grader_inaccurate": 0,
+      "grading_cost_usd": 0.1394174,
+      "checkout_unchanged": true
+    },
+    {
+      "run": 4,
+      "thread": "https://ampcode.com/threads/T-01a13eb2-2b89-7550-9fdf-feb6a28fbfe0",
+      "archive_sha256": "28462dc2ef21a21f11d829305bbc6b3b18700de5b9dbc662d6946caaba32624a",
+      "wall_time_ms": 1025945,
+      "cost_usd": 7.209133000000003,
+      "grader_located": 23,
+      "grader_level_matches": 21,
+      "grader_inaccurate": 0,
+      "grading_cost_usd": 0.14258939999999998,
+      "checkout_unchanged": true
+    },
+    {
+      "run": 5,
+      "thread": "https://ampcode.com/threads/T-01a13eb2-410f-76fb-b281-35b1b416a441",
+      "archive_sha256": "0801259e726c9d519ecb301170101a671a3c597e08ae59fb74ce1a74e2ca5a4d",
+      "wall_time_ms": 1045800,
+      "cost_usd": 6.801123199999998,
+      "grader_located": 21,
+      "grader_level_matches": 19,
+      "grader_inaccurate": 1,
+      "grading_cost_usd": 0.15490939999999997,
+      "checkout_unchanged": true
+    }
+  ]
+}

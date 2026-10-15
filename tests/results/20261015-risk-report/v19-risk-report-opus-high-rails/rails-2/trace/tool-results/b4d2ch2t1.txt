@@ -1,0 +1,511 @@
+     1	# Architecture
+     2	
+     3	## Starting point
+     4	
+     5	Margin Notes is a reading-notebook application. Implemented so far:
+     6	
+     7	- A reader (`User`) signs in with email and password through `has_secure_password`.
+     8	  `SessionsController` stores only the user ID in the Rails session.
+     9	  `ApplicationController#require_sign_in` protects the application's other
+    10	  controllers, but not Rails' Active Storage controllers.
+    11	- A reader owns `Notebook`s, and each `Note` belongs to one notebook. A note's
+    12	  owner is its notebook's owner, so `User#notes` (through notebooks) is the
+    13	  authorized note scope. There is no separate `user_id` on notes.
+    14	- `NotesController#index` serves `/notes` and its `/journal` alias. It lists the
+    15	  reader's notes newest first with an ID tie-breaker, and supports title search
+    16	  and notebook and status filters. `show` renders one note's rich body.
+    17	- Pagy 8.6.3 paginates that filtered list after ordering, 10 notes per page by
+    18	  default. The search form offers 5, 10, 25, or 50 as the `per_page` URL
+    19	  parameter. Larger requested sizes are capped at 50. Next and previous links keep
+    20	  the filters and page size. A blank, zero, negative, or nonnumeric page shows the
+    21	  first page, and a page past the end shows the last page. The form never sends
+    22	  an invalid size. A blank, zero, negative, or nonnumeric `per_page` in a URL is
+    23	  not handled, and Pagy raises `Pagy::VariableError`.
+    24	- A note's body is Action Text (`has_rich_text :body`), edited with Trix.
+    25	  Attachments are Active Storage blobs on the local Disk service. `Note` rejects
+    26	  saves that embed a blob over 1 MB. Direct uploads store blobs before this
+    27	  validation, without a size limit. Rejected or abandoned uploads remain
+    28	  unattached, and nothing purges them. No image processor is installed, so images
+    29	  use the original blobs, not variants. A migration converted existing plain-text
+    30	  bodies to escaped rich text.
+    31	- Action Text sanitizes rich text when it renders. The
+    32	  [Action Text initializer](config/initializers/action_text.rb) adds
+    33	  `details`/`summary` to the default allowlist for collapsible excerpts. Trix
+    34	  does not support those elements. Stored excerpts render as collapsible content,
+    35	  but saving them through the editor permanently flattens that structure, even
+    36	  when only tags or highlight change.
+    37	- Note tags are a JSON array in a text column, entered as a comma-separated
+    38	  list (`Note#tag_list`). The highlight color is `color` in the `settings` jsonb
+    39	  column, which the form edits as `highlight_color`.
+    40	- `NotebooksController#edit`/`update` are notebook settings. The slug is derived
+    41	  from the name on creation and is read-only afterward (`attr_readonly`). The
+    42	  settings form resubmits it unchanged. The export heading is stored in the
+    43	  serialized `preferences` hash. Markdown exports use both.
+    44	- A reader imports a CSV into one owned notebook. `ImportPreviewsController`
+    45	  reads the upload and renders a preview without saving. The preview page sends
+    46	  the CSV text back in a hidden field, and `ImportsController#create` reads and
+    47	  validates it again rather than trusting the preview. `Import#apply` saves the
+    48	  import and each row's note in one transaction. If any row cannot be saved,
+    49	  nothing from the batch remains. The receipt page and its CSV download list
+    50	  each imported note's title and DOI. Submitting the same preview twice creates
+    51	  two imports.
+    52	- `Import` accepts one format: UTF-8 CSV with the header row
+    53	  `title,body_html,doi,annotation,reminder_epoch`, at most 100 notes and 100 KB.
+    54	  Only the title is required. Previews identify rows by their source line, so a
+    55	  quoted multi-line body keeps the line where its row starts. Body HTML takes the
+    56	  same Action Text assignment and render-time sanitization as the editor.
+    57	- A `Citation` is identified by its DOI, the table's `doi` primary key, and is
+    58	  shared by every reader who cites it. A DOI is stored as given apart from
+    59	  surrounding whitespace, so case variants are different citations. Rows in one
+    60	  import share a new citation. Two simultaneous imports that introduce the same
+    61	  new DOI can conflict; the losing request fails with a server error and saves
+    62	  nothing. A reader's annotation and optional reminder epoch belong to the note,
+    63	  not the citation. Annotations are plain text in both the preview and note page;
+    64	  line breaks are preserved on the note page, but markup is displayed literally.
+    65	  Applying an import does not schedule its reminders; the reader schedules each
+    66	  one from its note.
+    67	- A reader can also enter a DOI on the note form (`Note#doi=`), which cites the
+    68	  shared citation with that exact, trimmed DOI or creates it.
+    69	- A reader requests metadata for the citation on one of their notes with
+    70	  `CitationEnrichmentsController#create`, nested under the note. It resolves the
+    71	  note through `current_user.notes`, so another reader's note, or a note without
+    72	  a DOI, is a 404. `Citation#request_enrichment` marks the citation pending and
+    73	  queues `CitationEnrichmentJob`, unless a request is already pending. The job
+    74	  calls `Citation#enrich`, which stores the provider's title and source URL and
+    75	  marks the citation completed, or records a failure message. Metadata and
+    76	  status belong to the shared citation, so every note citing the DOI shows them.
+    77	  The note page shows the state; it does not update itself while pending.
+    78	- `Citation::Provider` is the HTTP client for the metadata provider. It reads
+    79	  its URL and basic-auth credentials from [config/secrets.yml](config/secrets.yml)
+    80	  through `Rails.application.secrets`; that file reads them from the environment.
+    81	  Faraday retries a GET once on 503. A 401, 403, or 404, or a response without a
+    82	  title and an http(s) URL, fails the enrichment at once. A 429 or 5xx, timeout,
+    83	  or connection failure raises `Citation::Provider::Unavailable`. The job retries
+    84	  that with `retry_on`, three attempts in all at exponentially longer waits, then
+    85	  records the failure instead of passing the error to Sidekiq's own retries. A
+    86	  persistently unavailable provider therefore receives at most six requests per
+    87	  enrichment request. A job that fails for another reason uses Sidekiq's retries
+    88	  and leaves the citation pending meanwhile.
+    89	- [bin/citation-provider](bin/citation-provider) is a deterministic local stand-in
+    90	  for the provider, used for development and demonstrations. No real provider or
+    91	  credentials are configured.
+    92	- A reader exports an owned notebook as Markdown from its exports page
+    93	  (`ExportsController`, nested under the notebook). `Notebook#request_export`
+    94	  saves a queued `Export`, then queues the native Sidekiq job `ExportJob` and
+    95	  stores its job ID, which the page shows. The export is committed before the
+    96	  job is queued so the worker can always load it. If Redis refuses the job, the
+    97	  export is removed and the request fails. Each request creates a new export.
+    98	- `Export#generate`, run by the worker, marks the export working with the
+    99	  notebook's note count, then writes the notes oldest first (creation time, then
+   100	  ID). The file starts with the notebook's export heading, or its name when none
+   101	  is set. Each note is a second-level heading with its title on one line,
+   102	  followed by its body as Action Text plain text. Markdown characters are not
+   103	  escaped. Progress is saved after each note. A retried job starts again from
+   104	  the first note. There is no failed state: while Sidekiq retries a failing job,
+   105	  the export shows as working and the reader can cancel it.
+   106	- Cancelling (`ExportCancellationsController`) sets a queued or working export's
+   107	  persisted status to cancelled under its row lock. The worker checks that status
+   108	  before each note and before completing, then stops and keeps no file. Completed
+   109	  and cancelled exports cannot be cancelled.
+   110	- The worker uploads the file to Active Storage (`<slug>.md`) before marking the
+   111	  export completed, so a completed export always has a file. It can be downloaded
+   112	  for 24 hours (`Export::AVAILABLE_FOR`). `ExportDownloadsController` resolves the
+   113	  export through the reader's notebook, so another reader's export is a 404, and
+   114	  checks `Export#downloadable?` on every request before any conditional response.
+   115	  An expired, cancelled, or unfinished export redirects to the exports page. The
+   116	  file is sent by the application, never by an Active Storage URL, with an ETag
+   117	  and Last-Modified from the stored file and `private, must-revalidate`.
+   118	  A failed upload can leave an unattached blob row without a stored file. Nothing
+   119	  cleans up those rows, and each failed retry can leave another one.
+   120	- The exports page caches each completed export's availability indicator as a
+   121	  fragment that expires at the export's deadline. The download action does not
+   122	  read that cache. The page does not update itself while an export is queued or
+   123	  working. Nothing purges expired files; they remain in storage.
+   124	- A notebook's activity page (`ActivityReportsController#show`, nested under the
+   125	  notebook and linked from the notebooks list) shows how many of its notes were
+   126	  created on each UTC date, newest date first. It is read-only and resolves the
+   127	  notebook through `current_user.notebooks`, so another reader's notebook is a
+   128	  404. `Notebook#daily_note_counts` groups the notes by `DATE(created_at)` in
+   129	  PostgreSQL and reads the rows with a raw `select_rows`, which returns each date
+   130	  as ISO 8601 text; the method parses it with `Date.iso8601`. Every status counts,
+   131	  and dates without notes are omitted. The report is derived from the notes that
+   132	  exist when it is requested, not an activity log: deleting a note lowers its
+   133	  date's count, and nothing records past counts.
+   134	- Each reader has a time zone (`User#time_zone`, UTC by default), chosen on the
+   135	  account settings page (`AccountsController`). Reminder times use it. Digests
+   136	  follow UTC days, and other pages still show times in UTC.
+   137	- A note's reminder is its `reminder_epoch`, a time in seconds since 1970, set by
+   138	  an import or by the reader. `RemindersController#create`, nested under the
+   139	  note, reads a date and time the reader entered in their time zone
+   140	  (`User#local_time`), or, with none, uses the stored time. `Note#schedule_reminder`
+   141	  queues `NoteReminderJob` for that time with `set(wait_until:)` and stores the
+   142	  job's ID, under the note's row lock, so a failed enqueue keeps the earlier
+   143	  reminder. A local time that does not exist because of a daylight saving change
+   144	  moves forward, and an ambiguous one takes its first occurrence. A time in the
+   145	  past is sent as soon as a worker runs the job.
+   146	- Scheduling again, or postponing (`ReminderPostponementsController`), replaces the
+   147	  reminder. Earlier jobs stay in Sidekiq's schedule, but send nothing: when a job
+   148	  runs, `Note#send_reminder` takes the row lock and emails the reader only if its
+   149	  job ID is still the note's and the reminder has not been sent, then records
+   150	  `reminder_sent_at`. The note page shows whether a reminder is imported but not
+   151	  scheduled, scheduled, or sent. A job that fails after the email is written can
+   152	  send it again when Sidekiq retries it.
+   153	- Postponing moves the reminder 24 elapsed hours later. The note page previews
+   154	  that time as `reminder_at.to_time + 86_400`, which keeps the reminder's UTC
+   155	  offset. Across a daylight saving change the preview shows the right instant,
+   156	  but at a different offset and wall-clock time from the postponed reminder.
+   157	- A reader requests a digest of their ready notes from the notes page
+   158	  (`DigestsController`). `User#request_digest` reserves the reader's ID in a
+   159	  Redis set for the request's UTC date
+   160	  (`digest_requests:YYYY-MM-DD`, kept for two days) and queues `DigestJob` with
+   161	  the reader, the request time in the reader's zone, and the share of their notes
+   162	  that are ready, as a `BigDecimal`. A reader whose ID is already in the day's set
+   163	  is told the digest was already requested. If the job cannot be queued, the
+   164	  reservation is removed and the error raised, so the request fails and can be
+   165	  repeated. The reservation prevents repeated requests, not repeated emails:
+   166	  Sidekiq can run a job more than once. Each request logs redis-rb's deprecation
+   167	  warning for a single-member `sadd`, and Sidekiq warns that the job's arguments
+   168	  are not native JSON types, because of the `BigDecimal`.
+   169	- Sidekiq stores the job's arguments as JSON. Active Job 7.0 sends the request
+   170	  time with its UTC offset but deserializes it in the worker's zone, UTC, and the
+   171	  completion arrives as a decimal string such as `"0.6667"`. `DigestMailer` lists
+   172	  the reader's ready notes last updated during that UTC day, and dates the digest
+   173	  by it. The content day matches the reservation's day, even near local midnight.
+   174	  A digest is a snapshot when its job runs; notes updated afterward are not sent
+   175	  in a second digest for that UTC day.
+   176	- The mailers write plain-text email. Development writes each recipient's email
+   177	  to `tmp/mails` (Action Mailer's file delivery); tests use the `:test` delivery
+   178	  method. Production has no delivery method or link host configured.
+   179	- Active Storage serves blobs through signed URLs from its own controllers. Those
+   180	  URLs are not checked against the signed-in reader. The embedded blob redirect
+   181	  URLs do not expire, although the Disk-service URLs they redirect to do.
+   182	  The direct-upload controller checks CSRF, not sign-in; the public sign-in page
+   183	  supplies a CSRF token to anonymous clients. This sample has no private-file
+   184	  access policy or upload-abuse protection for a public deployment.
+   185	
+   186	These conventions guide further features without prescribing a schema in advance.
+   187	
+   188	The initial runtime is Ruby 3.3.6 and Rails 7.0.8.7 with Rails 7.0 defaults.
+   189	[Gemfile](Gemfile), [Gemfile.lock](Gemfile.lock), [.ruby-version](.ruby-version), and
+   190	[config/application.rb](config/application.rb) are the executable sources of truth.
+   191	
+   192	- PostgreSQL is the application database. Use Active Record and migrations for
+   193	  application-owned records, constraints, indexes, and transactions.
+   194	- ERB renders HTML. The generated app includes Sprockets, importmap, Turbo, and
+   195	  Stimulus. Jbuilder is available for requested JSON representations, but an HTML
+   196	  feature does not automatically need a JSON API.
+   197	- Rails includes the mailer, job, storage, and cable frameworks. Their presence
+   198	  does not mean broadcasts are implemented features. Email is sent only for
+   199	  reminders and digests, and is not delivered outside development's files. File
+   200	  uploads exist only as rich-text attachments.
+   201	- Active Job uses Sidekiq 6.5 as its adapter outside tests, so queued jobs are
+   202	  kept in Redis (`REDIS_URL`, by default `redis://localhost:6379`) and run in a
+   203	  separate `bundle exec sidekiq` process. Tests use Active Job's test adapter.
+   204	  `ExportJob` is a native Sidekiq job rather than an Active Job, so its job ID can
+   205	  be shown. Sidekiq stores its arguments as JSON, and it uses Sidekiq's default
+   206	  retries.
+   207	- Action Text 7.0.8.7 bundles Trix 1.3.4. That version cannot load saved HTML
+   208	  that has attributes, such as links or attachments, so the layout loads Trix
+   209	  1.3.5 from `vendor/javascript` as a classic script. Trix 1.x is not an ES
+   210	  module, so it is not in the import map. `@rails/actiontext` is.
+   211	  The vendored build comes from the [Trix 1.3.5 release](https://github.com/basecamp/trix/tree/1.3.5)
+   212	  and includes its [MIT license](vendor/javascript/trix-1.3.5.LICENSE).
+   213	- Orb setup starts PostgreSQL and Redis. Redis holds Sidekiq's queues and the
+   214	  digest reservations; it is not an application cache. The generated production
+   215	  cable configuration names Redis. That configuration is not a verified deployment.
+   216	
+   217	## Prefer Rails objects with clear responsibilities
+   218	
+   219	Use the framework's ordinary directories and interfaces:
+   220	
+   221	| Responsibility | Home |
+   222	| --- | --- |
+   223	| HTTP verbs, paths, and resource nesting | `config/routes.rb` |
+   224	| Parameter selection, authorized lookup, response negotiation | `app/controllers/` |
+   225	| Persistent state and domain operations | `app/models/` |
+   226	| A cohesive capability of one model | A namespace beneath `app/models/` |
+   227	| Behavior genuinely shared across models | `app/models/concerns/` |
+   228	| HTML, Turbo stream, and JSON representations | `app/views/` |
+   229	| Presentation helpers | `app/helpers/` |
+   230	| Browser interaction around rendered HTML | `app/javascript/controllers/` |
+   231	| Background execution and retry boundary | `app/jobs/` |
+   232	| Mail composition | `app/mailers/` and its views |
+   233	
+   234	A controller can call Active Record directly for a simple save. A multi-step
+   235	domain transition belongs behind a meaningful model method, not a sequence of
+   236	unrelated updates in the controller. Use a plain Ruby object or Active Model when
+   237	an operation needs its own object but no database table. Do not introduce a
+   238	mandatory service, repository, presenter, or command layer between every pair of
+   239	Rails objects.
+   240	
+   241	Fizzy models closing a card as a singular closure resource. Its controller calls
+   242	`Card#close`, and `Card::Closeable` owns the association, predicates, and transaction.
+   243	The [closure sources](docs/references/fizzy.md#card-closure) illustrate a resource
+   244	boundary and a domain method, not a requirement to add cards to Margin Notes.
+   245	
+   246	## Model resources, not collections of verbs
+   247	
+   248	Use the conventional REST actions, including `new` and `edit` for HTML forms.
+   249	When a new operation does not fit an existing resource, look for the resource it
+   250	creates, updates, or removes before adding a custom action. Keep nesting shallow
+   251	enough that the parent conveys ownership rather than reproducing the whole schema.
+   252	
+   253	Use route helpers in views and responses. Controllers choose the representation.
+   254	Models do not construct controller responses or reach into request parameters.
+   255	
+   256	## Keep data ownership and effects explicit
+   257	
+   258	- PostgreSQL owns durable application facts. Derive a value from those facts
+   259	  unless storing it solves a demonstrated query, history, or concurrency need.
+   260	- Put invariants used outside HTTP in the domain model. Add database constraints
+   261	  when integrity must also hold across concurrent requests and non-model writes.
+   262	- Keep related database writes in one transaction. Do not assume it can undo a
+   263	  remote request, an email, or a job already sent to another system.
+   264	- Jobs should delegate to domain behavior and carry the identifiers or context
+   265	  they need. Decide retries, duplicate delivery, and transaction timing when a
+   266	  real background feature is introduced, rather than adding a queue preemptively.
+   267	- Keep network clients at visible boundaries. Preserve failure information and
+   268	  distinguish a legitimate empty response from a failed operation.
+   269	
+   270	Fizzy's [comment example](docs/references/fizzy.md#comments) enforces comment
+   271	eligibility in both the model and the controller. Callers outside HTTP must obey
+   272	the same rule.
+   273	
+   274	## Authorization is not presentation
+   275	
+   276	Define ownership and the authorized lookup scope together. Resolve records
+   277	through the signed-in reader: `current_user.notebooks` and `current_user.notes`.
+   278	Direct lookups outside that scope raise `ActiveRecord::RecordNotFound`, which is
+   279	a 404 in production. A submitted `notebook_id` is resolved through
+   280	`current_user.notebooks.find_by`, never assigned directly. A missing or foreign
+   281	notebook fails validation and renders the form with 422, without saving the note.
+   282	Resolve nested records through their authorized parent. Neither an unguessable ID
+   283	nor a hidden or disabled button grants or checks permission.
+   284	
+   285	Keep actor-dependent decisions explicit in domain APIs and reusable rendering.
+   286	If request-local state is introduced, set and reset it at the request boundary.
+   287	Jobs, mailers, and tests must not rely on a previous request having populated it.
+   288	Do not adopt a tenancy or identity scheme solely because a reference application
+   289	uses one.
+   290	
+   291	## Render on the server, enhance in the browser
+   292	
+   293	Use HTML forms and links for their native semantics. Turbo handles navigation,
+   294	frames, and targeted replacements. Stimulus supplies local interaction that HTML
+   295	does not provide. Keep persistence and authorization on the server, not in a
+   296	second client-side model of the domain.
+   297	
+   298	Partials take the resources and presentation inputs they need. A template may
+   299	compose several resources. A reusable partial should not depend on a particular
+   300	controller's incidental instance variables or on undeclared request context.
+   301	See the [view guide](docs/guides/views.md) for HTML, accessibility, Turbo, and JSON.
+   302	
+   303	## Optimize the actual representation
+   304	
+   305	Start with correct queries and clear response contracts. Filter and order before
+   306	pagination. Use a stable tie-breaker where page membership must be deterministic.
+   307	Load the associations that the rendered representation uses rather than adding
+   308	a universal preload list to every request.
+   309	
+   310	Define cache keys and invalidation rules before introducing caching. Include
+   311	permissions, locale, and related-record changes when they affect the output, or
+   312	keep those parts outside the shared fragment. The
+   313	[board example](docs/references/fizzy.md#boards-and-caching) illustrates why a
+   314	warm cache must be tested with another viewer, not just the same request twice.
+   315	
+   316	## Scope and reference boundaries
+   317	
+   318	The [public examples](docs/references/fizzy.md) are evidence for design ideas, not
+   319	a compatible application template. Their Ruby, Rails, database adapters, asset
+   320	pipeline, editors, and helper libraries differ from this repository. Use the
+   321	locked local APIs, and introduce new infrastructure only for a requested feature.
+   322	
+   323	As features land, document their ownership and invariants here. Keep detailed
+   324	layer practices in the [model](docs/guides/models.md),
+   325	[controller](docs/guides/controllers.md), and [view](docs/guides/views.md) guides,
+   326	and verification rules in [TESTING.md](TESTING.md).
+     1	# Testing
+     2	
+     3	## Test the contract at its boundary
+     4	
+     5	Use Rails' Minitest integration with real application objects and the test
+     6	PostgreSQL database. Exercise the route, controller, model, and rendering stack
+     7	for HTTP behavior. When needed, substitute a controlled response at an external
+     8	boundary. Do not stub the domain behavior under test.
+     9	
+    10	Choose the smallest boundary that can catch the likely mistake:
+    11	
+    12	| Contract | Test |
+    13	| --- | --- |
+    14	| A domain decision, transition, or query | `ActiveSupport::TestCase` in `test/models/` |
+    15	| Routing, permissions, persistence, HTML, Turbo, or JSON | `ActionDispatch::IntegrationTest` in `test/controllers/` |
+    16	| A workflow across endpoints | An integration test in `test/integration/` |
+    17	| Browser execution, focus, navigation, or JavaScript interaction | `ApplicationSystemTestCase` in `test/system/` |
+    18	| Scheduling, delivery, and job-specific failure behavior | Rails job and mailer test helpers, usually in the request test that queues the job |
+    19	
+    20	Do not add a separate test for every method. Prefer assertions that would survive
+    21	an internal refactor. A useful regression test fails for a plausible wrong
+    22	implementation, not just a syntax error.
+    23	
+    24	## Commands and current configuration
+    25	
+    26	Use only a disposable test database. Rails may create, reload, or replace its
+    27	data. Never point test configuration at development data you need to keep, a
+    28	shared environment, or production.
+    29	
+    30	Run commands from the repository root with the pinned Ruby active:
+    31	
+    32	```sh
+    33	bundle check
+    34	bin/rails zeitwerk:check
+    35	bin/rails test
+    36	bin/rails test:system
+    37	```
+    38	
+    39	`bin/rails test` does not include system tests. The generated
+    40	[system test base](test/application_system_test_case.rb) uses Selenium with Chrome,
+    41	not headless Chrome. Until that configuration changes, system tests require a
+    42	display and a suitable browser and driver.
+    43	
+    44	For focused feedback, run a test directory:
+    45	
+    46	```sh
+    47	bin/rails test test/controllers
+    48	bin/rails test test/models
+    49	```
+    50	
+    51	To run one file, pass its path to `bin/rails test`. Append `:LINE` to that path to
+    52	select a test.
+    53	
+    54	The Gemfile keeps Minitest on 5.x because Rails 7.0's test runner fails under
+    55	Minitest 6. No RuboCop, security-audit command, or `bin/ci` is configured.
+    56	
+    57	[test/test_helper.rb](test/test_helper.rb) loads all fixtures and configures
+    58	processor-count parallel workers.
+    59	
+    60	The [test environment](config/environments/test.rb) disables caching and raises
+    61	application exceptions. For error-response or cache tests, set the required mode
+    62	explicitly and restore it afterward. Do not assume production behavior. The mail
+    63	delivery method is `:test`.
+    64	
+    65	## Make scenarios distinguish the right behavior
+    66	
+    67	- Name the domain fact or user outcome: a rejected edit leaves the body unchanged,
+    68	  not merely that an update action runs.
+    69	- Keep arrangement, action, and assertions recognizable. Share setup only for
+    70	  facts every test in that group needs. Do not hide the decisive input in a helper.
+    71	- Establish meaningful preconditions when the operation could otherwise be a
+    72	  no-op. Reload records when checking what was persisted.
+    73	- Use asymmetric values and contrasting records. A permission test needs another
+    74	  user's record. A filter needs both an included and an excluded candidate.
+    75	- Derive expected results independently. Do not call the production scope or
+    76	  serializer to compute the value the same scope or serializer should return.
+    77	- Assert order only where ordering is promised. For membership, include/exclude
+    78	  assertions can express the rule better than an exact count of unrelated fixtures.
+    79	  Assert total counts when pagination, duplicates, or filtering totals are contractual.
+    80	- Test both a successful result and the relevant failure or boundary. A denial
+     1	# Public examples and source notes
+     2	
+     3	These development guides use public
+     4	[basecamp/fizzy](https://github.com/basecamp/fizzy) as a source of concrete Rails
+     5	design examples. References are pinned to
+     6	[ea3cc44be97878babf86d4f453c53ee509d9393a](https://github.com/basecamp/fizzy/commit/ea3cc44be97878babf86d4f453c53ee509d9393a)
+     7	so readers can inspect the same code rather than a moving default branch.
+     8	
+     9	The prose is written for Margin Notes. Code illustrations are labeled as excerpts
+    10	or adaptations. These references are source evidence, not results from running
+    11	Fizzy or its tests. Keep the accompanying [Fizzy license notice](fizzy-license.md)
+    12	with Fizzy-derived examples.
+    13	
+    14	## Style and version
+    15	
+    16	- [STYLE.md](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/STYLE.md): readable methods, REST resources, domain-oriented models, and shallow jobs.
+    17	- [AGENTS.md](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/AGENTS.md): an example of concise repository-specific context rather than a framework manual.
+    18	- [Gemfile](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/Gemfile) and [Gemfile.lock](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/Gemfile.lock): this reference uses Rails 8.2 alpha and a custom Turbo branch.
+    19	
+    20	Margin Notes starts on Rails 7.0.8.7 with PostgreSQL and the generated asset stack.
+    21	The controller illustration therefore uses `require(...).permit(...)`, not the
+    22	newer parameter API used upstream. Do not import Fizzy's database adapters,
+    23	custom fixture identifiers, tenancy, editor, deployment, or cache/job backends as
+    24	implicit dependencies. General Rails 7 APIs are documented in the
+    25	[controller](https://guides.rubyonrails.org/v7.0/action_controller_overview.html) and
+    26	[testing](https://guides.rubyonrails.org/v7.0/testing.html) guides.
+    27	
+    28	## Card closure
+    29	
+    30	- [Routes](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/config/routes.rb): closure as a nested singular resource.
+    31	- [Card::Closeable](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/models/card/closeable.rb): association-backed state, query scopes, and transactional transitions.
+    32	- [Closures controller](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/controllers/cards/closures_controller.rb) and [CardScoped](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/controllers/concerns/card_scoped.rb): authorized lookup and HTTP delegation.
+    33	- [Closure controls](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/views/cards/container/_closure_buttons.html.erb) and [create stream](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/views/cards/closures/create.turbo_stream.erb): a mutation form and updates to affected page regions.
+    34	- [Model tests](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/test/models/card/closeable_test.rb) and [request tests](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/test/controllers/cards/closures_controller_test.rb): transitions, actor, event, stream, and JSON results.
+    35	
+    36	The routing example includes only the two actions discussed. The model example
+    37	includes only two scopes. Neither is a complete feature or a concurrency guarantee.
+    38	
+    39	## Comments
+    40	
+    41	- [Comment model](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/models/comment.rb) and [Card::Commentable](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/models/card/commentable.rb): validation at the domain boundary and a parent-owned relationship.
+    42	- [Comments controller](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/controllers/cards/comments_controller.rb): nested lookup, creatorship checks, and response negotiation.
+    43	- [New-comment form](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/views/cards/comments/_new.html.erb) and [HTML partial](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/views/cards/comments/_comment.html.erb): rich input, stable DOM identities, and reusable presentation.
+    44	- [Create stream](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/views/cards/comments/create.turbo_stream.erb) and [destroy stream](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/views/cards/comments/destroy.turbo_stream.erb): insert/reset and removal targets.
+    45	- [JSON partial](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/views/cards/comments/_comment.json.jbuilder): explicit fields, rich and plain body forms, and composed creator data.
+    46	- [Model tests](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/test/models/comment_test.rb) and [request tests](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/test/controllers/cards/comments_controller_test.rb): invalid domain state, forbidden edits, persistence, and JSON contracts.
+    47	
+    48	The parameter illustration intentionally permits only the body. The source also
+    49	supports other inputs. This example is not a default permit list for a new application.
+    50	The source comment form is JavaScript-dependent, not a demonstrated HTML fallback.
+    51	
+    52	## Boards and caching
+    53	
+    54	- [Boards controller](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/controllers/boards_controller.rb): conventional HTML forms, scoped lookup, query composition, and conditional responses.
+    55	- [Settings page](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/views/boards/edit.html.erb) and [name partial](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/views/boards/edit/_name.html.erb): form composition; the guide's illustration adds an explicit permission input and visible label.
+    56	- [Board JSON partial](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/views/boards/_board.json.jbuilder): conditional public fields.
+    57	- [Board::Cards](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/app/models/board/cards.rb) and [its test](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/test/models/board/cards_test.rb): related-record touching specifically when the name changes.
+    58	- [Request tests](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/test/controllers/boards_controller_test.rb) and [caching helper](https://github.com/basecamp/fizzy/blob/ea3cc44be97878babf86d4f453c53ee509d9393a/test/test_helpers/caching_test_helper.rb): a warm-cache permission check and restored test settings.
+    59	
+    60	The sample guides require explicit partial inputs and analysis of cache dependencies.
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+cd "$repo_root"
+
+echo "Installing database services..."
+sudo apt-get update || true
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  postgresql \
+  postgresql-contrib \
+  redis-server
+
+echo "Starting database services..."
+sudo service postgresql start
+sudo service redis-server start
+
+sudo -u postgres createuser --superuser "$(id -un)" 2>/dev/null || true
+
+echo "Installing mise and Ruby..."
+curl --fail --location --silent --show-error https://mise.run | sh
+printf '\n%s\n' 'eval "$("$HOME/.local/bin/mise" activate bash --shims)"' >> "$HOME/.bashrc"
+eval "$("$HOME/.local/bin/mise" activate bash --shims)"
+
+mise trust
+mise install
+
+echo "Installing gems..."
+bundle install --jobs "$(nproc)"
+
+echo "Preparing Rails databases..."
+bin/rails db:prepare
+
+echo "Cloud sandbox setup complete."
+#!/usr/bin/env bash
+set -euo pipefail
+
+sudo service postgresql start
+sudo service redis-server start
+
+echo "Cloud sandbox resume complete."
+[settings]
+idiomatic_version_file_enable_tools = ["ruby"]
+ruby-3.3.6

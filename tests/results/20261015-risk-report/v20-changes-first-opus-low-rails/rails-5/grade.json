@@ -1,0 +1,318 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`enum status: {...}, _prefix: true` (`app/models/note.rb:10`): the keyword form and `_prefix` raise \"invalid option(s)\" in 8.1",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R02": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`serialize :tags, JSON` (`app/models/note.rb:12`): a positional coder raises ArgumentError in 8.1, which only accepts the `coder:` keyword. Use `coder: JSON`.",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": true
+    },
+    "R03": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`alias_attribute :highlight_color, :color` (`app/models/note.rb:14`): `color` is a `store_accessor`, not an attribute. 8.1 raises ArgumentError",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R04": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never mentions the `where(notebooks: notebook)` table-name predicate in the notes controller.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`app/models/import.rb:402` reads `citation && citation[:id]`... the receipt CSV's doi column becomes blank and nothing raises.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R06": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`app/models/import.rb:387-392`: `return false unless row.note.save` inside `transaction do`.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R07": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "`fragments.sum` on strings in `app/models/export.rb:247`... Ruby raises TypeError, so every export job fails. Use `join`.",
+      "reason": "The report rates this medium, but the label is low because a direct replacement (`join`) exists.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never mentions the `HashWithIndifferentAccess#stringify_keys` change to integer keys or the import preview.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "the \"Expired\" fragment is written with no expiry, and errors are logged... If you adopt the 7.1 defaults, this raises and the page fails.",
+      "reason": "The report rates this medium, but the label is high because behavior changes silently under the current defaults.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "across a daylight-saving change, the \"24 hours later\" text and its `(UTC%:z)` offset now show local time. The scheduled epoch (`.to_i` at line 72) doesn't change.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": true
+    },
+    "R11": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "the digest's `@date` and the `all_day` range become the reader's local day. Different notes are selected near midnight",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R12": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "During a rolling deploy, 7.0 workers can't deserialize the new format and raise a DeserializationError.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R13": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`NoteReminderJob.set(wait_until: reminder_epoch)`... I expect `NoMethodError: undefined method 'utc' for Integer`... It raises, but only at runtime, so I rated it high.",
+      "reason": "The report rates this high, but the label is low because the call raises and `Time.at` replaces it directly.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "`app/jobs/citation_enrichment_job.rb:502`... The rename is mechanical, but boot won't catch it.",
+      "reason": "The report rates this medium, but the label is low because the app's existing retry test catches it and `:polynomially_longer` replaces it.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never mentions `form_with(model: nil)` in the notes index view.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "Route with multiple paths (`config/routes.rb`, `get \"/notes\", \"/journal\"`)... Split it into two routes.",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R17": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "`show_exceptions = false` now means \"show exceptions\"... these tests now get 404 or 500 responses instead of exceptions. Set `:none`",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R18": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "`config/initializers/action_text.rb:3` uses `+=`... boot raises NoMethodError on nil.",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R19": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "`app/models/citation/provider.rb:13` and `config/secrets.yml`... You need to decide where the settings go",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R20": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`serialize :preferences` with no coder (`app/models/notebook.rb:7`)... The 7.1 defaults set the default serializer to nil, and then it raises \"missing keyword: :coder\".",
+      "reason": "The report lists this under the defaults-dependent section and gives no risk level for adopting the default.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never mentions `raise_on_assign_to_attr_readonly` or the notebook slug resubmission.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "PostgreSQL date decoding (`decode_dates`, a 7.2 default)... If you turn it on, `Date.iso8601(day)` in `notebook.rb:40` gets a Date and raises TypeError.",
+      "reason": "The report lists this under the defaults-dependent section and gives no risk level for adopting the default.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`strict_freshness` (an 8.0 default that changes which header wins in `stale?`): off under 7.0 defaults. It's used at `export_downloads_controller.rb:11`.",
+      "reason": "The report lists this under the not-relevant/defaults section and gives no risk level for adopting the default.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [],
+  "otherFindings": [
+    {
+      "level": "medium",
+      "summary": "Rails' built-in Sidekiq adapter is deprecated in 8.1 (to be removed in 8.2) and asks for sidekiq >= 7.3.3, while the app pins sidekiq 6.5.12 (medium)."
+    }
+  ],
+  "located": 19,
+  "levelMatches": 12,
+  "inaccurate": 0,
+  "cost_usd": 0.1371654,
+  "duration_ms": 33738
+}

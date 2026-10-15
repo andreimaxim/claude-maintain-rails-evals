@@ -94,7 +94,7 @@ function schema(families: string[]) {
   };
 }
 
-function run(command: string, args: string[], input: string): Promise<{ status: number | null; stdout: string; stderr: string }> {
+export function run(command: string, args: string[], input: string): Promise<{ status: number | null; stdout: string; stderr: string }> {
   return new Promise((resolve, reject) => {
     // Drop variables that tie a nested claude to the calling session; keep its auth token.
     const env = Object.fromEntries(Object.entries(process.env)

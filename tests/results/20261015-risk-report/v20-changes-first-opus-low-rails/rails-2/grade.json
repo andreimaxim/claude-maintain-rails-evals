@@ -1,0 +1,322 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "**`enum status: {...}, _prefix: true`** (`app/models/note.rb:10`): the keyword form is removed. Write `enum :status, {...}, prefix: true`",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R02": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "**`serialize :tags, JSON`** (`note.rb:12`): passing the coder as a positional argument is removed. Write `coder: JSON`",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": true
+    },
+    "R03": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "**`alias_attribute :highlight_color, :color`** (`note.rb:14`): `color` is a `store_accessor`, not a column attribute, and 8.x raises `ArgumentError`",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R04": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never discusses the `where(notebooks: ...)` table-name predicate in the notes controller.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`app/models/import.rb:72` writes `citation[:id]` into the import receipt CSV. ... the DOI column of the receipt silently becomes empty.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R06": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't cover the change where a `return` inside a transaction now commits.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "**`fragments.sum`** (`app/models/export.rb:42`): Active Support no longer lets `sum` add strings, so this raises `TypeError` in `ExportJob`.",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R08": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't mention the `stringify_keys` integer-key change or the import preview.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't mention negative cache expiry or `raise_on_invalid_cache_expiration_time`.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:44` builds the next-day reminder with `reminder_at.to_time + 86_400`. ... The stored epoch (`.to_i`) is the same either way.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": true
+    },
+    "R11": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`app/models/user.rb:38` passes `Time.current.in_time_zone(time_zone)` to `DigestJob`. ... the digest covers the reader's local day instead of the UTC day",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R12": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "during the rollout, a 7.0 worker that picks up an 8.1-queued digest raises `Serializer ActiveJob::Serializers::BigDecimalSerializer is not known`",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R13": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "**`set(wait_until: reminder_epoch)` with an integer** (`note.rb:58`): ... raises `NoMethodError` on an Integer ... **Fix:** pass `Time.at(epoch)`",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R14": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "**3. `wait: :exponentially_longer` was removed, and the job only fails when it retries** ... `app/jobs/citation_enrichment_job.rb:7`",
+      "reason": "The report rates this high, but the label is low because the app's existing test exercises a retry and catches the error.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "named",
+      "level": "not_relevant",
+      "accuracy": "inaccurate",
+      "quote": "**`has_secure_password`, `form_with` and `button_to`:** I found no changes relevant to how the app uses them",
+      "reason": "The report says form_with has no relevant change and doesn't tie it to the notes index view, but `form_with(model: nil)` now raises there.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't mention the route declaration with two paths.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't mention the `show_exceptions = false` change.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "`config/initializers/action_text.rb` runs `allowed_tags += %w[details summary]`, which becomes `nil + [...]` and raises `NoMethodError`.",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R19": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "**7. `Rails.application.secrets` is removed** ... **Used in:** `app/models/citation/provider.rb:13`",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R20": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "**9. `serialize :preferences` with no coder** (`app/models/notebook.rb:8`) ... Adopting the 7.1 defaults sets `default_column_serializer = nil`, and then this line raises",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R21": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "**10. `attr_readonly :slug`** (`notebook.rb:9`) ... makes assigning to `slug` raise instead of being silently ignored. ... this only applies if you adopt that default.",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R23": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "`app/models/notebook.rb:40` passes the raw `select_rows` value to `Date.iso8601`. ... with the setting on, the value is already a `Date`, so that call raises a `TypeError`.",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R25": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't mention `strict_freshness` or conditional GET behavior.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [],
+  "otherFindings": [
+    {
+      "level": "high",
+      "summary": "The built-in Sidekiq adapter is deprecated in 8.1 and needs Sidekiq 7.3.3 or later, while the app is on Sidekiq 6.5.12, a combination with Rails 8.1 the report doesn't know to be tested (high)."
+    },
+    {
+      "level": "medium",
+      "summary": "Rails 8.2 will remove features that now emit deprecation warnings, such as the Sidekiq adapter and `to_time_preserves_timezone`, and production has `report_deprecations = false` (medium)."
+    }
+  ],
+  "located": 15,
+  "levelMatches": 14,
+  "inaccurate": 1,
+  "cost_usd": 0.1151294,
+  "duration_ms": 26592
+}
