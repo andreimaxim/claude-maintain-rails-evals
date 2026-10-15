@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum :status, { draft: 0, ready: 1 }, prefix: true`... A probe on both versions returned `true` for `status_ready?`. The notes filter test passes.",
+      "reasons": "Validation is one helper probe plus a filter test; it does not persist distinct draft/ready notes and check helpers and scopes after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 7.0.8.7, `serialize :tags, coder: JSON` silently ignores the keyword and stores YAML... On 8.1, `attribute_types[\"tags\"].serialize([\"a\"])` returns `\"[\\\"a\\\"]\"`.",
+      "reasons": "Validation checks only the serialized form of one value; it does not reload existing unequal tags or edit comma-separated input.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "alias_method :highlight_color, :color\nalias_method :highlight_color=, :color=",
+      "reasons": "The create/edit radio tests do not cover reloading JSON settings, error rendering, or keeping existing settings.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`PG::UndefinedColumn: column notes.notebooks does not exist` when filtering by notebook... `@notes.where(notebook: @notebook)`",
+      "reasons": "There is no check with unequal notebook populations, another owner, or denial of a foreign notebook.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`citation[:id]` returns the DOI on 7.0 and nil on 8.1, so the receipt CSV shows empty DOI cells... `citation&.doi`",
+      "reasons": "Validation only says 'the receipt assertion passes'; it does not compare distinct DOIs in the downloaded receipt against the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "With a CSV whose second row is invalid, an import saves the import row and a partial note... The invalid-rows import test shows unchanged counts after repair. The control is the happy-path import",
+      "reasons": "",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: String can't be coerced into Integer`. `Export#generate` and `ExportJob` fail... `finish(fragments.join)`.",
+      "reasons": "The plan does not specify a real worker run or check the exact ordered Markdown bytes.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The Annotation row silently disappears from the preview... The preview test shows \"Read <b>twice</b> & reflect\" in `#line_2 dd`.",
+      "reasons": "There is no unequal annotation at line 4, no multiline CSV row, and no check that the preview saves nothing.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "The instant is identical (`to_i` is 1793538000 on both), but the displayed text changes... `Time.at(reminder_epoch + 86_400, in: reminder_at.utc_offset)`",
+      "reasons": "",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Active Job now keeps the time zone... The digest subject changed from \"October 05, 2026\" to \"October 04, 2026\"... `requested_at = requested_at.in_time_zone(\"UTC\")`",
+      "reasons": "Validation is one test with the in-memory adapter; it does not use a real JSON queue and worker, cross each midnight separately, or inspect reservation keys.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`wait_until: Time.at(reminder_epoch)`... The reminder tests assert the job's `:at` equals `Time.utc(2026,10,31,13).to_i`",
+      "reasons": "It checks the enqueued :at but not the persisted schedule time or the replacement and ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`RuntimeError: Couldn't determine a delay based on :exponentially_longer`... `wait: ->(executions) { executions**4 + 2 }`",
+      "reasons": "Only a single 'retrying one unavailable response' test is cited; there is no persistent-503 count of requests and attempts, and no 503->200 or 401 controls.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Passed nil to the :model argument`... `form_with(model: false, ...)`... The filter test and the unbound search form test pass.",
+      "reasons": "It does not confirm the field names, the method, or the resulting note membership on submit.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "`NotesControllerTest` \"lists the reader's notes newest first at both list paths\" requests both paths and passes.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "**This cannot ship before the bump**, because `:none` is treated as true on 7.0... `config.action_dispatch.show_exceptions = :none`.",
+      "reasons": "Five named tests pass, but the CI eager-loading mode is not exercised.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`ActionText::ContentHelper.sanitizer.class.allowed_tags + [ ActionText::Attachment.tag_name, \"figure\", \"figcaption\" ] + %w[ details summary ]`",
+      "reasons": "The probe covers details/summary and unsafe markup, but attachment markup rendering is not exercised.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The \"credentials reach the server unchanged\" case boots a fresh process with `CITATION_PROVIDER_USER=00123` and the password `sample: value # keep`.",
+      "reasons": "It does not explicitly verify the Basic header contents, a successful metadata response, or bounded failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`active_support.raise_on_invalid_cache_expiration_time = true` | `ArgumentError: Cache expiration time is invalid...` | `expires_in: [export.expires_at - Time.current, 0].max`",
+      "reasons": "The only evidence is a suite pass under 8.1 defaults; there are no before/after-deadline, cached-versus-fresh, or download expiry and ownership checks.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Under 7.1 or later defaults (see 2.2) it raises `ArgumentError: missing keyword: :coder`... `serialize :preferences, coder: YAML`",
+      "reasons": "A single export_heading save/reload is tested; unequal existing YAML preferences are not checked with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`ActiveRecord::ReadonlyAttributeError: slug`... The settings form resubmits `slug`, and `notebook_params` permits it. | Drop `:slug` from `permit` at line 40.",
+      "reasons": "Dropping slug from the shared permit list does not explicitly preserve slug assignment on creation; validation relies only on the overall suite pass.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Date.iso8601(day)` at `app/models/notebook.rb:40` then raises `TypeError`... `day.to_date`, which works on both types",
+      "reasons": "There is no specific PostgreSQL test with decoding off and on, asymmetric UTC date counts, an empty report, or ownership.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "incorrect",
+      "applicability": "incorrect",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "`action_dispatch.strict_freshness = true`. No conditional GET code in the app.",
+      "reasons": "The plan wrongly says the app has no conditional GET code, so it misses the change in export_downloads_controller and offers no keep/adopt decision or tests.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0 worker raises `ActiveJob::DeserializationError: Serializer ActiveJob::Serializers::BigDecimalSerializer is not known`... Pass `reading_completion.to_s`... A 7.0-enqueued job (completion as `\"0.3333\"`) is read correctly by 8.1.",
+      "reasons": "Payload probes do not amount to a real JSON producer/consumer matrix with same-version controls and the exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 21,
+  "cost_usd": 0.24398399999999998,
+  "duration_ms": 54040
+}

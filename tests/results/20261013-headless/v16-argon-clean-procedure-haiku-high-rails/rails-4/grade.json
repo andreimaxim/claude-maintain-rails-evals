@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "every test errors during class load with `ArgumentError: wrong number of arguments (given 0, expected 1..2)`. Removed in 8.0. ... `enum :status, { draft: 0, ready: 1 }, prefix: true`. ... probe `Note.new(status: \"ready\").status_ready?` returns `true`",
+      "reasons": "Validation: the plan checks only one helper on an unsaved record. It does not persist draft and ready notes, reload them, or exercise the status filters and scopes.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The `coder:` keyword does not exist on 7.0, so this cannot ship early. ... `serialize :tags, coder: JSON`. ... I did not byte-compare stored `notes.tags` values",
+      "reasons": "Validation: the plan checks only `Note.new.tags`. It does not reload existing unequal JSON tags, edit comma-separated input, or verify the stored representation.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`highlight_color` returns `\"green\"` on 7.0 and raises on 8.1 ... alias_method :highlight_color, :color\n  alias_method :highlight_color=, :color=",
+      "reasons": "Validation: the plan has a reader probe and the edit test. It does not reload the JSON settings or check form and error rendering.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`PG::UndefinedColumn: column notes.notebooks does not exist` ... `@notes = @notes.where(notebook: @notebook)`",
+      "reasons": "Validation: the plan relies on one filter test and an unfiltered control. It has no unequal notebook populations and no check that another owner's notebook is denied.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`citation[:id]` returns `nil` on 8.1 because `Citation` uses `doi` as its primary key ... `csv << [ note.title, citation&.doi ]`",
+      "reasons": "Validation: the plan has one receipt assertion. It does not compare the downloaded receipt fields against persisted citations that have distinct DOI values.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "observed `record_counts` ... change from `[0, 3, 0, 1]` to `[1, 4, 1, 2]` ... raise ActiveRecord::Rollback unless saved ... Control: the valid-CSV import test ... still saves every row.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: String can't be coerced into Integer` ... Export generation fails and the export stays `working` ... `finish(fragments.join)`",
+      "reasons": "Validation: the plan runs only the export test. It does not verify exact ordered Markdown bytes from the real worker, or that a failed export without the repair leaves no artifact.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the annotation is silently missing from the import preview ... `<% annotations = @import.annotations %>`",
+      "reasons": "Validation: the plan checks only line 2. It omits unequal annotations at lines 2 and 4, a multiline CSV row, and a check that the preview saves nothing.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`to_time` keeps the named zone ... The instant is the same, 1793538000 on both. ... `reminder_at.to_time.localtime(reminder_at.utc_offset) + 86_400`",
+      "reasons": "Validation: the plan compares epoch and offset across the DST boundary but has no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "ActiveJob 8.1 restores a `TimeWithZone` in the reader's zone ... The `all_day` window also moves to the reader's local day ... add `requested_at = requested_at.utc`",
+      "reasons": "Validation: the plan has one digest test and a probe. It does not run a real JSON queue and worker across each midnight separately, or inspect the reservation keys and which notes are delivered.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`NoMethodError: undefined method 'utc' for an instance of Integer`. Reminder creation returns 500. ... `Time.at(reminder_epoch)`",
+      "reasons": "Validation: the plan says only that the reminder tests pass. It does not inspect the real scheduled payload, its score, or the persisted schedule time.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`RuntimeError: Couldn't determine a delay based on :exponentially_longer` whenever `Citation::Provider::Unavailable` is retried. ... The `:polynomially_longer` symbol does not exist in 7.0",
+      "reasons": "Validation: the plan names a single test. It does not check request counts and attempts for a persistent 503, or include the 503-then-200 and 401 controls.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Passed nil to the :model argument` ... `form_with(url: notes_path, method: :get, class: \"search\", html: { role: \"search\" })`",
+      "reasons": "Validation: the plan renders the form and checks field names. It does not submit the form or check the resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "route drawing fails with `ArgumentError: Wrong number of arguments (expect 1, got 2)` ... get \"/notes\", to: \"notes#index\"\n  get \"/journal\", to: \"notes#index\"",
+      "reasons": "Validation: the plan compares route tables and runs the tests. It does not request both `/notes` and `/journal` as an owner and compare the lists.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "On 7.0, `:none` is truthy and shows exceptions, so it cannot ship early. ... `config.action_dispatch.show_exceptions = :none`",
+      "reasons": "Validation: the plan covers the raised-exception tests but not the normal test and CI eager-loading modes.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "boot fails with `NoMethodError: undefined method '+' for nil` ... ActionText::ContentHelper.sanitizer.class.allowed_tags +\n    [ ActionText::Attachment.tag_name, \"figure\", \"figcaption\" ] + %w[ details summary ]",
+      "reasons": "Validation: the plan relies on one test. It does not explicitly cover attachment markup, event handlers, or `javascript:` URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Citation#enrich` rescues only `Provider::Error`, so this `NoMethodError` escapes the job and the citation stays `pending` ... `config_for(:secrets).citation_provider`",
+      "reasons": "Validation: the plan does not run a fresh-process request with special-character credentials or check the actual Basic header.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`active_support.raise_on_invalid_cache_expiration_time = true`. ... raises `Cache expiration time is invalid, cannot be negative: -60.0` for expired exports. Repair: `expires_in: [export.expires_at - Time.current, 0].max`. Do not use `cache_if`",
+      "reasons": "Validation: the plan cites test runs only. It does not specify before/after-deadline, cached and fresh reads, or download expiry and ownership checks.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`active_record.default_column_serializer = nil`. ... raises `ArgumentError: missing keyword: :coder`. Repair: `serialize :preferences, coder: YAML`. The stored format is identical",
+      "reasons": "Validation: the plan compares a YAML dump and runs the suite. It does not create, edit, and reload unequal preferences or check the export heading with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`active_record.raise_on_assign_to_attr_readonly = true`. ... `ActiveRecord::ReadonlyAttributeError: slug`. Repair: remove `:slug` from `permit`.",
+      "reasons": "Recommendation: removing slug from the shared permit list does not say how slug assignment at creation is preserved. Validation: the plan does not test creation, an attempted slug change, or the persisted slug.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`active_record.postgresql_adapter_decode_dates = true`. ... raises `TypeError: no implicit conversion of Date into String`. Repair: `[day.to_date, count]`.",
+      "reasons": "Validation: the plan relies only on the suite passing. It does not test asymmetric UTC date counts, empty reports, or ownership with decoding off and on.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "`action_dispatch.strict_freshness = true`. Affects this app only if `ExportDownloadsController#show` (`stale?` with ETag and Last-Modified) receives both headers. Not tested.",
+      "reasons": "Impact: the plan names the gate and controller but does not state the 200-to-304 change. Recommendation: there is no keep-or-adopt decision. Validation: the plan proposes no tests.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0 worker reading the 8.1 form fails with `ActiveJob::DeserializationError`. Change `user.rb:41` to pass `reading_completion.to_s`, which `DigestMailer`'s `BigDecimal(params[:completion])` accepts",
+      "reasons": "Validation: the plan has only a one-direction probe. It lacks a full producer/consumer matrix with same-version controls and an exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 21,
+  "cost_usd": 0.25582,
+  "duration_ms": 58491
+}

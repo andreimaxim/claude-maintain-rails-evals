@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`app/models/note.rb`: `enum` and `serialize` use the 8.1 signatures.",
+      "reasons": "Impact: the plan says the signature changed but not that the model stops loading. Applicability: it names the file but not the keyword-style enum condition. Recommendation: it does not say to use a positional declaration with prefix: true or to keep the values and prefixed helpers. Validation: it gives only a passing test suite, with no draft/ready persistence or filter scenario.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`enum` and `serialize` use the 8.1 signatures.",
+      "reasons": "Impact: no consequence is stated for removing the positional JSON coder. Applicability: it does not say that coder: JSON on 7.0 silently selects YAML. Recommendation: it does not explicitly say coder: JSON. Validation: it gives only a suite result, with no check of stored representation or array values.",
+      "actionable": false
+    },
+    "R03": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`alias_attribute` on a `store_accessor` became `alias_method`, which 8.1 requires.",
+      "reasons": "Impact: it gives only 'requires', not the concrete failure. Recommendation: it does not clearly forward both the reader and the writer, and it admits form error wrapping changes. Validation: it gives no reload or form/error rendering check beyond the suite.",
+      "actionable": false
+    },
+    "R04": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`where(notebook:)` replaces a table-name key that 8.1 no longer resolves.",
+      "reasons": "Impact: 'no longer resolves' is vague and does not state the invalid predicate or the effect on the filter. Validation: it gives only a suite result, with no unequal populations or foreign-owner check.",
+      "actionable": false
+    },
+    "R05": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The receipt uses `citation&.doi`.",
+      "reasons": "Impact: it does not say receipt DOI values were lost. Applicability: it does not mention that DOI is the primary key and that citation[:id] reads the wrong attribute. Validation: it gives only a suite result.",
+      "actionable": false
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`apply` uses `raise ActiveRecord::Rollback`, not `return`. The old form committed the partial batch on 8.1.",
+      "reasons": "Validation: it gives no mixed valid/invalid apply scenario with fresh PostgreSQL counts beyond the suite.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`app/models/export.rb`: `fragments.sum` on strings became `join`.",
+      "reasons": "Impact: it does not say the export worker raises TypeError. Validation: it gives no real worker run with exact Markdown bytes.",
+      "actionable": false
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`stringify_keys` turned the integer line keys into strings, so annotations stopped matching.",
+      "reasons": "Recommendation: the repair itself (remove the conversion or normalize keys) is implied but not stated. Validation: it gives no preview scenario with annotations on lines 2 and 4 or a multiline row.",
+      "actionable": false
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`next_day_reminder_at` now builds a fixed-offset time explicitly. Without that, the preview's offset shifts across the DST change",
+      "reasons": "Validation: it gives no comparison of epoch, wall-clock time and offset across a DST boundary with a control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "8.1 restores the request time in the reader's offset instead of UTC. `DigestMailer` now converts to UTC explicitly",
+      "reasons": "Impact: it does not say the content day can disagree with the UTC reservation day near midnight. Applicability: the job/queue serialization path and the reservation keys are not named. Validation: it gives no real queue/worker midnight scenario.",
+      "actionable": false
+    },
+    "R13": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "reminders pass `Time.at(epoch)` to `set(wait_until:)`, since 8.1 requires a Time there.",
+      "reasons": "Impact: it does not say enqueueing raises. Validation: it gives no check of the scheduled payload, score or persisted schedule time.",
+      "actionable": false
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`:exponentially_longer` is now `:polynomially_longer`. It's the same formula, which Rails renamed.",
+      "reasons": "Impact: it does not say bounded retry breaks and falls through to Sidekiq retries. Validation: it gives no persistent-503 attempt count or 503->200 and 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`form_with(model: nil)` became `form_with(url:)`.",
+      "reasons": "Impact: it does not say rendering raises. Validation: it gives no check of the search form's names, method or resulting membership.",
+      "actionable": false
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`/notes` and `/journal` are now two `get` lines, since 8.1 rejects multiple paths in one call.",
+      "reasons": "Validation: it does not request both URLs as an owner to compare behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`show_exceptions = :none`. In 8.1, `false` no longer means \"raise\".",
+      "reasons": "Validation: it gives no raised-exception or missing-record policy check, and eager loading is checked only in development.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "the allowlist is set explicitly, since 8.1 no longer has a default to extend.",
+      "reasons": "Impact: it does not say boot fails. Recommendation: it does not say the list must be a complete safe allowlist including the required excerpt and attachment tags. Validation: it gives no rendering check that safe markup survives while scripts and handlers are excluded.",
+      "actionable": false
+    },
+    "R19": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Rails.application.secrets` is replaced by `config_for(:secrets)` in a new initializer, which exposes `config.x.citation_provider`.",
+      "reasons": "Impact: it does not say provider requests fail. Applicability: provider.rb is not named. Validation: it gives no fresh-process request with special-character credentials or Basic header check.",
+      "actionable": false
+    },
+    "R09": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss the cache-expiration default gate.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss the notebook preferences serializer default.",
+      "actionable": false
+    },
+    "R21": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss the readonly slug assignment default.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss PostgreSQL date decoding.",
+      "actionable": false
+    },
+    "R25": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss strict freshness.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss the mixed-version BigDecimal serializer risk.",
+      "actionable": false
+    }
+  },
+  "actionable": 4,
+  "cost_usd": 0.119328,
+  "duration_ms": 39790
+}

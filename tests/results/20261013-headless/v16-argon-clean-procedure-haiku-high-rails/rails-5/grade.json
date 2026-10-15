@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "Impact: the plan never mentions the keyword-style enum declaration in note.rb. Applicability: not discussed. Recommendation: no repair given. Validation: no check given.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Do not ship `serialize :tags, coder: JSON` before the bump. On 7.0.8.7 that keyword is ignored and the column is YAML-encoded",
+      "reasons": "Validation: it only round-trips a single array and nil; it does not reload existing unequal JSON tags or edit comma-separated input.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair (pre-bump: yes): `alias_method :highlight_color, :color` and `alias_method :highlight_color=, :color=`.",
+      "reasons": "Validation: it relies on the suite passing; it does not edit highlight color, reload settings, or check form and error rendering.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "8.1 compiles it to `\"notes\".\"notebooks\" = 7`, which raises `PG::UndefinedColumn` ... Repair (pre-bump: yes): `where(notebook: @notebook)`.",
+      "reasons": "Validation: only a SQL probe; there are no unequal notebook populations and no foreign-owner denial check.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the receipt CSV has a blank DOI on 8.1 ... Repair (pre-bump: yes): `citation&.doi`.",
+      "reasons": "Validation: it compares a single receipt value; it does not compare distinct DOIs against persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "a `return false` inside `transaction` now commits ... rows.each { |row| raise ActiveRecord::Rollback unless row.note.save }",
+      "reasons": "Validation: a probe plus an existing test; there is no real apply request with fresh PostgreSQL counts and no successful-batch control.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: String can't be coerced into Integer` ... Every export job fails in `Export#generate`. ... Repair (pre-bump: yes): `finish(fragments.join)`.",
+      "reasons": "Validation: only a probe; no real worker produces exact Markdown bytes, and there is no failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`annotations[2]` returns `\"Second reading\"` on 7.0 but `nil` on 8.1 after `stringify_keys`. ... Repair: `<% annotations = @import.annotations %>`.",
+      "reasons": "Validation: it cites failing tests only; there are no unequal annotations at lines 2 and 4, no multiline CSV row, and no check that preview saves nothing.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the reminder postponed by a day becomes `2026-11-01T08:00:00-05:00` on 8.1 and `2026-11-01T09:00:00-04:00` on 7.0 ... 7.0 yields 25 elapsed hours across DST",
+      "reasons": "Impact: the plan frames this as a changed reminder time and wrongly claims 25 elapsed hours; only the user's notes correct this to the same instant. Validation: one DST-boundary value comparison with no explicit epoch check and no non-boundary control.",
+      "actionable": false
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the subject becomes \"October 04\" instead of \"October 05\" ... Repair (pre-bump: yes): `requested_at = requested_at.in_time_zone(\"UTC\")`.",
+      "reasons": "Validation: one test assertion; there is no real JSON queue/worker, no separate crossing of each midnight, and no inspection of reservation keys or delivered notes.",
+      "actionable": true
+    },
+    "R12": {
+      "impact": "partial",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "Whether 7.0 workers read 8.1 payloads, and the reverse, was not run. Digest and reminder jobs queued during rollout are the exposed cases. The safe approach is to drain queues before the bump",
+      "reasons": "Impact: only a generic mixed-version payload risk; it never names the BigDecimal serializer failure. Applicability: it does not say that only the 8.1-producer to 7.0-worker direction fails. Recommendation: the drain advice is generic and not tied to the decimal contract. Validation: it notes that cross-version decoding in both directions was not run, but proposes no producer/consumer matrix with delivered values.",
+      "actionable": false
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`NoMethodError: undefined method 'utc' for an instance of Integer` ... `NoteReminderJob.set(wait_until: Time.at(reminder_epoch))`. Probe on 8.1: the `Time` form enqueues",
+      "reasons": "Validation: an enqueue probe only; it does not inspect the scheduled payload, score, or persisted schedule time, and has no replacement or ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`RuntimeError: Couldn't determine a delay based on :exponentially_longer` ... Repair (pre-bump: yes): `wait: ->(executions) { executions**4 + 2 }`",
+      "reasons": "Impact: it names the error but not the consequence, which is losing bounded ActiveJob retries and falling into Sidekiq retries. Validation: no persistent-503 scenario and no 503->200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Passed nil to the :model argument, expect an object or false`. This breaks the notes list ... Repair (pre-bump: yes): drop `model: nil`.",
+      "reasons": "Validation: suite only; it does not submit the search form or check field names, method, and resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Routes do not load ... `get \"/notes\", to: \"notes#index\"` and `get \"/journal\", to: \"notes#index\"` on separate lines.",
+      "reasons": "Validation: suite only; it does not request both URLs as an owner and compare the resulting list behavior.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`config.action_dispatch.show_exceptions = :none` on 8.1. On 7.0.8.7 this value breaks 23 tests, so it is **not** pre-bump safe.",
+      "reasons": "Validation: it relies on the cross-reader tests; it does not separately exercise the raised-exception policy and CI eager-loading modes.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "ActionText::ContentHelper.allowed_tags = ActionText::ContentHelper.sanitizer.class.allowed_tags +\n    [ ActionText::Attachment.tag_name, \"figure\", \"figcaption\" ] + %w[ details summary ]",
+      "reasons": "Validation: it compares allowlists and one sample body; it does not check that scripts, event handlers, and javascript URLs are excluded.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`NoMethodError: undefined method 'secrets'` ... Repair (pre-bump: yes): `Rails.application.config_for(:secrets).citation_provider.to_h`.",
+      "reasons": "Validation: an output comparison plus a stubbed test; there is no fresh-process request with special-character credentials and no check of the actual Basic header.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The 7.1 defaults set `raise_on_invalid_cache_expiration_time = true`. Applies: when adopting `load_defaults 7.1` or later. Repair: `expires_in: [export.expires_at - Time.current, 0].max`.",
+      "reasons": "Validation: load-defaults suite runs only; it does not test before and after the deadline, cached versus fresh reads, or download expiry and ownership.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Applies: when adopting `load_defaults 7.1` or later, including the 8.1 gem bump.",
+      "reasons": "Applicability: 'including the 8.1 gem bump' wrongly implies the bump alone triggers it under retained 7.0 defaults; only the user's notes clarify this. Validation: one byte comparison plus suites; it does not create, edit, and reload unequal preferences or check the export heading.",
+      "actionable": false
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`ActiveRecord::ReadonlyAttributeError: slug` on update. The 7.1 defaults set `raise_on_assign_to_attr_readonly = true`. ... Repair: `permit(:name, :export_heading)`.",
+      "reasons": "Validation: suite only; it does not test an attempted slug change and the persisted slug alongside creation and name edits.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: no implicit conversion of Date into String`. The 7.2 defaults set `postgresql_adapter_decode_dates = true`. ... Repair: `Date.iso8601(day.to_s)`.",
+      "reasons": "Validation: suite only; it does not test asymmetric UTC date counts, empty reports, or ownership with decoding off and on.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "incorrect",
+      "applicability": "partial",
+      "recommendation": "partial",
+      "validation": "missing",
+      "quote": "`export_downloads_controller.rb:11` `stale?` needs both ETag and Last-Modified to match | none | Keep default",
+      "reasons": "Impact: it reverses the semantics; under strict freshness a matching ETag wins and returns 304. Applicability: it names the controller and the 8.0 gate but mischaracterizes the effect. Recommendation: 'Keep default' is not an informed keep/adopt decision. Validation: no ETag-list or conflicting-validator tests are given.",
+      "actionable": false
+    }
+  },
+  "actionable": 17,
+  "cost_usd": 0.28482399999999997,
+  "duration_ms": 77206
+}

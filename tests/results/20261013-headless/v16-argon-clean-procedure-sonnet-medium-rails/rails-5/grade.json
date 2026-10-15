@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum :status, { draft: 0, ready: 1 }, prefix: true` ... `status_ready` scopes and `Note.statuses` work.",
+      "reasons": "Validation: the plan checks scopes and the existing tests, but it does not persist draft and ready notes and exercise the filters and helpers after a reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "This repair does not work on 7.0.8.7: `coder: JSON` caused `undefined method 'any?'`... Apply it in the bump commit.",
+      "reasons": "Validation: the plan checks the raw column and reloads existing values, but it does not test editing comma-separated tag input.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "alias_method :highlight_color, :color\nalias_method :highlight_color=, :color=",
+      "reasons": "Validation: the plan relies on the create and update tests, and it does not reload JSON settings, check error rendering or confirm that existing settings are preserved.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`PG::UndefinedColumn: column notes.notebooks does not exist`... Repair: `where(notebook: @notebook)`",
+      "reasons": "Validation: there are no controls for another owner's data or for denying access to a foreign notebook.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The receipt CSV is `On idleness,` instead of `On idleness,10.1000/Essays.1`. Repair: `citation&.doi`",
+      "reasons": "Validation: both receipt rows in the expected body share one DOI, so the check does not use distinct DOI values.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "After, they stay `[0,3,0,1]` and the response is 422. Control: the valid two-row import still commits",
+      "reasons": "Validation: the counts come from inside the test suite rather than from a fresh PostgreSQL connection after a real request.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: String can't be coerced into Integer` in `Export#generate`. Every export job fails. Repair: `finish(fragments.join)`",
+      "reasons": "Validation: the plan cites only passing export and download tests, with no check of exact ordered bytes from the real worker and no failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `<% annotations = @import.annotations %>`... The `#line_2 dd` and `#line_3 dd` assertions pass.",
+      "reasons": "Validation: the plan does not test lines 2 and 4 with a multiline CSV row, and it does not confirm that the preview saves nothing.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "The instant is the same; the displayed offset and the `l ... :reminder` text change... July 2026 Eastern gives 09:00-04:00 and Kolkata gives 18:30+05:30",
+      "reasons": "",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`all_day` selected the Eastern day rather than the UTC day the code documents... Add `requested_at = requested_at.in_time_zone(Time.zone)`",
+      "reasons": "Applicability: the plan names only the mailer and does not mention the UTC reservation day in the job and user code. Validation: it relies on one digest test, not a real JSON queue and worker crossing each midnight with the reservation keys inspected.",
+      "actionable": false
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The reminder test asserts the job's `:at` equals `Time.utc(2026,10,31,13).to_i`.",
+      "reasons": "Validation: the plan checks the scheduled `:at` value but not the persisted schedule time or the replacement and ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`RuntimeError: Couldn't determine a delay based on :exponentially_longer`... `:polynomially_longer` does not exist on 7.0.8.7",
+      "reasons": "Impact: the plan describes a raise from request_enrichment, not the loss of bounded ActiveJob retry and the fall-through into Sidekiq retries. Validation: only the unavailable-provider test is cited, with no request or attempt counts and no 503->200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The main notes index returns 500... Repair: `model: false`",
+      "reasons": "Validation: the plan checks the form's attributes but does not submit the form and check field names or the resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "get \"/notes\", to: \"notes#index\"\nget \"/journal\", to: \"notes#index\"",
+      "reasons": "Validation: the plan compares route names only and does not request both URLs as an owner.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "In 8.1 `false` no longer re-raises... `:none` is truthy on 7.0.8.7, so this repair cannot ship before the bump.",
+      "reasons": "Validation: the plan gives no dedicated check of the exception and missing-record policy or of the CI eager-loading modes, only the overall suite result.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "ActionText::ContentHelper.sanitizer.class.allowed_tags.to_a +\n  [ ActionText::Attachment.tag_name, \"figure\", \"figcaption\", \"details\", \"summary\" ]",
+      "reasons": "",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "add `config.x.citation_provider = config_for(:secrets).citation_provider`... The credentials-reach-server test and the retry test pass.",
+      "reasons": "Validation: there is no fresh-process check with special-character credentials and no check of the actual Basic header.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`expires_in: [export.expires_at - Time.current, 0].max`. It passes on both versions and keeps the \"cached indicator does not authorize a download\" test green.",
+      "reasons": "Validation: the plan does not test before and after the deadline with both cached and fresh reads.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :preferences, coder: YAML`. Raw YAML is identical and the legacy rows read.",
+      "reasons": "Validation: the plan does not create, edit and reload unequal preferences or check the export heading with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "Change to `permit(:name, :export_heading)`... patching `slug: \"renamed\"` leaves `slug == \"novels\"`",
+      "reasons": "Recommendation: removing slug from the shared permit list may break setting a slug on creation, and the plan does not address keeping creation working. Validation: there is no creation test.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Date.iso8601(day.to_s)`. It works on both versions. Test: `daily_note_counts` returns Dates in UTC, newest first.",
+      "reasons": "Validation: the plan does not test with decoding both off and on, with empty reports, or with ownership controls.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "incorrect",
+      "applicability": "incorrect",
+      "recommendation": "incorrect",
+      "validation": "missing",
+      "quote": "`action_dispatch.strict_freshness = true` | No effect (source).",
+      "reasons": "Impact and applicability: the plan says the gate has no effect, but adopting it changes a 200-with-bytes response to a 304 for a matching ETag list sent with an older If-Modified-Since. Recommendation: it concludes nothing is needed instead of making an explicit keep or adopt decision. Validation: none is given.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0.8.7 worker given this payload raises `ActiveJob::DeserializationError`... Repair: `DigestJob.perform_later(self, requested_at, reading_completion.to_s)`",
+      "reasons": "Validation: the plan runs both payload formats on both versions but does not check the exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 19,
+  "cost_usd": 0.23614000000000002,
+  "duration_ms": 59744
+}

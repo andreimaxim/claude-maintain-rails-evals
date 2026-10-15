@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "partial",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum status: {...}, _prefix: true` raises `ArgumentError: wrong number of arguments (given 0, expected 1..2)` when `Note` loads. ... enum :status, { draft: 0, ready: 1 }, prefix: true ... These keyword forms are not accepted by 7.0, so they cannot ship early.",
+      "reasons": "Applicability: the plan says the positional enum form cannot ship on 7.0, which appears to be a wrong condition (Rails 7.0 already accepts it), though the affected code is named correctly. Validation: there is no persisted draft/ready status-filter or helper check after reload, only general suite results.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, JSON` (positional coder) is removed in 8.1. I did not run it unrepaired ... serialize :tags, coder: JSON ... These keyword forms are not accepted by 7.0, so they cannot ship early.",
+      "reasons": "Impact: the plan only names the removed API and gives no concrete consequence for the application. Validation: it gives a serialize round-trip, but no reload of existing unequal tags and no comma-separated input edit.",
+      "actionable": false
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "alias_method :highlight_color, :color\n  alias_method :highlight_color=, :color= ... This works on 7.0.8.7",
+      "reasons": "Validation: the plan covers create/edit radio values, but has no reload of JSON settings and no check of error rendering.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`@notes.where(notebook: @notebook)`. Works on 7.0.8.7. ... the filter test uses notes in two notebooks and expects only the chosen notebook's notes.",
+      "reasons": "Validation: there is no other-owner or foreign-notebook denial control and no unequal notebook populations.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "use `citation&.doi`. Works on 7.0.8.7. ... the receipt test (two notes sharing one DOI)",
+      "reasons": "Validation: the test uses one shared DOI rather than distinct DOI values compared against persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "raise ActiveRecord::Rollback unless row.note.save ... the CSV from that test has a valid row followed by an invalid one, and expects `[0,3,0,1]` after apply. Control: the valid two-row import creates 2 notes and 1 citation",
+      "reasons": "",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`finish(fragments.join)`. Works on 7.0.8.7. ... the export test asserts the Markdown body.",
+      "reasons": "Validation: no real worker run with exact ordered bytes is specified, and there is no failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "missing",
+      "applicability": "missing",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "",
+      "reasons": "The plan does not discuss the stringified source-line annotation keys in the import preview.",
+      "actionable": false
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Both are the same instant ... `Time.at(reminder_epoch + 86_400, in: reminder_at.utc_offset)` ... Alternative: accept the new display and update the test and the comment",
+      "reasons": "Validation: the plan checks the DST-end display and the epoch, but has no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The digest lists notes for the reader's local day, not the documented UTC day. ... In `DigestMailer`, add `requested_at = requested_at.utc`",
+      "reasons": "Validation: one near-midnight scenario is given, but it does not cross each midnight separately or inspect reservation keys.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`set(wait_until: Time.at(reminder_epoch))`. Works on 7.0.8.7. ... the reminder test asserts the enqueued `at` equals `Time.utc(2026,10,31,13).to_i`.",
+      "reasons": "Validation: the enqueued timestamp is checked, but there is no persisted schedule time and no replacement or ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`wait: ->(executions) { executions**4 + 2 }`. This is the old formula and works on both versions. ... expects 6 provider requests: 3 attempts",
+      "reasons": "Validation: the persistent-503 case is covered, but the 503->200 and 401 controls are not tied to this retry check.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "remove `model: nil`. Works on 7.0.8.7. ... asserts `form[role=search][action=\"/notes\"][method=get]`.",
+      "reasons": "Validation: the form render is checked, but there is no submission or resulting note-membership check.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "get \"/notes\", to: \"notes#index\"\n  get \"/journal\", to: \"notes#index\" ... the test \"lists the reader's notes newest first at both list paths\" covers `/notes` and `/journal`.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Five \"another reader cannot reach X\" tests fail ... `config.action_dispatch.show_exceptions = :none`. It does not work on 7.0.8.7, so it must ship with the bump.",
+      "reasons": "Validation: only the failing tests are implied; there is no check of normal and CI eager-loading modes.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "ActionText::ContentHelper.sanitizer.class.allowed_tags + [ ActionText::Attachment.tag_name, \"figure\", \"figcaption\" ] ... Do not use plain `allowed_tags = %w[details summary]`.",
+      "reasons": "Validation: the details/summary probe excludes scripts, handlers and javascript: URLs, but attachment markup rendering is not checked.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Add `config.x.citation_provider = config_for(:citation_provider)` ... the test \"provider credentials from the environment reach the server unchanged\" asserts the exact Basic header.",
+      "reasons": "Validation: special-character credentials and a fresh-process run are not specified.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`active_support.raise_on_invalid_cache_expiration_time = true` ... `expires_in: [export.expires_at - Time.current, 0].max`. ... travels past expiry and still expects the download refusal.",
+      "reasons": "Validation: there is no before-deadline case and no cached-versus-fresh read comparison.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Under `load_defaults 8.1`, `serialize :preferences` raises `ArgumentError: missing keyword: :coder` ... serialize :preferences, coder: YAML",
+      "reasons": "Validation: serialize/deserialize probes are given, but there is no create/edit/reload of unequal preferences and no export-heading check.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`ActiveRecord::ReadonlyAttributeError: slug` on notebook update ... Repair: `permit(:name, :export_heading)`. Create still works because `assign_slug` runs",
+      "reasons": "Validation: only the overall suite result under 8.1 defaults is given; there are no specific creation, attempted-slug-change or persisted-slug checks.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`Date.iso8601(day)` raises `TypeError` ... Repair: `Date.iso8601(day.to_s)`. ... the test \"a notebook's notes are counted by UTC creation date, newest first\".",
+      "reasons": "Validation: one named test is given, with no decoding off/on comparison, empty report or ownership controls.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "With a matching ETag and an older `If-Modified-Since`, `fresh?` goes from false to true, so the client gets a 304. ... Impact: none practical",
+      "reasons": "Recommendation: the plan dismisses the change as having no practical impact instead of making an explicit keep/adopt decision. Validation: the fresh? probes skip ETag lists in both orders, expired 302s and foreign 404s.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "cannot be run by 7.0.8.7. It raises `ActiveJob::DeserializationError` ... `reading_completion.to_s(\"F\")` ... 7.0 runs the 8.1 payload and 8.1 runs the 7.0 payload ... shows \"67% of your notes\".",
+      "reasons": "Validation: both cross-version directions are covered, but same-version producer/consumer controls are not explicitly specified.",
+      "actionable": true
+    }
+  },
+  "actionable": 19,
+  "cost_usd": 0.288932,
+  "duration_ms": 73908
+}
