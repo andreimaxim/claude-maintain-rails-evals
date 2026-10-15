@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum status: {...}, _prefix: true` raises `ArgumentError: wrong number of arguments (given 0, expected 1..2)`. Use `enum :status, {...}, prefix: true`. This works on 7.0 as well",
+      "reasons": "Validation: the plan only cites the suite going green. It does not persist draft and ready notes and exercise the filters and helpers after reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "7.2 removes the positional coder (`ArgumentError...`). Use `coder: JSON`. This is 7.1 and later only. On 7.0 `coder:` is read as a hash.",
+      "reasons": "Validation: the plan cites the suite and byte-identical stored tags. It does not reload unequal existing tags, test comma-separated edit input, or check the array values.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`alias_attribute :highlight_color, :color` (a `store_accessor`): 7.2 raises `ArgumentError...`. Define `highlight_color` and `highlight_color=` as methods. This works on 7.0.",
+      "reasons": "Validation: the plan only cites the suite. There is no edit-and-reload check of JSON settings or of form/error rendering.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`@notes.where(notebooks: @notebook)` ... raises `PG::UndefinedColumn: column notes.notebooks does not exist`. Use `where(notebook: @notebook)`. This works on 7.0.",
+      "reasons": "Validation: the only evidence is a general suite or experiment run. There are no unequal notebook populations, no other owner, and no foreign-notebook denial check.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Import a CSV that has DOIs, download the receipt, and assert the DOI column equals the stored `citation_doi`.",
+      "reasons": "Validation: close to the key, but it does not require distinct DOI values, so it cannot catch values landing in the wrong rows.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Record the result in a local variable and `raise ActiveRecord::Rollback` inside the block when a row fails to save.",
+      "reasons": "Validation: the plan forces the failure with an injected before_save abort. It does not send a real apply request with a valid row followed by an invalid row and then check fresh PostgreSQL counts, although it does include a successful-batch control.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`fragments.sum` raises `TypeError: String can't be coerced into Integer`, from 7.1. Use `fragments.join`.",
+      "reasons": "Validation: the plan names no real worker run that checks the exact ordered Markdown bytes, and no failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Use `row.annotation`, which the `Row` struct already carries, and drop the map. ... The preview test fails with `Expected: \"Second reading\"`",
+      "reasons": "Validation: only the existing preview test. There are no unequal annotations on lines 2 and 4, no multiline CSV row, and no check that preview saves nothing.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "It is the same instant and `.to_i` is unchanged, but the preview text differs ... use `Time.at(reminder_epoch + 86_400, in: reminder_at.utc_offset)` to keep the old display",
+      "reasons": "Validation: the plan compares the epoch and the displayed offset across a DST boundary only. It has no non-boundary control.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "add `requested_at = requested_at.in_time_zone(\"UTC\")` in `DigestMailer`. It works for both old and new queued payloads and on 7.0.",
+      "reasons": "Validation: one test and one 7.0-enqueued job. It does not cross each midnight separately or inspect reservation keys against delivered note membership.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "An Integer raises `NoMethodError: undefined method 'utc'`... Use `Time.at(reminder_epoch)`. This works on 7.0, and the queued epoch is unchanged.",
+      "reasons": "Validation: the plan says the queued epoch is unchanged, but it does not specify inspecting the scheduled payload and score or the persisted schedule time, and it has no replacement or ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "It raises `RuntimeError: Couldn't determine a delay based on :exponentially_longer` on the first retry. Use `:polynomially_longer` on 7.1 and later.",
+      "reasons": "Impact: the plan names the error but not the consequence that bounded ActiveJob retries are lost and the job falls into Sidekiq retries. Validation: none is specific beyond the general suite; there is no 503, 503->200 or 401 scenario.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`form_with(model: nil, …)` raises `ArgumentError: Passed nil to the :model argument...`. Use `model: false`. This works on 7.0.",
+      "reasons": "Validation: only the suite. There is no render-and-submit check of field names, method, and resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Split it into two `get` lines. This works on 7.0, and `rails routes` for the app is unchanged.",
+      "reasons": "Validation: the plan compares route output only. It does not request both /notes and /journal as an owner.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "In 8.x `false` means show all exceptions. Every `assert_raises(ActiveRecord::RecordNotFound)` test then fails ... Use `:none`. This is 7.1 and later only.",
+      "reasons": "Validation: only the suite results. CI eager-loading mode is not exercised separately.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`sanitizer.class.allowed_tags + [attachment tag, \"figure\", \"figcaption\"]` when it is nil. Append `details summary`.",
+      "reasons": "Validation: the plan checks that details/summary are kept and script/onclick are dropped. It does not render attachment markup or test javascript: URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Read it with `Rails.application.config_for(:citation_provider)`. This works on 7.0.",
+      "reasons": "Validation: the plan relies on an existing subprocess test of the ENV path. It does not specify special-character credentials, checking the actual Basic header, or bounded failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "To adopt, clamp with `[…, 0].max` or skip the cache for expired exports.",
+      "reasons": "Recommendation: skipping the cache is offered on equal footing with clamping, and the key says that alternative broke the stale-link contract. Validation: the only evidence is the failing test under the defaults; there are no before/after deadline, cached/fresh, or download expiry/ownership checks.",
+      "actionable": false
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "It raises `ArgumentError: missing keyword: :coder`, and every test errors. Set `coder: YAML` first. The stored YAML is unchanged.",
+      "reasons": "Validation: the plan checks cross-version reads of stored rows. It does not create, edit and reload unequal preferences or check the export heading with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "To adopt, drop the hidden field and the `:slug` permit.",
+      "reasons": "Recommendation: dropping the slug permit outright does not limit the change to updates, so creation may break. Validation: no creation, name/heading edit, attempted slug change, or persisted-slug check is specified.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "To adopt, drop the `Date.iso8601` call and accept Date values.",
+      "reasons": "Recommendation: the fix accepts Date only, not both String and Date, so it fails when the gate is off. Validation: no off/on run on real PostgreSQL with asymmetric counts, an empty report, or an ownership check.",
+      "actionable": false
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "Only `If-None-Match` would count when both headers are sent (S, not run). Re-verify the conditional-GET behavior if adopted.",
+      "reasons": "Impact: the plan does not state the concrete change from 200-with-bytes to 304. Recommendation: 're-verify' is not an explicit keep-or-adopt decision. Validation: a vague re-verification only, with no ETag-list orders, conflicting validators, 302 or 404 cases.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "a 7.0 worker raises `ActiveJob::DeserializationError: Serializer … is not known` ... Preparatory fix: pass `reading_completion.to_s` from `User#request_digest`. The mailer already calls `BigDecimal(params[:completion])`",
+      "reasons": "Validation: both directions were run, but the plan has no explicit same-version controls and does not check the exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 18,
+  "cost_usd": 0.29591199999999995,
+  "duration_ms": 57962
+}

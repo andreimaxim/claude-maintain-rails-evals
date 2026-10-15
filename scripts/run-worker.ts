@@ -148,6 +148,9 @@ function supervise(config: RunConfig): void {
   const env = Object.fromEntries(Object.entries(process.env)
     .filter(([key]) => !key.startsWith("CLAUDE") || KEPT_CLAUDE_ENV.has(key)));
   env.CLAUDE_CONFIG_DIR = CONFIG_DIR;
+  // Some models start the planner as a background subagent; by default `claude -p`
+  // stops background tasks ten minutes after the last turn, before the plan exists.
+  env.CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS = "0";
   const args = (request: string) => [
     "-p", request,
     "--plugin-dir", PLUGIN,
