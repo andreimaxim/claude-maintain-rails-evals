@@ -468,6 +468,30 @@ Rails runs scored 19, 18, 21, 18 and 20 (mean 19.2) at a median of $7.76 and
 its training cases were skipped. Its records are under
 [`tests/results/20261013-headless/`](tests/results/20261013-headless/).
 
+**Sonnet 5.5 runs v12 and v16 at two thirds of the cost with two fewer findings;
+Haiku 5.5 does not reliably stay plan-only.** v12 and v16 ran unchanged on
+Rails with other models for the whole session (main session and planner),
+five runs each:
+
+| Model and effort | v12 mean | v16 mean | Median cost (v12 / v16) | Median time (v12 / v16) | Checkout unchanged |
+|---|---|---|---|---|---|
+| Opus 5.5 low | 21.0 | 21.0 | $2.97 / $3.01 | 15.0 / 11.0 min | 10 of 10 |
+| Sonnet 5.5 medium | 19.0 | 19.6 | $2.04 / $2.20 | 14.9 / 14.3 min | 10 of 10 |
+| Sonnet 5.5 low | 18.4 | 16.2 | $1.62 / $1.37 | 11.9 / 10.1 min | 10 of 10 |
+| Haiku 5.5 high | 16.4 | 16.6 | $2.35 / $2.20 | 42.8 / 18.1 min | 6 of 10 |
+
+Haiku started the planner as a background subagent, and `claude -p` stops
+background tasks ten minutes after the last turn, so the first Haiku runs ended
+without a plan; `scripts/run-worker.ts` now sets
+`CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS=0` and those runs were redone. In the
+redone runs Haiku's planner plans scored 17 to 22, but the main Haiku session
+read "Upgrade the rails gem to 8.1.0" as a request to do the upgrade: in four of
+ten runs it changed the checkout, twice returning an implementation summary
+instead of the plan (scores 1 and 4), and once it skipped the planner
+altogether. Haiku medium was not run. The records are under
+[`tests/results/20261013-headless/`](tests/results/20261013-headless/), in
+directories named `<variant>-<model>-<effort>-rails`.
+
 ## Fixture construction established runtime ground truth
 
 Margin Notes is a reading-notebook application with eight implemented features:

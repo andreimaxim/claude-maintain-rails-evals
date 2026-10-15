@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum :status, { draft: 0, ready: 1 }, prefix: true` ... `Note.statuses`, `status_ready?` and `Note.status_ready` still work.",
+      "reasons": "Validation only checks that the helpers exist. It does not persist different draft and ready notes or exercise the filters after a reload.",
+      "actionable": true
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`coder:` is 7.1 or later only, so keep `serialize :tags, JSON` until the gem bump.",
+      "reasons": "Validation round-trips new input and an empty existing row. It does not reload unequal existing JSON tags or check the stored representation.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "alias_method :highlight_color, :color\n  alias_method :highlight_color=, :color=",
+      "reasons": "Validation covers edit, form and error behavior. It does not reload existing JSON settings or show that other settings are preserved.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`PG::UndefinedColumn: column notes.notebooks does not exist`. Filtering the list by notebook returns 500.\n- **Repair:** `where(notebook: @notebook)`.",
+      "reasons": "Validation relies on existing tests and an unfiltered control. It has no unequal notebook populations, other-owner exclusion or foreign-notebook denial.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "the receipt CSV has blank DOIs ... **Repair:** `citation&.id`.",
+      "reasons": "Validation is the existing receipt assertion. It does not apply an import with distinct DOIs and compare the downloaded receipt against the persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "a case where the second of three rows is invalid. It asserts no Import, Note, Citation or attachment exists afterwards ... Control: all-valid CSV creates everything.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`ExportsControllerTest` downloads a Markdown export whose bytes match the 7.0 output.",
+      "reasons": "Validation uses the controller test rather than a real worker run, and it does not check that a failed export leaves no artifact.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "use `@import.annotations` directly, without `.stringify_keys`.",
+      "reasons": "Validation covers a single annotation at line 2. It lacks unequal annotations at lines 2 and 4, a multiline CSV row, and a check that preview saves nothing.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "The instant and scheduling are identical; only the displayed wall-clock text and offset change ... Control: a summer date with no daylight-saving change gives the same string on both versions.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "The digest silently covers the reader's local day while the page text and comments say UTC day.\n  - Repair: in the mailer, `requested_at = requested_at.in_time_zone(\"UTC\")`.",
+      "reasons": "Validation is an in-process perform that crosses one midnight. It does not use a real JSON queue and worker, cross each midnight separately or inspect the reservation keys.",
+      "actionable": true
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "an 8.1-enqueued DigestJob deserialized by 7.0 raises `ActiveJob::DeserializationError` ... Repair: enqueue `reading_completion.to_s`.",
+      "reasons": "Both cross-version directions were run with real Sidekiq, but the plan gives no same-version controls and does not check the exact delivered completion percentage.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Repair: `wait_until: Time.at(reminder_epoch)`.",
+      "reasons": "Validation asserts the enqueued `at`. It does not check the persisted schedule time or the replacement and ownership controls.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`wait: :polynomially_longer` ... **Works on 7.0:** no. Apply it with the gem bump",
+      "reasons": "Validation is the existing failure-after-three-attempts test. It does not count six requests or include the 503->200 and 401 controls.",
+      "actionable": true
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`form_with(model: false, …)`.",
+      "reasons": "Validation checks only the rendered form attributes. It does not submit the form or check field names and the resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "supported",
+      "quote": "`bin/rails routes` before and after is identical for `notes` and `journal`, including helper names ... The existing test that requests both paths covers it.",
+      "reasons": "",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`config.action_dispatch.show_exceptions = :none`.\n- **Works on 7.0:** no.",
+      "reasons": "Validation covers the missing-record tests. It does not exercise a generic raised exception or check the normal and CI eager-loading modes specifically for this setting.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "tags = helper.allowed_tags || (helper.sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\"])",
+      "reasons": "Validation checks details/summary, script and onclick. It does not render attachment markup or exclude javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Add `config.x.citation_provider = config_for(:citation_provider)` to `config/application.rb`.",
+      "reasons": "Validation relies on the existing provider tests. It has no fresh-process run with special-character credentials checking the actual Basic header.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "**If `raise_on_invalid_cache_expiration_time` is adopted:** the exports index raises ... **Repair:** `expires_in: [export.expires_at - Time.current, 1].max`.",
+      "reasons": "Validation covers rendering after expiry with the flag on. It lacks before/after-deadline cached and fresh reads and the authoritative download expiry and ownership checks.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`config.active_record.default_column_serializer = nil`: `ArgumentError: missing keyword: :coder` for `Notebook` until `serialize :preferences, coder: YAML` is added.",
+      "reasons": "Validation is a suite run under 7.1 defaults plus a round-trip claim. It has no explicit create/edit/reload of unequal preferences with the gate both off and on.",
+      "actionable": true
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`NotebooksController#notebook_params` permits `:slug`, and today it is silently ignored. Drop `:slug` from the permitted params first.",
+      "reasons": "Dropping slug from the permitted params entirely is not limited to updates, so it does not keep slug assignment on creation. Validation cites only the existing keep-the-slug test.",
+      "actionable": false
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "partial",
+      "validation": "partial",
+      "quote": "`Notebook#daily_note_counts` fails with `TypeError: no implicit conversion of Date into String` at `Date.iso8601(day)` ... Switch `daily_note_counts` to handle `Date`",
+      "reasons": "The repair is vague and does not say it must accept both String and Date. Validation is only a suite run under 7.2 defaults, without decoding off/on, asymmetric counts, empty reports or ownership checks.",
+      "actionable": false
+    },
+    "R25": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "**`strict_freshness = true` (source, minimal):** `ExportDownloadsController` uses `stale?(etag:, last_modified:)`. With both conditional headers present only `If-None-Match` is then honored.",
+      "reasons": "The plan states the precedence rule but not the concrete 200-with-bytes to 304 change. It gives no keep/adopt decision and no validation.",
+      "actionable": false
+    }
+  },
+  "actionable": 20,
+  "cost_usd": 0.2441,
+  "duration_ms": 58882
+}

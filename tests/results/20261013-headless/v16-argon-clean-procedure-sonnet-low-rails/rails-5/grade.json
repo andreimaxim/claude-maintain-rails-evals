@@ -1,0 +1,217 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "families": {
+    "R01": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`enum status: {...}, _prefix: true` uses the keyword form, which was removed in 8.0. ... `enum :status, { draft: 0, ready: 1 }, prefix: true` | Yes",
+      "reasons": "Impact: the plan says only that the keyword form was removed; it never says the Note model fails to load. Validation: it relies on the general suite and has no persisted draft/ready filter or helper checks after reload.",
+      "actionable": false
+    },
+    "R02": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`serialize :tags, JSON` raises `ArgumentError` ... **No.** Probe on 7.0 shows `coder: JSON` silently selects `YAMLColumn` and writes `\"---\\n- x\\n\"`. Ship it with the bump.",
+      "reasons": "Validation: it relies on the suite and a read-compatibility statement, with no reload of unequal tags, edit of comma-separated input, or check of the stored representation.",
+      "actionable": true
+    },
+    "R03": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`alias_attribute :highlight_color, :color` raises `ArgumentError` ... `color` is a `store_accessor`. ... `alias_method :highlight_color, :color` and `alias_method :highlight_color=, :color=`",
+      "reasons": "Validation: it relies on the suite only, with no edit, reload or form-rendering check of highlight color.",
+      "actionable": true
+    },
+    "R04": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`PG::UndefinedColumn: column notes.notebooks does not exist` ... `where(notebook: @notebook)`",
+      "reasons": "Validation: it names one notebook-filter test but has no unequal populations, other-owner check or foreign-notebook denial.",
+      "actionable": true
+    },
+    "R05": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`citation[:id]` returns nil for the custom primary key `doi`. The receipt CSV has blank DOIs. ... `csv << [note.title, note.doi]`",
+      "reasons": "Validation: it relies on the suite, with no comparison of distinct DOI values between the downloaded receipt and persisted citations.",
+      "actionable": true
+    },
+    "R06": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`return false` inside `transaction` now commits (7.2 removed the rollback). ... `raise ActiveRecord::Rollback unless row.note.save`",
+      "reasons": "Validation: it cites the invalid-rows count test and a valid-import control, but does not specify a valid row followed by an invalid row or fresh PostgreSQL counts.",
+      "actionable": true
+    },
+    "R07": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`TypeError: String can't be coerced into Integer`. `fragments.sum` on strings no longer concatenates. ... `finish(fragments.join)`",
+      "reasons": "Validation: it has no real-worker run checking exact ordered Markdown bytes and no failed-export control.",
+      "actionable": true
+    },
+    "R08": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`HashWithIndifferentAccess#stringify_keys` now stringifies integer keys (8.0). ... Annotations vanish from the preview. ... use `@import.annotations` without `.stringify_keys`",
+      "reasons": "Validation: it has a probe and the suite, but no preview with unequal annotations at lines 2 and 4 including a multiline CSV row.",
+      "actionable": true
+    },
+    "R10": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`reminder_at.to_time + 86_400` yields `2026-11-01T08:00:00-05:00` instead of `2026-11-01T09:00:00-04:00`. The next-day preview label changes. The epoch passed to the scheduler does not change.",
+      "reasons": "Validation: it has a DST-boundary test but no non-boundary control comparing epoch, wall-clock time and offset.",
+      "actionable": true
+    },
+    "R11": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Active Job (7.1) serializes `TimeWithZone` with a `\"time_zone\"` key and restores it. The digest subject changes ... In the mailer, `requested_at = requested_at.utc`",
+      "reasons": "Validation: it has one Eastern-reader test at 03:30 UTC, with no real JSON queue/worker, no separate test for each midnight crossing, and no inspection of reservation keys.",
+      "actionable": true
+    },
+    "R13": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`NoMethodError: undefined method 'utc' for an instance of Integer`. `wait_until:` now requires a Time. ... `wait_until: Time.at(reminder_epoch)`",
+      "reasons": "Validation: it names RemindersControllerTest but does not inspect the real scheduled payload/score or the persisted schedule time.",
+      "actionable": true
+    },
+    "R14": {
+      "impact": "partial",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`RuntimeError: Couldn't determine a delay based on :exponentially_longer`. ... `wait: :polynomially_longer` | **No.** 7.0 lacks the symbol. Ship it with the bump.",
+      "reasons": "Impact: the plan names the error but does not say that bounded ActiveJob retry breaks and falls into Sidekiq retries. Validation: it has no persistent-503 request count, no recorded-failure check, and no 503->200 or 401 controls.",
+      "actionable": false
+    },
+    "R15": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`ActionView::Template::Error: Passed nil to the :model argument` ... `form_with(model: false, ...)`",
+      "reasons": "Validation: it has no check of form field names, method or resulting note membership.",
+      "actionable": true
+    },
+    "R16": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`get \"/notes\", \"/journal\"` raises `ArgumentError` ... Two lines ... Route names `notes` and `journal` are unchanged.",
+      "reasons": "Validation: it cites the list tests and a route probe but does not specify identical authorized list behavior for an owner on both URLs.",
+      "actionable": true
+    },
+    "R17": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`show_exceptions = false` is no longer understood. ... `RecordNotFound` was never raised in tests, and requests returned 500. ... `:none` | **No.** ... Ship it with the bump.",
+      "reasons": "Validation: it relies on the suite, with no explicit raised-exception, missing-record or CI eager-loading checks.",
+      "actionable": true
+    },
+    "R18": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "Boot fails. `NoMethodError: undefined method '+' for nil`. ... `allowed_tags = (allowed_tags || (sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, \"figure\", \"figcaption\"])) + %w[details summary]`",
+      "reasons": "Validation: it has no rendering check of details/summary and attachments, and none excluding scripts, handlers and javascript URLs.",
+      "actionable": true
+    },
+    "R19": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`NoMethodError: undefined method 'secrets'`. `Rails.application.secrets` was removed in 7.2. ... Add `config.x.citation_provider = config_for(:citation_provider)`",
+      "reasons": "Validation: it has no fresh-process request with special-character credentials checking the actual Basic header and the failure behavior.",
+      "actionable": true
+    },
+    "R09": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`raise_on_invalid_cache_expiration_time = true` ... `Cache expiration time is invalid, cannot be negative: -60.0` for an expired export. **Repair:** `expires_in: [export.expires_at - Time.current, 0].max`.",
+      "reasons": "Validation: it has no before/after-deadline, cached-versus-fresh or download expiry/ownership checks.",
+      "actionable": true
+    },
+    "R20": {
+      "impact": "supported",
+      "applicability": "incorrect",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "These apply as soon as the gem is bumped. ... `serialize :preferences` raises `ArgumentError: missing keyword: :coder`.",
+      "reasons": "Applicability: the plan calls the Notebook preferences failure an unconditional effect of the bump, but under the retained `load_defaults 7.0` it occurs only when `default_column_serializer = nil` is adopted. Validation: it has a legacy-YAML probe and suite runs under both defaults, but no create/edit/reload of unequal preferences with export-heading checks.",
+      "actionable": false
+    },
+    "R21": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`raise_on_assign_to_attr_readonly = true` ... `ActiveRecord::ReadonlyAttributeError: slug` ... **Repair:** `permit(:name, :export_heading)`. Create is unaffected because `assign_slug` overwrites it.",
+      "reasons": "Validation: it cites one update test but no explicit checks of creation, an attempted slug change or the persisted slug.",
+      "actionable": true
+    },
+    "R23": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "`postgresql_adapter_decode_dates = true` (7.2 defaults) ... `TypeError: no implicit conversion of Date into String` from `Date.iso8601(day)`. **Repair:** `Date.iso8601(day.to_s)`.",
+      "reasons": "Validation: it has no asymmetric UTC date counts, empty-report or ownership checks with decoding off and on.",
+      "actionable": true
+    },
+    "R25": {
+      "impact": "incorrect",
+      "applicability": "incorrect",
+      "recommendation": "missing",
+      "validation": "missing",
+      "quote": "`strict_freshness = true`: no conditional GET code in the app.",
+      "reasons": "Impact and applicability: the plan wrongly says there is no conditional GET code, so it misses the change from 200 to 304 in ExportDownloadsController. Recommendation: there is no keep/adopt decision. Validation: there are no freshness checks.",
+      "actionable": false
+    },
+    "R12": {
+      "impact": "supported",
+      "applicability": "supported",
+      "recommendation": "supported",
+      "validation": "partial",
+      "quote": "A 7.0 worker handed an 8.1 payload raises `ActiveJob::DeserializationError` ... This only matters on rollback or in a mixed fleet. **Repair:** Pass `reading_completion.to_s(\"F\")`.",
+      "reasons": "Validation: it has a probe of one direction only, with no full producer/consumer matrix, same-version controls or exact delivered completion percentage.",
+      "actionable": true
+    }
+  },
+  "actionable": 19,
+  "cost_usd": 0.222,
+  "duration_ms": 58829
+}
