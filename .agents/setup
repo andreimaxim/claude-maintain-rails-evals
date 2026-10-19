@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+node -e 'if (Number(process.versions.node.split(".")[0]) < 26) throw new Error("Node 26 or later is required")'
+npm --prefix "$root" ci
+
+# Use the existing Claude grader; native GPT sessions do not use this CLI.
+if [[ "$(claude --version 2>/dev/null || true)" != "2.1.296 (Claude Code)" ]]; then
+  npm install --global @anthropic-ai/claude-code@2.1.296
+fi
+echo "Evaluation dependencies ready. Grading requires a runtime Claude OAuth token."

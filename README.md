@@ -62,6 +62,11 @@ model quality alone. A completed tool call is not a correctness pass: missing
 delegation, incomplete delivery, changed files, and unsupported claims remain
 separate findings. Collection failures invalidate the harness result.
 
+Fresh evals orbs run `.agents/setup` to install the Node dependencies and Claude
+Code 2.1.296 for the existing graders. Grading uses the runtime
+`CLAUDE_CODE_OAUTH_TOKEN`; setup does not authenticate. Native GPT sessions do
+not use the Claude CLI.
+
 ## Run evaluations from this repo; run each test in an app orb
 
 **A thread in the evals project coordinates the evaluation.** This repository
