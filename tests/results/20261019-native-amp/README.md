@@ -18,6 +18,23 @@ Keep workflow failures, finding coverage, report accuracy, elapsed time, and
 usage separate. Cost is unavailable until the native token records are assessed.
 Full exports and result archives stay private, outside the committed results.
 
+## Launch and collection
+
+All 60 operators were launched on October 19 against evals revision
+[`586f16a`](https://github.com/andreimaxim/claude-maintain-rails-evals/commit/586f16a4510ec56928aa4103ec05fffe4b4a7575).
+The manifest has 60 distinct worker IDs and five assignments for each of the
+12 model, effort, and prompt combinations. A misspelled project reference was
+rejected before thread creation, then corrected; it did not start an extra run.
+
+As of 07:49 UTC, nine result archives have been collected and checked. Their
+receipts show the expected planner hash, request, application commit, model, and
+effort, with unchanged application files and no collection errors. Native agent
+definitions and usage records match the selected models; both agent definitions
+also record the selected effort. The per-run `native-audit.json` files retain
+those fields and source-export hashes without publishing the full exports.
+These runs are not graded yet. Verbatim response delivery alone does not establish
+full substantive-plan delivery, as the smoke below explains.
+
 ## Sol-medium smoke evidence
 
 The smoke requests contained no solution hints. Each handoff supplied only the
