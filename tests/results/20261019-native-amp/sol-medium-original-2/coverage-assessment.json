@@ -1,0 +1,335 @@
+{
+  "id": "sol-medium-original-2",
+  "source": "tests/results/20261019-native-amp/sol-medium-original-2/artifact-1.md",
+  "source_sha256": "eee71c7f068e3cd9754436a7d5602f3f394d78a9878ab95d233de1a780813c09",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:10-12`. ... Keyword-only enum declaration is removed in Rails 8.0",
+        "reason": "The report gives no high/medium/low level for this item; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "positional coder argument to `serialize` is removed in 7.2 ... Do not move tags to `coder: JSON` on 7.0: its `serialize` ignores that keyword when choosing the coder and would use YAML.",
+        "reason": "The report gives no high/medium/low level for this item; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:13-14` ... Rails 7.2 removes support for `alias_attribute` targeting nonexistent attributes. Reproduced: 7.0 returns `pink`; 8.1 raises `ArgumentError`.",
+        "reason": "The report gives no high/medium/low level for this item; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Replace `.where(notebooks: @notebook)` with `.where(notebook_id: @notebook.id)` ... Target currently queries nonexistent `notes.notebooks`.",
+        "reason": "The report gives no high/medium/low level for this item; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.2 removes `read_attribute(:id)` fallback for a custom primary key. `citation[:id]` becomes nil",
+        "reason": "The report says the DOI silently disappears but gives no level, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "high",
+        "accuracy": "accurate",
+        "quote": "Import atomicity changes on nonlocal return (E/S; high data-integrity risk)",
+        "reason": "",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": true
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/export.rb:42` (`fragments.sum`). ... Ruby's numeric identity causes `TypeError`.",
+        "reason": "The report gives no high/medium/low level for this item; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Preview stringifies source-line integers but later looks up integers: annotations vanish.",
+        "reason": "The report gives no level for this item, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses the negative cache expiry or `raise_on_invalid_cache_expiration_time`.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.1 `TimeWithZone#to_time` always preserves the named zone. ... Both represent epoch `1793538000`; scheduled instant is unchanged.",
+        "reason": "The report gives no level for this item, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "New TimeWithZone serialization preserves the originating IANA zone, independently of defaults.",
+        "reason": "The report gives no level for this item, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "New tagged arguments are **not readable by old 7.0 workers**: reproduced `ActiveJob::DeserializationError`, unknown `BigDecimalSerializer`.",
+        "reason": "The report gives no level for this item, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:61` ... On 8.1 `wait_until: reminder_epoch` raises `undefined method utc for Integer`",
+        "reason": "The report gives no high/medium/low level for this item; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/jobs/citation_enrichment_job.rb:7`. ... `:exponentially_longer` is deprecated 7.1 and removed 7.2.",
+        "reason": "The report gives no high/medium/low level for this item; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 8.0 rejects `form_with(model: nil, ...)`. Omit `model:` for this URL-based search form",
+        "reason": "The report gives no high/medium/low level for this item; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 8.1 removes multiple paths in one route declaration. Split `/notes` and `/journal` into separate `get` declarations",
+        "reason": "The report gives no high/medium/low level for this item; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 7.2 removes boolean `show_exceptions`. Use `:none` to preserve tests that expect raised authorization/not-found exceptions.",
+        "reason": "The report gives no level for this item, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/initializers/action_text.rb:3` ... `allowed_tags += ...` therefore raises `NoMethodError`; reproduced on 8.1.",
+        "reason": "The report gives no level for this item, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/citation/provider.rb:13`; `config/secrets.yml` ... `Rails.application.secrets` deprecated 7.1, removed 7.2.",
+        "reason": "The report gives no level for this item, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.1 `active_record.default_column_serializer = nil`; `Notebook` line 7 | `serialize :preferences` currently relies on implicit YAML. Remains valid with 7.0 defaults; fails when 7.1 defaults disable the implicit coder.",
+        "reason": "The optional-defaults table gives no level for adopting this default, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.1 raise on assigning readonly attributes; Notebook slug/controller/form | Settings form resubmits slug, controller permits it. New setting raises even for assigning the same slug (E).",
+        "reason": "The optional-defaults table gives no level for adopting this default, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.2 PostgreSQL date decoding; `Notebook#daily_note_counts:40` | Raw `select_rows` starts returning Date when enabled; `Date.iso8601(day)` then raises TypeError (E).",
+        "reason": "The optional-defaults table gives no level for adopting this default, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.0 `action_dispatch.strict_freshness`; export downloads | Changes conflicting If-None-Match/If-Modified-Since handling: matching ETag takes precedence. Authorization/expiry checks already happen before `stale?`",
+        "reason": "The optional-defaults table gives no level for adopting this default, while the label is Low.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json 3.1.0",
+        "quote": "Conservative `bundle update rails` resolves JSON 3.1.0 here."
+      },
+      {
+        "gem": "action_text-trix 2.1.19",
+        "quote": "Resolver brings `action_text-trix` 2.1.19; layout still explicitly loads vendored 1.3.5."
+      }
+    ],
+    "otherFindings": [],
+    "located": 22,
+    "levelMatches": 1,
+    "inaccurate": 0,
+    "cost_usd": 0.1960864,
+    "duration_ms": 32818
+  }
+}

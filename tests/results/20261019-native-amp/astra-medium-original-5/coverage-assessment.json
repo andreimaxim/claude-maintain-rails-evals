@@ -1,0 +1,331 @@
+{
+  "id": "astra-medium-original-5",
+  "source": "tests/results/20261019-native-amp/astra-medium-original-5/artifact-1.md",
+  "source_sha256": "1940b4f45feb3950706867613745060c77b24454b446dbddc7be002f2f4ff813",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:10` uses `enum status: ..., _prefix: true`.",
+        "reason": "The report gives no high, medium or low rating anywhere; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:12`, `db/schema.rb:99`: `serialize :tags, JSON` ... `coder: JSON` is not its serialization API and can leave the YAML coder selected.",
+        "reason": "The report gives no risk levels; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:13-14`: `color` is a `store_accessor` in `settings`, not a database column.",
+        "reason": "The report gives no risk levels; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses the `where(notebooks: notebook)` table-name predicate in notes_controller.rb.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/import.rb:68` uses `citation[:id]`; `citations` has primary key `doi` and no `id` column.",
+        "reason": "The report gives no risk levels; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/import.rb:50-60`, non-local `return false` from a transaction after saving the Import and prior notes/citations/rich text.",
+        "reason": "The report gives no risk levels; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/export.rb:42`, `finish(fragments.sum)`.",
+        "reason": "The report gives no risk levels; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/views/imports/preview.html.erb:22,42-44` stringifies it, then still indexes with integers.",
+        "reason": "The report gives no risk levels; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "With retained 7.0 defaults, 8.1 instead reports/logs the invalid TTL and drops it",
+        "reason": "The report gives no risk levels; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:43-44`, `reminder_at.to_time + 86_400` ... The epoch is unchanged.",
+        "reason": "The report gives no risk levels; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 7.2 preserves the original TimeWithZone zone. New payloads from an Eastern reader ... now select October 4 locally, while the reservation and UI promise October 5 UTC.",
+        "reason": "The report gives no risk levels; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A new producer/old consumer, including rollback to a 7.0 worker, can fail deserialization.",
+        "reason": "The report gives no risk levels; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:61`: `set(wait_until: reminder_epoch)` passes an Integer.",
+        "reason": "The report gives no risk levels; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/jobs/citation_enrichment_job.rb:7`, `wait: :exponentially_longer`.",
+        "reason": "The report gives no risk levels; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/views/notes/index.html.erb:14`, the unbound GET search form.",
+        "reason": "The report gives no risk levels; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/routes.rb:18`: `get \"/notes\", \"/journal\", to: \"notes#index\"`.",
+        "reason": "The report gives no risk levels; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/environments/test.rb:31`, `show_exceptions = false` ... In 8.1 `false` falls through to rendering exceptions; it is not equivalent to `:none`.",
+        "reason": "The report gives no risk levels; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/initializers/action_text.rb:3` does `ActionText::ContentHelper.allowed_tags += %w[ details summary ]`.",
+        "reason": "The report gives no risk levels; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/citation/provider.rb:13`, `config/secrets.yml`",
+        "reason": "The report gives no risk levels; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Notebook#preferences` (`app/models/notebook.rb:7`) is serialized YAML text. `load_defaults 7.1` sets `active_record.default_column_serializer = nil`",
+        "reason": "The report gives no risk levels; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Notebook` declares `attr_readonly :slug`, while the settings form submits a hidden slug and `NotebooksController#notebook_params` permits it.",
+        "reason": "The report gives no risk levels; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Notebook#daily_note_counts` (`app/models/notebook.rb:38-40`) assumes `select_rows` returns a string and calls `Date.iso8601(day)`.",
+        "reason": "The report gives no risk levels; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`ExportDownloadsController#show` calls `stale?` with ETag and Last-Modified. `strict_freshness = true` changes combined-header evaluation to prefer If-None-Match",
+        "reason": "The report gives no risk levels; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "action_text-trix",
+        "quote": "Rails 8.1 changes the bundled editor dependency to `action_text-trix ~> 2.1.15`."
+      }
+    ],
+    "otherFindings": [],
+    "located": 22,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.2086984,
+    "duration_ms": 28564
+  }
+}

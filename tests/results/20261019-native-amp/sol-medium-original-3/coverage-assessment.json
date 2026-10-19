@@ -1,0 +1,335 @@
+{
+  "id": "sol-medium-original-3",
+  "source": "tests/results/20261019-native-amp/sol-medium-original-3/artifact-1.md",
+  "source_sha256": "c3e084c7b7a9d3a3642f95406730cd4caeb9b22487f2dbbccae5a03171690323",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Removed enum keyword form.** `app/models/note.rb:10`: `enum status: ..., _prefix: true`.",
+        "reason": "The report gives no risk levels, so this item is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:12`: `serialize :tags, JSON`. ... **Do not deploy that keyword conversion alone on 7.0**: an executed probe shows it selects `YAMLColumn`",
+        "reason": "The report gives no risk levels, so this item is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:13–14`: `color` is from `store_accessor`, not a database column; target rejects `alias_attribute`.",
+        "reason": "The report gives no risk levels, so this item is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/controllers/notes_controller.rb:12`: `where(notebooks: @notebook)` eventually queries nonexistent `notes.notebooks`.",
+        "reason": "The report gives no risk levels, so this item is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Raw `:id` no longer aliases a custom primary key.** `app/models/import.rb:68`: `citation[:id]`, but `citations` has only a DOI primary key.",
+        "reason": "The report gives no risk levels, so this item is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/import.rb:53–58`: `return false` inside transaction after a failed note save used to roll back; target commits the import and earlier rows.",
+        "reason": "The report gives no risk levels, so this item is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/export.rb:42`: `fragments.sum` raises a TypeError.",
+        "reason": "The report gives no risk levels, so this item is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/import.rb:39–40` keys annotations by integer source line; `app/views/imports/preview.html.erb:27,46–48` stringifies then indexes with the integer. Target loses annotation display.",
+        "reason": "The report gives no risk levels, so this item is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/views/exports/_export.html.erb:26` computes negative TTL after a completed export expires. ... Target with strict flag raises for −1; without strict flag it drops the TTL and stores an unexpired value.",
+        "reason": "The report gives no risk levels, so this item is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note#next_day_reminder_at` does `reminder_at.to_time + 86_400`. Target `to_time` preserves the zone object ... Scheduling epoch is unchanged.",
+        "reason": "The report gives no risk levels, so this item is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`User#request_digest` reserves a Redis key by UTC day but sends a reader-zone `TimeWithZone`. New Active Job serialization preserves the named zone",
+        "reason": "The report gives no risk levels, so this item is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**7.0 cannot read the new BigDecimal payload** (“Serializer ... is not known”).",
+        "reason": "The report gives no risk levels, so this item is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Integer `wait_until` breaks target job serialization.** `app/models/note.rb:61` passes a persisted epoch",
+        "reason": "The report gives no risk levels, so this item is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Retry wait symbol removed in 7.2.** `app/jobs/citation_enrichment_job.rb:7` uses `:exponentially_longer`.",
+        "reason": "The report gives no risk levels, so this item is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Removed nil model form behavior.** `app/views/notes/index.html.erb:12`: unbound search uses `model: nil`.",
+        "reason": "The report gives no risk levels, so this item is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/routes.rb:18`: `get \"/notes\", \"/journal\", ...`. Target raises wrong-number-of-arguments and route loading stops.",
+        "reason": "The report gives no risk levels, so this item is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Boolean show_exceptions removed in 7.2.** `config/environments/test.rb:31` ... From **7.1**, use `:none` to preserve raise-through behavior.",
+        "reason": "The report gives no risk levels, so this item is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Action Text initializer prevents boot.** `config/initializers/action_text.rb:3` adds to `allowed_tags`.",
+        "reason": "The report gives no risk levels, so this item is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Application secrets API removed in 7.2.** `app/models/citation/provider.rb:13`, `config/secrets.yml`",
+        "reason": "The report gives no risk levels, so this item is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**7.1 default_column_serializer=nil**; `Notebook.serialize :preferences` relies on implicit YAML",
+        "reason": "The report gives no risk levels, so this item is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**7.1 raise_on_assign_to_attr_readonly=true**; Notebook slug is readonly but the settings form resubmits it and the controller permits it.",
+        "reason": "The report gives no risk levels, so this item is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**7.2 PostgreSQL date decoding**; `Notebook#daily_note_counts` passes raw date to `Date.iso8601`.",
+        "reason": "The report gives no risk levels, so this item is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**8.0 strict freshness**; `ExportDownloadsController#show` uses both ETag and Last-Modified.",
+        "reason": "The report gives no risk levels, so this item is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json resolves to 3.1.0 under the target; the report recommends constraining it to <3 (2.21.2)",
+        "quote": "**Actual target resolution selects incompatible JSON 3.1.0.** ... constrain JSON to `<3` and lock the tested resolution (2.21.2 here)"
+      },
+      {
+        "gem": "action_text-trix 2.1.19",
+        "quote": "the target bundle resolved **action_text-trix 2.1.19** through Rails' 2.1.x dependency"
+      }
+    ],
+    "otherFindings": [],
+    "located": 23,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.1753504,
+    "duration_ms": 29744
+  }
+}

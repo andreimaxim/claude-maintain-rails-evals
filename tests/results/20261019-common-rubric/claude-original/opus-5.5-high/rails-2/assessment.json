@@ -1,0 +1,362 @@
+{
+  "configuration": "opus-5.5-high",
+  "run": 2,
+  "variant": "original",
+  "source": "tests/results/20261012/opus-5.5-high/traces/rails-2.json",
+  "source_sha256": "4f8a29b3cdf48e4921b2d028f6579eeef146b02ebe60973fd84c1ce1487eb791",
+  "report_sha256": "35862dec999a569760ff36d48dbd0955a559eefc615776762df16f5ce71a908a",
+  "extraction": "Retain the authored planner hand-back. Remove the native prefix, two leading harness spaces per line, and trailing native agentId/usage metadata only.",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note`: `enum status: …, _prefix: true`.** Raises at class load on 8.1. Change to `enum :status, {…}, prefix: true`.",
+        "reason": "The report gives no high/medium/low rating, while the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`serialize :tags, JSON` → `serialize :tags, coder: JSON`,** ... On 7.0, the `coder:` keyword is silently ignored and YAML is used.",
+        "reason": "The report gives no high/medium/low rating, while the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note`: `alias_attribute :highlight_color, :color`.** `color` is a store accessor, and 8.1 raises \"is not an attribute\". Use `alias_method`",
+        "reason": "The report gives no high/medium/low rating, while the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`NotesController#index`: `where(notebooks: @notebook)`.** From 7.2 the notebook filter fails with `PG::UndefinedColumn notes.notebooks`. Use `where(notebook: @notebook)`.",
+        "reason": "The report gives no high/medium/low rating, while the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#receipt`: `citation[:id]`.** From 7.2 this reads an `id` column that doesn't exist, so the receipt CSV's DOI column comes out blank.",
+        "reason": "The report gives no high/medium/low rating, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#apply`: `return false` inside `transaction`.** On 7.0 this rolls back. From 7.2 (or 7.1 with 7.1 defaults) it commits, so the import and the earlier rows are saved.",
+        "reason": "The report gives no high/medium/low rating, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Export#generate`: `fragments.sum`.** From 7.1 this raises `TypeError` (7.0 already warns). Use `fragments.join`.",
+        "reason": "The report gives no high/medium/low rating, while the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`imports/preview.html.erb`: `@import.annotations.stringify_keys`.** From 8.0, `stringify_keys` on a HashWithIndifferentAccess also stringifies Integer keys ... annotations silently disappear",
+        "reason": "The report gives no high/medium/low rating, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`exports/_export.html.erb`: `expires_in: export.expires_at - Time.current`.** ... With 7.1 defaults: `ArgumentError` ... With 7.0 defaults on 7.1 or later: the expiry is silently dropped and the fragment is cached with no expiry",
+        "reason": "The report gives no high/medium/low rating, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note#next_day_reminder_at`: `reminder_at.to_time + 86_400`.** ... the \"24 hours later\" preview moves from the old offset ... The postponed time itself is the same.",
+        "reason": "The report treats this as a decision without a rating, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`DigestMailer#daily_digest`.** From 7.1, Active Job brings a time back in the zone it was queued in. A digest requested at 23:30 Eastern would then cover and be dated the reader's local day",
+        "reason": "The report gives no high/medium/low rating, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`User#request_digest` passes a BigDecimal.** ... A 7.0 worker then fails with `DeserializationError: Serializer … BigDecimalSerializer is not known`. That happens with a mixed fleet or after a rollback",
+        "reason": "The report gives no high/medium/low rating, while the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note#schedule_reminder`: `set(wait_until: reminder_epoch)` with an Integer.** On 8.0 and later, job serialization raises `NoMethodError` (`Integer#utc`)",
+        "reason": "The report gives no high/medium/low rating, while the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`CitationEnrichmentJob`: `wait: :exponentially_longer` → `:polynomially_longer`.** Same timing formula. Removed in 7.2.",
+        "reason": "The report gives no high/medium/low rating, while the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`notes/index.html.erb`: `form_with(model: nil, …)`.** Raises on 8.0. Remove `model: nil`.",
+        "reason": "The report gives no high/medium/low rating, while the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/routes.rb`: `get \"/notes\", \"/journal\", to:`.** Deprecated in 8.0, an `ArgumentError` at boot on 8.1. Split it into two `get` lines",
+        "reason": "The report gives no high/medium/low rating, while the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/environments/test.rb`: `show_exceptions = false` → `:none`.** On 8.1, `false` is treated like \"show everything\"",
+        "reason": "The report gives no high/medium/low rating, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/initializers/action_text.rb`.** From 7.1, `ActionText::ContentHelper.allowed_tags` starts as nil, so `+=` crashes at boot.",
+        "reason": "The report gives no high/medium/low rating, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Citation::Provider` reads `Rails.application.secrets`** ... Deprecated in 7.1, removed in 7.2.",
+        "reason": "The report gives no high/medium/low rating, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "named",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "and `serialize :preferences, coder: YAML`. ... **Covered by the changes above:** ... no default column serializer.",
+        "reason": "The report doesn't say which file declares `preferences` (Notebook) and gives no level, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`NotebooksController` permits `:slug`.** With 7.1's `raise_on_assign_to_attr_readonly`, every notebook settings save raises `ReadonlyAttributeError`",
+        "reason": "The report gives no high/medium/low rating, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Notebook#daily_note_counts`: `Date.iso8601(day)`.** With 7.2's `postgresql_adapter_decode_dates`, the raw select returns `Date` objects and this raises `TypeError`",
+        "reason": "The report gives no high/medium/low rating, while the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "named",
+        "level": "low",
+        "accuracy": "accurate",
+        "quote": "**Low-impact defaults:** ... 8.0 `strict_freshness` (the export download test passes).",
+        "reason": "The report only names the setting and a passing test, without describing the 304 behavior or tying it to export_downloads_controller.rb.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": true
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json 3.0.2 (with a recommended pin to ~> 2.7, resolved to 2.21.2)",
+        "quote": "Rails 8.1.0 adds a `json` dependency with no upper bound, so Bundler picks 3.0.2."
+      },
+      {
+        "gem": "action_text-trix 2.1.19",
+        "quote": "New: `action_text-trix` 2.1.19"
+      },
+      {
+        "gem": "rack-session 1.0.2",
+        "quote": "`rack-session` 1.0.2"
+      },
+      {
+        "gem": "rackup 1.0.1",
+        "quote": "`rackup` 1.0.1"
+      },
+      {
+        "gem": "useragent, securerandom, uri, drb, webrick",
+        "quote": "`useragent`, `securerandom`, `uri`, `drb`, `bigdecimal` 4.1.3, `webrick`"
+      },
+      {
+        "gem": "bigdecimal 4.1.3",
+        "quote": "`bigdecimal` 4.1.3"
+      },
+      {
+        "gem": "net-imap 0.6.7 → 0.6.8",
+        "quote": "Updated: `net-imap` 0.6.7 → 0.6.8."
+      },
+      {
+        "gem": "method_source (removed)",
+        "quote": "Removed: `method_source`."
+      }
+    ],
+    "otherFindings": [],
+    "located": 21,
+    "levelMatches": 1,
+    "inaccurate": 0,
+    "cost_usd": 0.1772464,
+    "duration_ms": 38189
+  }
+}

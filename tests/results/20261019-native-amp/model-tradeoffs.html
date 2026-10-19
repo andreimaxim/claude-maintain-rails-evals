@@ -1,0 +1,1045 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rails planners: original to v21, cost and time</title><style>
+			:root {
+				color-scheme: light dark;
+				--bg: #ffffff;
+				--surface: #f6f7f9;
+				--border: #e1e4ea;
+				--line: #aeb6c4;
+				--text: #1b1f27;
+				--muted: #5d6675;
+				--accent: #2f5fd0;
+				--accent-soft: #eaf0fd;
+				--ok: #1f7a4d;
+				--ok-soft: #e4f4ec;
+				--warn: #8a5a00;
+				--warn-soft: #fdf1d8;
+				--bad: #b3261e;
+				--bad-soft: #fde8e6;
+				--sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+				--mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #14161a;
+					--surface: #1c1f25;
+					--border: #2c313a;
+					--line: #566070;
+					--text: #e7e9ee;
+					--muted: #9ba3b1;
+					--accent: #8fb0ff;
+					--accent-soft: #1e2a47;
+					--ok: #6fd3a0;
+					--ok-soft: #173326;
+					--warn: #f0c36a;
+					--warn-soft: #3a2e12;
+					--bad: #ff9d94;
+					--bad-soft: #401f1c;
+				}
+			}
+			* {
+				box-sizing: border-box;
+			}
+			html {
+				scroll-behavior: smooth;
+			}
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--text);
+				font: 16px/1.55 var(--sans);
+				-webkit-text-size-adjust: 100%;
+			}
+			.layout {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr);
+				max-width: 46rem;
+				margin: 0 auto;
+				/* Bottom space keeps the last block clear of the review button in the corner. */
+				padding: 2.5rem 1.25rem 6rem;
+			}
+			.toc {
+				display: none;
+			}
+			@media (min-width: 64rem) {
+				.layout {
+					grid-template-columns: 13rem minmax(0, 46rem);
+					gap: 3rem;
+					max-width: 64rem;
+				}
+				.toc {
+					display: block;
+					position: sticky;
+					top: 2.5rem;
+					align-self: start;
+					max-height: calc(100vh - 5rem);
+					overflow-y: auto;
+					font-size: 0.875rem;
+				}
+			}
+			.toc ol {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			.toc a {
+				display: block;
+				padding: 0.3rem 0.6rem;
+				border-left: 2px solid var(--border);
+				color: var(--muted);
+				text-decoration: none;
+			}
+			.toc a:hover,
+			.toc a[aria-current='true'] {
+				border-left-color: var(--accent);
+				color: var(--text);
+			}
+			h1,
+			h2,
+			h3 {
+				line-height: 1.25;
+				text-wrap: balance;
+			}
+			h1 {
+				margin: 0.4rem 0 0.75rem;
+				font-size: 2rem;
+				letter-spacing: -0.01em;
+			}
+			h2 {
+				margin: 0 0 0.9rem;
+				font-size: 1.3rem;
+			}
+			h3 {
+				margin: 0;
+				font-size: 1.02rem;
+			}
+			p,
+			ul,
+			ol,
+			dl,
+			figure,
+			pre {
+				margin: 0 0 0.9rem;
+			}
+			a {
+				color: var(--accent);
+			}
+			section {
+				margin-top: 2.75rem;
+			}
+			[id] {
+				scroll-margin-top: 1.5rem;
+			}
+			.kicker,
+			.meta {
+				margin: 0;
+				color: var(--muted);
+				font-size: 0.875rem;
+			}
+			.meta {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem 0.75rem;
+				align-items: center;
+			}
+			.lede {
+				font-size: 1.15rem;
+				color: var(--text);
+			}
+
+			/* Summary: the part every reader sees. */
+			.facts {
+				display: grid;
+				gap: 1px;
+				margin: 0;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--border);
+				overflow: hidden;
+			}
+			.facts > div {
+				display: grid;
+				grid-template-columns: 8.5rem minmax(0, 1fr);
+				gap: 1rem;
+				padding: 0.7rem 1rem;
+				background: var(--surface);
+			}
+			.facts dt {
+				color: var(--muted);
+				font-size: 0.875rem;
+				font-weight: 600;
+			}
+			.facts dd {
+				margin: 0;
+			}
+			/* The first row is what the reader is asked to do, so it stands out from the rest. */
+			.facts > .ask {
+				background: var(--accent-soft);
+			}
+			.facts > .ask dt {
+				color: var(--accent);
+			}
+			@media (max-width: 34rem) {
+				h1 {
+					font-size: 1.6rem;
+				}
+				.facts > div {
+					grid-template-columns: minmax(0, 1fr);
+					gap: 0.15rem;
+				}
+			}
+
+			/* Items: one decision, step, or alternative per block, so one comment hits one thing. */
+			.items {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: grid;
+				gap: 0.75rem;
+			}
+			.item {
+				padding: 0.9rem 1rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			.item > :last-child {
+				margin-bottom: 0;
+			}
+			.item-head {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem 0.6rem;
+				align-items: center;
+				margin-bottom: 0.5rem;
+			}
+			.item-head h3 {
+				flex: 1 1 12rem;
+			}
+			.tag {
+				padding: 0.05rem 0.4rem;
+				border-radius: 5px;
+				background: var(--accent-soft);
+				color: var(--accent);
+				font: 600 0.8rem/1.5 var(--mono);
+				white-space: nowrap;
+			}
+			:target {
+				outline: 2px solid var(--accent);
+				outline-offset: 3px;
+				border-radius: 10px;
+			}
+			.chip {
+				display: inline-block;
+				padding: 0.05rem 0.55rem;
+				border-radius: 999px;
+				background: var(--surface);
+				border: 1px solid var(--border);
+				color: var(--muted);
+				font-size: 0.78rem;
+				font-weight: 600;
+				white-space: nowrap;
+			}
+			.chip.review,
+			.chip.doing {
+				background: var(--warn-soft);
+				border-color: transparent;
+				color: var(--warn);
+			}
+			.chip.done,
+			.chip.pick {
+				background: var(--ok-soft);
+				border-color: transparent;
+				color: var(--ok);
+			}
+			.chip.blocked {
+				background: var(--bad-soft);
+				border-color: transparent;
+				color: var(--bad);
+			}
+			.options {
+				padding-left: 1.2rem;
+				list-style: disc;
+			}
+			.options li {
+				margin-bottom: 0.3rem;
+			}
+			.detail {
+				display: grid;
+				grid-template-columns: 4.5rem minmax(0, 1fr);
+				gap: 0.25rem 0.75rem;
+				font-size: 0.92rem;
+			}
+			.detail dt {
+				color: var(--muted);
+				font-weight: 600;
+			}
+			.detail dd {
+				margin: 0;
+			}
+			.quiet {
+				color: var(--muted);
+				font-size: 0.92rem;
+			}
+
+			.note {
+				margin: 0 0 0.9rem;
+				padding: 0.75rem 1rem;
+				border-left: 3px solid var(--accent);
+				border-radius: 0 8px 8px 0;
+				background: var(--accent-soft);
+			}
+			.note.warn {
+				border-left-color: var(--warn);
+				background: var(--warn-soft);
+			}
+			.note > :last-child {
+				margin-bottom: 0;
+			}
+
+			.table-wrap {
+				margin: 0 0 0.9rem;
+				overflow-x: auto;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			table {
+				width: 100%;
+				/* On a phone the table scrolls sideways instead of squeezing its columns. */
+				min-width: 34rem;
+				border-collapse: collapse;
+				font-size: 0.92rem;
+			}
+			th,
+			td {
+				padding: 0.55rem 0.8rem;
+				border-bottom: 1px solid var(--border);
+				text-align: left;
+				vertical-align: top;
+			}
+			th {
+				background: var(--surface);
+				color: var(--muted);
+				font-size: 0.82rem;
+			}
+			tr:last-child td {
+				border-bottom: 0;
+			}
+			td:has(> .tag:only-child) {
+				width: 1%;
+				white-space: nowrap;
+			}
+
+			code {
+				padding: 0.1em 0.3em;
+				border-radius: 4px;
+				background: var(--surface);
+				font: 0.88em var(--mono);
+				overflow-wrap: anywhere;
+			}
+			pre {
+				padding: 0.8rem 1rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--surface);
+				overflow-x: auto;
+				font: 0.84rem/1.45 var(--mono);
+			}
+			pre code {
+				padding: 0;
+				background: none;
+				font: inherit;
+				overflow-wrap: normal;
+			}
+			/* Box-drawing diagrams need tight lines, or the vertical strokes show gaps. */
+			figure pre {
+				line-height: 1.2;
+			}
+			/* Before and After side by side; the panes stack when the page is narrow. */
+			.compare {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+				gap: 0.75rem;
+				margin: 0 0 0.9rem;
+			}
+			.compare > div {
+				min-width: 0;
+			}
+			.compare pre {
+				margin: 0;
+			}
+			.pane {
+				margin: 0 0 0.3rem;
+				color: var(--muted);
+				font-size: 0.82rem;
+				font-weight: 600;
+			}
+			/* The script at the end of the page adds these classes. */
+			pre .hot {
+				color: var(--accent);
+			}
+			.line {
+				display: block;
+			}
+			.line.add {
+				background: var(--ok-soft);
+				color: var(--ok);
+			}
+			.line.del {
+				background: var(--bad-soft);
+				color: var(--bad);
+			}
+			/* Visuals. .viz frames one picture. .flow, .parts, and .bars are ready-made pictures. */
+			.viz {
+				container-type: inline-size;
+				padding: 1.1rem 1rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--surface);
+				overflow-x: auto;
+			}
+			.viz > :last-child {
+				margin-bottom: 0;
+			}
+			.viz svg {
+				margin: 0 auto;
+				color: var(--text);
+				font-family: var(--sans);
+			}
+			.compare > div {
+				display: flex;
+				flex-direction: column;
+			}
+			.compare .viz {
+				flex: 1;
+			}
+
+			/* A flow: nodes joined by edges, top to bottom. */
+			.flow {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.node {
+				min-width: 6.5rem;
+				max-width: 100%;
+				padding: 0.45rem 0.85rem;
+				border: 1.5px solid var(--line);
+				border-radius: 8px;
+				background: var(--bg);
+				font-size: 0.92rem;
+				font-weight: 600;
+				line-height: 1.3;
+				text-align: center;
+			}
+			.node small {
+				display: block;
+				margin-top: 0.15rem;
+				color: var(--muted);
+				font-size: 0.8rem;
+				font-weight: 400;
+			}
+			.node.hot {
+				border-color: var(--accent);
+				background: var(--accent-soft);
+			}
+			.node.ok {
+				border-color: var(--ok);
+				background: var(--ok-soft);
+			}
+			.node.bad {
+				border-color: var(--bad);
+				background: var(--bad-soft);
+			}
+			.node.gone {
+				border-style: dashed;
+				background: none;
+				color: var(--muted);
+			}
+			/* The line is a background, the arrowhead is ::after, and ::before is the moving dot. */
+			.edge {
+				position: relative;
+				align-self: stretch;
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+				column-gap: 1.2rem;
+				min-height: 2.5rem;
+				margin: 2px 0;
+				color: var(--line);
+				background: linear-gradient(currentColor, currentColor) top center / 1.5px calc(100% - 5px)
+					no-repeat;
+			}
+			.edge::after {
+				content: '';
+				position: absolute;
+				left: 50%;
+				bottom: 0;
+				translate: -50% 0;
+				border: 5px solid transparent;
+				border-top: 7px solid currentColor;
+				border-bottom-width: 0;
+			}
+			.edge > span {
+				grid-column: 2;
+				align-self: center;
+				padding: 0.4rem 0 0.6rem;
+				color: var(--muted);
+				font-size: 0.8rem;
+				line-height: 1.25;
+			}
+			.edge.hot,
+			.edge.hot > span {
+				color: var(--accent);
+			}
+			/* Nodes that belong together or run in parallel. */
+			.group {
+				position: relative;
+				display: flex;
+				flex-wrap: wrap;
+				align-items: flex-start;
+				justify-content: center;
+				gap: 0.5rem;
+				max-width: 100%;
+				padding: 1.7rem 0.6rem 0.6rem;
+				border: 1.5px dashed var(--line);
+				border-radius: 10px;
+			}
+			.group::before {
+				content: attr(data-label);
+				position: absolute;
+				top: 0.35rem;
+				left: 0.7rem;
+				color: var(--muted);
+				font-size: 0.75rem;
+				font-weight: 600;
+			}
+			/* Left to right, when the picture is wide enough. */
+			@container (min-width: 34rem) {
+				.flow.row {
+					flex-direction: row;
+					justify-content: center;
+				}
+				.flow.row > .edge {
+					align-self: center;
+					flex: 1 1 3rem;
+					min-width: 3rem;
+					max-width: 10rem;
+					grid-template-columns: minmax(0, 1fr);
+					grid-template-rows: 1fr 1fr;
+					min-height: 2.6rem;
+					margin: 0 2px;
+					background-position: left center;
+					background-size: calc(100% - 5px) 1.5px;
+				}
+				.flow.row > .edge::after {
+					left: auto;
+					right: 0;
+					bottom: auto;
+					top: 50%;
+					translate: 0 -50%;
+					border: 5px solid transparent;
+					border-left: 7px solid currentColor;
+					border-right-width: 0;
+				}
+				.flow.row > .edge > span {
+					grid-column: 1;
+					grid-row: 1;
+					align-self: end;
+					padding: 0 0.6rem 0.3rem 0.2rem;
+					text-align: center;
+				}
+				.flow.row > .group {
+					flex-direction: column;
+					align-items: stretch;
+				}
+			}
+
+			/* One text split into labelled parts. */
+			.parts {
+				display: grid;
+				gap: 0.5rem;
+			}
+			.parts > div {
+				display: grid;
+				grid-template-columns: 8.5rem minmax(0, 1fr);
+				gap: 0.75rem;
+				align-items: start;
+			}
+			.parts dt {
+				padding-top: 0.55rem;
+				color: var(--muted);
+				font-size: 0.8rem;
+				font-weight: 600;
+			}
+			.parts dd {
+				margin: 0;
+				padding: 0.5rem 0.8rem;
+				border: 1.5px solid var(--line);
+				border-radius: 8px;
+				background: var(--bg);
+				font-size: 0.92rem;
+			}
+			.parts.code dd {
+				font: 0.84rem/1.5 var(--mono);
+				white-space: pre-wrap;
+				overflow-wrap: anywhere;
+			}
+			.parts > .hot dt {
+				color: var(--accent);
+			}
+			.parts > .hot dd {
+				border-color: var(--accent);
+				background: var(--accent-soft);
+			}
+			@container (max-width: 26rem) {
+				.parts > div {
+					grid-template-columns: minmax(0, 1fr);
+					gap: 0.15rem;
+				}
+				.parts dt {
+					padding-top: 0;
+				}
+			}
+
+			/* Bars: --v on each row is its length in percent of the longest bar. */
+			.bars {
+				display: grid;
+				grid-template-columns: auto minmax(3rem, 1fr) auto;
+				gap: 0.45rem 0.7rem;
+				padding: 0;
+				list-style: none;
+				font-size: 0.9rem;
+			}
+			.bars li {
+				display: grid;
+				grid-column: 1 / -1;
+				grid-template-columns: subgrid;
+				align-items: center;
+			}
+			.bars li::after {
+				content: '';
+				grid-column: 2;
+				grid-row: 1;
+				width: calc(var(--v, 0) * 1%);
+				min-width: 2px;
+				height: 0.85rem;
+				border-radius: 3px;
+				background: var(--line);
+				/* A script that changes --v gets a smooth change. */
+				transition: width 0.25s ease-out;
+			}
+			.bars li > span {
+				grid-column: 1;
+				max-width: 11rem;
+			}
+			.bars li > b {
+				grid-column: 3;
+				font: 600 0.84rem var(--mono);
+			}
+			.bars li.hot::after {
+				background: var(--accent);
+			}
+			.bars li.hot > b {
+				color: var(--accent);
+			}
+
+			/* Motion. Every picture is complete when it stands still: in print, in a screenshot, and
+			   for a reader who turned motion off. */
+			@media screen and (prefers-reduced-motion: no-preference) {
+				/* A dot travels along a live edge. Use it for the path that the data takes. */
+				.edge.live::before {
+					content: '';
+					position: absolute;
+					left: 50%;
+					top: 0;
+					width: 7px;
+					height: 7px;
+					margin: -3.5px;
+					border-radius: 50%;
+					background: var(--accent);
+					animation: travel-down 1.8s linear infinite;
+				}
+				@keyframes travel-down {
+					0% {
+						top: 0;
+						opacity: 0;
+					}
+					15%,
+					80% {
+						opacity: 1;
+					}
+					100% {
+						top: calc(100% - 6px);
+						opacity: 0;
+					}
+				}
+				@container (min-width: 34rem) {
+					.flow.row > .edge.live::before {
+						left: 0;
+						top: 50%;
+						animation-name: travel-right;
+					}
+				}
+				@keyframes travel-right {
+					0% {
+						left: 0;
+						opacity: 0;
+					}
+					15%,
+					80% {
+						opacity: 1;
+					}
+					100% {
+						left: calc(100% - 6px);
+						opacity: 0;
+					}
+				}
+				/* The script at the end of the page adds .play when the figure scrolls into view. */
+				.play .seq > * {
+					animation: appear 0.45s ease-out both;
+					animation-delay: calc(var(--i, 0) * 0.3s);
+				}
+				.play .bars li::after {
+					transform-origin: left;
+					animation: grow 0.8s ease-out both;
+				}
+				@keyframes appear {
+					from {
+						opacity: 0;
+						transform: translateY(-6px);
+					}
+				}
+				@keyframes grow {
+					from {
+						transform: scaleX(0);
+					}
+				}
+			}
+			.replay {
+				margin-left: 0.5rem;
+				padding: 0;
+				border: 0;
+				background: none;
+				color: var(--accent);
+				font: inherit;
+				text-decoration: underline;
+				cursor: pointer;
+			}
+			@media print {
+				.replay {
+					display: none;
+				}
+			}
+			figure svg,
+			figure img {
+				display: block;
+				max-width: 100%;
+				height: auto;
+			}
+			figcaption {
+				margin-top: 0.4rem;
+				color: var(--muted);
+				font-size: 0.875rem;
+			}
+			details {
+				margin: 0 0 0.6rem;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+			}
+			summary {
+				padding: 0.6rem 1rem;
+				cursor: pointer;
+				font-weight: 600;
+			}
+			details > :not(summary) {
+				margin-left: 1rem;
+				margin-right: 1rem;
+			}
+			@media print {
+				.toc {
+					display: none;
+				}
+				.layout {
+					display: block;
+					max-width: none;
+					padding: 0;
+				}
+			}
+		</style>
+<style>
+body{font-size:14px}.dashboard{max-width:1240px;margin:auto;padding:32px 32px 60px}h1{font-size:27px;font-weight:500;margin:0 0 8px}header p{max-width:85ch;color:var(--muted);font-size:13px}.controls{display:flex;align-items:center;flex-wrap:wrap;gap:12px 24px;margin:24px 0 12px}.segments{display:flex;border-bottom:1px solid var(--border);gap:20px}.segments button{border:0;background:none;color:var(--muted);padding:8px 0;font:500 13px var(--sans);border-bottom:2px solid transparent;cursor:pointer}.segments button[aria-selected=true]{color:var(--text);border-color:var(--accent)}select{font:13px var(--sans);background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:6px}label{font-size:12px;color:var(--muted)}button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.intro{font-size:12px;color:var(--muted);min-height:36px;max-width:100ch}.key{display:flex;flex-wrap:wrap;gap:16px;font-size:12px;margin:16px 0}.key .sol{color:var(--accent)}.key .astra{color:var(--text)}.key .claude{color:var(--muted)}figure{margin:0}.charts{display:grid;grid-template-columns:1fr 1fr;gap:32px}.charts h2{font-size:15px;font-weight:500;margin:0 0 4px}.charts .hint{font-size:11px;color:var(--muted);margin:0}.charts svg{display:block;width:100%;height:auto;overflow:visible}.charts svg text{font:11px var(--sans);fill:var(--muted);font-variant-numeric:tabular-nums}.charts .label{font-size:11px;font-weight:500;paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}.charts .mark{cursor:pointer;outline:none}.charts .mark:focus-visible .focus-ring{opacity:1}.charts .focus-ring{opacity:0;fill:none;stroke:var(--accent);stroke-width:2}.charts .selected .focus-ring{opacity:1}.detail{border-top:1px solid var(--border);padding-top:12px;margin:8px 0 20px;font-size:12px;min-height:62px;color:var(--muted)}.detail strong{font-weight:500;color:var(--text)}.table-wrap{border:0;border-radius:0}table{min-width:640px;font-size:12px}th{background:none;font-weight:500}td,th{padding:8px 10px}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}tbody tr{cursor:pointer}tbody tr.selected{background:var(--surface)}td:first-child{font-weight:500}section{margin-top:22px}details{font-size:12px}summary{font-weight:500}details p,details ul{max-width:100ch}.quiet{font-size:12px}#summary{margin:8px 0}#summary p{font-size:11px;color:var(--muted)}@media(hover:hover){.mark:hover .focus-ring{opacity:1}tbody tr:hover{background:var(--surface)}.segments button:hover{color:var(--text)}}@media(max-width:760px){.dashboard{padding:22px 16px 60px}.charts{grid-template-columns:1fr;gap:20px}h1{font-size:23px}.controls{gap:10px 16px}.intro{min-height:0}.key{gap:12px}.detail{min-height:80px}}@media print{.dashboard{padding:0}.controls{display:none}}
+.toc[hidden]{display:none}#detail{display:block}
+</style></head><body><nav class="toc" hidden></nav><main class="dashboard">
+<header id="top"><h1>Original → v21: what changed?</h1><p>Rails 7.0.8.7 to 8.1.0. Accuracy = expected changes located in application code ÷ 23. The same rubric for every model and prompt.</p></header>
+<section id="progress">
+<style>
+#progress{margin-top:26px}#progress .progress-key{display:flex;gap:12px 24px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:14px 0 24px}#progress .progress-key .sol{color:var(--accent)}#progress .progress-key .astra{color:var(--text)}#progress .progress-charts{display:grid;grid-template-columns:1fr;gap:38px}#progress h2{font-size:17px;font-weight:500;margin:0 0 5px}#progress .hint{font-size:12px;color:var(--muted);margin:0}#progress svg{display:block;width:100%;height:auto;overflow:visible}#progress svg text{font:12px var(--sans);fill:var(--muted);font-variant-numeric:tabular-nums}#progress .endpoint-label{font-size:12px;font-weight:500;paint-order:stroke;stroke:var(--bg);stroke-width:5px;stroke-linejoin:round}#progress .progress-series{cursor:pointer;outline:none}#progress .progress-series.selected .route,#progress .progress-series:focus-visible .route{stroke-width:4}#progress .progress-series.selected .endpoint,#progress .progress-series:focus-visible .endpoint{stroke-width:3}#progress .progress-detail{border-top:1px solid var(--border);font-size:12px;color:var(--muted);padding:12px 0;min-height:56px;margin-top:10px}#progress .progress-detail strong{color:var(--text);font-weight:500}#progress .progress-table{font-size:12px}#progress .progress-note{font-size:12px;color:var(--muted);max-width:110ch}#progress .progress-table tbody tr:focus-visible{outline:2px solid var(--accent)}#snapshots{margin-top:34px}#snapshots>summary{padding-left:0}
+@media(max-width:600px){#progress .progress-key{gap:8px 16px}#progress svg text{font-size:11px}#progress .progress-charts{gap:28px}}
+</style>
+<p class="progress-note" id="progress-status">OpenAI comparisons are complete. Claude evaluations are paused at the user’s request.</p>
+<p class="progress-note" id="metric-change"><strong>Accuracy here means “located,” not “actionable.”</strong> A change counts when the report describes it and names its affected application file. Impact and repair are not extra requirements. Astra low’s original mean is 90.4% located; the earlier 35.7% used a different, stricter measure. Historical grades remain unchanged in the source files.</p>
+<details id="metric-audit"><summary>How can the same reports score 35.7% and 90.4%?</summary><p>The two graders ask different questions. The earlier score credits a finding only when impact, applicability, and recommendation are all supported. The coverage grader credits a change described and tied to its application file; it records factual accuracy separately. Neither percentage is an overall accuracy rate.</p><p>For Astra low, five reports × 23 expected findings = 115 report/finding pairs. The strict grader credits 41 pairs (35.7%); the coverage grader locates 104 (90.4%). Of the 64 pairs located but not actionable, 58 lose credit only because impact is “partial”; four have a partial recommendation and two an incorrect recommendation. One other pair passes strict grading but is only “named” under the coverage rubric, which requires a file. These are separate assessments, not perfectly nested scores.</p><p><strong>Actual example, original run 1:</strong> the report identifies <code>app/models/export.rb#generate</code> and says, “Rails 7.1 removes its nonnumeric Enumerable/Array sum override. Ruby's zero identity is not a string concatenation identity. Replace with <code>fragments.join</code> (works on 7.0).” The strict grader marks impact partial because the report does not explicitly say the export worker raises <code>TypeError</code>. Applicability and repair are supported, and the coverage grader marks the finding located and accurate.</p><p>Sources: the five <code>astra-low-original-N/assessment.json</code>, <code>coverage-assessment.json</code>, and complete reports under <code>tests/results/20261019-native-amp/</code>; definitions in <code>tests/grader-instructions.md</code> and <code>tests/risk-grader-instructions.md</code>. Source hashes for the plotted measurements are below.</p></details>
+<div class="progress-key"><span class="sol">● Sol 6.1</span><span class="astra">● Astra 6</span><span>◇ Claude 5.5</span><span>Hollow original → filled v21</span><span>··· Low &nbsp; ┄ Medium &nbsp; ━ High effort</span><span>Marks = means; original-only marks have no arrow</span></div>
+<div class="progress-charts">
+<figure id="fig-progress-cost"><h2>Accuracy (located findings) vs. cost</h2><p class="hint">Higher and farther left is better. Original → v21. Log cost axis; accuracy axis starts at 50%.</p><svg id="progress-cost" role="group" aria-label="Original to v21 located-finding accuracy versus API cost"></svg><figcaption>Whole-workflow API price estimates, not bills. Operators and graders excluded. * Opus-high original has four exact-cost runs; its cost-chart point uses those same four reports. The fifth cost is a lower bound and is excluded.</figcaption></figure>
+<figure id="fig-progress-time"><h2>Accuracy (located findings) vs. response time</h2><p class="hint">Higher and farther left is better. Original → v21. Log time axis; accuracy axis starts at 50%.</p><svg id="progress-time" role="group" aria-label="Original to v21 located-finding accuracy versus response time"></svg><figcaption>Elapsed main-and-planner workflow time, not tokens per second. Means use five reports. Claude runs are historical comparisons across runtime dates, not controlled model rankings.</figcaption></figure>
+</div>
+<div id="progress-detail" class="progress-detail" aria-live="polite">Select a model’s arrow or a table row to see both endpoints.</div>
+<div class="table-wrap"><table class="progress-table"><thead><tr><th>Configuration</th><th class="num">Located, /23</th><th class="num">Change</th><th class="num">Cost, USD</th><th class="num">Time, min</th></tr></thead><tbody id="progress-values"></tbody></table></div>
+<p class="progress-note" id="progress-method">Every score uses located findings in the complete planner report, including linked artifacts. Existing original outputs were graded with the same Opus 5.5 high risk-report grader used for v21. Old strict-actionability grades are unchanged and are not plotted. Haiku is excluded. Opus low v21 finished before the pause; Sonnet medium and Opus high have original baselines only. No Sonnet-high original baseline is retained. Five reports per point are a small sample. Risk-level agreement and factual accuracy are separate grader fields, not part of this score. Table values use all known measurements; the cost chart uses matched score and exact-cost subsets. Models, runtime, prompt, dates, and historical price snapshots differ.</p>
+<details id="progress-sources"><summary>Progress-chart sources and checksums</summary><pre id="progress-source-files"></pre></details>
+<script type="application/json" id="progress-data">{"runs":[{"id":"sol-low-original-1","group":"sol-low","family":"sol","effort":"low","label":"Sol low","short":"Sol L","variant":"original","run":1,"coverage":17,"cost":0.310495,"minutes":3.977866666666667},{"id":"sol-low-original-2","group":"sol-low","family":"sol","effort":"low","label":"Sol low","short":"Sol L","variant":"original","run":2,"coverage":16,"cost":0.3310614,"minutes":3.9659666666666666},{"id":"sol-low-original-3","group":"sol-low","family":"sol","effort":"low","label":"Sol low","short":"Sol L","variant":"original","run":3,"coverage":17,"cost":0.35311600000000004,"minutes":3.2493666666666665},{"id":"sol-low-original-4","group":"sol-low","family":"sol","effort":"low","label":"Sol low","short":"Sol L","variant":"original","run":4,"coverage":18,"cost":0.3848539,"minutes":9.2344},{"id":"sol-low-original-5","group":"sol-low","family":"sol","effort":"low","label":"Sol low","short":"Sol L","variant":"original","run":5,"coverage":20,"cost":0.5048232,"minutes":6.58735},{"id":"sol-low-v21-1","group":"sol-low","family":"sol","effort":"low","label":"Sol low","short":"Sol L","variant":"v21","run":1,"coverage":14,"cost":0.4379964,"minutes":5.1382},{"id":"sol-low-v21-2","group":"sol-low","family":"sol","effort":"low","label":"Sol low","short":"Sol L","variant":"v21","run":2,"coverage":18,"cost":0.345716,"minutes":4.624},{"id":"sol-low-v21-3","group":"sol-low","family":"sol","effort":"low","label":"Sol low","short":"Sol L","variant":"v21","run":3,"coverage":18,"cost":0.4941716000000001,"minutes":5.847383333333333},{"id":"sol-low-v21-4","group":"sol-low","family":"sol","effort":"low","label":"Sol low","short":"Sol L","variant":"v21","run":4,"coverage":20,"cost":0.8933014999999999,"minutes":12.054416666666667},{"id":"sol-low-v21-5","group":"sol-low","family":"sol","effort":"low","label":"Sol low","short":"Sol L","variant":"v21","run":5,"coverage":20,"cost":0.6928054,"minutes":7.010866666666667},{"id":"sol-medium-original-1","group":"sol-medium","family":"sol","effort":"medium","label":"Sol medium","short":"Sol M","variant":"original","run":1,"coverage":21,"cost":0.7163235999999998,"minutes":9.945633333333333},{"id":"sol-medium-original-2","group":"sol-medium","family":"sol","effort":"medium","label":"Sol medium","short":"Sol M","variant":"original","run":2,"coverage":22,"cost":0.8711541,"minutes":17.2442},{"id":"sol-medium-original-3","group":"sol-medium","family":"sol","effort":"medium","label":"Sol medium","short":"Sol M","variant":"original","run":3,"coverage":23,"cost":0.9298750999999997,"minutes":14.065583333333333},{"id":"sol-medium-original-4","group":"sol-medium","family":"sol","effort":"medium","label":"Sol medium","short":"Sol M","variant":"original","run":4,"coverage":20,"cost":1.0262878,"minutes":14.700633333333334},{"id":"sol-medium-original-5","group":"sol-medium","family":"sol","effort":"medium","label":"Sol medium","short":"Sol M","variant":"original","run":5,"coverage":22,"cost":1.3215758000000002,"minutes":19.586433333333332},{"id":"sol-medium-v21-1","group":"sol-medium","family":"sol","effort":"medium","label":"Sol medium","short":"Sol M","variant":"v21","run":1,"coverage":21,"cost":1.1161028,"minutes":12.826183333333333},{"id":"sol-medium-v21-2","group":"sol-medium","family":"sol","effort":"medium","label":"Sol medium","short":"Sol M","variant":"v21","run":2,"coverage":20,"cost":1.3074104999999998,"minutes":12.357466666666667},{"id":"sol-medium-v21-3","group":"sol-medium","family":"sol","effort":"medium","label":"Sol medium","short":"Sol M","variant":"v21","run":3,"coverage":20,"cost":1.3052885,"minutes":10.883116666666666},{"id":"sol-medium-v21-4","group":"sol-medium","family":"sol","effort":"medium","label":"Sol medium","short":"Sol M","variant":"v21","run":4,"coverage":21,"cost":1.2203113,"minutes":11.646083333333333},{"id":"sol-medium-v21-5","group":"sol-medium","family":"sol","effort":"medium","label":"Sol medium","short":"Sol M","variant":"v21","run":5,"coverage":20,"cost":1.2952303000000003,"minutes":12.19055},{"id":"sol-high-original-1","group":"sol-high","family":"sol","effort":"high","label":"Sol high","short":"Sol H","variant":"original","run":1,"coverage":22,"cost":1.4533076,"minutes":18.20505},{"id":"sol-high-original-2","group":"sol-high","family":"sol","effort":"high","label":"Sol high","short":"Sol H","variant":"original","run":2,"coverage":23,"cost":1.8014016000000002,"minutes":22.018816666666666},{"id":"sol-high-original-3","group":"sol-high","family":"sol","effort":"high","label":"Sol high","short":"Sol H","variant":"original","run":3,"coverage":23,"cost":1.3038707999999999,"minutes":18.052566666666667},{"id":"sol-high-original-4","group":"sol-high","family":"sol","effort":"high","label":"Sol high","short":"Sol H","variant":"original","run":4,"coverage":23,"cost":1.365219,"minutes":16.91045},{"id":"sol-high-original-5","group":"sol-high","family":"sol","effort":"high","label":"Sol high","short":"Sol H","variant":"original","run":5,"coverage":22,"cost":1.5484333000000001,"minutes":18.92675},{"id":"sol-high-v21-1","group":"sol-high","family":"sol","effort":"high","label":"Sol high","short":"Sol H","variant":"v21","run":1,"coverage":21,"cost":1.6824864999999998,"minutes":17.579883333333335},{"id":"sol-high-v21-2","group":"sol-high","family":"sol","effort":"high","label":"Sol high","short":"Sol H","variant":"v21","run":2,"coverage":20,"cost":1.5760287999999996,"minutes":17.171783333333334},{"id":"sol-high-v21-3","group":"sol-high","family":"sol","effort":"high","label":"Sol high","short":"Sol H","variant":"v21","run":3,"coverage":22,"cost":1.9156275999999999,"minutes":21.065583333333333},{"id":"sol-high-v21-4","group":"sol-high","family":"sol","effort":"high","label":"Sol high","short":"Sol H","variant":"v21","run":4,"coverage":20,"cost":1.9495968000000001,"minutes":20.10108333333333},{"id":"sol-high-v21-5","group":"sol-high","family":"sol","effort":"high","label":"Sol high","short":"Sol H","variant":"v21","run":5,"coverage":22,"cost":2.0072556,"minutes":20.627483333333334},{"id":"astra-low-original-1","group":"astra-low","family":"astra","effort":"low","label":"Astra low","short":"Astra L","variant":"original","run":1,"coverage":20,"cost":2.6056215000000003,"minutes":4.885433333333333},{"id":"astra-low-original-2","group":"astra-low","family":"astra","effort":"low","label":"Astra low","short":"Astra L","variant":"original","run":2,"coverage":22,"cost":2.1144385,"minutes":4.0409},{"id":"astra-low-original-3","group":"astra-low","family":"astra","effort":"low","label":"Astra low","short":"Astra L","variant":"original","run":3,"coverage":21,"cost":2.099025,"minutes":3.7794333333333334},{"id":"astra-low-original-4","group":"astra-low","family":"astra","effort":"low","label":"Astra low","short":"Astra L","variant":"original","run":4,"coverage":21,"cost":2.2850539999999997,"minutes":4.339833333333333},{"id":"astra-low-original-5","group":"astra-low","family":"astra","effort":"low","label":"Astra low","short":"Astra L","variant":"original","run":5,"coverage":20,"cost":2.4750905000000003,"minutes":4.873283333333333},{"id":"astra-low-v21-1","group":"astra-low","family":"astra","effort":"low","label":"Astra low","short":"Astra L","variant":"v21","run":1,"coverage":20,"cost":3.6624084999999993,"minutes":5.600133333333333},{"id":"astra-low-v21-2","group":"astra-low","family":"astra","effort":"low","label":"Astra low","short":"Astra L","variant":"v21","run":2,"coverage":21,"cost":6.86426,"minutes":8.43365},{"id":"astra-low-v21-3","group":"astra-low","family":"astra","effort":"low","label":"Astra low","short":"Astra L","variant":"v21","run":3,"coverage":21,"cost":4.3534945,"minutes":5.0427},{"id":"astra-low-v21-4","group":"astra-low","family":"astra","effort":"low","label":"Astra low","short":"Astra L","variant":"v21","run":4,"coverage":21,"cost":3.4404175,"minutes":7.17335},{"id":"astra-low-v21-5","group":"astra-low","family":"astra","effort":"low","label":"Astra low","short":"Astra L","variant":"v21","run":5,"coverage":21,"cost":5.815290499999999,"minutes":9.6691},{"id":"astra-medium-original-1","group":"astra-medium","family":"astra","effort":"medium","label":"Astra medium","short":"Astra M","variant":"original","run":1,"coverage":23,"cost":7.8020095000000005,"minutes":14.893066666666666},{"id":"astra-medium-original-2","group":"astra-medium","family":"astra","effort":"medium","label":"Astra medium","short":"Astra M","variant":"original","run":2,"coverage":21,"cost":5.054159,"minutes":7.730966666666666},{"id":"astra-medium-original-3","group":"astra-medium","family":"astra","effort":"medium","label":"Astra medium","short":"Astra M","variant":"original","run":3,"coverage":22,"cost":5.0630545,"minutes":8.771166666666666},{"id":"astra-medium-original-4","group":"astra-medium","family":"astra","effort":"medium","label":"Astra medium","short":"Astra M","variant":"original","run":4,"coverage":21,"cost":5.451916,"minutes":8.777983333333333},{"id":"astra-medium-original-5","group":"astra-medium","family":"astra","effort":"medium","label":"Astra medium","short":"Astra M","variant":"original","run":5,"coverage":22,"cost":4.521745,"minutes":9.704333333333333},{"id":"astra-medium-v21-1","group":"astra-medium","family":"astra","effort":"medium","label":"Astra medium","short":"Astra M","variant":"v21","run":1,"coverage":21,"cost":8.8594385,"minutes":13.504933333333334},{"id":"astra-medium-v21-2","group":"astra-medium","family":"astra","effort":"medium","label":"Astra medium","short":"Astra M","variant":"v21","run":2,"coverage":21,"cost":7.5933025,"minutes":9.368166666666667},{"id":"astra-medium-v21-3","group":"astra-medium","family":"astra","effort":"medium","label":"Astra medium","short":"Astra M","variant":"v21","run":3,"coverage":21,"cost":7.4528205,"minutes":9.50825},{"id":"astra-medium-v21-4","group":"astra-medium","family":"astra","effort":"medium","label":"Astra medium","short":"Astra M","variant":"v21","run":4,"coverage":21,"cost":7.6340249999999985,"minutes":8.630916666666666},{"id":"astra-medium-v21-5","group":"astra-medium","family":"astra","effort":"medium","label":"Astra medium","short":"Astra M","variant":"v21","run":5,"coverage":21,"cost":6.753507,"minutes":9.710783333333334},{"id":"astra-high-original-1","group":"astra-high","family":"astra","effort":"high","label":"Astra high","short":"Astra H","variant":"original","run":1,"coverage":21,"cost":8.7547455,"minutes":17.992116666666668},{"id":"astra-high-original-2","group":"astra-high","family":"astra","effort":"high","label":"Astra high","short":"Astra H","variant":"original","run":2,"coverage":23,"cost":11.430393,"minutes":19.40315},{"id":"astra-high-original-3","group":"astra-high","family":"astra","effort":"high","label":"Astra high","short":"Astra H","variant":"original","run":3,"coverage":21,"cost":7.794800999999999,"minutes":12.89085},{"id":"astra-high-original-4","group":"astra-high","family":"astra","effort":"high","label":"Astra high","short":"Astra H","variant":"original","run":4,"coverage":23,"cost":8.038301500000001,"minutes":17.3244},{"id":"astra-high-original-5","group":"astra-high","family":"astra","effort":"high","label":"Astra high","short":"Astra H","variant":"original","run":5,"coverage":21,"cost":6.4352575,"minutes":13.75785},{"id":"astra-high-v21-1","group":"astra-high","family":"astra","effort":"high","label":"Astra high","short":"Astra H","variant":"v21","run":1,"coverage":21,"cost":8.1014255,"minutes":21.610666666666667},{"id":"astra-high-v21-2","group":"astra-high","family":"astra","effort":"high","label":"Astra high","short":"Astra H","variant":"v21","run":2,"coverage":21,"cost":9.024013,"minutes":13.548566666666666},{"id":"astra-high-v21-3","group":"astra-high","family":"astra","effort":"high","label":"Astra high","short":"Astra H","variant":"v21","run":3,"coverage":21,"cost":7.874093,"minutes":12.260233333333334},{"id":"astra-high-v21-4","group":"astra-high","family":"astra","effort":"high","label":"Astra high","short":"Astra H","variant":"v21","run":4,"coverage":22,"cost":9.2383175,"minutes":14.286266666666666},{"id":"astra-high-v21-5","group":"astra-high","family":"astra","effort":"high","label":"Astra high","short":"Astra H","variant":"v21","run":5,"coverage":20,"cost":7.1771995,"minutes":9.7752},{"id":"opus-5.5-low-original-1","group":"opus-5.5-low","family":"claude","effort":"low","label":"Opus low","short":"Opus L","variant":"original","run":1,"coverage":21,"cost":3.1098657999999997,"bound":null,"minutes":11.977883333333333},{"id":"opus-5.5-low-original-2","group":"opus-5.5-low","family":"claude","effort":"low","label":"Opus low","short":"Opus L","variant":"original","run":2,"coverage":22,"cost":3.4399209999999996,"bound":null,"minutes":12.128383333333334},{"id":"opus-5.5-low-original-3","group":"opus-5.5-low","family":"claude","effort":"low","label":"Opus low","short":"Opus L","variant":"original","run":3,"coverage":15,"cost":2.8480402000000002,"bound":null,"minutes":12.099733333333333},{"id":"opus-5.5-low-original-4","group":"opus-5.5-low","family":"claude","effort":"low","label":"Opus low","short":"Opus L","variant":"original","run":4,"coverage":22,"cost":2.712310600000001,"bound":null,"minutes":11.303366666666667},{"id":"opus-5.5-low-original-5","group":"opus-5.5-low","family":"claude","effort":"low","label":"Opus low","short":"Opus L","variant":"original","run":5,"coverage":22,"cost":2.737765,"bound":null,"minutes":10.059283333333333},{"id":"opus-5.5-high-original-1","group":"opus-5.5-high","family":"claude","effort":"high","label":"Opus high","short":"Opus H","variant":"original","run":1,"coverage":22,"cost":null,"bound":9.922614199999996,"minutes":31.9668},{"id":"opus-5.5-high-original-2","group":"opus-5.5-high","family":"claude","effort":"high","label":"Opus high","short":"Opus H","variant":"original","run":2,"coverage":21,"cost":8.404040600000002,"bound":null,"minutes":28.34365},{"id":"opus-5.5-high-original-3","group":"opus-5.5-high","family":"claude","effort":"high","label":"Opus high","short":"Opus H","variant":"original","run":3,"coverage":23,"cost":9.9514534,"bound":null,"minutes":31.444983333333333},{"id":"opus-5.5-high-original-4","group":"opus-5.5-high","family":"claude","effort":"high","label":"Opus high","short":"Opus H","variant":"original","run":4,"coverage":20,"cost":11.437012600000001,"bound":null,"minutes":43.412933333333335},{"id":"opus-5.5-high-original-5","group":"opus-5.5-high","family":"claude","effort":"high","label":"Opus high","short":"Opus H","variant":"original","run":5,"coverage":22,"cost":9.322651399999998,"bound":null,"minutes":33.95191666666667},{"id":"sonnet-5.5-medium-original-1","group":"sonnet-5.5-medium","family":"claude","effort":"medium","label":"Sonnet medium","short":"Sonnet M","variant":"original","run":1,"coverage":18,"cost":3.2738005999999995,"bound":null,"minutes":18.296233333333333},{"id":"sonnet-5.5-medium-original-2","group":"sonnet-5.5-medium","family":"claude","effort":"medium","label":"Sonnet medium","short":"Sonnet M","variant":"original","run":2,"coverage":18,"cost":3.3724969,"bound":null,"minutes":22.87313333333333},{"id":"sonnet-5.5-medium-original-3","group":"sonnet-5.5-medium","family":"claude","effort":"medium","label":"Sonnet medium","short":"Sonnet M","variant":"original","run":3,"coverage":19,"cost":2.4510111000000006,"bound":null,"minutes":13.5283},{"id":"sonnet-5.5-medium-original-4","group":"sonnet-5.5-medium","family":"claude","effort":"medium","label":"Sonnet medium","short":"Sonnet M","variant":"original","run":4,"coverage":21,"cost":2.9401251000000004,"bound":null,"minutes":17.58503333333333},{"id":"sonnet-5.5-medium-original-5","group":"sonnet-5.5-medium","family":"claude","effort":"medium","label":"Sonnet medium","short":"Sonnet M","variant":"original","run":5,"coverage":19,"cost":2.3442176,"bound":null,"minutes":14.824033333333333},{"id":"opus-5.5-low-v21-1","group":"opus-5.5-low","family":"claude","effort":"low","label":"Opus low","short":"Opus L","variant":"v21","run":1,"coverage":14,"cost":1.0532728,"minutes":6.055516666666667},{"id":"opus-5.5-low-v21-2","group":"opus-5.5-low","family":"claude","effort":"low","label":"Opus low","short":"Opus L","variant":"v21","run":2,"coverage":16,"cost":1.1660664000000003,"minutes":9.195683333333333},{"id":"opus-5.5-low-v21-3","group":"opus-5.5-low","family":"claude","effort":"low","label":"Opus low","short":"Opus L","variant":"v21","run":3,"coverage":16,"cost":0.9173888000000001,"minutes":5.651983333333333},{"id":"opus-5.5-low-v21-4","group":"opus-5.5-low","family":"claude","effort":"low","label":"Opus low","short":"Opus L","variant":"v21","run":4,"coverage":13,"cost":0.7508117999999999,"minutes":3.1343666666666667},{"id":"opus-5.5-low-v21-5","group":"opus-5.5-low","family":"claude","effort":"low","label":"Opus low","short":"Opus L","variant":"v21","run":5,"coverage":11,"cost":0.537687,"minutes":3.5136666666666665}],"sources":[{"file":"tests/results/20261019-native-amp/outcomes.json","sha256":"cd15f33586d50017cccae5db71060391c2466ac77d4bf416c8cfb1331b8bff0e"},{"file":"tests/results/20261019-native-amp/sol-low-original-1/artifact-1.md","sha256":"d4576e35f506e0f980714bc27fb346560d54f9d9d7a82100ec6ea801df494a11"},{"file":"tests/results/20261019-native-amp/sol-low-original-1/coverage-assessment.json","sha256":"1427a246bc0b20a85ea229a935a2d5c6d8020ec51d6249bdbca0a97710193b07"},{"file":"scripts/grade-risk-report.ts","sha256":"a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a"},{"file":"scripts/grade-plan.ts","sha256":"aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c"},{"file":"tests/risk-grader-instructions.md","sha256":"fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab"},{"file":"tests/risk-labels.md","sha256":"f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de"},{"file":"tests/planner-development.md","sha256":"4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"},{"file":"tests/results/20261019-native-amp/sol-low-original-2/artifact-1.md","sha256":"c60e61625ffe5c7bab4c08416bbce9cffa3be04140ec30b5e193b3d58622cf6f"},{"file":"tests/results/20261019-native-amp/sol-low-original-2/coverage-assessment.json","sha256":"f8b5cd0526f0756455180bb141cc9dc186e9bf5f52989619094b3d61e09caf9b"},{"file":"tests/results/20261019-native-amp/sol-low-original-3/planner.md","sha256":"59fb1e888971dd13a4315415d03e8b9ea960bf971b91bb1011c9de60f98db3ca"},{"file":"tests/results/20261019-native-amp/sol-low-original-3/coverage-assessment.json","sha256":"14d118bef5463c1d3931f68079a3e0d9017cf5b4e5cbe5daa027ce09bf59718c"},{"file":"tests/results/20261019-native-amp/sol-low-original-4/artifact-1.md","sha256":"65b358853fa5d0e2f7b7d0b7a3e4fe0e8c5d1a22237e7f4fc9e50655f96b6586"},{"file":"tests/results/20261019-native-amp/sol-low-original-4/coverage-assessment.json","sha256":"46c465d02a978dc718ee16716f64ffa47295c87511d825a909dfcd1913b2fe73"},{"file":"tests/results/20261019-native-amp/sol-low-original-5/artifact-1.md","sha256":"6c3b054504c22193633d9dcac460bd7b5f090f7b652abcb1daa54c415420c29f"},{"file":"tests/results/20261019-native-amp/sol-low-original-5/coverage-assessment.json","sha256":"d0007191c91ec902c5730e3408b4e083f4eb7aaa2c439ba8de567a39aead11d8"},{"file":"tests/results/20261019-native-amp/sol-low-v21-1/planner.md","sha256":"d507ed8d1b5f24cc18f3bb9add9e5a2caae92883d17399d001f14c7513c49c25"},{"file":"tests/results/20261019-native-amp/sol-low-v21-1/assessment.json","sha256":"841bdacd6e7c736aa794fba0460a40cae095d9aa7f5be00d68c481acceafc0b9"},{"file":"tests/results/20261019-native-amp/sol-low-v21-2/artifact-1.md","sha256":"50badf4bd091a3771e3f3348fc1f427e0f28cf97b8330748e3802e80de90491c"},{"file":"tests/results/20261019-native-amp/sol-low-v21-2/assessment.json","sha256":"50076368026ab0962c97721524d0edc905e805a213623b93dfe4f30154934f4d"},{"file":"tests/results/20261019-native-amp/sol-low-v21-3/artifact-1.md","sha256":"c5644c5d425c20faba906eb64236a03601464c2ee875e545c95389bac3d61d5d"},{"file":"tests/results/20261019-native-amp/sol-low-v21-3/assessment.json","sha256":"7f99ac55750458eea963ffdfa20007186f2d10e478c2379d4bceef2fc1e78fde"},{"file":"tests/results/20261019-native-amp/sol-low-v21-4/artifact-1.md","sha256":"61e1587dfa4bcc7ad9b43f89bd0c873fe666db088a31484e64d63374320b4d7a"},{"file":"tests/results/20261019-native-amp/sol-low-v21-4/assessment.json","sha256":"8d7ef8f743c09d4021ce73c0ae5a73a3231f611209ea6e74366dc79c2188f4d5"},{"file":"tests/results/20261019-native-amp/sol-low-v21-5/planner.md","sha256":"2da2a56e9d327a6884956b6ec37aee864b7dcf3f07cfec5628a15d4c96c69ce0"},{"file":"tests/results/20261019-native-amp/sol-low-v21-5/assessment.json","sha256":"fb8fa91f562dadc2a151fedcfe4c910090f7be4ebcc31a11917bb61f409fe0f0"},{"file":"tests/results/20261019-native-amp/sol-medium-original-1/artifact-1.md","sha256":"be440d52fcb43515c1cdcc44898c685ccf16d2b302e46792175f774b966036fb"},{"file":"tests/results/20261019-native-amp/sol-medium-original-1/coverage-assessment.json","sha256":"27fee4f09f380224e47f11762c31b95f931c4b0e756c3ec10117a823d3041874"},{"file":"tests/results/20261019-native-amp/sol-medium-original-2/artifact-1.md","sha256":"eee71c7f068e3cd9754436a7d5602f3f394d78a9878ab95d233de1a780813c09"},{"file":"tests/results/20261019-native-amp/sol-medium-original-2/coverage-assessment.json","sha256":"94bf0c4e659b860ae919734af05ac49bc470a4981208c8191ae5b080458b62c5"},{"file":"tests/results/20261019-native-amp/sol-medium-original-3/artifact-1.md","sha256":"c3e084c7b7a9d3a3642f95406730cd4caeb9b22487f2dbbccae5a03171690323"},{"file":"tests/results/20261019-native-amp/sol-medium-original-3/coverage-assessment.json","sha256":"19b04832344ea8cd37936954def7c0586a92726c096e0a9946a3a39ed766d97f"},{"file":"tests/results/20261019-native-amp/sol-medium-original-4/artifact-1.md","sha256":"cb213767a745ebf27fe86745550ddfc4242dbb2c4c48228f9f2bcf7d757cf1fc"},{"file":"tests/results/20261019-native-amp/sol-medium-original-4/coverage-assessment.json","sha256":"4de01f4b956a3b809428c1867141ed7c00dcb024df05097e2b9bd262c9e4bdc8"},{"file":"tests/results/20261019-native-amp/sol-medium-original-5/artifact-1.md","sha256":"5be3de80956c39ecf38487e483f9d7ed19ccf29713fcf1a8cdd306d33c5cefa1"},{"file":"tests/results/20261019-native-amp/sol-medium-original-5/coverage-assessment.json","sha256":"f6b94172026a31abc9cf4824be9cf19c9b60a3a68618abab20987a76ce653e9d"},{"file":"tests/results/20261019-native-amp/sol-medium-v21-1/artifact-1.md","sha256":"bf19230a3d63676d2e5d8420be5fae4bae5a526dcc56225fc7d1d82f3a8195a4"},{"file":"tests/results/20261019-native-amp/sol-medium-v21-1/assessment.json","sha256":"81508bd4aecb5e96264bb99a86bec2aed7e1d21da0fc945a86f0526a0d873432"},{"file":"tests/results/20261019-native-amp/sol-medium-v21-2/artifact-1.md","sha256":"3895191523f22bd35239e6cfdcbfd97a5990a5ca64234bfe3c6a5c4caca96f50"},{"file":"tests/results/20261019-native-amp/sol-medium-v21-2/assessment.json","sha256":"931cff745282352a314f5920c0f7e4014a46bc76f585b658e073e0b2544f6157"},{"file":"tests/results/20261019-native-amp/sol-medium-v21-3/artifact-1.md","sha256":"2b90af05c8296507a842674eb6d37f4c8a4f424c344ae85c1e11ae445429b39c"},{"file":"tests/results/20261019-native-amp/sol-medium-v21-3/assessment.json","sha256":"03f6b64469afe0c45379b97f92fbd8be43b2f98779501f8c9e525814d805ee42"},{"file":"tests/results/20261019-native-amp/sol-medium-v21-4/artifact-1.md","sha256":"ac3822c916318f7242c710396604bf711f895b65d16494148190247b7aa6915b"},{"file":"tests/results/20261019-native-amp/sol-medium-v21-4/assessment.json","sha256":"876658aaf59790f0fdcd9517a0f5b2943408c97bc2ed4560a2b22fcade72b471"},{"file":"tests/results/20261019-native-amp/sol-medium-v21-5/artifact-1.md","sha256":"c50d4d73aeab2794d59e9758ea992458263c54398fd7ac0bc998bfb31952b6d1"},{"file":"tests/results/20261019-native-amp/sol-medium-v21-5/assessment.json","sha256":"7317fce227104316df43ea7efc965b280551c8738b4bb4d2027c463a4c2008d0"},{"file":"tests/results/20261019-native-amp/sol-high-original-1/artifact-1.md","sha256":"6ecf22a7d22dd40dd9a26b02042c9d337649c098ab703bf8590092538f53650d"},{"file":"tests/results/20261019-native-amp/sol-high-original-1/coverage-assessment.json","sha256":"1adf22f7b2bc24311a315cbfa0bd3f970a3911fc5713f8ab923777428f6a2921"},{"file":"tests/results/20261019-native-amp/sol-high-original-2/artifact-1.md","sha256":"9932d98b09b603349a66158de85689e98346287cae1d087784591b6344d56097"},{"file":"tests/results/20261019-native-amp/sol-high-original-2/coverage-assessment.json","sha256":"9d4b5c9a695f3101db0f6b6567c6d647650c4aa6de495638a6e4604a8d879792"},{"file":"tests/results/20261019-native-amp/sol-high-original-3/artifact-1.md","sha256":"00c57e280ad3d664eee0fcbe6c838f536d2fb83a47a268be35ef03612953ccad"},{"file":"tests/results/20261019-native-amp/sol-high-original-3/coverage-assessment.json","sha256":"f1b9603bc7e8b90434453fbe65fe9463698719f08cc4b028b00d1d1100e2d3bc"},{"file":"tests/results/20261019-native-amp/sol-high-original-4/artifact-1.md","sha256":"1ab20e1d2071ebdab909b0606cc582f41c5310adfbdcfd5cd93bea9ce073a48f"},{"file":"tests/results/20261019-native-amp/sol-high-original-4/coverage-assessment.json","sha256":"b825bf3ffb60ea1768436374581e62d3e036357419e0e72e9c54d2b5a5cc8407"},{"file":"tests/results/20261019-native-amp/sol-high-original-5/artifact-1.md","sha256":"4b64e4b05b3693223701591e40923672c12cf4340cd67157febe1213121791f2"},{"file":"tests/results/20261019-native-amp/sol-high-original-5/coverage-assessment.json","sha256":"b4b026e995494b49dfbd648c605fc8d03c129f2ba0b03820b019daec51d3d15c"},{"file":"tests/results/20261019-native-amp/sol-high-v21-1/artifact-1.md","sha256":"554199d1725548ab3954a2b9ea93e41fcca47ec14970963ed5d60cb36b577936"},{"file":"tests/results/20261019-native-amp/sol-high-v21-1/assessment.json","sha256":"c14090c61a20c9a8ac93ca70f8872f343c703eb7f447c6d38a269f42931ae9ac"},{"file":"tests/results/20261019-native-amp/sol-high-v21-2/artifact-1.md","sha256":"1bd4746ffba648f9739d36a12c33fd778696f97707103978304e3cf3a73a55e7"},{"file":"tests/results/20261019-native-amp/sol-high-v21-2/assessment.json","sha256":"c3b0a0d95c386021f39c79d5294078dec98c6fa23fb5576ad92d3ec0ba6c0e8e"},{"file":"tests/results/20261019-native-amp/sol-high-v21-3/artifact-1.md","sha256":"a35b39b802ffe18a423b94920cd774161a0b750e67d2c61cce601e92ddfaedc0"},{"file":"tests/results/20261019-native-amp/sol-high-v21-3/assessment.json","sha256":"f43dd0397ecbb807045b4197cd47affbc9fbe08aee72826aa17d0e81b93f5082"},{"file":"tests/results/20261019-native-amp/sol-high-v21-4/artifact-1.md","sha256":"9ef08312ec2d5dc3a9dd88369cf551695ff363ba0bba91c30ea43f8195432c68"},{"file":"tests/results/20261019-native-amp/sol-high-v21-4/assessment.json","sha256":"0424139b7d8ba16a7a27e35238b605c497c2e1e021c8b570acb8bcae82f78fcd"},{"file":"tests/results/20261019-native-amp/sol-high-v21-5/artifact-1.md","sha256":"0c109029ec01838141488f9d0db793b1a99a9a56d014e1777cd08614b9bbf2b4"},{"file":"tests/results/20261019-native-amp/sol-high-v21-5/assessment.json","sha256":"b76607f0207b17be216a45c5817fde6d0b9947e492cb75cd926e07bf5e4cc907"},{"file":"tests/results/20261019-native-amp/astra-low-original-1/artifact-1.md","sha256":"98a139b5fc4d7d7cafef224f23d42b5de9f7fb5b5fd8fa1f17c97620166bd300"},{"file":"tests/results/20261019-native-amp/astra-low-original-1/coverage-assessment.json","sha256":"c6da0769dee08e4983246cd422a4edbbe316d66cafe627bc4ee7e2b9aad741a1"},{"file":"tests/results/20261019-native-amp/astra-low-original-2/artifact-1.md","sha256":"f0ea39908d09d52e563091cf94185207decb470c8580adaf2ab7e03d21eec0ec"},{"file":"tests/results/20261019-native-amp/astra-low-original-2/coverage-assessment.json","sha256":"6b4ddefb48f0ac5a41e505515c1a0b94935e6f557cec03ae7cb4d19a36a55153"},{"file":"tests/results/20261019-native-amp/astra-low-original-3/artifact-1.md","sha256":"28d21a5c0803f1186ce752eeea9e6c30169f790ff67ce9666e926e54c7d796d4"},{"file":"tests/results/20261019-native-amp/astra-low-original-3/coverage-assessment.json","sha256":"9fe3aa0005c342777eb20eca9fec9b2db00a1642dd957470da160d525568ce41"},{"file":"tests/results/20261019-native-amp/astra-low-original-4/artifact-1.md","sha256":"e061447f094b5bf3e89b6c1b3a8cfa4ca5be044b6a4e54f93115756a73f36eda"},{"file":"tests/results/20261019-native-amp/astra-low-original-4/coverage-assessment.json","sha256":"21b7b33d5d163635960eabb70983c2469bc48efa5f5fd8a811af8bfe34bb45d2"},{"file":"tests/results/20261019-native-amp/astra-low-original-5/artifact-1.md","sha256":"a4216bc4fa532eb5b52adc767cbf5d2842d7ab5274d6d4d9381f198e1583937b"},{"file":"tests/results/20261019-native-amp/astra-low-original-5/coverage-assessment.json","sha256":"eedb7bcdca8bddd73f9e886a4038932be8a9ae12613b23ea5e2ccb2cd5d62a96"},{"file":"tests/results/20261019-native-amp/astra-low-v21-1/planner.md","sha256":"49ab2770c91a4b224d5babee965551cc225e49c7d22cc4450b9d54055ee78210"},{"file":"tests/results/20261019-native-amp/astra-low-v21-1/assessment.json","sha256":"521394fb257ab39489c2f35f451d9c7cc3cb10f2e1f872d2fa2ac3c4d4e00a0f"},{"file":"tests/results/20261019-native-amp/astra-low-v21-2/artifact-1.md","sha256":"10d82605435f6f214b5540785694b8839d702bde4a0d0b8b2da87448fe6de56c"},{"file":"tests/results/20261019-native-amp/astra-low-v21-2/assessment.json","sha256":"0ebd8a4d1cdf4477884fa8a51f434ba19894b7f2949ec58080d323ca864b27f0"},{"file":"tests/results/20261019-native-amp/astra-low-v21-3/planner.md","sha256":"7922b172a594229229dc6a0e303a40ea04983750a1078f2d6a1e7fa7fd90a515"},{"file":"tests/results/20261019-native-amp/astra-low-v21-3/assessment.json","sha256":"842cef5d6a408fce9f332307fe83d1c11497dfaeb3bd7b877621c42b36258111"},{"file":"tests/results/20261019-native-amp/astra-low-v21-4/artifact-1.md","sha256":"71572a60d2c36b3f2fe888e503d3c279e151de358c6245c41323b0df3e360e3a"},{"file":"tests/results/20261019-native-amp/astra-low-v21-4/assessment.json","sha256":"796f051d335567169c6faa6b2b6ebd253a8b6b8b5b87910f9d3cd53ea8f1e21a"},{"file":"tests/results/20261019-native-amp/astra-low-v21-5/artifact-1.md","sha256":"bcc51e629eb3c5aad6b27887a9d2b3496b7b1a6f559dd6d95b7e630f04084f12"},{"file":"tests/results/20261019-native-amp/astra-low-v21-5/assessment.json","sha256":"ff44c8459bd5ea3495c951a4f6fbf01fbd3d536f97d9bab44777c2481c0c5aed"},{"file":"tests/results/20261019-native-amp/astra-medium-original-1/artifact-1.md","sha256":"0c0587cec70a5e7c28728901bd936e36ed820418928b12894f7d47aa5be65fba"},{"file":"tests/results/20261019-native-amp/astra-medium-original-1/coverage-assessment.json","sha256":"03fa3345e59874d1bc9a7c7e22e7ba0bbb9ddefd478fa6ed1e19ed14bfa76ce6"},{"file":"tests/results/20261019-native-amp/astra-medium-original-2/artifact-1.md","sha256":"a9f0ad5a64d207ce0e900cc854ec386418175671a7f173fcfc30904bf641ecbc"},{"file":"tests/results/20261019-native-amp/astra-medium-original-2/coverage-assessment.json","sha256":"a788b577f5d5297af54c38a3462ce729ebbbebe09bb6b0df15d4f46fdcc0b35e"},{"file":"tests/results/20261019-native-amp/astra-medium-original-3/artifact-1.md","sha256":"373c383eae9902c1b14e9fcd7363f3d1466c4d891e80324a77aa1d52bbf65ce4"},{"file":"tests/results/20261019-native-amp/astra-medium-original-3/coverage-assessment.json","sha256":"3ceaa0c8b473090c0106f618413c9025429e9e44c47f9936992a797e727f2314"},{"file":"tests/results/20261019-native-amp/astra-medium-original-4/artifact-1.md","sha256":"46994a071494e67a7e808b7bb9cfa0bdc41196dc0f5533c19eeff4958f1a38c0"},{"file":"tests/results/20261019-native-amp/astra-medium-original-4/coverage-assessment.json","sha256":"fc2dc87b4cd5d2a5988ab92002a73562aee742cc4b0ab2e483181d808201a74b"},{"file":"tests/results/20261019-native-amp/astra-medium-original-5/artifact-1.md","sha256":"1940b4f45feb3950706867613745060c77b24454b446dbddc7be002f2f4ff813"},{"file":"tests/results/20261019-native-amp/astra-medium-original-5/coverage-assessment.json","sha256":"d087d4c488a4fcfed436e3b92555327cfec4cf9ea2c93bf79a25bf5e44db43a4"},{"file":"tests/results/20261019-native-amp/astra-medium-v21-1/artifact-1.md","sha256":"414922719f4e263f07548bfbe99dbac409ca60a71db18bfd07687548cec761ff"},{"file":"tests/results/20261019-native-amp/astra-medium-v21-1/assessment.json","sha256":"3c192e8cc389e19735f058fe14fc4d055b075478e1cafa5101e51ff85c3921b3"},{"file":"tests/results/20261019-native-amp/astra-medium-v21-2/artifact-1.md","sha256":"e758e05581474e41cad2866abbbc2208d416e6ba41dd5e5923975fb38bfa3de9"},{"file":"tests/results/20261019-native-amp/astra-medium-v21-2/assessment.json","sha256":"d76556d7320b6a098b063ec1078e24ab47b183b02dfe9eccbeed22e61754c4e7"},{"file":"tests/results/20261019-native-amp/astra-medium-v21-3/artifact-1.md","sha256":"bb1016b6feae0a1b8a6aa8c54441bc7349da79f9c3794f70ef8f4e1366ea09d1"},{"file":"tests/results/20261019-native-amp/astra-medium-v21-3/assessment.json","sha256":"f585c9b8ec7f9d10b52ebca50b5a48a38030092ae43d6c491cd1e3d99bec5e04"},{"file":"tests/results/20261019-native-amp/astra-medium-v21-4/planner.md","sha256":"9543372e6beb00b9642324ba92102a43dbe37610c622e3b6241ffe8fb98e88de"},{"file":"tests/results/20261019-native-amp/astra-medium-v21-4/assessment.json","sha256":"b29b3f0a6b1de2de055a09bb73264798e09b395bace187f1b2247d5352ba221c"},{"file":"tests/results/20261019-native-amp/astra-medium-v21-5/artifact-1.md","sha256":"5e820840e59d35950481d2b7489ad45c87e3464b4d5f4b6effcf610379a13658"},{"file":"tests/results/20261019-native-amp/astra-medium-v21-5/assessment.json","sha256":"05a2f93d41dc8f5d0e463d64791dacf6fc597c5119c9ada3b8e343a790b3e606"},{"file":"tests/results/20261019-native-amp/astra-high-original-1/artifact-1.md","sha256":"262119c2f1296b8dff5a19b490f30307cefa9b2aa0efe20f5f27cfad63de0091"},{"file":"tests/results/20261019-native-amp/astra-high-original-1/coverage-assessment.json","sha256":"2eebd3e2e17b148fd820a79dadb9cb09f593e414c479c7a1d98ec501dc5dd13e"},{"file":"tests/results/20261019-native-amp/astra-high-original-2/artifact-1.md","sha256":"a150e1d94b87cb44214f01def32b4e452a40a107ac8b704d04fdcbae63c36fce"},{"file":"tests/results/20261019-native-amp/astra-high-original-2/coverage-assessment.json","sha256":"2bb5a829ea782828bbb053850a6d22b539d19e58f5bff2defe9737ca9c1c51ba"},{"file":"tests/results/20261019-native-amp/astra-high-original-3/artifact-1.md","sha256":"7a18d3d5fb158445732b4b155ea419bf2d914678569b983ef893606e23627b1d"},{"file":"tests/results/20261019-native-amp/astra-high-original-3/coverage-assessment.json","sha256":"da739cc048502fa9f66e87e46275afeb80529e9bb9e0b29f5b0b314f89e0a281"},{"file":"tests/results/20261019-native-amp/astra-high-original-4/artifact-1.md","sha256":"4a0791e8db4a891e1634869cc3fb086d01d32f2873e5dedaa4d4735185e21c63"},{"file":"tests/results/20261019-native-amp/astra-high-original-4/coverage-assessment.json","sha256":"1e81aff99ae1e4ad4484e8566e2223738c0d416a2aa3bce5bf5f25200fc92df0"},{"file":"tests/results/20261019-native-amp/astra-high-original-5/artifact-1.md","sha256":"82aeb59e5a8ccff11a6dc090540132051f3c4b2ea4831bb6efaa7727bda8eb21"},{"file":"tests/results/20261019-native-amp/astra-high-original-5/coverage-assessment.json","sha256":"f6ecf1a5b70a8a6efc7944786eddf081c0cd30ecdc479d6286ddf9bd92194305"},{"file":"tests/results/20261019-native-amp/astra-high-v21-1/artifact-1.md","sha256":"6fae0124b2c4f52a1fcfa3ff9d7ea8a09f9456b9fe41954ab9ecb296a27c442d"},{"file":"tests/results/20261019-native-amp/astra-high-v21-1/assessment.json","sha256":"ad74ca2f3bb441bbf4e4ca30639962552772177327a55ba346465d9ef644fa15"},{"file":"tests/results/20261019-native-amp/astra-high-v21-2/artifact-1.md","sha256":"c13e94fba0f0dc8e76ed32b59a0fc9dca9441b0b54b1117acf9986a3e8ef7796"},{"file":"tests/results/20261019-native-amp/astra-high-v21-2/assessment.json","sha256":"d077f1e5d09da437d0d15b0a8f21e7407b4bf774d06ec806e5a6c5cd321024e6"},{"file":"tests/results/20261019-native-amp/astra-high-v21-3/artifact-1.md","sha256":"2ead77676f245abaf4aa3a4fb46c153cc6c00a3a59f414f25090c56fd4aa6709"},{"file":"tests/results/20261019-native-amp/astra-high-v21-3/assessment.json","sha256":"9f3cded87da9ad98ec5d54cf7a3820f57c63f6e6409a22d79f2e0c2f99f4dcb7"},{"file":"tests/results/20261019-native-amp/astra-high-v21-4/artifact-1.md","sha256":"f24c84203bfe2dc80a02ddb2a62994c935ade4c89ffd055c50eb43b7496371ad"},{"file":"tests/results/20261019-native-amp/astra-high-v21-4/assessment.json","sha256":"a07414e6460f535529d0decd0131588bc35a0055893b5c7fa57b9d7fb3fa8af3"},{"file":"tests/results/20261019-native-amp/astra-high-v21-5/artifact-1.md","sha256":"b3f945ba79bd015aaa9496314f4a83de5711a86a538e6866c9b656a504d4bb71"},{"file":"tests/results/20261019-native-amp/astra-high-v21-5/assessment.json","sha256":"dc87b83f505c0c58227d73d33fb476effab6bc7d9d4c99ed3a3a0c07a7071c53"},{"file":"tests/results/20261012/benchmark-outcomes.json","sha256":"646308897bc0e4ab993816b89d41ceefa43a9824644983d3fd7811a081a142e3"},{"file":"tests/results/20261012/benchmark-costs.json","sha256":"ba571b12a9789618e740eed7d6cd918fa8a63cd32bd59692db3c62e9707e4837"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-low/rails-1/assessment.json","sha256":"52a4686bb165f4624fcdcb2f7e8824e8d7b41af3d2bbd9e607196dd758cefcb3"},{"file":"tests/results/20261012/opus-5.5-low/traces/rails-1.json","sha256":"be5ebfb3b4b4f1c823d69d4386f1b10405583ae0c0125278d0abc9b2db246570"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-low/rails-1/report.md","sha256":"251db701e645e83ba4e3c609d1df41d14c86b932ed803ba5c15aa9d0f85c44a6"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-low/rails-2/assessment.json","sha256":"233b114ab1ad448b7edc7b4e3a346812815bec7821146be9859a7e4cada4787b"},{"file":"tests/results/20261012/opus-5.5-low/traces/rails-2.json","sha256":"2b64b9dcf61269bf435e5396ffa705e666448114f95523cfe392a5661644b311"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-low/rails-2/report.md","sha256":"4ccb317e90ea61f95ec85c5db927b7b804b9f2199f49383e5ff5b1a145e1715e"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-low/rails-3/assessment.json","sha256":"44fcc0bd9947e128ff82c5cfc3c03cf6f7f82bf065cb83350267dd93c4373d2f"},{"file":"tests/results/20261012/opus-5.5-low/traces/rails-3.json","sha256":"8901a5f0417cf1900a16b0731ed88cbc0c4f8ef404d9dec4d2f54a2268a7a08e"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-low/rails-3/report.md","sha256":"10f7f112520549ed578a26ad6e6c3941b1bebd7bb3d43ddc51b9f371b965d6dd"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-low/rails-4/assessment.json","sha256":"4944e200f1e9a06ee70962419e7a0004940072177c493439b2c0d108aef12f73"},{"file":"tests/results/20261012/opus-5.5-low/traces/rails-4.json","sha256":"eb721ebee972568be73c11b011b540b77ec04d6066ebd4b0b9f95d750c168cf6"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-low/rails-4/report.md","sha256":"c09ca366d3741fcfcae91d2bbc78ccdaaf8384c6c8ec73a9d26ba1694179eb70"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-low/rails-5/assessment.json","sha256":"e0d57bbcc9046d944fe2da69eafc1bca95ac59f51814365c7f503e86d469a579"},{"file":"tests/results/20261012/opus-5.5-low/traces/rails-5.json","sha256":"0790a2e86ecef28ff718d701bf404a5bb1f42730b3b6a109d91f747992a0d416"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-low/rails-5/report.md","sha256":"016095e8829ed48b5a97fe206010f607c70c8de64a6b83bdcb89036bee6e0962"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-high/rails-1/assessment.json","sha256":"a8fb4bc9040162b12a16968555b3ee8a175a093471987976ee6319970a939441"},{"file":"tests/results/20261012/opus-5.5-high/traces/rails-1.json","sha256":"1043fdc91d1d70b75f00bd4164dc15e7e0aabf6c5e89276946c12636733a1ed8"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-high/rails-1/report.md","sha256":"4dd2aded612a47ab7fab9b1d4f1943ef7b1d7cfcff6208594c46d2bb8b28a1fd"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-high/rails-2/assessment.json","sha256":"8763c50945da291fe402959d57904ac4e3bdf9efb5da44c622af34e2fdd0b9ef"},{"file":"tests/results/20261012/opus-5.5-high/traces/rails-2.json","sha256":"4f8a29b3cdf48e4921b2d028f6579eeef146b02ebe60973fd84c1ce1487eb791"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-high/rails-2/report.md","sha256":"35862dec999a569760ff36d48dbd0955a559eefc615776762df16f5ce71a908a"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-high/rails-3/assessment.json","sha256":"3174b9b3f8d326f2b5cf7d6df905a1307ce25984be22ab46ef9dc92c50e4e0cf"},{"file":"tests/results/20261012/opus-5.5-high/traces/rails-3.json","sha256":"3581ba9059ff25fe1fd23599434d7b1afa14b1917a22c64b7c8269bc760272ea"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-high/rails-3/report.md","sha256":"3c81f2b4345bbea7a482195d76168476b7ac6afb1725b9a68496e2175dcb4ff8"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-high/rails-4/assessment.json","sha256":"eb47d3fd6a2b3aeed493a1c9822be3dcdde0ae2dee3700ea1f28b6a81bff9f6b"},{"file":"tests/results/20261012/opus-5.5-high/traces/rails-4.json","sha256":"c36fab863fe3a374b699468baccd87db8a19ae9c79022a29bcc06f7e2cbc5ad2"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-high/rails-4/report.md","sha256":"618568e9446b6efb309ffeaf1ddc32a33e9a244af2e61e67ad96882519cbc7e4"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-high/rails-5/assessment.json","sha256":"88b42d08a5380e15a8806fe20db3aee1d11662961997a0a42395657133c8423d"},{"file":"tests/results/20261012/opus-5.5-high/traces/rails-5.json","sha256":"c4ea50d99ad010ef39a753b27960edd49bf565cb5914991bc22c21e54a854f96"},{"file":"tests/results/20261019-common-rubric/claude-original/opus-5.5-high/rails-5/report.md","sha256":"781d8b356ca31baa68d894a60d6f993d11678b72f86dd14c7ab84e5af3343b0e"},{"file":"tests/results/20261019-common-rubric/claude-original/sonnet-5.5-medium/rails-1/assessment.json","sha256":"4ed40a25c449937535fab34a0bbc0d385fb956d90ab9183255f2337ff0f84b37"},{"file":"tests/results/20261012/sonnet-5.5-medium/traces/rails-1.json","sha256":"0d2baf3bc3d8ab6d89ef1fd766766cc5d116e94f9f956fe68bd9eddd611875ac"},{"file":"tests/results/20261019-common-rubric/claude-original/sonnet-5.5-medium/rails-1/report.md","sha256":"ee7b5493f2e2a149339d422abfda726d0978a9ef3ded60450e40029da44e67d5"},{"file":"tests/results/20261019-common-rubric/claude-original/sonnet-5.5-medium/rails-2/assessment.json","sha256":"9ff656316dca297290e5cf0c64742b38be542e59c70c8e423fc5d177c11982bf"},{"file":"tests/results/20261012/sonnet-5.5-medium/traces/rails-2.json","sha256":"d09dd79ed829422c6c2f7a292cea9174683fa68b5da148b7c2fc2096b06d1750"},{"file":"tests/results/20261019-common-rubric/claude-original/sonnet-5.5-medium/rails-2/report.md","sha256":"73e5b203b2969922b69a102f5c908c1642f8de59e2e676d2261fa6bd9be77a70"},{"file":"tests/results/20261019-common-rubric/claude-original/sonnet-5.5-medium/rails-3/assessment.json","sha256":"29335265ab94a0c4db4f25d3ef0dd0cbf26acb7a4edf96bbd23988fe8ae9d3bf"},{"file":"tests/results/20261012/sonnet-5.5-medium/traces/rails-3.json","sha256":"9a67a0a1b0e45c0cecf307058320fa51599ad8e85e42d817bae4f796e7778700"},{"file":"tests/results/20261019-common-rubric/claude-original/sonnet-5.5-medium/rails-3/report.md","sha256":"02ffe872efda57eb6d653041121d8343823b80270b661b7454e9f2d8621878bd"},{"file":"tests/results/20261019-common-rubric/claude-original/sonnet-5.5-medium/rails-4/assessment.json","sha256":"33e9861d4d6df08dbe314724271b5188386a8a9241a71288821b8ba7b7fb2305"},{"file":"tests/results/20261012/sonnet-5.5-medium/traces/rails-4.json","sha256":"98a8ff7f68f1490ecd2aedd032a86dc02f3639e47af97ae2d3f41c96518596a1"},{"file":"tests/results/20261019-common-rubric/claude-original/sonnet-5.5-medium/rails-4/report.md","sha256":"f72e516efc86585a11d5380469936a65363b3ea9e779706d4332973043e0a781"},{"file":"tests/results/20261019-common-rubric/claude-original/sonnet-5.5-medium/rails-5/assessment.json","sha256":"5ee5b8a87149a115c02c2c98a59098cb89312bc1713188dc715f0dd9b5f128fd"},{"file":"tests/results/20261012/sonnet-5.5-medium/traces/rails-5.json","sha256":"04ca41968e5449e2b4c5960874fabdfd495dd872683d377ab442d315dfb683e8"},{"file":"tests/results/20261019-common-rubric/claude-original/sonnet-5.5-medium/rails-5/report.md","sha256":"2ee13aad675ff8e2db4adc02ad1b8d1813f5dc8d5559ba23cc17b5aab7f137d3"},{"file":"tests/results/20261019-claude-v21/opus-low/summary.json","sha256":"13bf059e04c818c89359cf9b1c079ef5f20bd8557c7813243ac512e93a985fac"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-1/grade.json","sha256":"148f1522fae7202412238aa78a6100d56043fcad71f3bc31bfed7c327eac25f2"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-1/final.md","sha256":"ac22783385372f1373926e5aaa5196a38956553d775c764fc60701bf398e5fa2"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-1/receipt.json","sha256":"33be79da5eb091ef27d7fb7725a9a623e3e7b448a3cf3e0e18f440450b5a4482"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-2/grade.json","sha256":"1772ba1350d9ea1332420fadfeab5e90a1bbf46fae53ddf3a74ff66de4373a49"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-2/final.md","sha256":"201e08886140099f5f190a2a4d9f2aba52400c9bd60a3079d3766a0e7b54b44c"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-2/receipt.json","sha256":"53853e2a7bc8350fa03ebc185cd9d1ea640b6305a7625ab41828d2540e286a12"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-3/grade.json","sha256":"16dd8101dab232bebfbb4f9a4d5c3550f511ccaa42558f3bb3decce78da11014"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-3/final.md","sha256":"0f315784d972222adb49e95a8fa6715be35638f5e3402a48ff61405b649a61bd"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-3/receipt.json","sha256":"12601f2a51a4f9d7f525dd466f5468515e329a83a2c73e7d0bae3eea62d55da9"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-4/grade.json","sha256":"3145e894a1de165edbff8ff774bad6215179f450d3946595fd7a2513e44738d2"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-4/final.md","sha256":"d44c79e417af8b123abbf07c71be701aace6ca857c6f1a31f40e74b9a9a6f0da"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-4/receipt.json","sha256":"8057f74fb3df556822ce0b45f78a1574d65b9a5d0418796916172cb0de55ff54"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-5/grade.json","sha256":"6d485ad8169c6759b888ff004731d90e249bbad6d3e641081d5f6afec09fcc45"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-5/final.md","sha256":"9d357a5b86016795399bd3e2f1e2f5a5131724e2faefb9c9f5f22b93edb664dd"},{"file":"tests/results/20261019-claude-v21/opus-low/rails-5/receipt.json","sha256":"87f1fc344a84d63560db13bdbd5b7a13ec2ce345d55fb6efc119a7bb86add296"}]}</script>
+<script>
+{
+const data=JSON.parse(document.getElementById('progress-data').textContent),mean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+const svgNode=(tag,attrs={},text)=>{const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);if(text!==undefined)n.textContent=text;return n};
+const colors={sol:'var(--accent)',astra:'var(--text)',claude:'var(--muted)'},dashes={low:'2 5',medium:'8 5',high:''};
+const groups=[...new Set(data.runs.map(r=>r.group))].map(group=>{
+ const rows=data.runs.filter(r=>r.group===group),stat=variant=>{const rs=rows.filter(r=>r.variant===variant),priced=rs.filter(r=>typeof r.cost==='number');return rs.length?{n:rs.length,coverage:mean(rs.map(r=>r.coverage)),cost:mean(priced.map(r=>r.cost)),costCoverage:mean(priced.map(r=>r.coverage)),costN:priced.length,minutes:mean(rs.map(r=>r.minutes))}:null};
+ return {...rows[0],original:stat('original'),v21:stat('v21')};
+});
+const f=v=>v.toFixed(1),money=v=>'$'+v.toFixed(2),pct=v=>f(v/23*100)+'%',signed=v=>(v>=0?'+':'')+f(v);
+function select(g){
+ document.querySelectorAll('[data-progress-group]').forEach(n=>n.classList.toggle('selected',n.dataset.progressGroup===g.group));
+ const a=g.original,b=g.v21,describe=(s,v)=>v+' '+f(s.coverage)+'/23 ('+pct(s.coverage)+'), '+money(s.cost)+', '+f(s.minutes)+' min; n='+s.n+'.';
+ document.getElementById('progress-detail').textContent=g.label+': '+describe(a,'original')+(b?' → '+describe(b,'v21')+' Accuracy '+signed((b.coverage-a.coverage)/23*100)+' percentage points; cost '+signed((b.cost/a.cost-1)*100)+'%; time '+signed((b.minutes/a.minutes-1)*100)+'%.':' v21 not available; evaluations are paused.')+(a.costN<a.n?' Original cost-chart point: '+f(a.costCoverage)+'/23 at '+money(a.cost)+', matched n='+a.costN+'.':'');
+}
+function draw(metric){
+ const svg=document.getElementById('progress-'+metric),w=svg.getBoundingClientRect().width;if(w<100)return;
+ const small=w<600,h=small?350:415,L=small?42:56,R=w-(small?18:32),T=45,B=h-64;
+ svg.replaceChildren();svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+ if(!groups.length){svg.append(svgNode('text',{x:L,y:80},'Waiting for common-rubric coverage grades…'));return;}
+ const limits=metric==='cost'?[.25,16]:[2,64],x=v=>L+(R-L)*Math.log(v/limits[0])/Math.log(limits[1]/limits[0]),y=v=>B-(B-T)*(v/23-.5)/.5;
+ const defs=svgNode('defs');for(const [family,color]of Object.entries(colors)){const marker=svgNode('marker',{id:metric+'-arrow-'+family,viewBox:'0 0 10 10',refX:15,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse'});marker.append(svgNode('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:color}));defs.append(marker)}svg.append(defs);
+ for(const p of [50,60,70,80,90,100]){const yy=y(23*p/100);svg.append(svgNode('line',{x1:L,x2:R,y1:yy,y2:yy,stroke:p===50?'var(--border)':'var(--surface)'}));svg.append(svgNode('text',{x:0,y:yy+4},p+'%'));}
+ svg.append(svgNode('text',{x:L,y:18},'Accuracy · located / 23'));
+ const ticks=metric==='cost'?[.25,.5,1,2,4,8,16]:[2,4,8,16,32,64];
+ for(const tick of ticks)svg.append(svgNode('text',{x:x(tick),y:B+22,'text-anchor':'middle'},metric==='cost'?'$'+tick:tick+'m'));
+ svg.append(svgNode('text',{x:L,y:h-6},metric==='cost'?'Estimated API cost per workflow (USD, log scale)':'Response time per workflow (minutes, log scale)'));
+ const ends=[],points=[];
+ for(const g of groups){
+  const a=g.original,b=g.v21,value=s=>s[metric==='cost'?'cost':'minutes'],accuracy=s=>s[metric==='cost'?'costCoverage':'coverage'],xx1=x(value(a)),xx2=b?x(value(b)):xx1,yy1=y(accuracy(a)),yy2=b?y(accuracy(b)):yy1,color=colors[g.family];
+  const series=svgNode('g',{class:'progress-series','data-progress-group':g.group,tabindex:0,role:'button','aria-label':g.label+', original '+f(a.coverage)+(b?' to v21 '+f(b.coverage):'; original only')+' located findings'});
+  if(b){series.append(svgNode('line',{class:'route',x1:xx1,x2:xx2,y1:yy1,y2:yy2,stroke:color,'stroke-width':1.8,'stroke-dasharray':dashes[g.effort],'marker-end':`url(#${metric}-arrow-${g.family})`,opacity:.8}));series.append(svgNode('line',{x1:xx1,x2:xx2,y1:yy1,y2:yy2,stroke:'transparent','stroke-width':16}));}
+  for(const [px,py,filled]of b?[[xx1,yy1,false],[xx2,yy2,true]]:[[xx1,yy1,false]]){const size=filled?6:5,attrs={class:'endpoint',fill:filled?color:'var(--bg)',stroke:color,'stroke-width':1.8};series.append(g.family==='claude'?svgNode('path',{...attrs,d:`M${px},${py-size}l${size},${size}l-${size},${size}l-${size},-${size}z`}):svgNode('circle',{...attrs,cx:px,cy:py,r:size}));}
+  series.addEventListener('pointerenter',()=>select(g));series.addEventListener('focus',()=>select(g));series.addEventListener('click',()=>select(g));series.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(g)}});svg.append(series);
+  ends.push({g,x:xx2,y:yy2,color,text:g.short+(!b?' (orig.)':'')+(metric==='cost'&&a.costN<a.n?'*':'')});
+  points.push({x:xx1,y:yy1},{x:xx2,y:yy2});
+ }
+ const labels=[];
+ for(const p of ends.sort((a,b)=>a.y-b.y||a.x-b.x)){
+  const text=p.text,tw=text.length*(small?6:6.6),th=15,candidates=[];
+  for(const dy of [-13,25,-32,44,-51,63,-70,82])for(const side of [1,-1])candidates.push({x:Math.max(L,Math.min(R-tw,side===1?p.x+12:p.x-12-tw)),y:Math.max(28,Math.min(B-7,p.y+dy))});
+  const q=candidates.find(q=>!labels.some(l=>q.x<l.x+l.w+6&&q.x+tw+6>l.x&&q.y-th<l.y+6&&q.y+6>l.y-th)&&!points.some(e=>e.x>q.x-6&&e.x<q.x+tw+6&&e.y>q.y-th-6&&e.y<q.y+6))||candidates[0];
+  labels.push({...q,w:tw,color:p.color,text});if(Math.abs(q.y-p.y)>24)svg.append(svgNode('line',{x1:p.x,y1:p.y,x2:q.x+tw/2,y2:q.y-6,stroke:p.color,opacity:.35}));
+ }
+ for(const q of labels)svg.append(svgNode('text',{class:'endpoint-label',x:q.x,y:q.y,style:'fill:'+q.color},q.text));
+}
+for(const g of groups){const a=g.original,b=g.v21,tr=document.createElement('tr');tr.tabIndex=0;tr.dataset.progressGroup=g.group;
+ const change=(left,right)=>left+(b?' → '+right:' → not run');
+ for(const [i,text]of [g.label,change(f(a.coverage),b&&f(b.coverage)),b?signed(b.coverage-a.coverage):'—',change(money(a.cost)+(a.costN<a.n?'*':''),b&&money(b.cost)),change(f(a.minutes),b&&f(b.minutes))].entries()){const td=document.createElement('td');td.textContent=text;if(i)td.className='num';else td.style.color=colors[g.family];tr.append(td)}
+ tr.addEventListener('click',()=>select(g));tr.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(g)}});document.getElementById('progress-values').append(tr);
+}
+document.getElementById('progress-source-files').textContent=data.sources.map(s=>s.file+'\nSHA-256 '+s.sha256).join('\n\n');
+if(groups.length)document.getElementById('progress-status').textContent=data.runs.length===80?'80 saved reports, one located-finding rubric. Includes Opus-low v21 completed before the pause. Opus-high and Sonnet-medium v21 are not available. New planner evaluations remain paused.':'OpenAI: 60 saved reports graded with the located-finding rubric. Saved Claude reports are being graded; no new planner evaluations are running.';
+new ResizeObserver(()=>{draw('cost');draw('time')}).observe(document.getElementById('progress'));draw('cost');draw('time');window.progressGroups=groups;
+}
+</script>
+</section>
+<details id="snapshots" hidden><summary>Historical strict-actionability charts, not the current accuracy measure</summary>
+<script type="application/json" id="claude-risk-data">
+{"sources":[{"file":"tests/results/20261015-risk-report/v19-risk-report-opus-high-rails/summary.json","sha256":"eed971a5a0479e8db2b101ceb34e64d9363b726e142adaaa8815e39e921e148b"},{"file":"tests/results/20261015-risk-report/v20-changes-first-opus-high-rails/summary.json","sha256":"ce207c6fbef4b727a22e3d11ee76ebcc254b07fb4d81ecfd96c36df10bf9f721"},{"file":"tests/results/20261015-risk-report/v20-changes-first-opus-low-rails/summary.json","sha256":"bd6ccf89073a82d07339126465fe0c294775b3b5a05efc998e9243118ef626c0"}],"runs":[
+{"prompt":"v19","effort":"high","run":1,"primary":20,"primaryLevels":17,"minutes":19.72821666666667,"cost":9.643344800000001},
+{"prompt":"v19","effort":"high","run":2,"primary":23,"primaryLevels":18,"minutes":14.526566666666668,"cost":6.5089534},
+{"prompt":"v19","effort":"high","run":3,"primary":20,"primaryLevels":18,"minutes":14.657616666666666,"cost":5.351426600000002},
+{"prompt":"v19","effort":"high","run":4,"primary":23,"primaryLevels":21,"minutes":17.099083333333333,"cost":7.209133000000003},
+{"prompt":"v19","effort":"high","run":5,"primary":21,"primaryLevels":19,"minutes":17.43,"cost":6.801123199999998},
+{"prompt":"v20","effort":"high","run":1,"primary":23,"primaryLevels":20,"minutes":13.188516666666667,"cost":5.860873400000001},
+{"prompt":"v20","effort":"high","run":2,"primary":20,"primaryLevels":18,"minutes":15.800133333333333,"cost":5.723057400000004},
+{"prompt":"v20","effort":"high","run":3,"primary":22,"primaryLevels":19,"minutes":16.375516666666666,"cost":5.862987200000003},
+{"prompt":"v20","effort":"high","run":4,"primary":23,"primaryLevels":21,"minutes":15.852733333333333,"cost":6.603894399999999},
+{"prompt":"v20","effort":"high","run":5,"primary":22,"primaryLevels":17,"minutes":15.351383333333333,"cost":6.254669000000001},
+{"prompt":"v20","effort":"low","run":1,"primary":16,"primaryLevels":10,"minutes":4.382433333333333,"cost":1.1619886000000001},
+{"prompt":"v20","effort":"low","run":2,"primary":15,"primaryLevels":14,"minutes":3.415033333333333,"cost":0.8243596000000001},
+{"prompt":"v20","effort":"low","run":3,"primary":15,"primaryLevels":13,"minutes":3.3929,"cost":0.7459368},
+{"prompt":"v20","effort":"low","run":4,"primary":10,"primaryLevels":8,"minutes":2.3309,"cost":0.5205902},
+{"prompt":"v20","effort":"low","run":5,"primary":19,"primaryLevels":12,"minutes":3.43175,"cost":0.915708}
+]}
+</script>
+<div class="controls" id="controls"><div class="segments" role="tablist" aria-label="Planner prompt"><button role="tab" id="original" aria-selected="true" data-variant="original">Original prompt</button><button role="tab" id="v21" aria-selected="false" data-variant="v21">Risk reports: v19–v21</button></div><label>Score layer <select id="layer"><option value="primary">Complete planner report</option><option value="final">Final response text</option></select></label><label>Measure <select id="measure"><option value="findings">Actionable findings</option></select></label></div>
+<p class="intro" id="intro"></p>
+<div class="key"><span class="sol">● Sol, native Amp</span><span class="astra">● Astra, native Amp</span><span class="claude">◇ Claude 5.5, Claude Code</span><span>Large marks = means. Small marks = individual runs. △ = cost lower bound.</span></div>
+<div class="charts" id="charts"><figure id="fig-cost"><h2>Finding accuracy vs. cost</h2><p class="hint">Higher and farther left is better. Cost uses a log scale.</p><svg id="cost" role="group" aria-label="Finding accuracy versus estimated API cost"></svg><figcaption id="cost-caption"></figcaption></figure><figure id="fig-speed"><h2>Finding accuracy vs. response time</h2><p class="hint">Higher and farther left is better. Time uses a log scale.</p><svg id="speed" role="group" aria-label="Finding accuracy versus response time"></svg><figcaption id="speed-caption"></figcaption></figure></div>
+<div id="detail" class="detail" aria-live="polite">Select a mean, individual run, or table row for exact measurements.</div>
+<section id="values" data-toc="Measurements"><div class="table-wrap"><table><thead><tr><th>Configuration</th><th class="num">Findings / 23</th><th class="num">Share of 23</th><th class="num">Cost, USD</th><th class="num">Time, min</th><th class="num">Known scores</th><th class="num">Exact costs</th></tr></thead><tbody id="values-body"></tbody></table></div><p class="quiet" id="table-note"></p></section>
+<section id="methods" data-toc="Read the comparison"><details open id="limits"><summary>Read the comparison correctly</summary><ul><li>Original-plan actionability requires supported impact, applicability, and recommendation together. Missing an explicit consequence can lose the entire finding even when the affected code and repair are correct. This is not general accuracy or issue coverage. Risk reports instead measure located findings or matching risk levels.</li><li>The default scores complete planner reports, including linked artifacts for GPT. A short artifact link can score zero as final text even when the complete report exists. The Claude risk references use their retained graded final reports in both score-layer views; no separate primary-layer grade is available for those references.</li><li>The risk view overlays GPT v21 with Claude v19/v20 references. These use the same risk-grader instructions and labels, but different planner prompts and runtimes. The verified Claude risk runs are Opus high on v19/v20 and Opus low on v20; no Sonnet or Haiku risk runs were found in this retained set.</li><li>Original Claude scores use the October 12 hand assessments. GPT and the October 15 Claude risk reports use the automated Opus 5.5 high grader. Runtime, date, tools, and prompt versions differ. These are historical comparisons, not controlled model rankings. Opus-high original Rails was a development reference.</li><li>Averages exclude missing measurements, never replace them with zero. Haiku has incomplete report coverage. Cost-chart means use matched score and exact-cost runs. Lower-bound triangles are excluded. Table cost averages include every exact cost, including failed attempts.</li><li>Dollar amounts are standard API/list-price estimates, not bills. Original Claude uses retained October 13 rates; Claude risk reports use their October 15 receipt estimates; GPT uses October 19 rates. Operators, graders, orbs, unlogged helpers, and billing adjustments are excluded. Response time covers the whole main/planner workflow, not token speed.</li></ul></details><details id="low-effort-audit"><summary>Why Astra low looks worse on the original metric</summary><p>The saved grader recognizes more expected issues and correct applicability/repair pairs in Astra-low reports, but awards fewer fully actionable findings because explicit application impact is often only partial. These diagnostics summarize the existing grades, not a regrade.</p><div class="table-wrap"><table><thead><tr><th>Mean across five original reports, out of 23</th><th>Astra low</th><th>Sol low</th></tr></thead><tbody><tr><td>Grader records some discussion of the finding</td><td>21.0</td><td>18.4</td></tr><tr><td>Applicability and repair both supported</td><td>19.8</td><td>17.4</td></tr><tr><td>Strict actionability: all three supported</td><td>8.2</td><td>11.2</td></tr></tbody></table></div><p>For example, Astra-low run 1 recommends <code>fragments.join</code> for the removed nonnumeric <code>sum</code> behavior, but receives partial impact because it does not explicitly say the export worker raises. Some near-equivalent wording also receives different impact judgments across reports. The low strict score does not establish lower issue coverage.</p></details><details id="sources"><summary>Source files and checksums</summary><pre id="source-files"></pre></details></section>
+<section id="summary"><p>Needs from you: nothing. Version 3, October 19, 2026: added full-width cost and time progress charts using one coverage rubric on both prompt versions. Earlier official grades remain unchanged. Claude v19/v20 references below are not v21 runs.</p></section>
+</details>
+<script type="application/json" id="data">[{"id":"opus-5.5-high-1","group":"opus-5.5-high","label":"Opus high","short":"Opus H","family":"claude","variant":"original","run":1,"primary":21,"final":21,"minutes":31.9668,"cost":null,"bound":9.922614199999996,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a13140-02ab-760b-aa0f-025b3f7fd927","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"opus-5.5-high-2","group":"opus-5.5-high","label":"Opus high","short":"Opus H","family":"claude","variant":"original","run":2,"primary":20,"final":20,"minutes":28.34365,"cost":8.404040600000002,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a13140-0bbf-705c-993c-0b3c658428f8","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"opus-5.5-high-3","group":"opus-5.5-high","label":"Opus high","short":"Opus H","family":"claude","variant":"original","run":3,"primary":19,"final":19,"minutes":31.444983333333333,"cost":9.9514534,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a13140-14ec-766a-ac70-8c3deed0847f","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"opus-5.5-high-4","group":"opus-5.5-high","label":"Opus high","short":"Opus H","family":"claude","variant":"original","run":4,"primary":21,"final":21,"minutes":43.412933333333335,"cost":11.437012600000001,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a13140-1cd9-7270-ac6a-e959dee2abb8","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"opus-5.5-high-5","group":"opus-5.5-high","label":"Opus high","short":"Opus H","family":"claude","variant":"original","run":5,"primary":21,"final":21,"minutes":33.95191666666667,"cost":9.322651399999998,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a13140-244e-76ba-992b-a6e9d04729c9","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"opus-5.5-low-1","group":"opus-5.5-low","label":"Opus low","short":"Opus L","family":"claude","variant":"original","run":1,"primary":18,"final":18,"minutes":11.977883333333333,"cost":3.1098657999999997,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a1317d-421e-774f-9075-12cba5e1aa24","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"opus-5.5-low-2","group":"opus-5.5-low","label":"Opus low","short":"Opus L","family":"claude","variant":"original","run":2,"primary":19,"final":19,"minutes":12.128383333333334,"cost":3.4399209999999996,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a1317d-4e6c-7202-a9d0-f0a79401c306","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"opus-5.5-low-3","group":"opus-5.5-low","label":"Opus low","short":"Opus L","family":"claude","variant":"original","run":3,"primary":13,"final":13,"minutes":12.099733333333333,"cost":2.8480402000000002,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a1317d-5f32-71ab-8850-773b885f5fda","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"opus-5.5-low-4","group":"opus-5.5-low","label":"Opus low","short":"Opus L","family":"claude","variant":"original","run":4,"primary":16,"final":16,"minutes":11.303366666666667,"cost":2.712310600000001,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a1317d-6cc0-73d9-9172-4ac8661e124d","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"opus-5.5-low-5","group":"opus-5.5-low","label":"Opus low","short":"Opus L","family":"claude","variant":"original","run":5,"primary":17,"final":17,"minutes":10.059283333333333,"cost":2.737765,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a1317d-7952-766d-b731-75b4bab7176a","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"sonnet-5.5-medium-1","group":"sonnet-5.5-medium","label":"Sonnet medium","short":"Sonnet M","family":"claude","variant":"original","run":1,"primary":17,"final":17,"minutes":18.296233333333333,"cost":3.2738005999999995,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a133bd-b6bb-76de-945c-5391d23035e3","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"sonnet-5.5-medium-2","group":"sonnet-5.5-medium","label":"Sonnet medium","short":"Sonnet M","family":"claude","variant":"original","run":2,"primary":18,"final":18,"minutes":22.87313333333333,"cost":3.3724969,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a133bd-bfc9-761d-a1f1-18033ab9e5fc","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"sonnet-5.5-medium-3","group":"sonnet-5.5-medium","label":"Sonnet medium","short":"Sonnet M","family":"claude","variant":"original","run":3,"primary":14,"final":14,"minutes":13.5283,"cost":2.4510111000000006,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a133bd-c927-76f5-b340-ccefb4b035b0","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"sonnet-5.5-medium-4","group":"sonnet-5.5-medium","label":"Sonnet medium","short":"Sonnet M","family":"claude","variant":"original","run":4,"primary":17,"final":17,"minutes":17.58503333333333,"cost":2.9401251000000004,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a133bd-d62c-704f-9a49-3e2091a0282f","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"sonnet-5.5-medium-5","group":"sonnet-5.5-medium","label":"Sonnet medium","short":"Sonnet M","family":"claude","variant":"original","run":5,"primary":17,"final":15,"minutes":14.824033333333333,"cost":2.3442176,"bound":null,"delivery":"completed_report","thread":"https://ampcode.com/threads/T-01a133bd-deab-712c-9d70-c752d06e553b","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"haiku-5.5-medium-1","group":"haiku-5.5-medium","label":"Haiku medium","short":"Haiku M","family":"claude","variant":"original","run":1,"primary":null,"final":null,"minutes":1.0394166666666667,"cost":0.043225875,"bound":null,"delivery":"no_plan_at_evaluated_choice_gate","thread":"https://ampcode.com/threads/T-01a133f3-12d4-72d2-bcde-7870beb203a6","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"haiku-5.5-medium-2","group":"haiku-5.5-medium","label":"Haiku medium","short":"Haiku M","family":"claude","variant":"original","run":2,"primary":null,"final":2,"minutes":7.5819,"cost":0.5703222700000001,"bound":null,"delivery":"working_application_implementation_with_planner_bypass","thread":"https://ampcode.com/threads/T-01a133f3-1b18-76fa-a684-bfdaf69d9144","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"haiku-5.5-medium-3","group":"haiku-5.5-medium","label":"Haiku medium","short":"Haiku M","family":"claude","variant":"original","run":3,"primary":3,"final":3,"minutes":7.753816666666666,"cost":0.8644460949999998,"bound":null,"delivery":"status_handoff_recovered_by_resumed_native_planner","thread":"https://ampcode.com/threads/T-01a133f3-2358-7668-9410-e481d38ac0e0","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"haiku-5.5-medium-4","group":"haiku-5.5-medium","label":"Haiku medium","short":"Haiku M","family":"claude","variant":"original","run":4,"primary":null,"final":17,"minutes":18.869083333333332,"cost":null,"bound":null,"delivery":"later_plan_delivered_native_provenance_unavailable","thread":"https://ampcode.com/threads/T-01a133f3-2eca-7037-bad9-57a5c7d79bdb","runtime":"Claude Code, October 12","verification":"native_audit_unavailable"},{"id":"haiku-5.5-medium-5","group":"haiku-5.5-medium","label":"Haiku medium","short":"Haiku M","family":"claude","variant":"original","run":5,"primary":18,"final":18,"minutes":21.715683333333335,"cost":1.7308921600000002,"bound":null,"delivery":"self_delegation_loop_recovered_by_fresh_native_planner","thread":"https://ampcode.com/threads/T-01a133f3-379f-7133-8751-66407a1cd304","runtime":"Claude Code, October 12","verification":"native_metadata_verified"},{"id":"sol-low-original-1","group":"sol-low","family":"sol","label":"Sol low","short":"Sol L","variant":"original","run":1,"primary":10,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":3.977866666666667,"cost":0.310495,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-low-original-2","group":"sol-low","family":"sol","label":"Sol low","short":"Sol L","variant":"original","run":2,"primary":9,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":3.9659666666666666,"cost":0.3310614,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-low-original-3","group":"sol-low","family":"sol","label":"Sol low","short":"Sol L","variant":"original","run":3,"primary":11,"final":11,"primaryLevels":null,"finalLevels":null,"minutes":3.2493666666666665,"cost":0.35311600000000004,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-low-original-4","group":"sol-low","family":"sol","label":"Sol low","short":"Sol L","variant":"original","run":4,"primary":12,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":9.2344,"cost":0.3848539,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-low-original-5","group":"sol-low","family":"sol","label":"Sol low","short":"Sol L","variant":"original","run":5,"primary":14,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":6.58735,"cost":0.5048232,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-low-v21-1","group":"sol-low","family":"sol","label":"Sol low","short":"Sol L","variant":"v21","run":1,"primary":14,"final":14,"primaryLevels":12,"finalLevels":12,"minutes":5.1382,"cost":0.4379964,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-low-v21-2","group":"sol-low","family":"sol","label":"Sol low","short":"Sol L","variant":"v21","run":2,"primary":18,"final":0,"primaryLevels":12,"finalLevels":0,"minutes":4.624,"cost":0.345716,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-low-v21-3","group":"sol-low","family":"sol","label":"Sol low","short":"Sol L","variant":"v21","run":3,"primary":18,"final":0,"primaryLevels":11,"finalLevels":6,"minutes":5.847383333333333,"cost":0.4941716000000001,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-low-v21-4","group":"sol-low","family":"sol","label":"Sol low","short":"Sol L","variant":"v21","run":4,"primary":20,"final":0,"primaryLevels":14,"finalLevels":0,"minutes":12.054416666666667,"cost":0.8933014999999999,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-low-v21-5","group":"sol-low","family":"sol","label":"Sol low","short":"Sol L","variant":"v21","run":5,"primary":20,"final":20,"primaryLevels":14,"finalLevels":14,"minutes":7.010866666666667,"cost":0.6928054,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-medium-original-1","group":"sol-medium","family":"sol","label":"Sol medium","short":"Sol M","variant":"original","run":1,"primary":17,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":9.945633333333333,"cost":0.7163235999999998,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-medium-original-2","group":"sol-medium","family":"sol","label":"Sol medium","short":"Sol M","variant":"original","run":2,"primary":18,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":17.2442,"cost":0.8711541,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-medium-original-3","group":"sol-medium","family":"sol","label":"Sol medium","short":"Sol M","variant":"original","run":3,"primary":15,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":14.065583333333333,"cost":0.9298750999999997,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-medium-original-4","group":"sol-medium","family":"sol","label":"Sol medium","short":"Sol M","variant":"original","run":4,"primary":13,"final":13,"primaryLevels":null,"finalLevels":null,"minutes":14.700633333333334,"cost":1.0262878,"bound":null,"delivery":"changed_text_needs_review","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-medium-original-5","group":"sol-medium","family":"sol","label":"Sol medium","short":"Sol M","variant":"original","run":5,"primary":17,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":19.586433333333332,"cost":1.3215758000000002,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-medium-v21-1","group":"sol-medium","family":"sol","label":"Sol medium","short":"Sol M","variant":"v21","run":1,"primary":21,"final":0,"primaryLevels":15,"finalLevels":0,"minutes":12.826183333333333,"cost":1.1161028,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-medium-v21-2","group":"sol-medium","family":"sol","label":"Sol medium","short":"Sol M","variant":"v21","run":2,"primary":20,"final":0,"primaryLevels":14,"finalLevels":0,"minutes":12.357466666666667,"cost":1.3074104999999998,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-medium-v21-3","group":"sol-medium","family":"sol","label":"Sol medium","short":"Sol M","variant":"v21","run":3,"primary":20,"final":20,"primaryLevels":14,"finalLevels":14,"minutes":10.883116666666666,"cost":1.3052885,"bound":null,"delivery":"changed_text_needs_review","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-medium-v21-4","group":"sol-medium","family":"sol","label":"Sol medium","short":"Sol M","variant":"v21","run":4,"primary":21,"final":0,"primaryLevels":15,"finalLevels":0,"minutes":11.646083333333333,"cost":1.2203113,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-medium-v21-5","group":"sol-medium","family":"sol","label":"Sol medium","short":"Sol M","variant":"v21","run":5,"primary":20,"final":20,"primaryLevels":16,"finalLevels":16,"minutes":12.19055,"cost":1.2952303000000003,"bound":null,"delivery":"changed_text_needs_review","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-high-original-1","group":"sol-high","family":"sol","label":"Sol high","short":"Sol H","variant":"original","run":1,"primary":19,"final":18,"primaryLevels":null,"finalLevels":null,"minutes":18.20505,"cost":1.4533076,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-high-original-2","group":"sol-high","family":"sol","label":"Sol high","short":"Sol H","variant":"original","run":2,"primary":13,"final":13,"primaryLevels":null,"finalLevels":null,"minutes":22.018816666666666,"cost":1.8014016000000002,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-high-original-3","group":"sol-high","family":"sol","label":"Sol high","short":"Sol H","variant":"original","run":3,"primary":20,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":18.052566666666667,"cost":1.3038707999999999,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-high-original-4","group":"sol-high","family":"sol","label":"Sol high","short":"Sol H","variant":"original","run":4,"primary":20,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":16.91045,"cost":1.365219,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-high-original-5","group":"sol-high","family":"sol","label":"Sol high","short":"Sol H","variant":"original","run":5,"primary":14,"final":14,"primaryLevels":null,"finalLevels":null,"minutes":18.92675,"cost":1.5484333000000001,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-high-v21-1","group":"sol-high","family":"sol","label":"Sol high","short":"Sol H","variant":"v21","run":1,"primary":21,"final":21,"primaryLevels":14,"finalLevels":14,"minutes":17.579883333333335,"cost":1.6824864999999998,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-high-v21-2","group":"sol-high","family":"sol","label":"Sol high","short":"Sol H","variant":"v21","run":2,"primary":20,"final":20,"primaryLevels":14,"finalLevels":14,"minutes":17.171783333333334,"cost":1.5760287999999996,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-high-v21-3","group":"sol-high","family":"sol","label":"Sol high","short":"Sol H","variant":"v21","run":3,"primary":22,"final":22,"primaryLevels":16,"finalLevels":16,"minutes":21.065583333333333,"cost":1.9156275999999999,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-high-v21-4","group":"sol-high","family":"sol","label":"Sol high","short":"Sol H","variant":"v21","run":4,"primary":20,"final":20,"primaryLevels":14,"finalLevels":14,"minutes":20.10108333333333,"cost":1.9495968000000001,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"sol-high-v21-5","group":"sol-high","family":"sol","label":"Sol high","short":"Sol H","variant":"v21","run":5,"primary":22,"final":22,"primaryLevels":16,"finalLevels":16,"minutes":20.627483333333334,"cost":2.0072556,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-low-original-1","group":"astra-low","family":"astra","label":"Astra low","short":"Astra L","variant":"original","run":1,"primary":9,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":4.885433333333333,"cost":2.6056215000000003,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-low-original-2","group":"astra-low","family":"astra","label":"Astra low","short":"Astra L","variant":"original","run":2,"primary":8,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":4.0409,"cost":2.1144385,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-low-original-3","group":"astra-low","family":"astra","label":"Astra low","short":"Astra L","variant":"original","run":3,"primary":8,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":3.7794333333333334,"cost":2.099025,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-low-original-4","group":"astra-low","family":"astra","label":"Astra low","short":"Astra L","variant":"original","run":4,"primary":10,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":4.339833333333333,"cost":2.2850539999999997,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-low-original-5","group":"astra-low","family":"astra","label":"Astra low","short":"Astra L","variant":"original","run":5,"primary":6,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":4.873283333333333,"cost":2.4750905000000003,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-low-v21-1","group":"astra-low","family":"astra","label":"Astra low","short":"Astra L","variant":"v21","run":1,"primary":20,"final":20,"primaryLevels":15,"finalLevels":15,"minutes":5.600133333333333,"cost":3.6624084999999993,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-low-v21-2","group":"astra-low","family":"astra","label":"Astra low","short":"Astra L","variant":"v21","run":2,"primary":21,"final":0,"primaryLevels":17,"finalLevels":7,"minutes":8.43365,"cost":6.86426,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-low-v21-3","group":"astra-low","family":"astra","label":"Astra low","short":"Astra L","variant":"v21","run":3,"primary":21,"final":21,"primaryLevels":17,"finalLevels":17,"minutes":5.0427,"cost":4.3534945,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-low-v21-4","group":"astra-low","family":"astra","label":"Astra low","short":"Astra L","variant":"v21","run":4,"primary":21,"final":21,"primaryLevels":15,"finalLevels":15,"minutes":7.17335,"cost":3.4404175,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-low-v21-5","group":"astra-low","family":"astra","label":"Astra low","short":"Astra L","variant":"v21","run":5,"primary":21,"final":21,"primaryLevels":15,"finalLevels":15,"minutes":9.6691,"cost":5.815290499999999,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-medium-original-1","group":"astra-medium","family":"astra","label":"Astra medium","short":"Astra M","variant":"original","run":1,"primary":16,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":14.893066666666666,"cost":7.8020095000000005,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-medium-original-2","group":"astra-medium","family":"astra","label":"Astra medium","short":"Astra M","variant":"original","run":2,"primary":15,"final":15,"primaryLevels":null,"finalLevels":null,"minutes":7.730966666666666,"cost":5.054159,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-medium-original-3","group":"astra-medium","family":"astra","label":"Astra medium","short":"Astra M","variant":"original","run":3,"primary":21,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":8.771166666666666,"cost":5.0630545,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-medium-original-4","group":"astra-medium","family":"astra","label":"Astra medium","short":"Astra M","variant":"original","run":4,"primary":13,"final":12,"primaryLevels":null,"finalLevels":null,"minutes":8.777983333333333,"cost":5.451916,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-medium-original-5","group":"astra-medium","family":"astra","label":"Astra medium","short":"Astra M","variant":"original","run":5,"primary":16,"final":15,"primaryLevels":null,"finalLevels":null,"minutes":9.704333333333333,"cost":4.521745,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-medium-v21-1","group":"astra-medium","family":"astra","label":"Astra medium","short":"Astra M","variant":"v21","run":1,"primary":21,"final":21,"primaryLevels":15,"finalLevels":15,"minutes":13.504933333333334,"cost":8.8594385,"bound":null,"delivery":"changed_text_needs_review","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-medium-v21-2","group":"astra-medium","family":"astra","label":"Astra medium","short":"Astra M","variant":"v21","run":2,"primary":21,"final":0,"primaryLevels":15,"finalLevels":0,"minutes":9.368166666666667,"cost":7.5933025,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-medium-v21-3","group":"astra-medium","family":"astra","label":"Astra medium","short":"Astra M","variant":"v21","run":3,"primary":21,"final":21,"primaryLevels":17,"finalLevels":17,"minutes":9.50825,"cost":7.4528205,"bound":null,"delivery":"changed_text_needs_review","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-medium-v21-4","group":"astra-medium","family":"astra","label":"Astra medium","short":"Astra M","variant":"v21","run":4,"primary":21,"final":19,"primaryLevels":15,"finalLevels":15,"minutes":8.630916666666666,"cost":7.6340249999999985,"bound":null,"delivery":"changed_text_needs_review","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-medium-v21-5","group":"astra-medium","family":"astra","label":"Astra medium","short":"Astra M","variant":"v21","run":5,"primary":21,"final":0,"primaryLevels":15,"finalLevels":0,"minutes":9.710783333333334,"cost":6.753507,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-high-original-1","group":"astra-high","family":"astra","label":"Astra high","short":"Astra H","variant":"original","run":1,"primary":16,"final":16,"primaryLevels":null,"finalLevels":null,"minutes":17.992116666666668,"cost":8.7547455,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-high-original-2","group":"astra-high","family":"astra","label":"Astra high","short":"Astra H","variant":"original","run":2,"primary":16,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":19.40315,"cost":11.430393,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-high-original-3","group":"astra-high","family":"astra","label":"Astra high","short":"Astra H","variant":"original","run":3,"primary":16,"final":1,"primaryLevels":null,"finalLevels":null,"minutes":12.89085,"cost":7.794800999999999,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-high-original-4","group":"astra-high","family":"astra","label":"Astra high","short":"Astra H","variant":"original","run":4,"primary":15,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":17.3244,"cost":8.038301500000001,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-high-original-5","group":"astra-high","family":"astra","label":"Astra high","short":"Astra H","variant":"original","run":5,"primary":14,"final":0,"primaryLevels":null,"finalLevels":null,"minutes":13.75785,"cost":6.4352575,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-high-v21-1","group":"astra-high","family":"astra","label":"Astra high","short":"Astra H","variant":"v21","run":1,"primary":21,"final":21,"primaryLevels":15,"finalLevels":15,"minutes":21.610666666666667,"cost":8.1014255,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-high-v21-2","group":"astra-high","family":"astra","label":"Astra high","short":"Astra H","variant":"v21","run":2,"primary":21,"final":21,"primaryLevels":15,"finalLevels":15,"minutes":13.548566666666666,"cost":9.024013,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-high-v21-3","group":"astra-high","family":"astra","label":"Astra high","short":"Astra H","variant":"v21","run":3,"primary":21,"final":21,"primaryLevels":15,"finalLevels":15,"minutes":12.260233333333334,"cost":7.874093,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-high-v21-4","group":"astra-high","family":"astra","label":"Astra high","short":"Astra H","variant":"v21","run":4,"primary":22,"final":22,"primaryLevels":16,"finalLevels":16,"minutes":14.286266666666666,"cost":9.2383175,"bound":null,"delivery":"report_inline_exact","runtime":"Native Amp, October 19","verification":"native_metadata_verified"},{"id":"astra-high-v21-5","group":"astra-high","family":"astra","label":"Astra high","short":"Astra H","variant":"v21","run":5,"primary":20,"final":0,"primaryLevels":14,"finalLevels":0,"minutes":9.7752,"cost":7.1771995,"bound":null,"delivery":"planner_reply_exact_with_report_link","runtime":"Native Amp, October 19","verification":"native_metadata_verified"}]</script><script type="application/json" id="source-data">[{"file":"tests/results/20261012/benchmark-outcomes.json","sha256":"646308897bc0e4ab993816b89d41ceefa43a9824644983d3fd7811a081a142e3"},{"file":"tests/results/20261012/benchmark-costs.json","sha256":"ba571b12a9789618e740eed7d6cd918fa8a63cd32bd59692db3c62e9707e4837"},{"file":"tests/results/20261019-native-amp/outcomes.json","sha256":"cd15f33586d50017cccae5db71060391c2466ac77d4bf416c8cfb1331b8bff0e"},{"file":"tests/results/20261019-native-amp/api-pricing.json","sha256":"f3df853cb78b10185f0b20f34c72a873315cf60ac6688663d167a70e2883ad72"},{"file":"tests/results/../api-pricing-20261013.json","sha256":"b9820d73c3ae786f13bc212d98a92cb195e48b4ee0090309f8e71d5f00d93c32"}]</script>
+<script>
+{
+const riskData=JSON.parse(document.getElementById('claude-risk-data').textContent);
+const runs=[...JSON.parse(document.getElementById('data').textContent),...riskData.runs.map(r=>({...r,id:'claude-'+r.prompt+'-opus-'+r.effort+'-'+r.run,group:'claude-'+r.prompt+'-opus-'+r.effort,family:'claude',label:'Opus '+r.effort+' ('+r.prompt+')',short:'Opus '+r.effort[0].toUpperCase()+' '+r.prompt,variant:r.prompt,final:r.primary,finalLevels:r.primaryLevels,bound:null,delivery:'graded_final_report_only',runtime:'Claude Code, October 15, '+r.prompt}))],state={variant:'original',layer:'primary',measure:'findings',selected:null};
+const colors={sol:'var(--accent)',astra:'var(--text)',claude:'var(--muted)'};
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null,known=v=>typeof v==='number'&&Number.isFinite(v);
+const score=r=>state.measure==='levels'?r[state.layer+'Levels']:r[state.layer];
+const fmt=(v,n=1)=>known(v)?v.toFixed(n):'N/A';
+const money=v=>known(v)?'$'+v.toFixed(2):'N/A';
+const node=(tag,attrs={},text)=>{const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);if(text!==undefined)n.textContent=text;return n};
+const active=()=>runs.filter(r=>state.variant==='original'?r.variant==='original':r.variant!=='original');
+function groups(){return [...new Set(active().map(r=>r.group))].map(key=>{const rows=active().filter(r=>r.group===key),scored=rows.filter(r=>known(score(r))),priced=rows.filter(r=>known(r.cost)),paired=priced.filter(r=>known(score(r)));return{...rows[0],id:key,rows,scored,priced,paired,avg:mean(scored.map(score)),costMean:mean(priced.map(r=>r.cost)),minutesMean:mean(rows.map(r=>r.minutes))}})}
+function select(id,kind='group'){
+ state.selected=id;const g=groups().find(g=>g.id===id),r=active().find(r=>r.id===id),d=document.getElementById('detail');
+ if(kind==='group'&&g){d.innerHTML='<strong>'+g.label+'</strong> · '+fmt(g.avg)+'/23 ('+fmt(100*g.avg/23)+'%) across '+g.scored.length+'/5 known reports. Exact-cost mean '+money(g.costMean)+' across '+g.priced.length+'/5 attempts. Response mean '+fmt(g.minutesMean)+' min across all five attempts. '+(g.paired.length?'Cost-chart mean: '+fmt(mean(g.paired.map(score)))+'/23 at '+money(mean(g.paired.map(r=>r.cost)))+', matched n='+g.paired.length+'.':'No complete cost/score pair.');}
+ else if(r){d.innerHTML='<strong>'+r.label+', run '+r.run+'</strong> · '+(known(score(r))?score(r)+'/23 ('+fmt(100*score(r)/23)+'%)':'N/A, no designated report score')+' · '+(known(r.cost)?money(r.cost):known(r.bound)?'at least '+money(r.bound):'cost unavailable')+' · '+fmt(r.minutes)+' min. '+r.runtime+'. '+r.delivery.replaceAll('_',' ')+'.';}
+ document.querySelectorAll('[data-key]').forEach(el=>el.classList.toggle('selected',el.dataset.key===id));
+}
+function chart(type){
+ const svg=document.getElementById(type),w=svg.getBoundingClientRect().width,h=350,L=50,R=w-16,T=30,B=282;
+ if(w<100)return;
+ svg.setAttribute('viewBox','0 0 '+w+' '+h);svg.replaceChildren();
+ const x=v=>L+(R-L)*Math.log(v/(type==='cost'?.03:.5))/Math.log(type==='cost'?16/.03:100),y=v=>B-(B-T)*v/23;
+ for(const p of [0,25,50,75,100]){const yy=y(23*p/100);svg.append(node('line',{x1:L,x2:R,y1:yy,y2:yy,stroke:p===0?'var(--border)':'var(--surface)','stroke-width':1}));svg.append(node('text',{x:0,y:yy+4},p+'%'));}
+ svg.append(node('text',{x:0,y:14},state.variant==='original'?'Actionable / 23':state.measure==='levels'?'Level matches / 23':'Located / 23'));
+ for(const tick of type==='cost'?[.05,.2,1,5,15]:[1,4,16,48])svg.append(node('text',{x:x(tick),y:B+19,'text-anchor':'middle'},type==='cost'?'$'+tick:tick+'m'));
+ svg.append(node('text',{x:L,y:h-5},type==='cost'?'Estimated API cost per attempt (USD)':'Whole-workflow response time (minutes)'));
+ const layout=[];const plotted=[];
+ const draw=(r,px,py,large,bound=false)=>{const g=node('g',{class:'mark','data-key':large?r.group:r.id,tabindex:0,role:'button','aria-label':r.label+(large?' mean':', run '+r.run)}),c=colors[r.family];g.append(node('circle',{class:'focus-ring',cx:px,cy:py,r:large?12:7}));
+ if(bound)g.append(node('path',{d:'M'+px+','+(py-5)+'l5,9h-10z',fill:'var(--bg)',stroke:c,'stroke-width':1.4}));
+ else if(r.family==='claude')g.append(node('path',{d:'M'+px+','+(py-(large?7:3))+'l'+(large?7:3)+','+(large?7:3)+'l-'+(large?7:3)+','+(large?7:3)+'l-'+(large?7:3)+',-'+(large?7:3)+'z',fill:'var(--bg)',stroke:c,'stroke-width':large?2:1,opacity:large?1:.45}));
+ else g.append(node('circle',{cx:px,cy:py,r:large?6:2.7,fill:c,opacity:large?1:.3}));
+ const fn=()=>select(large?r.group:r.id,large?'group':'run');g.addEventListener('pointerover',fn);g.addEventListener('click',fn);g.addEventListener('focus',fn);g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}});svg.append(g);return g;};
+ for(const r of active()){
+  const value=type==='cost'?(r.cost??r.bound):r.minutes;if(!known(value))continue;
+  const s=score(r);draw(r,x(value),known(s)?y(s):B+44,false,type==='cost'&&!known(r.cost));
+ }
+ if(active().some(r=>!known(score(r))))svg.append(node('text',{x:0,y:B+48},'N/A'));
+ const stats=groups();for(const g of stats){const rows=type==='cost'?g.paired:g.scored;if(!rows.length)continue;const a=mean(rows.map(score)),v=mean(rows.map(r=>type==='cost'?r.cost:r.minutes));const p={g,px:x(v),py:y(a)};plotted.push(p);}
+ for(const p of plotted)draw(p.g,p.px,p.py,true);
+ // Label means directly, choosing a free position without moving the measurements.
+ for(const p of plotted.sort((a,b)=>a.py-b.py)){
+  const text=p.g.short+(p.g.scored.length<5?'*':''),tw=text.length*6.6,th=14;
+  let chosen;const candidates=[];
+  for(const dy of [-12,22,-30,40,-48,58,-66,76])for(const side of [1,-1]){const xx=side===1?p.px+10:p.px-10-tw,yy=p.py+dy;candidates.push({x:Math.max(L,Math.min(R-tw,xx)),y:Math.max(T-4,Math.min(B-5,yy))});}
+  chosen=candidates.find(a=>!layout.some(b=>a.x<b.x+b.w+5&&a.x+tw+5>b.x&&a.y-th<b.y+5&&a.y+5>b.y-b.h)&&!plotted.some(q=>q!==p&&q.px>a.x-5&&q.px<a.x+tw+5&&q.py>a.y-th-5&&q.py<a.y+5))??candidates[0];
+  layout.push({...chosen,w:tw,h:th});if(Math.abs(chosen.y-p.py)>24)svg.append(node('line',{x1:p.px,y1:p.py,x2:chosen.x+tw/2,y2:chosen.y-5,stroke:colors[p.g.family],opacity:.3}));svg.append(node('text',{x:chosen.x,y:chosen.y,class:'label',style:'fill:'+colors[p.g.family]},text));
+ }
+}
+function render(){
+ const v21=state.variant==='v21',final=state.layer==='final';document.querySelectorAll('[data-variant]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.variant===state.variant)));
+ const metric=v21?(state.measure==='levels'?'Risk-level agreement':'Finding coverage'):'Strict actionability';
+ document.querySelector('#fig-cost h2').textContent=metric+' vs. cost';document.querySelector('#fig-speed h2').textContent=metric+' vs. response time';
+ document.getElementById('cost').setAttribute('aria-label',metric+' versus estimated API cost');document.getElementById('speed').setAttribute('aria-label',metric+' versus response time');
+ document.getElementById('intro').textContent=v21?'GPT uses v21. Claude references use v19/v20, not v21: the risk rubric is shared, but the prompts differ. Claude points use graded final reports in either score layer. Sonnet/Haiku risk runs are not in this retained set.':'Strict actionability requires supported impact, applicability, and repair together; this is not general accuracy or issue coverage. '+(final?'Final text only: artifact links can score zero despite a complete report.':'Complete reports, including GPT artifacts. Haiku scores are available for only 2/5 reports.');
+ document.querySelector('.key .sol').textContent='● Sol, native Amp'+(v21?' (v21)':'');document.querySelector('.key .astra').textContent='● Astra, native Amp'+(v21?' (v21)':'');
+ const tbody=document.getElementById('values-body');tbody.replaceChildren();
+ for(const g of groups()){const tr=document.createElement('tr');tr.dataset.key=g.id;tr.tabIndex=0;const values=[g.label,fmt(g.avg),known(g.avg)?fmt(100*g.avg/23)+'%':'N/A',money(g.costMean),fmt(g.minutesMean),g.scored.length+'/5',g.priced.length+'/5'];values.forEach((value,i)=>{const td=document.createElement('td');td.textContent=value;if(i)td.className='num';else td.style.color=colors[g.family];tr.append(td)});tr.addEventListener('click',()=>select(g.id));tr.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(g.id)}});tbody.append(tr);}
+ document.getElementById('cost-caption').textContent='Means use matched score + exact-cost runs. Lower bounds stay separate.';
+ document.getElementById('speed-caption').textContent='Means use scored runs. Failed attempts without scores sit on the N/A row.';
+ document.getElementById('table-note').textContent='Table means use every known value in each column. Cost-chart means may differ when the scored and exact-cost subsets differ. H = high, M = medium, L = low; * marks incomplete score coverage.';
+ chart('cost');chart('speed');if(state.selected)select(state.selected,active().some(r=>r.id===state.selected)?'run':'group');
+}
+document.querySelectorAll('[data-variant]').forEach(b=>b.addEventListener('click',()=>{state.variant=b.dataset.variant;state.measure='findings';state.selected=null;const s=document.getElementById('measure');s.innerHTML=state.variant==='original'?'<option value="findings">Actionable findings</option>':'<option value="findings">Located findings</option><option value="levels">Matching risk levels</option>';document.getElementById('detail').textContent='Select a mean, individual run, or table row for exact measurements.';render()}));
+document.getElementById('layer').addEventListener('change',e=>{state.layer=e.target.value;render()});document.getElementById('measure').addEventListener('change',e=>{state.measure=e.target.value;render()});
+document.getElementById('source-files').textContent=JSON.parse(document.getElementById('source-data').textContent).concat(riskData.sources).map(s=>s.file+'\nSHA-256 '+s.sha256).join('\n\n');
+new ResizeObserver(()=>{chart('cost');chart('speed')}).observe(document.getElementById('charts'));render();window.chartState=state;window.chartGroups=groups;
+}
+</script><script>
+			// Builds the side contents list from the sections, so it cannot drift from the page.
+			const toc = document.querySelector('.toc')
+			const sections = [...document.querySelectorAll('main > section[id]')]
+			const list = document.createElement('ol')
+			const links = new Map()
+			for (const section of sections) {
+				const label = section.dataset.toc || section.querySelector('h2')?.textContent.trim()
+				if (!label) continue
+				const link = document.createElement('a')
+				link.href = `#${section.id}`
+				link.textContent = label
+				const count = section.querySelectorAll('.item, tbody > tr[id]').length
+				if (count > 0) link.textContent += ` (${count})`
+				links.set(section, link)
+				const entry = document.createElement('li')
+				entry.append(link)
+				list.append(entry)
+			}
+			toc.append(list)
+			const observer = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						if (!entry.isIntersecting) continue
+						for (const link of links.values()) link.removeAttribute('aria-current')
+						links.get(entry.target)?.setAttribute('aria-current', 'true')
+					}
+				},
+				{ rootMargin: '0px 0px -70% 0px' },
+			)
+			for (const section of links.keys()) observer.observe(section)
+
+			// A line break before the end tag of a view would show as an empty last line.
+			for (const pre of document.querySelectorAll('figure pre')) {
+				const last = pre.lastChild
+				if (last?.nodeType === Node.TEXT_NODE) last.data = last.data.trimEnd()
+			}
+
+			// Colors the heavy glyphs in a drawing, so the changed parts stand out from the light lines.
+			const heavy = /([━┃┏┓┗┛┣┫┳┻╋▶◀▲▼●◆■]+)/
+			for (const pre of document.querySelectorAll('pre.diagram')) {
+				const walker = document.createTreeWalker(pre, NodeFilter.SHOW_TEXT)
+				const texts = []
+				while (walker.nextNode()) texts.push(walker.currentNode)
+				for (const text of texts) {
+					const parts = text.data.split(heavy)
+					if (parts.length === 1) continue
+					const pieces = parts.map((part, index) => {
+						if (index % 2 === 0) return part
+						const span = document.createElement('span')
+						span.className = 'hot'
+						span.textContent = part
+						return span
+					})
+					text.replaceWith(...pieces)
+				}
+			}
+
+			// Colors the added and removed lines in a diff view. The view holds text only.
+			for (const pre of document.querySelectorAll('pre.diff')) {
+				const lines = pre.textContent.split('\n').map((line) => {
+					const span = document.createElement('span')
+					span.className = line.startsWith('+') ? 'line add' : line.startsWith('-') ? 'line del' : 'line'
+					span.textContent = line === '' ? ' ' : line
+					return span
+				})
+				pre.replaceChildren(...lines)
+			}
+
+			// Plays the one-shot motion of a picture when it scrolls into view, and adds a Replay
+			// button. Without this script the pictures are complete and still.
+			if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+				const play = new IntersectionObserver((entries) => {
+					for (const entry of entries) {
+						if (!entry.isIntersecting) continue
+						entry.target.classList.add('play')
+						play.unobserve(entry.target)
+					}
+				})
+				for (const figure of document.querySelectorAll('figure')) {
+					if (!figure.querySelector('.seq, .bars')) continue
+					for (const sequence of figure.querySelectorAll('.seq')) {
+						;[...sequence.children].forEach((child, index) => child.style.setProperty('--i', index))
+					}
+					play.observe(figure)
+					// A picture with its own controls needs no Replay button.
+					if (figure.querySelector('input, select, button')) continue
+					const button = document.createElement('button')
+					button.type = 'button'
+					button.className = 'replay'
+					button.textContent = 'Replay'
+					button.addEventListener('click', () => {
+						figure.classList.remove('play')
+						void figure.offsetWidth
+						figure.classList.add('play')
+					})
+					const caption = figure.querySelector('figcaption') ?? figure
+					caption.append(button)
+				}
+			}
+		</script></main></body></html>

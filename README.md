@@ -5,6 +5,21 @@ Claude Code subagent. The goal is to assess the application-specific plan it
 returns: affected code, recommended changes, and validation steps. Completing an
 upgrade is a separate capability, not the result these tests measure.
 
+## Model comparison reports
+
+The [original prompt report](tests/results/20261019-common-rubric/report.html)
+compares Sol, Astra, Sonnet and Opus across 44 runs. Accuracy counts expected
+changes located out of 23, using the same grading rules for every model. The
+graphs show individual results and labeled medians for cost and response time.
+Haiku and the Opus high run without a complete cost estimate are excluded.
+The report is self-contained HTML that can be opened in a browser.
+
+The [prompt comparison report](tests/results/20261019-native-amp/model-tradeoffs.html)
+retains the original and v21 prompt results. The completed Claude v21 Opus low
+runs are saved separately in
+[`20261019-claude-v21`](tests/results/20261019-claude-v21/opus-low/summary.json).
+The remaining Claude evaluations were stopped.
+
 ## Repository boundaries
 
 | Repository | Responsibility |

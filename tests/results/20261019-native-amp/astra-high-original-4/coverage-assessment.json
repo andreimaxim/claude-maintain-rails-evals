@@ -1,0 +1,335 @@
+{
+  "id": "astra-high-original-4",
+  "source": "tests/results/20261019-native-amp/astra-high-original-4/artifact-1.md",
+  "source_sha256": "4a0791e8db4a891e1634869cc3fb086d01d32f2873e5dedaa4d4735185e21c63",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "keyword enum definitions are removed in 8.0 ... `enum :status, { draft: 0, ready: 1 }, prefix: true`",
+        "reason": "The report never gives high, medium or low ratings. It sorts findings into 'required' and 'optional default' sections, so the level is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "positional coder removed in 7.2. **Executed trap:** `serialize :tags, coder: JSON` on 7.0 silently uses YAML",
+        "reason": "The report gives no risk level for this change, so it is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "From 7.2, `alias_attribute` cannot target a non-column store accessor: `color` lives inside `settings`",
+        "reason": "The report gives no risk level for this change, so it is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "singular association referred to as plural removed in 7.2 ... Target execution produced `notes.notebooks` undefined-column errors",
+        "reason": "The report gives no risk level for this change, so it is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`citation[:id]` no longer aliases custom primary key `doi` from 7.2. Executed: the receipt changes from `Cited,10.9999/receipt` to `Cited,`.",
+        "reason": "The report calls this a required fix but gives no level, so it is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.0 persisted nothing, while 8.1 committed **one Import, Note, Citation and RichText**. This is a data-integrity blocker",
+        "reason": "The report calls this a 'data-integrity blocker' but gives no high, medium or low level, so it is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails' nonnumeric `Enumerable#sum` override removed in 7.1. Executed target exports fail with String/Integer coercion.",
+        "reason": "The report gives no risk level for this change, so it is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "In 8.0, `HashWithIndifferentAccess#stringify_keys` actually stringifies integer keys. The preview reads integers (`row.line`), so annotations disappear.",
+        "reason": "The report gives no risk level for this change, so it is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "target with retained defaults discards that invalid TTL and can retain the fragment indefinitely ... Enabling the 7.1 `raise_on_invalid_cache_expiration_time` default instead raises",
+        "reason": "The report gives no risk level for this change, so it is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.1's `TimeWithZone#to_time` preserves the named zone ... both are exactly 86,400 seconds after the original reminder.",
+        "reason": "The report gives no risk level for this change, so it is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "from 7.2, TimeWithZone arguments preserve the producer's zone ... changed the digest subject to October 04 and selected the wrong day's window",
+        "reason": "The report gives no risk level for this change, so it is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "new payload → old raises unknown `BigDecimalSerializer`",
+        "reason": "The report gives no risk level for this change, so it is unrated, not high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "current `set(wait_until: reminder_epoch)` raises `undefined method utc for Integer` on 8.1",
+        "reason": "The report gives no risk level for this change, so it is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`retry_on wait: :exponentially_longer` removed in 7.2. Executed algorithm probe: old name succeeds on 7.0, raises on 8.1",
+        "reason": "The report gives no risk level for this change, so it is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`form_with(model: nil)` removed in 8.0. Target execution produced ... `Passed nil to the :model argument`",
+        "reason": "The report gives no risk level for this change, so it is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "route-to-multiple-paths removed in 8.1",
+        "reason": "The report gives no risk level for this change, so it is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Executed target `false` no longer supplies the expected exception-raising behavior and masked genuine request failures as error pages.",
+        "reason": "The report gives no risk level for this change, so it is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "from 7.1, `ContentHelper.allowed_tags` defaults to nil ... Current `+=` prevents boot.",
+        "reason": "The report gives no risk level for this change, so it is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Rails.application.secrets` removed in 7.2",
+        "reason": "The report gives no risk level for this change, so it is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "New 7.1 defaults set `default_column_serializer = nil`; implicit declaration then fails. Retained defaults do not.",
+        "reason": "The report lists this as an optional default without a risk level, so it is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.1 defaults raise on assignment to readonly attributes. Even resubmitting the **same** persisted slug raises (executed).",
+        "reason": "The report lists this as an optional default without a risk level, so it is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.2 default `postgresql_adapter_decode_dates=true` changes raw dates to Date objects. `Date.iso8601(day)` then raises (executed).",
+        "reason": "The report lists this as an optional default without a risk level, so it is unrated, not medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.0 defaults set `action_dispatch.strict_freshness=true`, giving If-None-Match precedence when both headers are present.",
+        "reason": "The report lists this as an optional default without a risk level, so it is unrated, not low.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json (3.1.0, or 2.21.2 when constrained)",
+        "quote": "resolving Rails 8.1.0 today introduces JSON 3.1.0 ... Resolving with `json < 3` selected 2.21.2"
+      },
+      {
+        "gem": "Resolved dependency set (Rack 2.2.24, rack-session 1.0.2, rackup 1.0.1, pg 1.6.0, Sprockets 4.4.1 / sprockets-rails 3.5.2, among others)",
+        "quote": "Rails 8.1.0 resolves with Sidekiq 6.5.12, Redis 4.8.1, Rack 2.2.24, rack-session 1.0.2, rackup 1.0.1, Puma 5.6.9, pg 1.6.0, Pagy 8.6.3, Sprockets 4.4.1 / sprockets-rails 3.5.2."
+      }
+    ],
+    "otherFindings": [],
+    "located": 23,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.2341704,
+    "duration_ms": 36531
+  }
+}

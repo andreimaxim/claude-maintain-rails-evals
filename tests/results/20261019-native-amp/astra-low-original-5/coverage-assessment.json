@@ -1,0 +1,326 @@
+{
+  "id": "astra-low-original-5",
+  "source": "tests/results/20261019-native-amp/astra-low-original-5/artifact-1.md",
+  "source_sha256": "a4216bc4fa532eb5b52adc767cbf5d2842d7ab5274d6d4d9381f198e1583937b",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note`: keyword-only enum declaration removed in 8.0 ... Change enum to `enum :status, { draft: 0, ready: 1 }, prefix: true`",
+        "reason": "The report sorts this into a 'Required compatibility changes' table but never rates it high, medium or low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "positional serializer argument removed in 7.2 ... **Do not deploy the coder-keyword replacement alone on 7.0**",
+        "reason": "It is listed as a required change without a risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note`: `alias_attribute :highlight_color, :color`, where `color` is a JSONB store accessor, not a database attribute. Unsupported from 7.2.",
+        "reason": "It is listed as a required change without a risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never mentions the `where(notebooks: notebook)` table-name predicate in NotesController.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#receipt`: `citation[:id]`; citations have primary key `doi` and no id column.",
+        "reason": "It is listed as a required change without a risk level, while the label is high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#apply`: `return false` inside a transaction after saving import/earlier notes. Rails 7.2 removes rollback-on-nonlocal-return behavior.",
+        "reason": "It is listed as a required change without a risk level, while the label is high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Export#generate`: `finish(fragments.sum)`. Rails' nonnumeric sum override removed in 7.1.",
+        "reason": "It is listed as a required change without a risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`imports/preview.html.erb`: `@import.annotations.stringify_keys` then integer lookup `annotations[row.line]`.",
+        "reason": "It is listed as a required change without a risk level, while the label is high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.1 raises on negative cache expiry; `_export.html.erb` uses `expires_at - Time.current` even after expiry. ... New Rails can log invalid TTL even without raising",
+        "reason": "It appears in the optional-defaults table with no risk level, while the label is high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note#next_day_reminder_at` uses `reminder_at.to_time + 86_400`. ... The epoch still advances by 86,400 seconds, but the preview's offset/wall-clock time can change across DST.",
+        "reason": "It is called a 'mandatory decision' but is never given a risk level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Time zones change in Rails 7.2, regardless of load_defaults.** ... The mailer uses `requested_at.to_date` and `requested_at.all_day`, while reservation keys use UTC dates.",
+        "reason": "It is described as mandatory behavior but never given a risk level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A 7.0 worker cannot resolve that serializer. New workers can consume old decimal strings.",
+        "reason": "It is described as rollout preparation but never given a risk level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note#schedule_reminder`: numeric epoch passed to `wait_until:`. Numeric scheduled_at support removed in 7.2",
+        "reason": "It is listed as a required change without a risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`CitationEnrichmentJob`: `retry_on ... wait: :exponentially_longer`. Removed in 7.2.",
+        "reason": "It is listed as a required change without a risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never mentions `form_with(model: nil)` in the notes index view.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never mentions the two-path route declaration in config/routes.rb.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/environments/test.rb`: `show_exceptions = false`. Boolean support removed in 7.2. ... On 7.1 change to `:none`",
+        "reason": "It is listed as a required change without a risk level, while the label is medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/initializers/action_text.rb`: `allowed_tags += ...`. Rails 7.1 initializes this override to nil",
+        "reason": "It is listed as a required change without a risk level, while the label is medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Citation::Provider#initialize`: `Rails.application.secrets.citation_provider`. Removed in 7.2.",
+        "reason": "It is listed as a required change without a risk level, while the label is medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.1 `default_column_serializer = nil`; `Notebook.serialize :preferences` currently stores YAML text.",
+        "reason": "It appears in the optional-defaults table with no risk level, while the label is medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.1 raises on assigning readonly attributes; `NotebooksController` permits and form resubmits `slug`.",
+        "reason": "It appears in the optional-defaults table with no risk level, while the label is medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.2 PostgreSQL date decoding; `Notebook#daily_note_counts` passes raw DATE output to `Date.iso8601`.",
+        "reason": "It appears in the optional-defaults table with no risk level, while the label is medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.0 strict HTTP freshness; `ExportDownloadsController` supplies both ETag and Last-Modified.",
+        "reason": "It appears in the optional-defaults table with no risk level.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [],
+    "otherFindings": [],
+    "located": 20,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.17347439999999997,
+    "duration_ms": 37655
+  }
+}

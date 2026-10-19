@@ -1,0 +1,346 @@
+{
+  "configuration": "opus-5.5-low",
+  "run": 1,
+  "variant": "original",
+  "source": "tests/results/20261012/opus-5.5-low/traces/rails-1.json",
+  "source_sha256": "be5ebfb3b4b4f1c823d69d4386f1b10405583ae0c0125278d0abc9b2db246570",
+  "report_sha256": "251db701e645e83ba4e3c609d1df41d14c86b932ed803ba5c15aa9d0f85c44a6",
+  "extraction": "Retain the authored planner hand-back. Remove the native prefix, two leading harness spaces per line, and trailing native agentId/usage metadata only.",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb` `enum status:, _prefix:` | The keyword form was removed, so the class won't load [X]. | `enum :status, {...}, prefix: true`.",
+        "reason": "The report gives no high/medium/low level anywhere; required changes are listed in a table without risk ratings, so the label's low is not recorded.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note` `serialize :tags, JSON` ... Passing the coder positionally was removed [X]. | `serialize :tags, coder: JSON` ... **No.** The keyword doesn't exist on 7.0; change it with the bump.",
+        "reason": "The report discusses this change but gives it no risk level (label: low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note` `alias_attribute :highlight_color, :color` | `color` is a `store_accessor`, not an attribute, so this raises [X].",
+        "reason": "The report discusses this change but gives it no risk level (label: low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`NotesController#index` `where(notebooks: @notebook)` | This becomes a nonexistent `notes.notebooks` column (`PG::UndefinedColumn`) [X]. | `where(notebook: @notebook)`.",
+        "reason": "The report discusses this change but gives it no risk level (label: low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#receipt` `citation[:id]` | The DOI primary key is no longer returned for `:id`, so the receipt's DOI column comes out **blank**",
+        "reason": "The report discusses this change but gives it no risk level (label: high).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#apply` uses `return false` inside `transaction` | 8.x **commits** on an early return. An invalid row leaves the import and the earlier notes saved",
+        "reason": "The report calls it a data-integrity bug but gives it no risk level (label: high).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Export#generate` `fragments.sum` | Rails' string `sum` is gone, so every export raises `TypeError`.",
+        "reason": "The report discusses this change but gives it no risk level (label: low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`imports/preview.html.erb` `annotations.stringify_keys` | Now really turns the integer line keys into strings, so lookups by integer return nil and annotations silently disappear",
+        "reason": "The report discusses this change but gives it no risk level (label: high).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`raise_on_invalid_cache_expiration_time` (7.1):** `exports/_export.html.erb` passes `expires_in: expires_at - Time.current`, which goes negative for expired exports. Skip caching or clamp the value.",
+        "reason": "The report lists this as an optional default without a risk level (label: high).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note#next_day_reminder_at` `.to_time + 86_400` | `to_time` now keeps the zone, so the \"24 hours later\" display changes offset across DST. The epoch the reminder is postponed to is unchanged",
+        "reason": "The report discusses this change but gives it no risk level (label: high).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`DigestMailer` uses the deserialized `requested_at` | Since 7.1 the job argument keeps the reader's zone, so the digest's day and range shift to local time [X].",
+        "reason": "The report discusses this change but gives it no risk level (label: high).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**8.1 enqueues, 7.0 runs:** 8.1 serializes the BigDecimal argument to `DigestJob` with `BigDecimalSerializer`, which 7.0 doesn't know, so 7.0 raises `DeserializationError`.",
+        "reason": "The report discusses the mixed-version failure but gives it no risk level (label: high).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note#schedule_reminder` `set(wait_until: Integer)` | 8.1 calls `scheduled_at.utc`, so scheduling a reminder raises",
+        "reason": "The report discusses this change but gives it no risk level (label: low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`CitationEnrichmentJob` `wait: :exponentially_longer` | The symbol was removed [K]. | `:polynomially_longer`",
+        "reason": "The report discusses this change but gives it no risk level (label: low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`notes/index.html.erb` `form_with(model: nil, ...)` | Raises \"Passed nil to the :model argument\" [X]. | Drop `model: nil`.",
+        "reason": "The report discusses this change but gives it no risk level (label: low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/routes.rb` `get \"/notes\", \"/journal\", ...` | Multiple paths in one call raise",
+        "reason": "The report discusses this change but gives it no risk level (label: low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/environments/test.rb` `show_exceptions = false` | On 8.1, `false` means show exceptions. 14 `assert_raises RecordNotFound` tests would fail",
+        "reason": "The report discusses this change but gives it no risk level (label: medium).",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/initializers/action_text.rb` | `allowed_tags` is now `nil` by default, so `+=` raises `NoMethodError` and the app won't boot",
+        "reason": "The report discusses this change but gives it no risk level (label: medium).",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Citation::Provider` and its test use `Rails.application.secrets` | `secrets` was removed, so every enrichment fails [X].",
+        "reason": "The report discusses this change but gives it no risk level (label: medium).",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never describes the `default_column_serializer` default; it only adds `coder: YAML` to Notebook preferences under the positional-coder removal.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`raise_on_assign_to_attr_readonly` (7.1):** `NotebooksController` permits `:slug`, so updates raise `ReadonlyAttributeError`. Stop permitting it.",
+        "reason": "The report lists this as an optional default without a risk level (label: medium).",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`postgresql_adapter_decode_dates` (7.2):** `Notebook#daily_note_counts` calls `Date.iso8601(Date)`, which raises `TypeError`.",
+        "reason": "The report lists this as an optional default without a risk level (label: medium).",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report doesn't mention `strict_freshness` or the export download conditional GET behavior.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json 3.0.2 (pinned back to 2.21.2)",
+        "quote": "It added `rackup` 1.0.1, `rack-session` 1.0.2, `action_text-trix` 2.1.19, and an unpinned `json`, which resolved to 3.0.2."
+      },
+      {
+        "gem": "rackup 1.0.1",
+        "quote": "It added `rackup` 1.0.1"
+      },
+      {
+        "gem": "rack-session 1.0.2",
+        "quote": "`rack-session` 1.0.2"
+      },
+      {
+        "gem": "action_text-trix 2.1.19",
+        "quote": "`action_text-trix` 2.1.19"
+      }
+    ],
+    "otherFindings": [],
+    "located": 21,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.1708544,
+    "duration_ms": 45202
+  }
+}

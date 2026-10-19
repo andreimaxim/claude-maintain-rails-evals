@@ -1,0 +1,335 @@
+{
+  "id": "astra-high-original-1",
+  "source": "tests/results/20261019-native-amp/astra-high-original-1/artifact-1.md",
+  "source_sha256": "262119c2f1296b8dff5a19b490f30307cefa9b2aa0efe20f5f27cfad63de0091",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Enum — S: The keyword-only declaration is removed in 8.0. Use `enum :status, { draft: 0, ready: 1 }, prefix: true`.",
+        "reason": "The report lists the change under required compatibility work but gives no high, medium or low rating.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "On 7.1 or later, use `serialize :tags, coder: JSON`. Do not apply that keyword rewrite blindly on 7.0.8.7",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`color` is a `store_accessor` backed by `settings`, not a database attribute. 7.2 removes aliases of non-attributes",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses the `where(notebooks: notebook)` table-name predicate in notes_controller.rb.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Since 7.2, `citation[:id]` no longer redirects to the table's custom primary key. Citations have `doi`, no `id` column.",
+        "reason": "The report gives no risk level, so it is not rated high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "If a later `row.note.save` returns false after earlier writes, the target transaction commits those writes even though the method reports failure.",
+        "reason": "The report calls this a data-integrity risk but gives no high, medium or low rating.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "The current string-fragment sum works with a deprecation on 7.0 and raises `TypeError` on 8.1. Replace `fragments.sum` with `fragments.join`",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "In 8.0, `HashWithIndifferentAccess#stringify_keys` starts converting integer keys too. The preview stringifies integer source-line keys and then indexes with an integer, silently hiding annotations.",
+        "reason": "The report gives no risk level, so it is not rated high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "In 8.1 with the non-raising flag, the invalid TTL is removed and the entry survives; with 7.1 defaults' `raise_on_invalid_cache_expiration_time = true`, it raises `ArgumentError`.",
+        "reason": "The report gives no risk level, so it is not rated high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 8.1 `TimeWithZone#to_time` retains the named zone ... The probe confirms the same resulting epoch (1793538000) on both versions",
+        "reason": "The report gives no risk level, so it is not rated high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 7.2 preserves a serialized TimeWithZone's named zone ... The mailer uses `to_date` and `all_day` from that argument, while reservations explicitly use UTC.",
+        "reason": "The report gives no risk level, so it is not rated high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "New target arguments contain `ActiveJob::Serializers::BigDecimalSerializer`. The 7.0 reader raises `ActiveJob::DeserializationError` on them.",
+        "reason": "The report gives no risk level, so it is not rated high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Numeric `scheduled_at` is deprecated in 7.1 and unsupported in 7.2. `set(wait_until: reminder_epoch)` reaches this path.",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Replace `wait: :exponentially_longer` with `:polynomially_longer` on 7.1 or later, before 7.2 removes the old name.",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses `form_with(model: nil)` in notes/index.html.erb.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 8.1 removes mapping one route declaration to multiple paths. Define two GET routes to `notes#index`",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "The 8.1 implementation treats values other than `:none`/`:rescuable` as rendering all exceptions, so leaving false can hide unexpected exceptions behind HTTP responses.",
+        "reason": "The report gives no risk level, so it is not rated medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Since 7.1, `ActionText::ContentHelper.allowed_tags` defaults to nil ... Executing the existing initializer against 8.1 raises on `nil + ...`",
+        "reason": "The report gives no risk level, so it is not rated medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Rails.application.secrets` is deprecated in 7.1 and removed in 7.2. Retaining 7.0 defaults cannot restore it.",
+        "reason": "The report gives no risk level, so it is not rated medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "With 7.1 defaults, `default_column_serializer` becomes nil and bare `serialize :preferences` fails. With retained 7.0 defaults the implicit YAML coder remains.",
+        "reason": "The report gives no risk level, so it is not rated medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`raise_on_assign_to_attr_readonly = true` is gated on 7.1 defaults. It raises for assigning a readonly attribute on a persisted record even if the value is unchanged.",
+        "reason": "The report gives no risk level, so it is not rated medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "With it enabled, raw `select_rows` returns a Date for `DATE(created_at)`, making `Date.iso8601(day)` fail.",
+        "reason": "The report gives no risk level, so it is not rated medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`action_dispatch.strict_freshness = true` makes `If-None-Match` take precedence over `If-Modified-Since`.",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json 3.1.0 (unconstrained); 2.21.2 with the recommended json < 3 constraint",
+        "quote": "The unconstrained resolution installs JSON 3.1.0."
+      },
+      {
+        "gem": "action_text-trix 2.1.19",
+        "quote": "Rails 8.1 supplies Trix through `action_text-trix ~> 2.1.15` (resolved 2.1.19)"
+      }
+    ],
+    "otherFindings": [],
+    "located": 21,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.2262504,
+    "duration_ms": 28346
+  }
+}

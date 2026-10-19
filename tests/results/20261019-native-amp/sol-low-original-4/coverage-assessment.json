@@ -1,0 +1,326 @@
+{
+  "id": "sol-low-original-4",
+  "source": "tests/results/20261019-native-amp/sol-low-original-4/artifact-1.md",
+  "source_sha256": "65b358853fa5d0e2f7b7d0b7a3e4fe0e8c5d1a22237e7f4fc9e50655f96b6586",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb`: keyword-style enum ... Use `enum :status, { draft: 0, ready: 1 }, prefix: true`",
+        "reason": "The report has no high/medium/low levels; it puts this under 'Required changes' without a risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`coder: JSON`: **not** a safe 7.0 preparation—7.0's implementation chooses the positional argument and would keep YAML coding",
+        "reason": "Listed under 'Required changes' without a risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`color` is a store accessor inside jsonb `settings`, not a database column ... replace `highlight_color` getter/setter with explicit forwarding",
+        "reason": "Listed under 'Required changes' without a risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses `where(notebooks: notebook)` in the notes controller.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#receipt` reads `citation[:id]`; schema uses `citations.doi` as the primary key ... CSV DOI cells would no longer contain the DOI",
+        "reason": "Discussed without a risk level, but the label is high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#apply` (`app/models/import.rb`) does `return false unless row.note.save` inside `transaction` ... In 7.2+ it commits",
+        "reason": "Discussed without a risk level, but the label is high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Export#generate` calls `finish(fragments.sum)` ... Ruby's default numeric identity makes String aggregation fail.",
+        "reason": "Listed under 'Required changes' without a risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/views/imports/preview.html.erb` calls `stringify_keys` then looks up `annotations[row.line]` using that integer.",
+        "reason": "Discussed without a risk level, but the label is high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report mentions export cache fragments only in terms of cache format and never discusses negative `expires_in` or the invalid-expiration raise gate.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.1 `TimeWithZone#to_time` always retains the named zone ... The persisted +24 elapsed-hour instant stays the same",
+        "reason": "Discussed without a risk level, but the label is high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.1 emits `time_zone` and restores it. New jobs can select the reader's local day while still reserving the UTC day.",
+        "reason": "Discussed without a risk level, but the label is high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.1 writes a tagged `ActiveJob::Serializers::BigDecimalSerializer` object ... Old consumers must not receive unknown serializers",
+        "reason": "Discussed as a mixed-version risk without a risk level, but the label is high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Numeric `wait_until:` is used here ... do not label it a confirmed removal without testing the actual set(wait_until:) path.",
+        "reason": "The report mentions numeric `wait_until:` in the Note reminder code but treats the removal as unconfirmed and gives no level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/jobs/citation_enrichment_job.rb` uses `wait: :exponentially_longer` ... Use `:polynomially_longer` on 7.1+",
+        "reason": "Listed under 'Required changes' without a risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses `form_with(model: nil)` in the notes index.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses the multi-path route declaration in `config/routes.rb`.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/environments/test.rb`: `show_exceptions = false`. ... Set `:none` on 7.1+ to continue raising",
+        "reason": "Listed under 'Required changes' without a risk level.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.1's getter defaults to nil ... The existing initializer would call `nil + Array` and fail initialization.",
+        "reason": "Listed under 'Required changes' without a risk level.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/citation/provider.rb` reads `Rails.application.secrets.citation_provider` ... Both APIs are removed in 7.2.",
+        "reason": "Listed under 'Required changes' without a risk level.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Notebook` has bare `serialize :preferences`. Works with retained 7.0 defaults, but >=7.1 defaults set `default_column_serializer = nil`",
+        "reason": "Listed under optional default adoption without a risk level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "named",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": ">=7.1 defaults raise on assignment to readonly attributes. Notebook settings permit and resubmit `slug`",
+        "reason": "The report describes the read-only slug issue but doesn't name the affected controller or form file, and it gives no risk level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Notebook#daily_note_counts` then receives Date objects where it currently calls `Date.iso8601(day)` on text.",
+        "reason": "Listed under optional default adoption without a risk level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": ">=8.0 defaults use strict freshness, affecting `ExportDownloadsController#show` when ETag and Last-Modified validators disagree.",
+        "reason": "Listed under optional default adoption without a risk level.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [],
+    "otherFindings": [],
+    "located": 18,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.26005999999999996,
+    "duration_ms": 35377
+  }
+}

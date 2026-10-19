@@ -1,0 +1,350 @@
+{
+  "configuration": "opus-5.5-low",
+  "run": 3,
+  "variant": "original",
+  "source": "tests/results/20261012/opus-5.5-low/traces/rails-3.json",
+  "source_sha256": "8901a5f0417cf1900a16b0731ed88cbc0c4f8ef404d9dec4d2f54a2268a7a08e",
+  "report_sha256": "10f7f112520549ed578a26ad6e6c3941b1bebd7bb3d43ddc51b9f371b965d6dd",
+  "extraction": "Retain the authored planner hand-back. Remove the native prefix, two leading harness spaces per line, and trailing native agentId/usage metadata only.",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`enum status: {...}, _prefix: true` is removed syntax. Where: `app/models/note.rb:10`.",
+        "reason": "The report doesn't rate anything high, medium or low; it groups this under 'Required changes', where the label expects low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`serialize :tags, JSON` must become `serialize :tags, coder: JSON`. Where: `note.rb:12`. Works on 7.0: no. Rails 7.0 does not accept `coder:`, so ship this with the bump.",
+        "reason": "The report doesn't rate anything high, medium or low, where the label expects low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "named",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`alias_attribute :highlight_color, :color` now raises, because `color` is a store accessor, not an attribute.",
+        "reason": "This entry names no file, and the report gives no level where the label expects low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`where(notebooks: @notebook)` now reads `notebooks` as a column, which fails with `PG::UndefinedColumn`. Where: `app/controllers/notes_controller.rb:18`.",
+        "reason": "The report gives no level where the label expects low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#receipt` uses `citation[:id]`, which is nil on 8.1 because the primary key is `doi`. Use `citation&.doi`.",
+        "reason": "The report gives no level where the label expects high; it only lists this under changes that would raise no error.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "named",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`return false` inside `transaction` rolls back on 7.0 but commits on 7.1 and later, so a failed import keeps its saved rows.",
+        "reason": "The entry names no file or class for the transaction code, and gives no level where the label expects high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`fragments.sum` on strings raises `TypeError`... Where: `app/models/export.rb:42`. Change: `fragments.join`.",
+        "reason": "The report gives no level where the label expects low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`@import.annotations.stringify_keys` in `app/views/imports/preview.html.erb` now really turns the keys into strings, so lookups by integer line return nothing.",
+        "reason": "The report gives no level where the label expects high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report doesn't discuss the negative cache expires_in or raise_on_invalid_cache_expiration_time.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "named",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`to_time` now keeps the zone, so `next_day_reminder_at` displays across a DST change differently than the test expects. The stored epoch is not affected.",
+        "reason": "The entry gives only a method name, with no file or class, and no level where the label expects high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "The Time-with-zone job serializer now keeps the reader's zone, so `DigestMailer` would use the reader's local day instead of the UTC day documented in the view hint and in `User`.",
+        "reason": "The report gives no level where the label expects high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`DigestJob`, which passes `reading_completion`, would fail on any 7.0 worker after a rollback or during a mixed deploy.",
+        "reason": "The report gives no level where the label expects high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`set(wait_until: Integer)` raises `NoMethodError utc`. Where: `note.rb:61`. Change: `set(wait_until: Time.at(reminder_epoch))`.",
+        "reason": "The report gives no level where the label expects low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`retry_on wait: :exponentially_longer` was removed. Where: `app/jobs/citation_enrichment_job.rb:7`.",
+        "reason": "The report gives no level where the label expects low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`form_with(model: nil, ...)` now raises. Where: `app/views/notes/index.html.erb:12`.",
+        "reason": "The report gives no level where the label expects low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Multi-path `get \"/notes\", \"/journal\", to:` is no longer supported. Where: `config/routes.rb:18`.",
+        "reason": "The report gives no level where the label expects low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config.action_dispatch.show_exceptions = false` must become `:none`. Where: `config/environments/test.rb`. Why: on 8.1, `false` renders 500 pages instead of raising",
+        "reason": "The report gives no level where the label expects medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`ActionText::ContentHelper.allowed_tags` is nil in 8.1, so boot fails. Where: `config/initializers/action_text.rb`.",
+        "reason": "The report gives no level where the label expects medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Rails.application.secrets` was removed. Where: `app/models/citation/provider.rb:13`, `config/secrets.yml`",
+        "reason": "The report gives no level where the label expects medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report doesn't discuss default_column_serializer.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report doesn't discuss raise_on_assign_to_attr_readonly or the notebook slug.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report doesn't discuss postgresql_adapter_decode_dates.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report doesn't discuss strict_freshness.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json",
+        "quote": "Added: action_text-trix 2.1.19, **json 3.0.2**, bigdecimal 4.1.3, rackup, rack-session, and others. ... add `gem \"json\", \"< 3\"`, which resolved to 2.21.2."
+      },
+      {
+        "gem": "action_text-trix",
+        "quote": "Added: action_text-trix 2.1.19"
+      },
+      {
+        "gem": "bigdecimal",
+        "quote": "bigdecimal 4.1.3"
+      },
+      {
+        "gem": "rackup",
+        "quote": "rackup, rack-session, and others"
+      },
+      {
+        "gem": "rack-session",
+        "quote": "rackup, rack-session, and others"
+      }
+    ],
+    "otherFindings": [],
+    "located": 15,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.1632384,
+    "duration_ms": 46005
+  }
+}

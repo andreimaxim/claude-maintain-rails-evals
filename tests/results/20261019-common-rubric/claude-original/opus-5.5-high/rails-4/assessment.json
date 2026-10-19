@@ -1,0 +1,342 @@
+{
+  "configuration": "opus-5.5-high",
+  "run": 4,
+  "variant": "original",
+  "source": "tests/results/20261012/opus-5.5-high/traces/rails-4.json",
+  "source_sha256": "c36fab863fe3a374b699468baccd87db8a19ae9c79022a29bcc06f7e2cbc5ad2",
+  "report_sha256": "618568e9446b6efb309ffeaf1ddc32a33e9a244af2e61e67ad96882519cbc7e4",
+  "extraction": "Retain the authored planner hand-back. Remove the native prefix, two leading harness spaces per line, and trailing native agentId/usage metadata only.",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:10` (`enum status: …, _prefix: true`) | 8.0: `ArgumentError` when the class loads.",
+        "reason": "The report has no high, medium or low ratings and lists this under required changes without a level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:12` (`serialize :tags, JSON`) | 7.2: `ArgumentError (given 2, expected 1)` when the class loads. | Use `serialize :tags, coder: JSON` in the 7.1 step. | **No.** [S] 7.0 passes `coder:` on as an option and keeps a YAML coder",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:14` (`alias_attribute :highlight_color, :color`, where `color` is a store accessor) | 7.1 warns \"Starting in Rails 7.2, alias_attribute with non-attribute targets will raise\".",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses the `where(notebooks: notebook)` table-name predicate in notes_controller.rb.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/import.rb` `#receipt` (`citation[:id]`) | ... on 7.2+ `[:id]` reads a missing `id` column, so the receipt CSV's DOI column comes out empty.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/import.rb` `#apply` (`return false` inside `transaction`) | 7.0 rolls back silently. 7.1 warns. 7.2+ (and 7.1 with 7.1 defaults) commits instead, which saves a partial import.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/export.rb:42` (`fragments.sum`) | 7.1 removes Active Support's `sum` for strings: `TypeError: String can't be coerced into Integer`. | Use `fragments.join`.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/views/imports/preview.html.erb` (`@import.annotations.stringify_keys`) | In 8.0 `HashWithIndifferentAccess#stringify_keys` now turns the integer line keys into strings, so annotations silently disappear from the preview.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/views/exports/_export.html.erb` passes a negative `expires_in` for expired exports, which is a 500 on the exports page. ... Even without the flag, 7.1+ drops a negative `expires_in` (the entry never expires) and logs an error each time.",
+        "reason": "The report lists this as optional default D2 with no risk level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb` `#next_day_reminder_at` (`reminder_at.to_time + 86_400`) | 8.0 warns; in 8.1 `to_time` always keeps the zone, so the preview shows the zone-adjusted wall clock instead of the fixed offset. The stored epoch does not change.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/mailers/digest_mailer.rb` | From 7.1 Active Job deserializes a time-with-zone **in its original zone**, so the digest covers the reader's local day instead of the UTC day.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**M1, BigDecimal job argument** (`User#request_digest` passes `reading_completion`): this is what failed in scenario C.",
+        "reason": "The report calls it a mixed-version risk but gives no high, medium or low level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb` `#schedule_reminder` (`set(wait_until: reminder_epoch)`, an Integer) | 7.1 warns. 8.1 serializes `scheduled_at.utc.iso8601` and Integer has no `utc`. | `set(wait_until: Time.at(reminder_epoch))`",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/jobs/citation_enrichment_job.rb` (`wait: :exponentially_longer`) | 7.1 warns; 7.2 removes the symbol, so the job only fails at retry time and falls through to Sidekiq's own retries.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/views/notes/index.html.erb:12` (`form_with(model: nil, …)`) | 8.0 raises \"Passed nil to the :model argument\". | Drop `model: nil`.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/routes.rb` (`get \"/notes\", \"/journal\", …`) | 8.0 warns; 8.1 raises \"Wrong number of arguments\" when the routes load. | Two `get` calls.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/environments/test.rb` (`show_exceptions = false`) | 7.1 warns; on 7.2+ `false` means `:all`, so every `assert_raises(RecordNotFound)` test fails.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/initializers/action_text.rb` | From 7.1 `ActionText::ContentHelper.allowed_tags` defaults to nil, so `+=` raises NoMethodError and the app does not boot.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/citation/provider.rb`, `config/secrets.yml`, ... (`Rails.application.secrets`) | Deprecated in 7.1 (26 warnings), removed in 7.2.",
+        "reason": "The report gives no risk level for this change.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "named",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "D3 | `default_column_serializer = nil` (7.1) | `serialize :preferences` without a coder raises.",
+        "reason": "The report doesn't name the affected file (app/models/notebook.rb) and gives no risk level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "D1 | `raise_on_assign_to_attr_readonly` (7.1) | `NotebooksController#update` raises `ReadonlyAttributeError: slug`, because the form posts the slug back. | [E] Stop permitting `:slug` in `app/controllers/notebooks_controller.rb`",
+        "reason": "The report lists this as an optional default with no risk level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "D4 | `postgresql_adapter_decode_dates` (7.2) | `Notebook#daily_note_counts` would call `Date.iso8601(Date)`.",
+        "reason": "The report lists this as an optional default with no risk level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "named",
+        "level": "not_relevant",
+        "accuracy": "accurate",
+        "quote": "D9 | Others: HTML5 sanitizer, `dom_testing` html5, default headers, `strict_freshness`, ... | No breakage seen.",
+        "reason": "The report lists strict_freshness only among defaults with no breakage seen, without tying it to export_downloads_controller.rb or describing the 304 change, which in effect treats it as not affecting the app.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json 3.0.2 (resolved; pin to < 3 / 2.21.2 for 8.1.0)",
+        "quote": "The `json` 3.0.2 gem that Bundler resolves rejects that, so every signed-in request fails decoding the session cookie ... Fix by adding `gem \"json\", \"< 3\"` (tested with 2.21.2)"
+      },
+      {
+        "gem": "rackup 1.0.1",
+        "quote": "u71 | 7.1.6 | stdlib 2.7.2 | rackup 1.0.1 added"
+      },
+      {
+        "gem": "action_text-trix 2.1.19",
+        "quote": "u81 / w81 ... | 8.1.0 | 2.21.2 (pinned `< 3`) | action_text-trix 2.1.19"
+      }
+    ],
+    "otherFindings": [],
+    "located": 20,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.19963039999999999,
+    "duration_ms": 42147
+  }
+}

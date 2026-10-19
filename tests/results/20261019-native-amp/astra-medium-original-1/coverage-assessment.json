@@ -1,0 +1,343 @@
+{
+  "id": "astra-medium-original-1",
+  "source": "tests/results/20261019-native-amp/astra-medium-original-1/artifact-1.md",
+  "source_sha256": "0c0587cec70a5e7c28728901bd936e36ed820418928b12894f7d47aa5be65fba",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 8.0 removes keyword enum definitions. Change to **`enum :status, { draft: 0, ready: 1 }, prefix: true`**.",
+        "reason": "The report gives no high/medium/low levels; it only splits changes into required and optional-default sections, so this item is unrated against a Low label.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "the second positional `serialize` argument is removed in Rails 7.2. On **Rails 7.1 or later**, use `serialize :tags, coder: JSON`. **Do not deploy that spelling on 7.0:** an executed type-serialization probe wrote `---\\n- one\\n- two\\n` (YAML)",
+        "reason": "The report gives no risk level (label: Low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 7.2 rejects `alias_attribute :highlight_color, :color` because `color` is a store accessor, not a database attribute.",
+        "reason": "The report gives no risk level (label: Low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 7.2 removes plural references to singular associations: `where(notebooks: @notebook)` becomes **`where(notebook: @notebook)`**",
+        "reason": "The report gives no risk level (label: Low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 7.2 stops treating `read_attribute(:id)`/`record[:id]` as a custom primary-key accessor. `citations` has primary key `doi`, no `id` column. The target probe emitted `Receipt,` instead of the DOI.",
+        "reason": "The report gives no risk level (label: High).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`return false` exits the transaction nonlocally. Rails 7.0 rolls that work back; Rails 7.2 removed that behavior",
+        "reason": "The report gives no risk level (label: High).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 7.1 removes Active Support's nonnumeric zero-argument `sum` behavior. Replace **`fragments.sum` with `fragments.join`**.",
+        "reason": "The report gives no risk level (label: Low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 8.0's `HashWithIndifferentAccess#stringify_keys` now converts integer keys too. The preview stringifies line keys then reads them using `row.line` integers, losing all annotations.",
+        "reason": "The report gives no risk level (label: High).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "On target with old defaults, a negative-expiry probe discarded the invalid expiry and retained the cache value; with 7.1 defaults it raised `ArgumentError`.",
+        "reason": "The report gives no risk level (label: High).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 8.1 makes `TimeWithZone#to_time` retain the actual zone. Across the fall DST change, `to_time + 86_400` now displays **08:00 −05:00**, rather than the documented old **09:00 −04:00**, for the same instant.",
+        "reason": "The report gives no risk level (label: High).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 7.2 preserves the serialized `TimeWithZone` zone. Reservation keys are UTC dates, but the mailer calls `requested_at.to_date` and `all_day`.",
+        "reason": "The report gives no risk level (label: High).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "The existing `BigDecimal(params[:completion])` consumer accepts the tested string and BigDecimal... However, **7.0 workers cannot deserialize newly typed payloads at all**.",
+        "reason": "The report gives no risk level (label: High).",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 7.2 removes numeric `scheduled_at` support. Pass **`Time.at(reminder_epoch)`** to `set(wait_until:)`",
+        "reason": "The report gives no risk level (label: Low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`wait: :exponentially_longer` is removed in 7.2. Rename it to **`:polynomially_longer` on Rails 7.1**",
+        "reason": "The report gives no risk level (label: Low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 8.0 rejects explicit `form_with(model: nil, ...)`. **Omit `model:`** for this unbound GET form",
+        "reason": "The report gives no risk level (label: Low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 8.1 removes the two-path routing shorthand. Split into **`get \"/notes\", to: \"notes#index\"`** and **`get \"/journal\", to: \"notes#index\"`**",
+        "reason": "The report gives no risk level (label: Low).",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Rails 7.2 removes boolean `show_exceptions`. Set **`:none` on Rails 7.1+** to preserve exception propagation.",
+        "reason": "The report gives no risk level (label: Medium).",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "From Rails 7.1, `ContentHelper.allowed_tags` defaults to nil; the effective defaults are computed at render time. The current `+=` crashes boot even with 7.0 defaults.",
+        "reason": "The report gives no risk level (label: Medium).",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Rails.application.secrets` is removed in 7.2. Move provider settings to an ordinary environment-backed `config_for` file and expose them through `config.x.citation_provider`",
+        "reason": "The report gives no risk level (label: Medium).",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`serialize :preferences` still works with retained 7.0 defaults on Rails 8.1, but 7.1 defaults set `default_column_serializer = nil`. Before enabling those defaults, explicitly use `serialize :preferences, coder: YAML` on 7.1+.",
+        "reason": "The report gives no risk level (label: Medium).",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**7.1 readonly assignment raising**; Notebook `attr_readonly :slug`, notebook settings controller/form | The form resubmits the unchanged slug and the controller permits it. New enforcement raises even when assigning the same value.",
+        "reason": "The report gives no risk level (label: Medium).",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**7.2 PostgreSQL date decoding**; Notebook#daily_note_counts | With new defaults, `select_rows` returns a Date, and `Date.iso8601(day)` raises.",
+        "reason": "The report gives no risk level (label: Medium).",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**8.0 strict HTTP freshness**; ExportDownloadsController#show | ... With `strict_freshness=true`, If-None-Match takes precedence; previously both conditions had to match.",
+        "reason": "The report gives no risk level (label: Low).",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json (3.1.0 unconstrained; 2.21.2 with the recommended ~> 2.0 constraint)",
+        "quote": "The unconstrained new dependency **json 3.1.0 is incompatible with Rails 8.1.0's positional-options `JSON.parse` call**... Constraining json to `~> 2.0` resolved **2.21.2**"
+      },
+      {
+        "gem": "bigdecimal 4.1.3",
+        "quote": "Bigdecimal resolved to 4.1.3"
+      },
+      {
+        "gem": "action_text-trix 2.1.19",
+        "quote": "action_text-trix to 2.1.19"
+      },
+      {
+        "gem": "rack-session 1.0.2, rackup 1.0.1 (and Rack 2.2.24, Puma 5.6.9, redis 4.8.1, pg 1.6.0 listed as resolved versions)",
+        "quote": "succeeded with Rails 8.1.0, **Rack 2.2.24, rack-session 1.0.2, rackup 1.0.1, Puma 5.6.9, Sidekiq 6.5.12, redis 4.8.1, pg 1.6.0**"
+      }
+    ],
+    "otherFindings": [],
+    "located": 23,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.2440384,
+    "duration_ms": 40671
+  }
+}

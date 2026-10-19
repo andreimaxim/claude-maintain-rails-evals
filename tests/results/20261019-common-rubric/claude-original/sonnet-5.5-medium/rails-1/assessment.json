@@ -1,0 +1,350 @@
+{
+  "configuration": "sonnet-5.5-medium",
+  "run": 1,
+  "variant": "original",
+  "source": "tests/results/20261012/sonnet-5.5-medium/traces/rails-1.json",
+  "source_sha256": "0d2baf3bc3d8ab6d89ef1fd766766cc5d116e94f9f956fe68bd9eddd611875ac",
+  "report_sha256": "ee7b5493f2e2a149339d422abfda726d0978a9ef3ded60450e40029da44e67d5",
+  "extraction": "Retain the authored planner hand-back. Remove the native prefix, two leading harness spaces per line, and trailing native agentId/usage metadata only.",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "F4. `enum status: {...}, _prefix: true` in `Note` fails at class load.",
+        "reason": "The report has no high/medium/low ratings. It groups this under 'Required changes' without a level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "named",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "F5. `serialize :tags, JSON` no longer accepts a positional coder.",
+        "reason": "The entry names no model or file, and the report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`alias_attribute :highlight_color, :color` raises. Affected code: `Note`, where `color` is a `store_accessor` key and not a column.",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`@notes.where(notebooks: @notebook)` in `NotesController#index`... generates SQL against `notes.notebooks`, which does not exist",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`citation[:id]` in `Import#receipt`... On 8.1 `[:id]` returns nil, so the receipt CSV has blank DOIs.",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#apply` returns from inside `transaction do`... On 8.1 a non-local `return` commits the transaction.",
+        "reason": "The report gives no risk level. It only calls this 'the one data-integrity regression'.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`fragments.sum` of Strings in `Export#finish`... `TypeError: String can't be coerced into Integer`",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Affected code: `app/views/imports/preview.html.erb`... On 8.1 they become Strings, so `annotations[row.line]` returns nil",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "named",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`cache ..., expires_in: export.expires_at - Time.current` raises on a negative expiry for expired exports.",
+        "reason": "The report doesn't name the exports view file. It lists this only under optional default adoption, without a level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`to_time` behaviour change in `Note#next_day_reminder_at`... The scheduled instant is identical.",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.1 adds a `time_zone` key to the serialized `TimeWithZone`... `requested_at = requested_at.utc` at the top of `DigestMailer#daily_digest`",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "7.0 workers cannot read the new form... This hits rollback and any mixed fleet where old workers take new jobs.",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "named",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`NoteReminderJob.set(wait_until: reminder_epoch)` passes an Integer.",
+        "reason": "The report doesn't name the file or method that makes the call, and gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`retry_on ... wait: :exponentially_longer` in `CitationEnrichmentJob`... (`Couldn't determine a delay`)",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`form_with(model: nil, ...)` in `app/views/notes/index.html.erb`... returns 500",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "named",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`get \"/notes\", \"/journal\", to: \"notes#index\"` raises at route load.",
+        "reason": "The report doesn't name config/routes.rb, and gives no risk level.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config.action_dispatch.show_exceptions = false` in `config/environments/test.rb`... on 8.1 `false` no longer means \"raise\".",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/initializers/action_text.rb` crashes boot... `NoMethodError: undefined method '+' for nil`",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Rails.application.secrets` was removed. Affected code: `app/models/citation/provider.rb`, `config/secrets.yml`",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`serialize :preferences` then needs `coder: YAML`.",
+        "reason": "The report lists this under optional default adoption without a level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Notebook#update` with `slug` raises `ReadonlyAttributeError` instead of ignoring it. The settings form resubmits `slug`.",
+        "reason": "The report lists this under optional default adoption without a level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "with the 8.1 defaults, `select_rows` returns `Date` objects, so `Date.iso8601(day)` in `Notebook#daily_note_counts` raises. This passes under 7.0 defaults.",
+        "reason": "The report gives no risk level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses strict_freshness or conditional GET behavior.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json 3.0.2 (resolver pulls it in; report pins json ~> 2.21, resolving to 2.21.2)",
+        "quote": "The resolver also pulls in `json 3.0.2`, which breaks Rails 8.1.0."
+      },
+      {
+        "gem": "action_text-trix 2.1.19",
+        "quote": "with new action_text-trix 2.1.19, rack-session 1.0.2, rackup 1.0.1 and bigdecimal 4.1.3."
+      },
+      {
+        "gem": "rack-session 1.0.2",
+        "quote": "with new action_text-trix 2.1.19, rack-session 1.0.2, rackup 1.0.1 and bigdecimal 4.1.3."
+      },
+      {
+        "gem": "rackup 1.0.1",
+        "quote": "with new action_text-trix 2.1.19, rack-session 1.0.2, rackup 1.0.1 and bigdecimal 4.1.3."
+      },
+      {
+        "gem": "bigdecimal 4.1.3",
+        "quote": "with new action_text-trix 2.1.19, rack-session 1.0.2, rackup 1.0.1 and bigdecimal 4.1.3."
+      }
+    ],
+    "otherFindings": [],
+    "located": 18,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.1566864,
+    "duration_ms": 38673
+  }
+}

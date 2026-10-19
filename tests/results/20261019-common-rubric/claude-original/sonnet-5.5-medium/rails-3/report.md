@@ -1,0 +1,120 @@
+# Rails 7.0.8.7 → 8.1.0 upgrade plan for Margin Notes
+
+This is the planner's report, reproduced in full. My commentary follows it.
+
+## Summary
+
+- **Result:** a direct bump does not boot, and 28 of 46 tests failed on the first run. With the changes below, the suite passes on 8.1.0 (46 runs, 340 assertions), including with `CI=1` eager loading. `bin/rails zeitwerk:check` also passes.
+- **Silent changes:** three behaviors change without raising an error and are only partly covered by tests.
+  - A rejected CSV import now commits partial data (finding 6).
+  - The import receipt's DOI column goes blank (finding 7).
+  - Digest and reminder dates change (findings 8 and 9).
+- **Rollout risk:** jobs queued by 8.1 can fail on 7.0 workers, so a rollback strands them (finding 8).
+- **Preparatory changes:** most fixes also work on 7.0.8.7 and can ship before the bump (table below).
+- **Not used:** `maintain-rails:gem-upgrade-planner` was not run, because no sub-agent tool was available to it. It did the analysis directly. `/home/user/workspace/repo` was not modified (`git status` is clean).
+
+## Experiment record
+
+Everything ran in disposable copies under `/tmp/upg`.
+
+- **Isolation:**
+  - Copies: `base` (unchanged 7.0.8.7), `up` (gem bump plus incremental fixes), `prep` (7.0.8.7 plus preparatory fixes), `final` (prep plus 8.1.0).
+  - Databases: separate Postgres databases `mn_upg_*`, dropped afterward.
+  - Redis: its own instance on port 6391, stopped afterward.
+  - Storage: each copy's own `storage/` and `tmp/storage`.
+- **Baseline:** `base` ran 46 tests, 325 assertions, 0 failures.
+- **Resolution after `bundle update rails`:**
+  - Rails 8.1.0.
+  - New gems: `action_text-trix` 2.1.19, `rack-session`, `rackup`, `useragent`, `drb`, `bigdecimal` 4.1.3.
+  - Unchanged: rack 2.2.24, puma 5.6.9, sidekiq 6.5.12, redis 4.8.1, minitest 5.27.0, sprockets 4.4.1, pagy 8.6.3, faraday 1.10.4.
+  - Resolved to `json` 3.0.2. I pinned it below 3 (finding 2), which resolved to 2.21.2.
+- **Logs and diffs** (the `up-test*` logs are the iterative runs):
+  - Test logs: `/tmp/upg/up-test1.log` through `/tmp/upg/up-test8.log`, and `/tmp/upg/final-test.log`.
+  - Diffs: `/tmp/upg/prep-vs-repo.diff` (preparatory changes against the repo) and `/tmp/upg/final-vs-prep.diff` (8.1-only changes).
+  - Probe scripts: `/tmp/upg/{enq,enq2,run,tx2,tt,wr,rd,ck_get,ck_use}.rb`.
+- **Interactive check:** I ran the dev server on 8.1.0 with puma 5.6.9 and rack 2.2.24 and used agent-browser. Sign-in and the note edit page loaded, and the Trix 1.3.5 editor initialized with its toolbar and the existing attachment. A save via `form.requestSubmit()` persisted. Clicking the "Update Note" button through agent-browser did not submit the form. I did not determine whether that was an automation quirk or a real problem.
+- **Experiment settings:** `MISE_TRUSTED_CONFIG_PATHS=/tmp/upg` and `REDIS_URL=redis://localhost:6391/N`. The shared-database experiments used `DATABASE_URL=postgresql:///mn_upg_shared`.
+
+## Required changes
+
+Each finding is tagged:
+- **[exp]** confirmed by an executed experiment
+- **[src]** confirmed from gem source only
+
+"Also works on 7.0" is based on running the full suite on `prep`.
+
+| # | Finding | Affected code | Fix | Also works on 7.0? | Validation |
+|---|---|---|---|---|---|
+| 1 [exp] | `ActionText::ContentHelper.allowed_tags` is now `nil` by default, so `+=` raises `NoMethodError` at boot. | `config/initializers/action_text.rb` | Assign the full list, falling back to `sanitizer.class.allowed_tags + [ActionText::Attachment.tag_name, "figure", "figcaption"]`, then add `details`/`summary`. Written in `/tmp/upg/prep`. | Yes | Boot; the test "rich text keeps collapsible excerpts and drops unsafe markup". |
+| 2 [exp] | Rails 8.1.0 calls `JSON.parse(json, options)` with a positional hash. json 3.0.x rejects that ("given 2, expected 1"), which breaks Active Storage metadata and `serialize`. | `Gemfile` | Add `gem "json", "< 3"`. Alternatively, use a later 8.1.x patch (not tested). | Not needed on 7.0 | `bundle exec ruby -e 'p JSON::VERSION'` is 2.x; `NoteTest` attachment test. |
+| 3 [exp] | Positional `serialize :tags, JSON` was removed. | `app/models/note.rb` | `serialize :tags, coder: JSON`. | No. `coder:` needs 7.1 or later, so this must land with the bump. | `/tmp/upg/wr.rb` and `/tmp/upg/rd.rb`: the same raw `["a","b"]` text reads back in both versions. |
+| 4 [exp] | `enum status: {...}, _prefix: true` was removed. | `app/models/note.rb` (`Citation` and `Export` already use the new form) | `enum :status, { draft: 0, ready: 1 }, prefix: true`. | Yes, but it can be done with the bump. | Model tests; `status_ready` scope. |
+| 5 [exp] | `alias_attribute :highlight_color, :color` now raises, because `color` is a store accessor, not a column. | `app/models/note.rb`; used by `NotesController` params and the views | Define `highlight_color` and `highlight_color=` delegating to `color`. Do **not** use `store_accessor :settings, :highlight_color`, which would change the stored key. | Yes | The stored `settings` JSON stays `{"color":"green"}` in both versions. |
+| 6 [exp] | `return` inside a `transaction` block now **commits**. `Import#apply` returns from inside the block when a row is invalid. | `app/models/import.rb` | `saved = rows.all? { |r| r.note.save }`, then `raise ActiveRecord::Rollback unless saved`, and return `saved`. | Yes | `/tmp/upg/tx2.rb` against a CSV with one valid row and one blank title. |
+| 7 [exp] | `citation[:id]` no longer resolves to the custom primary key `doi`, so the receipt CSV's DOI column goes blank. | `Import#receipt` | Use `citation&.doi`. | Yes | `ImportsControllerTest` receipt assertion. |
+| 8 [exp] | Active Job serialization changed (see the paragraph after the table). | `User#request_digest`, `DigestJob`, `DigestMailer` | Pass `reading_completion.to_s` from `request_digest`. In `DigestMailer#daily_digest`, call `.utc` on `requested_at` to keep the UTC-day behavior. The mailer already calls `BigDecimal(params[:completion])`. | Yes | `/tmp/upg/enq2.rb` and `/tmp/upg/run.rb` in both directions. |
+| 9 [exp] | `TimeWithZone#to_time` now returns a zone-aware time, so `next_day_reminder_at` shows `2026-11-01T08:00:00-05:00` instead of `09:00-04:00`. | `Note#next_day_reminder_at`, `notes/_reminder.html.erb`, the reminder test | To keep the documented fixed-offset display: `Time.at(reminder_epoch + 86_400, in: reminder_at.utc_offset)`. The scheduled instant is identical either way. | Yes | `RemindersControllerTest` first test. |
+| 10 [exp] | `retry_on ..., wait: :exponentially_longer` was removed. It raised "Couldn't determine a delay". | `app/jobs/citation_enrichment_job.rb` | `:polynomially_longer`, which uses the same formula. | **No.** It does not exist in 7.0, so it must land with the bump. | Citation enrichment failure test. |
+| 11 [exp] | `NoteReminderJob.set(wait_until: <Integer>)` raises `undefined method 'utc' for Integer`. | `Note#schedule_reminder` | `wait_until: Time.at(reminder_epoch)`. | Yes | Reminder tests; `/tmp/upg/enq.rb` schedules one under Sidekiq. |
+| 12 [exp] | `get "/notes", "/journal", to:` raises, because multiple paths are no longer accepted. | `config/routes.rb` | Two separate `get` lines. | Yes | `bin/rails routes` is identical except dev-only mailbox conductor routes (diff in `/tmp/upg/routes-*.txt`). |
+| 13 [exp] | `form_with(model: nil, url: ...)` raises "Passed nil to the :model argument". | `app/views/notes/index.html.erb` | Drop `model: nil`. | Yes | Any notes index request test. |
+| 14 [exp] | `where(notebooks: @notebook)` now generates `notes.notebooks`. The old singularize fallback is gone. | `NotesController#index`, notebook filter | `where(notebook: @notebook)`. | Yes | Test "filters by notebook, status, and title". |
+| 15 [exp] | `@import.annotations.stringify_keys` now converts the Integer line keys to Strings, so `annotations[row.line]` returns `nil` and the preview drops every annotation. | `app/views/imports/preview.html.erb` | Remove `.stringify_keys`; look up by Integer. | Yes | `.citation dd` and `#line_2 dd` assertions. |
+| 16 [exp] | `fragments.sum` on Strings raises `TypeError`. The Rails 7.0 `Enumerable#sum` extension that allowed it is gone. | `Export#generate` | `fragments.join`. | Yes | Export tests. |
+| 17 [exp] | `Rails.application.secrets` was removed. | `Citation::Provider#initialize`, `config/secrets.yml`, citation enrichment tests | Move the file to `config/citation_provider.yml`, flattened per environment. Read it with `config.x.citation_provider = config_for(:citation_provider)`. Tests set `Rails.configuration.x.citation_provider`. | Yes (`config_for` exists in 7.0) | `with_provider` tests, including the credentials one. |
+| 18 [exp] | `config.action_dispatch.show_exceptions = false` is no longer recognized. Any value other than `:none` or `:rescuable` means "show", so tests expecting a raised `RecordNotFound` silently got a 404. [src] confirmed in `exception_wrapper.rb`. | `config/environments/test.rb` | `:none`. | **No.** 7.0 does not know `:none`. | Tests such as "another reader's notebook settings cannot be reached". |
+
+**Finding 8 detail.**
+- On 8.1, `BigDecimal` serializes as `BigDecimalSerializer`.
+- `TimeWithZone` now carries a `time_zone` key, so the worker sees the reader's local time instead of UTC.
+- Jobs also carry a `scheduled_at` field.
+- A 7.0 worker given an 8.1-queued `DigestJob` fails with `ActiveJob::DeserializationError: Serializer ... BigDecimalSerializer is not known`.
+- With `.to_s` on `completion`, both directions succeeded. Old and new jobs both ran, and `NoteReminderJob` succeeded either way.
+- The test at `digests_controller_test.rb:33` catches the `DigestMailer` date change; the queue behavior is not covered by tests.
+
+## Optional and later work
+
+- **Sidekiq adapter:** the built-in adapter logs a deprecation ("will be removed in Rails 8.2; use sidekiq 7.3.3 or later"). This is not required for 8.1.0 but is needed before 8.2. A Sidekiq 7 move touches these places, none of which I tested:
+  - `redis` 4.8.1 → `redis-client`, so `rescue Redis::BaseError` in `Notebook#request_export` must change.
+  - `Sidekiq.redis { |r| r.sadd(...) }` in `User#request_digest`.
+  - `ExportJob.perform_async(id, { format: "markdown" })`, which uses symbol keys and will raise under strict args.
+- **`load_defaults 7.0`:** keep it. Raising it changes behavior I did not test. The settings I know of are:
+  - `raise_on_assign_to_attr_readonly`, relevant because `NotebooksController` resubmits `slug`.
+  - `enqueue_after_transaction_commit`, relevant because the app enqueues inside `with_lock`.
+  - The HTML5 sanitizer.
+  - Cookie and message serializer defaults.
+- **Trix 1.3.5:** the app loads Trix 1.3.5 from `vendor/javascript`. It still works with Action Text 8.1's `actiontext.js` (UMD, event-based). Moving to the bundled Trix 2 would be a separate task.
+- **Rack 3 and Puma 6:** not required. The lockfile stays on rack 2.2.24 and puma 5.6.9, which worked in tests and the dev server.
+- **Other optional items:** dropping the `concurrent-ruby` 1.3.4 pin, and the regenerated `db/schema.rb`.
+- **Schema:** `db:schema:dump` produces only a cosmetic diff, namely `Schema[8.1]`, alphabetized columns, and `pg_catalog.plpgsql`. No migration is needed.
+
+## Data and rollout
+
+- **Stored data:** the experiments wrote with 7.0 and 8.1 and read with the other (`/tmp/upg/wr.rb`, `/tmp/upg/rd.rb`).
+  - Compatible: tags JSON, `settings` JSON, `preferences` YAML, Action Text HTML, and signed-in session cookies.
+  - Attachment signed IDs (sgids) were unreadable across versions only because dev and test derive the secret from separate files (`tmp/development_secret.txt` in 7.0, `tmp/local_secret.txt` in 8.1). With the same secret, they are compatible.
+- **Production secret unverified:** `config/secrets.yml` defines no `secret_key_base`, so production depends on `SECRET_KEY_BASE` or credentials. Confirm that source is unchanged, or users are signed out and sgids break.
+- **Queued jobs:**
+  - Jobs queued by 7.0 run correctly on 8.1. The digest date stays the UTC day with the `.utc` fix.
+  - Without the `.to_s` change, 8.1-queued `DigestJob`s fail on a 7.0 worker. With it they run on either version.
+- **Rollback:** the preparatory changes in findings 1 and 5–9, 11–17 are safe to ship and roll back on 7.0. Findings 3, 10 and 18 cannot be reverted independently of the bump.
+- **Suggested order:**
+  1. Ship the changes marked "Yes" in the table (`/tmp/upg/prep-vs-repo.diff`) on 7.0.8.7.
+  2. Drain or let digest jobs expire.
+  3. Bump to 8.1.0 with the version-bound changes (`/tmp/upg/final-vs-prep.diff`).
+
+## Unverified
+
+- I jumped directly from 7.0 to 8.1 and did not step through 7.1, 7.2 and 8.0, so deprecation warnings from the intermediate versions were not seen.
+- The assertion count differs between `prep` on 7.0.8.7 (325) and `final` on 8.1 (340). I did not investigate why.
+- `test/system` is empty, so there is no browser suite. I covered only sign-in and the note edit page by hand.
+- Not tested: production asset precompile, real file attachment uploads, mail delivery in production, a 24-hour `CitationEnrichmentJob` retry through Sidekiq, and `bin/rails server` in production with real credentials.
+
+## Commentary
+
+- I have not independently re-checked this report. I did not re-run any experiments or confirm that the logs, diffs and probe scripts under `/tmp/upg` exist.
+- I did not change the working application at `/home/user/workspace/repo`.
+- The two largest risks are not caught by the existing tests:
+  - Finding 8: 8.1-queued digest jobs fail on a 7.0 worker, which only shows up in a mixed-version rollout or a rollback.
+  - The production `secret_key_base` source is unconfirmed.
+- Findings 3, 10 and 18 must land in the same release as the bump, because they do not work on 7.0.

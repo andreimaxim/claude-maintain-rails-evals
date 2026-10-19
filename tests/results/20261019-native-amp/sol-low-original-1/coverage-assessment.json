@@ -1,0 +1,326 @@
+{
+  "id": "sol-low-original-1",
+  "source": "tests/results/20261019-native-amp/sol-low-original-1/artifact-1.md",
+  "source_sha256": "d4576e35f506e0f980714bc27fb346560d54f9d9d7a82100ec6ea801df494a11",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb` uses keyword-style `enum status: ..., _prefix: true` ... Use `enum :status, {...}, prefix: true`",
+        "reason": "The report lists this under required compatibility work but gives no high/medium/low level; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "positional `serialize :tags, JSON` ... On 7.1 change serialization to `serialize :tags, coder: JSON` ... 7.0's implementation selects its coder from the positional argument.",
+        "reason": "The report gives no risk level; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note` declares `store_accessor :settings, :color` then `alias_attribute :highlight_color, :color`. Rails 7.2 rejects aliases of non-attributes.",
+        "reason": "The report gives no risk level; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report does not discuss the `where(notebooks: notebook)` table-name predicate in NotesController.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#receipt` uses `citation[:id]`, but `Citation` has `doi` as its database primary key. 7.0 `read_attribute` rewrites `id` to the primary key; 8.1 no longer does.",
+        "reason": "The report gives no risk level; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Import#apply` in `app/models/import.rb` saves the import and notes, then `return false` exits the transaction on a failed row. Rails 7.0 rolls back this nonlocal return; 7.2+ commits.",
+        "reason": "The report gives no risk level; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report does not mention string `sum` raising TypeError in the export job.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/views/imports/preview.html.erb` calls `stringify_keys` then looks up the integer ... 8.1 uses actual key transformation, turning the line into text.",
+        "reason": "The report gives no risk level; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Cache expiration validation (7.1 defaults): `app/views/exports/_export.html.erb` computes `expires_in: expires_at - Time.current`, which is nonpositive for expired exports. New strict validation raises instead of displaying Expired.",
+        "reason": "The report correctly treats this as an optional defaults item but gives no risk level; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Note#next_day_reminder_at` uses `reminder_at.to_time + 86_400`. In 8.1 `to_time` retains the named zone ... Scheduling still uses the same epoch.",
+        "reason": "The report gives no risk level; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.1 TimeWithZoneSerializer stores the zone ... Thus new jobs can select the reader-local day while Redis still deduplicates the UTC day",
+        "reason": "The report gives no risk level; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "BigDecimalSerializer writes a named serializer envelope ... old workers cannot deserialize the new BigDecimal serializer.",
+        "reason": "The report gives no risk level; the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report does not discuss Integer `wait_until:` being rejected when reminders are scheduled.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/jobs/citation_enrichment_job.rb` uses `wait: :exponentially_longer`. Replace with `:polynomially_longer` at 7.1",
+        "reason": "The report gives no risk level; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report does not mention `form_with(model: nil)` raising in the notes index view.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report does not mention the two-path route declaration in config/routes.rb.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report does not discuss the `show_exceptions = false` semantics change in config/environments/test.rb.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/initializers/action_text.rb` uses `allowed_tags += ...`. In 7.0 it starts as an inherited list; in 8.1 `allowed_tags` starts nil",
+        "reason": "The report gives no risk level; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/citation/provider.rb` defaults to `Rails.application.secrets.citation_provider.to_h`; `config/secrets.yml` contains environment-backed settings.",
+        "reason": "The report gives no risk level; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Notebook#preferences` currently defaults to YAML; explicitly use `coder: YAML` on 7.1 before adopting defaults that remove the default serializer.",
+        "reason": "The report gives no risk level; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Read-only assignment errors (7.1 defaults): `NotebooksController#notebook_params` permits `slug`, and the form submits it unchanged. Raising on readonly assignment can reject even the ordinary settings submission.",
+        "reason": "The report gives no risk level; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "PostgreSQL decoded dates (7.2 defaults): `Notebook#daily_note_counts` parses `select_rows`' day with `Date.iso8601`; decoded PostgreSQL dates become Date objects.",
+        "reason": "The report gives no risk level; the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Strict HTTP freshness (8.0 defaults): `ExportDownloadsController#show` uses ETag plus Last-Modified. New behavior gives If-None-Match precedence.",
+        "reason": "The report gives no risk level; the label is Low.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [],
+    "otherFindings": [],
+    "located": 17,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.22820000000000001,
+    "duration_ms": 28500
+  }
+}

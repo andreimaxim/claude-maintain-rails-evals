@@ -1,0 +1,335 @@
+{
+  "id": "sol-medium-original-4",
+  "source": "tests/results/20261019-native-amp/sol-medium-original-4/artifact-1.md",
+  "source_sha256": "cb213767a745ebf27fe86745550ddfc4242dbb2c4c48228f9f2bcf7d757cf1fc",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Enum:** keyword definition removed in 8.0. Use `enum :status, { draft: 0, ready: 1 }, prefix: true`.",
+        "reason": "The report uses sections (required work, optional defaults) and never assigns high/medium/low levels.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Use `serialize :tags, coder: JSON` **only after reaching 7.1**. **Not a safe 7.0 preparation:** ... can silently write YAML to a JSON-text column.",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`color` is a `store_accessor` into `settings` jsonb, not a database column. 7.2 removes `alias_attribute` for nonattributes.",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses the `where(notebooks: notebook)` predicate in the notes controller.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Affected:** `app/models/import.rb:68`, `citation[:id]`; schema `citations` has string primary key `doi`, no `id` column.",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/import.rb:50-60`, `return false unless row.note.save` inside `transaction`. ... The first rows and Import can persist even though the controller returns the invalid preview.",
+        "reason": "The report calls this one of the 'most important non-boot risks' but never gives it a high/medium/low level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/export.rb:42`, `finish(fragments.sum)`. ... equivalent string array `.sum` raises TypeError on 8.1",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses `stringify_keys` turning the integer annotation keys into strings in the import preview.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "inaccurate",
+        "quote": "An expired completed export computes a **negative** duration on a cache miss. New `raise_on_invalid_cache_expiration_time = true` turns this into an exception",
+        "reason": "The report ties the exception to a cache miss, but under the adopted default the page raises even on a cache hit; it also gives no level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "October 31 09:00 Eastern becomes November 1 **08:00 −05:00**; old fixed-offset display is **09:00 −04:00**, the same instant.",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "Thus new jobs query a local day while reservations remain UTC; old queued jobs still query UTC.",
+        "reason": "The report calls this one of the most important risks but never gives it a high/medium/low level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A 7.0 worker cannot consume new envelopes. New Rails can consume legacy string arguments.",
+        "reason": "The report calls this one of the most important risks but never gives it a high/medium/low level.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`app/models/note.rb:61`, `NoteReminderJob.set(wait_until: reminder_epoch)`. ... target integer wait_until fails serialization with `NoMethodError`",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Affected:** `app/jobs/citation_enrichment_job.rb:7`. **Recommendation:** use `wait: :polynomially_longer` at 7.1+",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "missing",
+        "level": "missing",
+        "accuracy": "missing",
+        "quote": "",
+        "reason": "The report never discusses `form_with(model: nil)` in the notes index view.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**Affected:** `config/routes.rb` multi-path `get`. **Finding:** 8.1 rejects more than one path.",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/environments/test.rb`, `config.action_dispatch.show_exceptions = false` ... In 8.1 the boolean false falls through the wrapper's switch to “show,” not “raise.”",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`config/initializers/action_text.rb:3` ... `allowed_tags += ...` calls `nil +` on 8.1 even with 7.0 defaults.",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "### A4. Citation provider settings disappear (7.2) **Affected:** `app/models/citation/provider.rb:13`, `config/secrets.yml`",
+        "reason": "The report never assigns high/medium/low levels.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "New defaults set default column serializer to nil. Before enabling, specify `serialize :preferences, coder: YAML` at 7.1+",
+        "reason": "The report lists this under optional default adoption without a high/medium/low level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "New defaults raise on assignment of `attr_readonly` even for the **same** value. Every normal edit resubmits slug",
+        "reason": "The report lists this under optional default adoption without a high/medium/low level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`Notebook#daily_note_counts` (`app/models/notebook.rb:40`), raw `select_rows` then `Date.iso8601(day)`. Enabling `postgresql_adapter_decode_dates` returns a Date",
+        "reason": "The report lists this under optional default adoption without a high/medium/low level.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.0 defaults enable strict freshness: If-None-Match takes precedence when both conditional headers arrive. This changes 304 behavior only for contrasting validators.",
+        "reason": "The report lists this under optional default adoption without a high/medium/low level.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "action_text-trix",
+        "quote": "Rails 8.1 depends on `action_text-trix` (~>2.1.15); this resolution selected **2.1.19**"
+      },
+      {
+        "gem": "bigdecimal",
+        "quote": "convert successfully through this mailer's `BigDecimal(...)` with resolved bigdecimal 4.1.3"
+      }
+    ],
+    "otherFindings": [],
+    "located": 20,
+    "levelMatches": 0,
+    "inaccurate": 1,
+    "cost_usd": 0.2064384,
+    "duration_ms": 36501
+  }
+}

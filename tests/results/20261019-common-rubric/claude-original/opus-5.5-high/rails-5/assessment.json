@@ -1,0 +1,338 @@
+{
+  "configuration": "opus-5.5-high",
+  "run": 5,
+  "variant": "original",
+  "source": "tests/results/20261012/opus-5.5-high/traces/rails-5.json",
+  "source_sha256": "c4ea50d99ad010ef39a753b27960edd49bf565cb5914991bc22c21e54a854f96",
+  "report_sha256": "781d8b356ca31baa68d894a60d6f993d11678b72f86dd14c7ab84e5af3343b0e",
+  "extraction": "Retain the authored planner hand-back. Remove the native prefix, two leading harness spaces per line, and trailing native agentId/usage metadata only.",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A2 | `app/models/note.rb:10`, `enum status: {...}, _prefix: true` | Old syntax is removed in 8.0; ArgumentError when the class loads.",
+        "reason": "The report groups changes into ship-order sections and gives no risk level, so this is unrated where the label says low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "B1 `serialize :tags, JSON` (`note.rb:12`) → `serialize :tags, coder: JSON`. This cannot ship early. On 7.0, `coder:` is silently ignored and YAML is used",
+        "reason": "The report gives no risk level (it's in the 'must ship with the version bump' section); the label says low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A3 | `note.rb:15`, `alias_attribute :highlight_color, :color` | `color` is a `store_accessor`, not an attribute.",
+        "reason": "The report gives no risk level; the label says low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A8 | `app/controllers/notes_controller.rb:18`, `where(notebooks: @notebook)` | ... On 8.1 it raises `PG::UndefinedColumn`.",
+        "reason": "The report gives no risk level; the label says low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A10 | `app/models/import.rb`, receipt uses `citation[:id]` | From 7.2, `read_attribute(:id)` reads a literal `id` column. Citation's primary key is `doi`, so the receipt CSV DOI column comes out blank.",
+        "reason": "The report gives no risk level; the label says high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A13 | `import.rb#apply`, `return false` inside `transaction` | 7.0 rolls back on an early return; from 7.2 it commits.",
+        "reason": "The report gives no risk level; the label says high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A5 | `app/models/export.rb:42`, `fragments.sum` | Strings no longer sum from 7.1 (TypeError",
+        "reason": "The report gives no risk level; the label says low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A6 | `app/views/imports/preview.html.erb`, `@import.annotations.stringify_keys` | In 8.0, `HashWithIndifferentAccess#stringify_keys` turns the integer line keys into strings, so annotations silently disappear",
+        "reason": "The report gives no risk level; the label says high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`raise_on_invalid_cache_expiration_time` (7.1).** `exports/_export.html.erb:26` computes a negative `expires_in` for an expired export. The exports page would return 500",
+        "reason": "The report lists this under optional default adoption without a risk level; the label says high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A16 | `note.rb#next_day_reminder_at`, `reminder_at.to_time + 86_400` | From 8.1, `TimeWithZone#to_time` always keeps the zone. ... The stored epoch does not change.",
+        "reason": "The report calls this a product decision but gives no risk level; the label says high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A15 | `app/mailers/digest_mailer.rb` | From 7.1, Active Job keeps a time's zone through serialization. The digest would then cover the reader's local day, not the UTC day",
+        "reason": "The report gives no risk level; the label says high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "8.1 queues, 7.0 worker runs (a rollback): `DigestJob` failed with `DeserializationError: BigDecimalSerializer is not known`",
+        "reason": "The report gives no risk level; the label says high.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A9 | `note.rb:62`, `set(wait_until: reminder_epoch)` (an Integer) | ... on 8.1 enqueueing raises `undefined method 'utc' for Integer`",
+        "reason": "The report gives no risk level; the label says low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A12 | `app/jobs/citation_enrichment_job.rb:7`, `wait: :exponentially_longer` | Deprecated in 7.1. On 8.1 the retry itself raises \"Couldn't determine a delay\".",
+        "reason": "The report gives no risk level; the label says low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A7 | `app/views/notes/index.html.erb:12`, `form_with(model: nil, ...)` | 8.1 raises \"Passed nil to the :model argument\".",
+        "reason": "The report gives no risk level; the label says low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A4 | `config/routes.rb:18`, `get \"/notes\", \"/journal\", to:` | ArgumentError when routes load on 8.1.0.",
+        "reason": "The report gives no risk level; the label says low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "B2 `config/environments/test.rb`: `show_exceptions = false` → `:none`.** On 8.1, `false` counts as \"show everything\"",
+        "reason": "The report gives no risk level; the label says medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A1 | `config/initializers/action_text.rb:3` | From 7.1, `ContentHelper.allowed_tags` starts as nil, so `+=` stops the app booting.",
+        "reason": "The report gives no risk level; the label says medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "A11 | `app/models/citation/provider.rb:13`, the test helper, `config/secrets.yml` | `Rails.application.secrets` is removed in 7.2.",
+        "reason": "The report gives no risk level; the label says medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`default_column_serializer = nil` (7.1).** The `Notebook` class fails to load. Fix: `serialize :preferences, coder: YAML`",
+        "reason": "The report lists this under optional defaults without a risk level; the label says medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`raise_on_assign_to_attr_readonly` (7.1).** `NotebooksController` permits `:slug` on update, so saving notebook settings returns 500.",
+        "reason": "The report lists this under optional defaults without a risk level; the label says medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`postgresql_adapter_decode_dates` (7.2).** `Notebook#daily_note_counts` raises because `Date.iso8601` is given a Date.",
+        "reason": "The report lists this under optional defaults without a risk level; the label says medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "named",
+        "level": "not_relevant",
+        "accuracy": "accurate",
+        "quote": "With the YAML coder in place, the other 8.1 defaults passed the suite (HTML5 sanitizer, `strict_freshness`, the 8.1 redirect and JSON settings).",
+        "reason": "The report mentions strict_freshness only as a default that passed the suite, treats it as causing no problem, and doesn't tie it to the export downloads controller; the label says low.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json (pinned below 3, resolved to 2.21.2)",
+        "quote": "`gem \"rails\", \"8.1.0\"` plus `gem \"json\", \"< 3\"` ... With the pin, json resolved to 2.21.2 and the suite passed."
+      },
+      {
+        "gem": "action_text-trix 2.1.19, rackup 1.0.1, rack-session 1.0.2, webrick, bigdecimal 4.1.3, uri, securerandom, drb, useragent (newly added)",
+        "quote": "Newly added gems: action_text-trix 2.1.19, rackup 1.0.1, rack-session 1.0.2, webrick, bigdecimal 4.1.3, uri, securerandom, drb, useragent."
+      }
+    ],
+    "otherFindings": [],
+    "located": 22,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.1798944,
+    "duration_ms": 41282
+  }
+}

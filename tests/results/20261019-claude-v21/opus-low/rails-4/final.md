@@ -1,0 +1,90 @@
+# Rails 7.0.8.7 → 8.1.0 upgrade risk report for Margin Notes
+
+**Bottom line:** I found four high-risk changes. Two of them change what readers get without raising any error: the daily digest will cover a different day, and the Active Job argument format changes while old and new workers run side by side. Several more changes will break boot or tests and are easy to fix.
+
+Each claim is tagged by source: **[code]** means I read the Rails 7.0.8.7 or 8.1.0 gem source (unpacked under `/tmp/gems`) or the app's code, **[lock]** means the trial resolve, and **[inference]** means my own reasoning. I didn't read changelog entries, so each item links to the source file I compared rather than a pull request or changelog.
+
+## Facts about the app the ratings depend on (please correct if wrong)
+- **Database:** PostgreSQL only (`config/database.yml`). **[code]**
+- **Background jobs:** Active Job runs on Sidekiq 6.5.12 with redis 4.8.1 (`config/application.rb:20`). `ExportJob` is a plain `Sidekiq::Job`. Tests use the `:test` adapter. **[code]**
+- **Front end:** HTML with Sprockets, importmap, Turbo and Stimulus, plus some Jbuilder. Action Text and Active Storage (local disk) are used. **[code]**
+- **Framework defaults:** `config.load_defaults 7.0` stays as it is, so new defaults from 7.1 to 8.1 don't apply unless you opt in. That rules out many changes, such as the HTML5 sanitizer, the change to `serialize`'s default coder, and enqueuing after commit. **[code]**
+- **Ruby** is 3.3.6, which Rails 8.1 supports. **[inference]**
+- **Gems that move:** the trial resolve with `rails 8.1.0` moves only the Rails gems. It adds `action_text-trix`, `bigdecimal`, `drb`, `json`, `rack-session`, `rackup`, `securerandom`, `uri`, `useragent` and `webrick`, bumps `net-imap` from 0.6.7 to 0.6.8, and drops `method_source`. Sidekiq, redis, pagy, faraday, puma and rack don't change. **[lock]**
+- **Production:** deprecation warnings are switched off (`report_deprecations = false`), so production never showed you the 7.x deprecation warnings that led to these removals. **[code]**
+
+## High risk
+
+**1. Job times now come back in the reader's time zone, which shifts the daily digest**
+- **Before:** `TimeWithZoneSerializer#deserialize` called `Time.iso8601(value).in_time_zone`, which converts to the worker's zone (UTC). [7.0 source](https://github.com/rails/rails/blob/v7.0.8.7/activejob/lib/active_job/serializers/time_with_zone_serializer.rb) **[code]**
+- **Now:** the serializer also stores `"time_zone"` and restores the time in that zone. [8.1 source](https://github.com/rails/rails/blob/v8.1.0/activejob/lib/active_job/serializers/time_with_zone_serializer.rb) **[code]**
+- **Where the app uses it:** `app/models/user.rb:35,41` enqueues `requested_at` in the reader's zone. `app/mailers/digest_mailer.rb:8-9` then uses `requested_at.to_date` and `requested_at.all_day`. The comment at lines 3-5 documents the old UTC behavior. **[code]**
+- **What could go wrong:** without any error, the digest's day and its note set switch from the UTC day to the reader's local day. The Redis reservation key at `user.rb:36` still uses the UTC date. `test/controllers/digests_controller_test.rb` uses `travel_to` near midnight and probably encodes the old behavior. **[inference]**
+- **Decision needed:** this is arguably a bug fix, but you have to choose which day the digest covers and update the comment and tests to match.
+
+**2. BigDecimal job arguments use a new format, which breaks mixed-version deploys**
+- **Before:** 7.0 passed `BigDecimal` through as a raw permitted type (`activejob-7.0.8.7/lib/active_job/arguments.rb:50`). In Sidekiq's JSON it ends up as a plain value. **[code]**
+- **Now:** 8.1 always uses `BigDecimalSerializer`, which writes `_aj_serialized` and `{"value": "..."}`, and there is no config to turn it off. **[code]**
+- **Where the app uses it:** `user.rb:41` passes `reading_completion` (a BigDecimal) to `DigestJob`. **[code]**
+- **What could go wrong:** jobs enqueued by 8.1 and picked up by a 7.0 worker during a rolling deploy will fail to deserialize. `DigestJob` has no `discard_on`, so Sidekiq retries them. The reverse direction is fine because the mailer calls `BigDecimal(params[:completion])`. Item 1's new `time_zone` key is ignored by 7.0 workers, so that one is safe across versions. **[inference]**
+- **Fix:** deploy the workers first, drain the queues, or pass `.to_s` instead of the BigDecimal.
+
+**3. `retry_on wait: :exponentially_longer` now raises when a retry happens**
+- **Before:** 7.0 supported `:exponentially_longer`.
+- **Now:** 8.1's `determine_delay` only accepts `:polynomially_longer` and raises `"Couldn't determine a delay..."` for anything else. [8.1 exceptions.rb:175-188](https://github.com/rails/rails/blob/v8.1.0/activejob/lib/active_job/exceptions.rb) **[code]**
+- **Where the app uses it:** `app/jobs/citation_enrichment_job.rb:7`. **[code]**
+- **What could go wrong:** nothing fails at boot. The first time the provider is unavailable, the job raises a RuntimeError instead of retrying, so Sidekiq's own retries take over. The `fail_enrichment` block never runs, and the citation can stay `pending` for good, which also blocks new requests at `citation.rb:16`. **[inference]**
+- **Fix:** rename it to `:polynomially_longer`. `test/controllers/citation_enrichments_controller_test.rb` exercises this retry path and should catch it. **[inference]**
+
+**4. `citation[:id]` no longer reads the primary key**
+- **Before:** 7.0's `read_attribute` mapped `"id"` to `@primary_key`. **[code]**
+- **Now:** 8.1 removed that mapping (`activerecord-8.1.0/.../attribute_methods/read.rb:29-34`). **[code]**
+- **Where the app uses it:** `Citation` uses `doi` as its primary key (`db/schema.rb:55`), and `app/models/import.rb:68` writes `citation[:id]` into the import receipt CSV. **[code]**
+- **What could go wrong:** generating a receipt now raises `ActiveModel::MissingAttributeError`. That's an error rather than a silent change, but I rated it high because it only happens when a receipt is generated. `test/controllers/imports_controller_test.rb:6` probably covers it. **[inference]**
+- **Fix:** use `citation.doi` or `citation.id`.
+
+## Medium risk
+
+**5. `Rails.application.secrets` and `config/secrets.yml` were removed (removed in 7.2)**
+- **Before:** secrets were read from `config/secrets.yml`.
+- **Now:** railties 8.1 has no `secrets` method. **[code]**
+- **Where the app uses it:** `app/models/citation/provider.rb:13` reads its settings this way. **[code]**
+- **What could go wrong:** it raises `NoMethodError` when `Provider.new` runs. That happens at runtime inside jobs, not at boot. **[inference]**
+- **Decision needed:** there is no direct replacement. Choose between credentials, `config_for(:citation_provider)` (a custom YAML file) or `ENV`, and keep the local development stand-in defaults.
+
+**6. The built-in Sidekiq adapter is deprecated and will be removed in 8.2**
+- `sidekiq_adapter.rb` in 8.1 warns at boot and says to upgrade to Sidekiq 7.3.3 or later, which ships its own adapter. **[code]**
+- Moving to Sidekiq 7 needs Redis 6.2 or later and the `redis-client` gem. `user.rb` calls `Sidekiq.redis { |redis| redis.sadd(...) }` and uses the return value as a boolean. That API changes under `redis-client`, and the app rescues `Redis::BaseError` (`notebook.rb`) and `Redis::CannotConnectError` (digests test). This is a later decision, not something 8.1 forces. **[inference]**
+
+## Low risk (boot or tests should catch these)
+- **`enum status: {...}, _prefix: true` (`app/models/note.rb:10`):** 8.1 requires the name as a positional argument, so this raises `ArgumentError` when the class loads. Change it to `enum :status, {...}, prefix: true`. **[code]**
+- **`serialize :tags, JSON` (`note.rb:12`):** 8.1 only accepts `coder:` as a keyword, so this raises when the class loads. Change it to `serialize :tags, coder: JSON`. **[code]** `serialize :preferences` (`notebook.rb:7`) keeps YAML because the 7.0 defaults are kept. **[code]**
+- **`alias_attribute :highlight_color, :color` (`note.rb:14`):** `color` comes from `store_accessor`, not a real attribute, so 8.1 raises `ArgumentError` ("is not an attribute"). Replace it with `alias_method` for both the reader and the writer. The notes controller tests cover it. **[code]**
+- **`ActionText::ContentHelper.allowed_tags += ...` (`config/initializers/action_text.rb:3`):** the default is now `nil`, so this raises `NoMethodError` at boot. Build the list from `Rails::HTML::SafeListSanitizer.allowed_tags` plus the Action Text tags and your two extra tags. **[code]**
+- **`fragments.sum` of strings (`app/models/export.rb:42`):** 7.0's override, already deprecated, is gone, so Ruby raises `TypeError`. Use `fragments.join`. The export tests drain `ExportJob`. **[code]**
+- **`config.action_dispatch.show_exceptions = false` (`config/environments/test.rb:31`):** 8.1 treats `false` like `:all`, so exceptions are rendered as error pages instead of raised. The `assert_raises(RecordNotFound)` and `assert_raises(Redis::CannotConnectError)` tests will fail. Use `:none`. **[code]**
+- **`Note.connection.select_rows` (`notebook.rb:40`):** `connection` is only soft-deprecated in favor of `with_connection` and `lease_connection`, and still works. **[inference]**
+- **`to_time_preserves_timezone` (used by `note.rb:44`):** the setting is deprecated, with removal planned for 8.2. Adding 86,400 seconds gives the same epoch either way. **[inference]**
+- **`has_secure_password`:** a 72-byte maximum password length validation was added in 7.1. Over-long passwords now fail validation instead of being silently truncated. **[inference]**
+
+## Judged not relevant
+- **MySQL and SQLite adapter changes:** the app uses PostgreSQL. **[code]**
+- **`enqueue_after_transaction_commit`:** the class default is `false` in 8.1 (`activejob-8.1.0/lib/active_job/enqueuing.rb:53`), so enqueuing inside `with_lock` keeps rolling back as the comments in `note.rb` and `citation.rb` describe. **[code]**
+- **New framework defaults from 7.1 to 8.1** (HTML5 sanitizer, YAML coder off, encryption and cache format changes): they don't apply while `load_defaults 7.0` stays. **[code]**
+- **Cache store changes:** production uses the default file store, and only `exports/_export.html.erb:26` uses a fragment cache with `expires_in`. I found nothing in that path that changed. **[inference]**
+- **Propshaft, Solid Queue, Cache and Cable, Kamal:** these are only defaults for new apps. Sprockets is still supported. **[inference]**
+
+## Where to look first
+`app/mailers/digest_mailer.rb` together with `test/controllers/digests_controller_test.rb` (item 1), and your deploy order for Sidekiq workers (item 2).
+
+Files: the trial lockfile is `/tmp/lock/Gemfile.lock`, and the unpacked gem source is under `/tmp/gems/`. Nothing in `/home/user/workspace/repo` was changed.
+
+---
+
+I haven't changed the repo yet. Rails is pinned to `7.0.8.7` in the `Gemfile`, so this upgrade jumps four minor versions (7.1, 7.2, 8.0 and 8.1), not one.
+
+Two decisions are needed before I start:
+1. **Digest day (item 1):** should the digest cover the reader's local day, which is the new 8.1 behavior, or stay on the UTC day?
+2. **Replacing `secrets` (item 5):** should the citation provider's settings move to credentials, `config_for`, or `ENV`?
+
+Tell me which you want and I'll do the upgrade. That means changing the Gemfile pin, applying the fixes listed above, and running `bin/rails test` and `bin/rails test:system`.

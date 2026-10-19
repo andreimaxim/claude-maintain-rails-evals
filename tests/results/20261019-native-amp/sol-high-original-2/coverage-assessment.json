@@ -1,0 +1,339 @@
+{
+  "id": "sol-high-original-2",
+  "source": "tests/results/20261019-native-amp/sol-high-original-2/artifact-1.md",
+  "source_sha256": "9932d98b09b603349a66158de85689e98346287cae1d087784591b6344d56097",
+  "rubric_sha256": {
+    "scripts/grade-risk-report.ts": "a8a2081c84acb4324e5d45ead95310d7fe9eaf4c778b798cdc8aed4dbe5bd43a",
+    "scripts/grade-plan.ts": "aa826bf05d519df0ad7e07521e591554c84e8bd0c1b6e30f6d6f6bf28493477c",
+    "tests/risk-grader-instructions.md": "fab4fb40a844053d566f2a624cce9dfeed8b60dcd786b19a18be8a10596cccab",
+    "tests/risk-labels.md": "f1773e6dfb39f9c8763a7a951ca6c461b4f816b08279c75db3a16d1790bc89de",
+    "tests/planner-development.md": "4c62bcf99d9962cb7ce45261e5579400afd255471c0144a2076eaeb0cc292ff2"
+  },
+  "purpose": "Supplemental common-rubric coverage comparison; original official grades unchanged.",
+  "grade": {
+    "case": "rails",
+    "model": "claude-opus-5-5",
+    "effort": "high",
+    "items": {
+      "R01": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Note enum](file:///home/user/workspace/repo/app/models/note.rb#L10-L14). Keyword enum declaration removed in 8.0. [S3] | Use `enum :status, { draft: 0, ready: 1 }, prefix: true`.",
+        "reason": "The report sorts changes into sections by type of work and never gives a high, medium or low rating, so this change is unrated where the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R02": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Note tags](file:///home/user/workspace/repo/app/models/note.rb#L12). Positional coder removed in 7.2. ... **Do not do this on 7.0:** the keyword is not its coder API and the probe wrote YAML.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R03": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Highlight alias](file:///home/user/workspace/repo/app/models/note.rb#L13-L14). `color` is a jsonb store accessor, **not** a database attribute; non-attribute `alias_attribute` is removed in 7.2.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R04": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Notebook filtering](file:///home/user/workspace/repo/app/controllers/notes_controller.rb#L10-L12). The old plural spelling of singular `belongs_to :notebook` no longer works in 7.2; target SQL attempts `notes.notebooks`.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R05": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Import#receipt](file:///home/user/workspace/repo/app/models/import.rb#L65-L70). `Citation` has primary key `doi`, not an `id` column. `citation[:id]` ceases to mean custom primary key in 7.2.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R06": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Import#apply](file:///home/user/workspace/repo/app/models/import.rb#L50-L63). It returns from inside a transaction when a later note fails. Rails 7.2 no longer rolls back for a non-local return.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R07": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Export#generate](file:///home/user/workspace/repo/app/models/export.rb#L42). Rails' old nonnumeric `sum` override is removed in 7.1.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R08": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Import preview](file:///home/user/workspace/repo/app/views/imports/preview.html.erb#L22). ... In 8.0 `stringify_keys` starts stringifying integers too; lookups still use integers.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R09": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**7.1 raises on negative cache expiration.** [Export availability partial](file:///home/user/workspace/repo/app/views/exports/_export.html.erb#L25-L36) passes `expires_at - Time.current` even for expired exports.",
+        "reason": "The report lists this under optional framework defaults without a risk level, so it is unrated where the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R10": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Note#next_day_reminder_at](file:///home/user/workspace/repo/app/models/note.rb#L40-L44). In 8.1 `to_time` always retains the zone object, not just a fixed offset. This applies **even with 7.0 defaults**.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": true
+        },
+        "levelMatches": false
+      },
+      "R11": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[DigestMailer](file:///home/user/workspace/repo/app/mailers/digest_mailer.rb#L6-L10), [User#request_digest](file:///home/user/workspace/repo/app/models/user.rb#L34-L46) ... Rails 7.2+ retains the argument's originating zone. The existing mailer takes `to_date`/`all_day` in that zone, while Redis reserves by **UTC** day.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R12": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "`User#reading_completion` returns a BigDecimal. ... Rails 7.2+ always emits `ActiveJob::Serializers::BigDecimalSerializer`. Old Rails 7.0 workers cannot deserialize that class.",
+        "reason": "The report discusses this in its mixed-version rollout section without a risk level, so it is unrated where the label is High.",
+        "label": {
+          "level": "high",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R13": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Note#schedule_reminder](file:///home/user/workspace/repo/app/models/note.rb#L54-L64). Integer `wait_until` becomes numeric `scheduled_at`; numeric values are unsupported from 7.2 and target serialization calls `utc` on the integer.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R14": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[CitationEnrichmentJob](file:///home/user/workspace/repo/app/jobs/citation_enrichment_job.rb#L7). `:exponentially_longer` removed in 7.2.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R15": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Unbound search form](file:///home/user/workspace/repo/app/views/notes/index.html.erb#L12). Explicit `model: nil` removed in 8.0.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R16": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Routes](file:///home/user/workspace/repo/config/routes.rb#L17-L19). Multiple paths in one `get` are deprecated in 8.0, removed in 8.1.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Low.",
+        "label": {
+          "level": "low",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R17": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Test exception configuration](file:///home/user/workspace/repo/config/environments/test.rb#L30-L31). Boolean `show_exceptions` removed in 7.2. [S1,S2] | On 7.1+, replace `false` with `:none`",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R18": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Action Text initializer](file:///home/user/workspace/repo/config/initializers/action_text.rb#L1-L3). From 7.1, `allowed_tags` defaults to nil ... The initializer crashes at boot regardless of retained defaults.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R19": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "[Citation::Provider](file:///home/user/workspace/repo/app/models/citation/provider.rb#L13) and citation request tests read/override `Rails.application.secrets`; removed in 7.2.",
+        "reason": "The report never gives a risk level, so this change is unrated where the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": false,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R20": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**7.1 default column serializer becomes nil.** [Notebook](file:///home/user/workspace/repo/app/models/notebook.rb#L7) currently relies on YAML for text `preferences`.",
+        "reason": "The report lists this under optional defaults without a risk level, so it is unrated where the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R21": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**7.1 raises on readonly assignment.** The notebook form resubmits `slug`, and controller permits it.",
+        "reason": "The report lists this under optional defaults without a risk level, so it is unrated where the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R23": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**7.2 raw PostgreSQL dates decode to Date.** [Notebook#daily_note_counts](file:///home/user/workspace/repo/app/models/notebook.rb#L37-L40) passes each result to `Date.iso8601`.",
+        "reason": "The report lists this under optional defaults without a risk level, so it is unrated where the label is Medium.",
+        "label": {
+          "level": "medium",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      },
+      "R25": {
+        "found": "located",
+        "level": "unrated",
+        "accuracy": "accurate",
+        "quote": "**8.0 strict freshness prioritizes ETag.** [ExportDownloadsController](file:///home/user/workspace/repo/app/controllers/export_downloads_controller.rb#L6-L20) supplies both ETag and Last-Modified.",
+        "reason": "The report lists this under optional defaults without a risk level, so it is unrated where the label is Low.",
+        "label": {
+          "level": "low",
+          "default": true,
+          "judgmentCall": false
+        },
+        "levelMatches": false
+      }
+    },
+    "otherGems": [
+      {
+        "gem": "json (resolved to 3.1.0; the report recommends pinning below 3, which resolved 2.21.2)",
+        "quote": "The initial `bundle update rails` resolved **JSON 3.1.0**. ... Pin **`gem 'json', '< 3'`** for an exact 8.1.0 target; the experiment resolved **2.21.2**"
+      },
+      {
+        "gem": "action_text-trix 2.1.19",
+        "quote": "Target resolves `action_text-trix` **2.1.19** and new Action Text JS."
+      },
+      {
+        "gem": "rack 2.2.24",
+        "quote": "The existing Sidekiq 6.5.12 / Redis 4.8.1 / Puma 5.6.9 / Sprockets stack resolves with Rails 8.1.0 and Rack 2.2.24"
+      }
+    ],
+    "otherFindings": [],
+    "located": 23,
+    "levelMatches": 0,
+    "inaccurate": 0,
+    "cost_usd": 0.2282904,
+    "duration_ms": 36817
+  }
+}

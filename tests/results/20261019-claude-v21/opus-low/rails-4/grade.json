@@ -1,0 +1,363 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`enum status: {...}, _prefix: true` (`app/models/note.rb:10`):** 8.1 requires the name as a positional argument, so this raises `ArgumentError` when the class loads. Change it to `enum :status, {...}, prefix: true`.",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R02": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`serialize :tags, JSON` (`note.rb:12`):** 8.1 only accepts `coder:` as a keyword, so this raises when the class loads. Change it to `serialize :tags, coder: JSON`.",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": true
+    },
+    "R03": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`alias_attribute :highlight_color, :color` (`note.rb:14`):** `color` comes from `store_accessor`, not a real attribute, so 8.1 raises `ArgumentError` (\"is not an attribute\").",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R04": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't discuss the `where(notebooks: notebook)` change in the notes controller.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "inaccurate",
+      "quote": "generating a receipt now raises `ActiveModel::MissingAttributeError`. That's an error rather than a silent change",
+      "reason": "The report says the receipt raises, but the key says the receipt silently loses its DOI values without an error.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R06": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't discuss the change where `return` inside a transaction now commits.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`fragments.sum` of strings (`app/models/export.rb:42`):** 7.0's override, already deprecated, is gone, so Ruby raises `TypeError`. Use `fragments.join`.",
+      "reason": "",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R08": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't discuss the change to `HashWithIndifferentAccess#stringify_keys` or the import preview annotations.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "named",
+      "level": "not_relevant",
+      "accuracy": "inaccurate",
+      "quote": "only `exports/_export.html.erb:26` uses a fragment cache with `expires_in`. I found nothing in that path that changed.",
+      "reason": "The report looks at the right fragment cache but never describes the negative-expiry change, and its claim that nothing in that path changed contradicts the key: the entry is now cached without expiry and an error is logged, and it raises if the default is adopted.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`to_time_preserves_timezone` (used by `note.rb:44`):** the setting is deprecated, with removal planned for 8.2. Adding 86,400 seconds gives the same epoch either way.",
+      "reason": "The report rates it low, while the label is high because the displayed zone and offset shift across a DST change.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "without any error, the digest's day and its note set switch from the UTC day to the reader's local day. The Redis reservation key at `user.rb:36` still uses the UTC date.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R12": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "jobs enqueued by 8.1 and picked up by a 7.0 worker during a rolling deploy will fail to deserialize... The reverse direction is fine because the mailer calls `BigDecimal(params[:completion])`.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R13": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't discuss the Integer `wait_until:` change in note.rb.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "`retry_on wait: :exponentially_longer` now raises when a retry happens... `app/jobs/citation_enrichment_job.rb:7`",
+      "reason": "The report rates it high, but the label is low because a direct replacement exists and the app's test catches it.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't discuss `form_with(model: nil)` raising in the notes index.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't discuss the route declaration with two paths.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`config.action_dispatch.show_exceptions = false` (`config/environments/test.rb:31`):** 8.1 treats `false` like `:all`, so exceptions are rendered as error pages instead of raised.",
+      "reason": "The report rates it low, while the label is medium because the developer must choose between `:none` and `:rescuable`.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`ActionText::ContentHelper.allowed_tags += ...` (`config/initializers/action_text.rb:3`):** the default is now `nil`, so this raises `NoMethodError` at boot.",
+      "reason": "The report rates it low, while the label is medium because building a complete, safe allowlist is a security decision.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "medium",
+      "accuracy": "accurate",
+      "quote": "`app/models/citation/provider.rb:13` reads its settings this way... it raises `NoMethodError` when `Provider.new` runs.",
+      "reason": "",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R20": {
+      "found": "located",
+      "level": "not_relevant",
+      "accuracy": "accurate",
+      "quote": "`serialize :preferences` (`notebook.rb:7`) keeps YAML because the 7.0 defaults are kept.",
+      "reason": "The report calls the default not relevant while 7.0 defaults are kept and gives no level for adopting it; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't discuss the `raise_on_assign_to_attr_readonly` default or the notebook slug.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report mentions `select_rows` in notebook.rb only for the `connection` deprecation, not the date-decoding default.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report doesn't discuss the `strict_freshness` default or the export downloads controller.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "action_text-trix (added)",
+      "quote": "It adds `action_text-trix`, `bigdecimal`, `drb`, `json`, `rack-session`, `rackup`, `securerandom`, `uri`, `useragent` and `webrick`"
+    },
+    {
+      "gem": "bigdecimal (added)",
+      "quote": "It adds `action_text-trix`, `bigdecimal`, `drb`, `json`, ..."
+    },
+    {
+      "gem": "drb (added)",
+      "quote": "It adds ... `drb` ..."
+    },
+    {
+      "gem": "json (added)",
+      "quote": "It adds ... `json` ..."
+    },
+    {
+      "gem": "rack-session (added)",
+      "quote": "It adds ... `rack-session` ..."
+    },
+    {
+      "gem": "rackup (added)",
+      "quote": "It adds ... `rackup` ..."
+    },
+    {
+      "gem": "securerandom (added)",
+      "quote": "It adds ... `securerandom` ..."
+    },
+    {
+      "gem": "uri (added)",
+      "quote": "It adds ... `uri` ..."
+    },
+    {
+      "gem": "useragent (added)",
+      "quote": "It adds ... `useragent` ..."
+    },
+    {
+      "gem": "webrick (added)",
+      "quote": "It adds ... and `webrick`"
+    },
+    {
+      "gem": "net-imap 0.6.7 -> 0.6.8",
+      "quote": "bumps `net-imap` from 0.6.7 to 0.6.8"
+    }
+  ],
+  "otherFindings": [
+    {
+      "level": "medium",
+      "summary": "Rails 8.1's built-in Sidekiq adapter is deprecated and will be removed in 8.2, which leads to a later move to Sidekiq 7 that changes the redis-client API (medium)."
+    }
+  ],
+  "located": 13,
+  "levelMatches": 8,
+  "inaccurate": 2,
+  "cost_usd": 0.1443024,
+  "duration_ms": 41749
+}
