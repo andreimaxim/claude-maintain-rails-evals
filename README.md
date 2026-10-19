@@ -13,6 +13,54 @@ upgrade is a separate capability, not the result these tests measure.
 | [claude-maintain-rails-sample](https://github.com/andreimaxim/claude-maintain-rails-sample) | Margin Notes, the Rails application being evaluated |
 | [claude-plugins](https://github.com/andreimaxim/claude-plugins) | The general Claude Code plugin marketplace, including `maintain-rails`, its skill, and its planner prompt |
 
+## Native Amp evaluations with Sol and Astra
+
+The native comparison uses GPT-6.1 Sol and GPT-6 Astra, each at low, medium, and
+high reasoning effort. It tests the frozen original planner and v21. Each prompt
+and model configuration has five Rails repetitions, for 60 sessions. Every
+session gets a fresh app orb, including its own PostgreSQL and Redis. Sessions
+run in parallel; no orb runs multiple repetitions.
+
+`scripts/prepare-amp-run.ts` packages one session's runtime and selected inputs:
+
+```sh
+node scripts/prepare-amp-run.ts /tmp/amp-payload.tar.gz \
+  --model openai/gpt-6.1-sol --effort medium --variant v21 \
+  --request "Upgrade the rails gem to 8.1.0"
+```
+
+Upload the payload to a fresh sample orb, extract it under `.amp/plugins`, load
+`maintain-rails/index.ts`, and call its `run_eval` tool once. The operator is
+outside the scored session. The tool creates a fresh main thread that receives
+only the natural upgrade request. Its skill delegates the gem and exact versions
+to a planner thread on the same orb, then returns the full report. Both threads
+use the selected model and effort with the same Amp `medium` base instructions.
+Their explicit tool lists exclude MCP discovery and extra model delegation.
+Planner bodies are unchanged; only the skill's Claude agent reference is replaced
+with the Amp planner tool. Neither the payload nor the app orb receives answer keys.
+
+The project-local `eval-matrix` plugin launches all 60 independent app orbs from
+one published revision. Each operator downloads only five runtime source files
+from that revision, builds the payload, and starts its single session. The
+coordinator saves each thread ID before dispatch, with an exclusive reservation
+and atomic manifest updates. An interrupted launch requires inspection, not a
+blind retry. Never call the launch tool again to recover an existing matrix.
+
+Each orb retains `.git/amp-evals/run-1/` with the raw planner report, final answer,
+visible main and planner traces, and a receipt. The receipt records input hashes,
+model and effort, elapsed time, delivery checks, and application state before and
+after. Native exports retain observed model usage; full exports under
+`.git/amp-evals/private/` contain thinking and metadata and must not be committed.
+Review visible traces for secrets before publishing them. Cost remains unavailable
+until native usage is assessed, rather than being reported as zero.
+
+The original planner produces a plan and uses `grade-plan.ts`; v21 produces a
+risk report and uses `grade-risk-report.ts`. Keep their results separate. The
+comparison changes the agent runtime as well as the model, so it does not isolate
+model quality alone. A completed tool call is not a correctness pass: missing
+delegation, incomplete delivery, changed files, and unsupported claims remain
+separate findings. Collection failures invalidate the harness result.
+
 ## Run evaluations from this repo; run each test in an app orb
 
 **A thread in the evals project coordinates the evaluation.** This repository
