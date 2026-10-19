@@ -29,7 +29,7 @@ export default function (amp: PluginAPI) {
         renameSync(`${manifest}.tmp`, manifest);
       };
       save();
-      const operator = amp.createAgent({ extends: "medium", model: "openai/gpt-6.1-sol", reasoningEffort: "medium", features: [] });
+      const operator = amp.getBuiltinAgent("medium");
       await Promise.all(runs.map(async (run) => {
         try {
           run.status = "creating";

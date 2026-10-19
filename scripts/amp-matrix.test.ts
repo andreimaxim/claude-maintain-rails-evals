@@ -13,7 +13,7 @@ test("matrix ledger retains all 60 independent sessions and refuses a second lau
   install({
     system: { workspaceRoot: root }, helpers: { filePathFromURI: (path: string) => path },
     registerTool: (registered: unknown) => { tool = registered; },
-    createAgent: () => ({ createThread: async () => {
+    getBuiltinAgent: () => ({ createThread: async () => {
       const number = ++id;
       return { id: `T-session-${number}`, appendUserMessage: async () => {
         if (number === 7) throw new Error("Lost dispatch acknowledgment");
