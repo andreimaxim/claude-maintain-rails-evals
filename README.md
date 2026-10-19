@@ -52,8 +52,11 @@ visible main and planner traces, and a receipt. The receipt records input hashes
 model and effort, elapsed time, delivery checks, and application state before and
 after. Native exports retain observed model usage; full exports under
 `.git/amp-evals/private/` contain thinking and metadata and must not be committed.
-Review visible traces for secrets before publishing them. Cost remains unavailable
-until native usage is assessed, rather than being reported as zero.
+Review visible traces for secrets before publishing them. The
+[October 19 results](tests/results/20261019-native-amp/README.md) retain all 60
+receipts, report layers, grades, token usage, and standard API-equivalent cost
+estimates. The provider billing route is unverified, so estimates are not actual
+spend. Full exports remain private.
 
 The original planner produces a plan and uses `grade-plan.ts`; v21 produces a
 risk report and uses `grade-risk-report.ts`. Keep their results separate. The

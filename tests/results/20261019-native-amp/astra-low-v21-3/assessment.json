@@ -1,0 +1,756 @@
+{
+  "id": "astra-low-v21-3",
+  "variant": "v21",
+  "grades": [
+    {
+      "name": "planner",
+      "sha256": "7922b172a594229229dc6a0e303a40ea04983750a1078f2d6a1e7fa7fd90a515",
+      "grade": {
+        "case": "rails",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "items": {
+          "R01": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[Note line 10](...) must become positional `enum :status, \u2026, prefix: true`; keyword declarations were removed in Rails 8.0",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R02": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[Note line 12](...) needs `serialize :tags, coder: JSON`; the positional coder was removed in 7.2",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": true
+            },
+            "levelMatches": true
+          },
+          "R03": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[Note lines 13\u201314] alias `color`, which is not a database attribute; 7.2 rejects this. Explicit reader/writer delegation preserves the intended behavior.",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R04": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report never discusses `where(notebooks: notebook)` in the notes controller.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R05": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "Citations use `doi` as their primary key, but [`Import#receipt`] exports `citation[:id]`... The CSV's DOI becomes nil",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R06": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "[`Import#apply`] ... executes `return false unless row.note.save`... earlier notes and the import can remain committed while the controller presents a failed import",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R07": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[`fragments.sum`](.../app/models/export.rb#L42) needs an explicit string identity or `join`",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R08": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "The [preview] calls `stringify_keys`, then still reads `annotations[row.line]`... Annotation lookup returns nil",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R09": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "With retained 7.0 defaults, it reports rather than raises... Adopting newer defaults instead makes this an exception.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R10": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "The resulting instant remains 24 elapsed hours later, but its displayed offset and wall-clock time now follow DST.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": true
+            },
+            "levelMatches": true
+          },
+          "R11": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "Newly produced digests cover the reader's local day, while reservations remain UTC-based.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R12": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "New producers sharing queues with old workers can produce unreadable jobs.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R13": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[`wait_until: reminder_epoch`](.../app/models/note.rb#L60-L62) must pass a Time rather than numeric epoch",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R14": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[`:exponentially_longer`](.../app/jobs/citation_enrichment_job.rb#L7) becomes `:polynomially_longer`",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R15": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report never mentions `form_with(model: nil)` in the notes index view.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R16": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[The two-path `get`](.../config/routes.rb#L17-L18) must become two route declarations",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R17": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[`show_exceptions = false`](.../config/environments/test.rb#L30-L31) becomes `:none`; boolean support was removed in 7.2",
+            "reason": "The report rates it low as a mechanical fix, but the label is medium because the developer has to choose between :none and :rescuable.",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R18": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[`allowed_tags += \u2026`](.../config/initializers/action_text.rb#L1-L3) now adds to nil; 7.1 changed its default.",
+            "reason": "The report rates it low, but the label is medium because building the allowlist is a security decision.",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R19": {
+            "found": "located",
+            "level": "medium",
+            "accuracy": "accurate",
+            "quote": "[`Citation::Provider#initialize`] uses it by default... Enrichment fails when constructing the provider.",
+            "reason": "",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R20": {
+            "found": "located",
+            "level": "medium",
+            "accuracy": "accurate",
+            "quote": "New defaults\u2014medium if adopted: Notebook preferences rely on implicit YAML... Rails 7.1 defaults remove the implicit serializer",
+            "reason": "",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R21": {
+            "found": "located",
+            "level": "medium",
+            "accuracy": "accurate",
+            "quote": "notebook updates resubmit an `attr_readonly` slug. Rails 7.1 defaults ... raise on readonly assignment.",
+            "reason": "",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R23": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "PostgreSQL date decoding\u2014low if enabled: [`daily_note_counts`] expects strings and calls `Date.iso8601`; 7.2 defaults return Date objects.",
+            "reason": "The report rates the adoption risk low, but the label is medium because Date.iso8601 raises once the default is adopted.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R25": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "HTTP freshness\u2014high if enabled: Newer defaults prioritize ETags when both conditional headers are supplied... this affects [export downloads]",
+            "reason": "The report rates it high if enabled, but the label is low because a 304 only happens when the client already has the same bytes.",
+            "label": {
+              "level": "low",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          }
+        },
+        "otherGems": [
+          {
+            "gem": "net-imap 0.6.7 \u2192 0.6.8",
+            "quote": "Existing dependency updated | `net-imap` 0.6.7 \u2192 0.6.8"
+          },
+          {
+            "gem": "action_text-trix 2.1.19 (new)",
+            "quote": "Newly locked dependencies | `action_text-trix` 2.1.19"
+          },
+          {
+            "gem": "bigdecimal 4.1.3 (new)",
+            "quote": "`bigdecimal` 4.1.3"
+          },
+          {
+            "gem": "drb 2.2.3 (new)",
+            "quote": "`drb` 2.2.3"
+          },
+          {
+            "gem": "json 3.1.0 (new)",
+            "quote": "`json` 3.1.0"
+          },
+          {
+            "gem": "rack-session 1.0.2 (new)",
+            "quote": "`rack-session` 1.0.2"
+          },
+          {
+            "gem": "rackup 1.0.1 (new)",
+            "quote": "`rackup` 1.0.1"
+          },
+          {
+            "gem": "securerandom 0.4.1 (new)",
+            "quote": "`securerandom` 0.4.1"
+          },
+          {
+            "gem": "uri 1.1.2 (new)",
+            "quote": "`uri` 1.1.2"
+          },
+          {
+            "gem": "useragent 0.16.11 (new)",
+            "quote": "`useragent` 0.16.11"
+          },
+          {
+            "gem": "webrick 1.9.2 (new)",
+            "quote": "`webrick` 1.9.2"
+          }
+        ],
+        "otherFindings": [
+          {
+            "level": "high",
+            "summary": "Action Text now sanitizes HTML content attachments when preparing editor content, which changes how imported note bodies round-trip through the editor."
+          },
+          {
+            "level": "medium",
+            "summary": "Rails 8.1 deprecates the Sidekiq adapter for removal in 8.2, and the app stays on Sidekiq 6.5.12."
+          },
+          {
+            "level": "medium",
+            "summary": "The resolved json 3 parser rejects duplicate keys and comments, so citation provider responses that were accepted before may now fail."
+          }
+        ],
+        "located": 21,
+        "levelMatches": 17,
+        "inaccurate": 0,
+        "cost_usd": 0.221532,
+        "duration_ms": 27446
+      }
+    },
+    {
+      "name": "final",
+      "sha256": "7922b172a594229229dc6a0e303a40ea04983750a1078f2d6a1e7fa7fd90a515",
+      "grade": {
+        "case": "rails",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "items": {
+          "R01": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[Note line 10](...) must become positional `enum :status, \u2026, prefix: true`; keyword declarations were removed in Rails 8.0",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R02": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[Note line 12](...) needs `serialize :tags, coder: JSON`; the positional coder was removed in 7.2",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": true
+            },
+            "levelMatches": true
+          },
+          "R03": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[Note lines 13\u201314] alias `color`, which is not a database attribute; 7.2 rejects this. Explicit reader/writer delegation preserves the intended behavior.",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R04": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report never discusses `where(notebooks: notebook)` in the notes controller.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R05": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "Citations use `doi` as their primary key, but [`Import#receipt`] exports `citation[:id]`... The CSV's DOI becomes nil",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R06": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "[`Import#apply`] ... executes `return false unless row.note.save`... earlier notes and the import can remain committed while the controller presents a failed import",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R07": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[`fragments.sum`](.../app/models/export.rb#L42) needs an explicit string identity or `join`",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R08": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "The [preview] calls `stringify_keys`, then still reads `annotations[row.line]`... Annotation lookup returns nil",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R09": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "With retained 7.0 defaults, it reports rather than raises... Adopting newer defaults instead makes this an exception.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R10": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "The resulting instant remains 24 elapsed hours later, but its displayed offset and wall-clock time now follow DST.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": true
+            },
+            "levelMatches": true
+          },
+          "R11": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "Newly produced digests cover the reader's local day, while reservations remain UTC-based.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R12": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "New producers sharing queues with old workers can produce unreadable jobs.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R13": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[`wait_until: reminder_epoch`](.../app/models/note.rb#L60-L62) must pass a Time rather than numeric epoch",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R14": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[`:exponentially_longer`](.../app/jobs/citation_enrichment_job.rb#L7) becomes `:polynomially_longer`",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R15": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report never mentions `form_with(model: nil)` in the notes index view.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R16": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[The two-path `get`](.../config/routes.rb#L17-L18) must become two route declarations",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R17": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[`show_exceptions = false`](.../config/environments/test.rb#L30-L31) becomes `:none`; boolean support was removed in 7.2",
+            "reason": "The report rates it low as a mechanical fix, but the label is medium because the developer has to choose between :none and :rescuable.",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R18": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[`allowed_tags += \u2026`](.../config/initializers/action_text.rb#L1-L3) now adds to nil; 7.1 changed its default.",
+            "reason": "The report rates it low, but the label is medium because building the allowlist is a security decision.",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R19": {
+            "found": "located",
+            "level": "medium",
+            "accuracy": "accurate",
+            "quote": "[`Citation::Provider#initialize`] uses it by default... Enrichment fails when constructing the provider.",
+            "reason": "",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R20": {
+            "found": "located",
+            "level": "medium",
+            "accuracy": "accurate",
+            "quote": "New defaults\u2014medium if adopted: Notebook preferences rely on implicit YAML... Rails 7.1 defaults remove the implicit serializer",
+            "reason": "",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R21": {
+            "found": "located",
+            "level": "medium",
+            "accuracy": "accurate",
+            "quote": "notebook updates resubmit an `attr_readonly` slug. Rails 7.1 defaults ... raise on readonly assignment.",
+            "reason": "",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R23": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "PostgreSQL date decoding\u2014low if enabled: [`daily_note_counts`] expects strings and calls `Date.iso8601`; 7.2 defaults return Date objects.",
+            "reason": "The report rates the adoption risk low, but the label is medium because Date.iso8601 raises once the default is adopted.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R25": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "HTTP freshness\u2014high if enabled: Newer defaults prioritize ETags when both conditional headers are supplied... this affects [export downloads]",
+            "reason": "The report rates it high if enabled, but the label is low because a 304 only happens when the client already has the same bytes.",
+            "label": {
+              "level": "low",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          }
+        },
+        "otherGems": [
+          {
+            "gem": "net-imap 0.6.7 \u2192 0.6.8",
+            "quote": "Existing dependency updated | `net-imap` 0.6.7 \u2192 0.6.8"
+          },
+          {
+            "gem": "action_text-trix 2.1.19 (new)",
+            "quote": "Newly locked dependencies | `action_text-trix` 2.1.19"
+          },
+          {
+            "gem": "bigdecimal 4.1.3 (new)",
+            "quote": "`bigdecimal` 4.1.3"
+          },
+          {
+            "gem": "drb 2.2.3 (new)",
+            "quote": "`drb` 2.2.3"
+          },
+          {
+            "gem": "json 3.1.0 (new)",
+            "quote": "`json` 3.1.0"
+          },
+          {
+            "gem": "rack-session 1.0.2 (new)",
+            "quote": "`rack-session` 1.0.2"
+          },
+          {
+            "gem": "rackup 1.0.1 (new)",
+            "quote": "`rackup` 1.0.1"
+          },
+          {
+            "gem": "securerandom 0.4.1 (new)",
+            "quote": "`securerandom` 0.4.1"
+          },
+          {
+            "gem": "uri 1.1.2 (new)",
+            "quote": "`uri` 1.1.2"
+          },
+          {
+            "gem": "useragent 0.16.11 (new)",
+            "quote": "`useragent` 0.16.11"
+          },
+          {
+            "gem": "webrick 1.9.2 (new)",
+            "quote": "`webrick` 1.9.2"
+          }
+        ],
+        "otherFindings": [
+          {
+            "level": "high",
+            "summary": "Action Text now sanitizes HTML content attachments when preparing editor content, which changes how imported note bodies round-trip through the editor."
+          },
+          {
+            "level": "medium",
+            "summary": "Rails 8.1 deprecates the Sidekiq adapter for removal in 8.2, and the app stays on Sidekiq 6.5.12."
+          },
+          {
+            "level": "medium",
+            "summary": "The resolved json 3 parser rejects duplicate keys and comments, so citation provider responses that were accepted before may now fail."
+          }
+        ],
+        "located": 21,
+        "levelMatches": 17,
+        "inaccurate": 0,
+        "cost_usd": 0.221532,
+        "duration_ms": 27446
+      }
+    }
+  ]
+}

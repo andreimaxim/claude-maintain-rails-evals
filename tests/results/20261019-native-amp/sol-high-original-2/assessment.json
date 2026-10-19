@@ -1,0 +1,892 @@
+{
+  "id": "sol-high-original-2",
+  "variant": "original",
+  "grades": [
+    {
+      "name": "planner",
+      "sha256": "0c4c62dec998eaa7c8a90ccdc779fee2b4b209f88a145c81cc123634fbc8b015",
+      "grade": {
+        "case": "rails",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "families": {
+          "R01": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing",
+            "quote": "",
+            "reasons": "The plan never mentions the enum declaration in Note.",
+            "actionable": false
+          },
+          "R02": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Required API changes affect Action Text initialization, tags/highlights",
+            "reasons": "Impact: it says only that tags need an API change, not that the JSON serialize call fails. Applicability: it gives no code location and doesn't say the explicit coder is unsafe on 7.0. Recommendation: no repair is given. Validation: only a generic 46-test suite result.",
+            "actionable": false
+          },
+          "R03": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Required API changes affect Action Text initialization, tags/highlights",
+            "reasons": "Impact: it names highlights only as an area, with no alias_attribute or store-accessor consequence. Applicability: it gives no code location. Recommendation: no repair is given. Validation: only a generic suite result.",
+            "actionable": false
+          },
+          "R04": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing",
+            "quote": "",
+            "reasons": "The plan doesn't discuss the where(notebooks:) predicate.",
+            "actionable": false
+          },
+          "R05": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing",
+            "quote": "",
+            "reasons": "The plan doesn't discuss the receipt reading citation[:id] instead of the DOI.",
+            "actionable": false
+          },
+          "R06": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Rails 7.2+ can commit earlier rows when `Import#apply` returns after a later row fails.",
+            "reasons": "Recommendation: no rollback repair is stated. Validation: only a generic suite result, with no valid-then-invalid row scenario or database counts.",
+            "actionable": false
+          },
+          "R07": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Required API changes affect ... exports",
+            "reasons": "Impact: it names exports only as an area, without the TypeError from the string sum. Applicability: it gives no code location. Recommendation: no join repair is given. Validation: only a generic suite result.",
+            "actionable": false
+          },
+          "R08": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing",
+            "quote": "",
+            "reasons": "The plan doesn't discuss the preview annotation key mismatch.",
+            "actionable": false
+          },
+          "R09": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Enabling 8.1 defaults exposed three additional errors involving readonly slugs, PostgreSQL dates, and cache expiration.",
+            "reasons": "Impact: it names a cache-expiration error without a concrete consequence. Applicability: it correctly ties the error to defaults but names neither the gate nor the view. Recommendation: no clamp repair is given. Validation: only that the defaults run exposed the error.",
+            "actionable": false
+          },
+          "R10": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing",
+            "quote": "",
+            "reasons": "The plan doesn't discuss the to_time zone and offset change.",
+            "actionable": false
+          },
+          "R11": {
+            "impact": "supported",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "newer job serialization preserves the reader\u2019s time zone, changing this app\u2019s promised UTC-day selection.",
+            "reasons": "Applicability: it gives no files and no version. Recommendation: it doesn't state the 'proposed digest preparation'. Validation: it mentions Redis JSON probes but not the midnight-crossing scenario or the reservation-key checks.",
+            "actionable": false
+          },
+          "R12": {
+            "impact": "supported",
+            "applicability": "partial",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "new BigDecimal job payloads cannot be read by Rails 7.0 workers. Enqueuing decimal strings works on both versions.",
+            "reasons": "Applicability: it gives no affected files and doesn't say the same-version paths deliver. Validation: it mentions Redis probes on both versions but not the full producer/consumer matrix or the exact delivered percentage.",
+            "actionable": false
+          },
+          "R13": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Required API changes affect ... reminder scheduling.",
+            "reasons": "Impact: it names reminder scheduling only as an area, without saying the numeric wait_until raises. Applicability: it gives no code location. Recommendation: no Time.at repair is given. Validation: only a generic suite result.",
+            "actionable": false
+          },
+          "R14": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing",
+            "quote": "",
+            "reasons": "The plan doesn't discuss the exponentially_longer retry delay.",
+            "actionable": false
+          },
+          "R15": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Required API changes affect ... forms",
+            "reasons": "Impact: it names forms only as an area, without saying form_with model: nil raises. Applicability: it gives no code location. Recommendation: no repair is given. Validation: only a generic suite result.",
+            "actionable": false
+          },
+          "R16": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Required API changes affect ... routing",
+            "reasons": "Impact: it names routing only as an area, without saying routes fail to draw. Applicability: it gives no code location. Recommendation: no repair is given. Validation: only a generic suite result.",
+            "actionable": false
+          },
+          "R17": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing",
+            "quote": "",
+            "reasons": "The plan doesn't discuss the show_exceptions setting.",
+            "actionable": false
+          },
+          "R18": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Required API changes affect Action Text initialization",
+            "reasons": "Impact: it names Action Text initialization without saying allowed_tags is nil and boot fails. Applicability: it gives no specific code. Recommendation: no allowlist repair is given. Validation: only a generic suite result.",
+            "actionable": false
+          },
+          "R19": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Required API changes affect ... citations",
+            "reasons": "Impact: 'citations' is only a vague area, with no mention of Rails.application.secrets being removed. Applicability: it gives no code location. Recommendation: no config migration is given. Validation: only a generic suite result.",
+            "actionable": false
+          },
+          "R20": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing",
+            "quote": "",
+            "reasons": "The plan doesn't discuss the Notebook preferences serializer.",
+            "actionable": false
+          },
+          "R21": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Enabling 8.1 defaults exposed three additional errors involving readonly slugs",
+            "reasons": "Impact: it names an error but not that an ordinary notebook update raises. Applicability: it correctly ties the error to defaults but names neither the gate nor the controller. Recommendation: no repair is given. Validation: only that the defaults run exposed the error.",
+            "actionable": false
+          },
+          "R23": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "Enabling 8.1 defaults exposed three additional errors involving ... PostgreSQL dates",
+            "reasons": "Impact: it names an error but not the daily_note_counts failure. Applicability: it correctly ties the error to defaults but names neither the gate nor the method. Recommendation: no repair is given. Validation: only that the defaults run exposed the error.",
+            "actionable": false
+          },
+          "R25": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing",
+            "quote": "",
+            "reasons": "The plan doesn't discuss the strict_freshness ETag behavior.",
+            "actionable": false
+          }
+        },
+        "actionable": 0,
+        "cost_usd": 0.095652,
+        "duration_ms": 35599
+      }
+    },
+    {
+      "name": "final",
+      "sha256": "873b7c82a4c6b4e62f87ce17e218ef2c5620143bcefe69a9d3b52aba7e0419e0",
+      "grade": {
+        "case": "rails",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "families": {
+          "R01": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Keyword enum declaration removed in 8.0. [S3] | Use `enum :status, { draft: 0, ready: 1 }, prefix: true`. Do not change stored integer mapping. ... Edit draft \u2192 ready; status predicates and status filtering agree with persisted values.",
+            "reasons": "Impact: the plan says the API was removed but never says the Note model fails to load. Validation: it edits one note's status instead of persisting separate draft and ready notes and checking filters and helpers after reload.",
+            "actionable": false
+          },
+          "R02": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "Positional coder removed in 7.2. ... On the **7.1 bridge**, change to `serialize :tags, coder: JSON`. ... **Do not do this on 7.0:** the keyword is not its coder API and the probe wrote YAML.",
+            "reasons": "Impact: the plan names the removed positional coder but does not say what breaks in the app.",
+            "actionable": false
+          },
+          "R03": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "`color` is a jsonb store accessor, **not** a database attribute; non-attribute `alias_attribute` is removed in 7.2. ... Alias/delegate **both** `highlight_color` and `highlight_color=` to the store accessor methods",
+            "reasons": "Impact: the plan names the removed alias_attribute behavior but does not state the concrete app consequence.",
+            "actionable": false
+          },
+          "R04": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "target SQL attempts `notes.notebooks`. ... Use `where(notebook: @notebook)` or the actual `notebook_id` column, retaining the authorized notebook lookup. ... Filter among multiple owned notebooks and another user's notebook",
+            "reasons": "Validation: no unequal notebook populations, and no explicit inclusion, exclusion and foreign-notebook denial assertions.",
+            "actionable": true
+          },
+          "R05": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "`citation[:id]` ceases to mean custom primary key in 7.2. ... Use `citation.id` or `citation.doi`. ... CSV must contain the exact DOI, not blank/null.",
+            "reasons": "",
+            "actionable": true
+          },
+          "R06": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Raise `ActiveRecord::Rollback` on the failed note ... Without this, the target persisted an Import, first Note, Citation, and rich text from a rejected batch. ... Valid **first** row, invalid second row; assert no Import/Note/Citation/RichText remains",
+            "reasons": "Validation: no successful-batch control and no fresh-PostgreSQL count check through a real apply request.",
+            "actionable": true
+          },
+          "R07": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Join Markdown fragments with `fragments.join` ... Old target failed with String/Integer `TypeError` ... assert exact downloaded bytes and successful completion.",
+            "reasons": "Validation: no control showing that the failed-export path still works and leaves no artifact.",
+            "actionable": true
+          },
+          "R08": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "In 8.0 `stringify_keys` starts stringifying integers too; lookups still use integers. ... Remove this unnecessary conversion ... Current request tests caught the disappearing annotations on the target.",
+            "reasons": "Validation: one annotation instead of unequal annotations at lines 2 and 4, and no check that the preview does not save.",
+            "actionable": true
+          },
+          "R10": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "the original DST preview changes from `2026-11-01T09:00:00-04:00` to `2026-11-01T08:00:00-05:00` ... A preserving prep is `reminder_at.to_time.getlocal(reminder_at.utc_offset) + 86_400`",
+            "reasons": "Validation: no non-boundary control, and epoch, wall-clock time and offset are not all compared explicitly.",
+            "actionable": true
+          },
+          "R11": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "Normalize `requested_at = requested_at.utc` in the consumer **before both** date and range calculation. ... At 03:30 UTC on 5 Oct (23:30 Eastern on 4 Oct), use ready notes on opposite sides of UTC midnight. ... Test the UTC selection and reservation together, and a positive-offset reader near local midnight.",
+            "reasons": "",
+            "actionable": true
+          },
+          "R13": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "numeric values are unsupported from 7.2 and target serialization calls `utc` on the integer. ... `wait_until: Time.at(reminder_epoch).utc`",
+            "reasons": "Validation: replacement and ownership are checked, but the real scheduled payload/score and the persisted schedule time are not inspected.",
+            "actionable": true
+          },
+          "R14": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "`:exponentially_longer` removed in 7.2. ... On the **7.1 bridge**, rename to `:polynomially_longer` ... **New symbol is not supported on 7.0.**",
+            "reasons": "Impact: the plan does not say that bounded Active Job retry breaks and falls through to Sidekiq retries. Validation: there is no 503-then-200 control.",
+            "actionable": false
+          },
+          "R15": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "Explicit `model: nil` removed in 8.0. [S3] | Omit `model:`; retain explicit URL, GET verb, and unscoped field names.",
+            "reasons": "Impact: the plan names the removal but does not say the search form raises when rendered.",
+            "actionable": false
+          },
+          "R16": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "Multiple paths in one `get` are deprecated in 8.0, removed in 8.1. [S3,S4] | Draw `/notes` and `/journal` separately, preserving `notes_path` and both endpoints.",
+            "reasons": "Impact: the plan does not say that route drawing fails.",
+            "actionable": false
+          },
+          "R17": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Boolean `show_exceptions` removed in 7.2. ... On 7.1+, replace `false` with `:none`, preserving the suite's raise-not-render behavior. **Not a 7.0 preparatory change**",
+            "reasons": "Impact: the plan names the removal but does not clearly say the exception policy stops being preserved. Validation: CI eager-loading and normal test modes are not exercised.",
+            "actionable": false
+          },
+          "R18": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "The initializer crashes at boot regardless of retained defaults. ... sanitizer's safe defaults **plus** `ActionText::Attachment.tag_name`, `figure`, and `figcaption`, then add `details`/`summary`. Do not replace it with just those two tags.",
+            "reasons": "",
+            "actionable": true
+          },
+          "R19": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "read/override `Rails.application.secrets`; removed in 7.2. ... load the existing ENV-backed YAML via `config_for(:secrets).citation_provider` into `config.x.citation_provider` ... Existing fresh-process test sends `00123` and `sample: value # keep` through real HTTP Basic auth unchanged",
+            "reasons": "Impact: the plan does not say that provider requests fail before they are sent.",
+            "actionable": false
+          },
+          "R09": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "incorrect",
+            "validation": "partial",
+            "quote": "Cache only the future-available state; render expired state uncached. ... Target-default suite actually raised on a hit with `expires_in: -60`.",
+            "reasons": "Recommendation: the plan proposes the cache_if-style conditional caching that the key says broke the stale-link contract, not clamping expiry to zero. Validation: authoritative download expiry and ownership are not tested.",
+            "actionable": false
+          },
+          "R20": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "**7.1 default column serializer becomes nil.** Notebook currently relies on YAML for text `preferences`. ... Explicitly keep **YAML**, e.g. `serialize :preferences, coder: YAML` on 7.1+",
+            "reasons": "Impact: the plan does not say that the missing coder raises. Validation: it does not test with the gate both off and on.",
+            "actionable": false
+          },
+          "R21": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "The notebook form resubmits `slug`, and controller permits it. ... Even resubmitting the **same** slug raises. ... Same-value and tampered slugs on persisted notebook must not 500 or alter slug; name/heading still save. New notebook slug remains derived",
+            "reasons": "",
+            "actionable": true
+          },
+          "R23": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "passes each result to `Date.iso8601`. ... Normalize via `day.to_date` ... Multiple notes at UTC 23:30 and 00:30; order/counts remain UTC, with both decoder settings.",
+            "reasons": "Validation: no empty-report or ownership controls.",
+            "actionable": true
+          },
+          "R25": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "A **matching ETag and stale If-Modified-Since** distinguishes modes: new strict behavior can return 304 where legacy mode requires both validators to agree and sends 200.",
+            "reasons": "Validation: no ETag list with the matching tag in both orders, and no non-conflicting-validator or expired-302 cases.",
+            "actionable": true
+          },
+          "R12": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Rails 8.1.0 reads the old JSON-round-tripped decimal string ... Rails 7.0 cannot read a new `BigDecimalSerializer` payload. ... enqueue `reading_completion.to_s('F')` and retain `BigDecimal(params[:completion])` at consumption.",
+            "reasons": "Validation: the real Redis path is tested per version, but there is no explicit producer/consumer matrix in both directions with same-version controls.",
+            "actionable": true
+          }
+        },
+        "actionable": 13,
+        "cost_usd": 0.280884,
+        "duration_ms": 58907
+      }
+    },
+    {
+      "name": "artifact-1",
+      "source_artifact": "rails-upgrade/PLAN.md",
+      "sha256": "9932d98b09b603349a66158de85689e98346287cae1d087784591b6344d56097",
+      "grade": {
+        "case": "rails",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "families": {
+          "R01": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Keyword enum declaration removed in 8.0. [S3] | Use `enum :status, { draft: 0, ready: 1 }, prefix: true`. Do not change stored integer mapping. **Works on 7.0; executed.**",
+            "reasons": "Impact: the plan names the removal but never says that Note fails to load. Validation: it checks one draft\u2192ready edit, not unequal persisted draft/ready populations with helpers and scopes checked after reload.",
+            "actionable": false
+          },
+          "R02": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "Positional coder removed in 7.2. ... On the **7.1 bridge**, change to `serialize :tags, coder: JSON`. ... **Do not do this on 7.0:** the keyword is not its coder API and the probe wrote YAML.",
+            "reasons": "Impact: the plan cites the removal without saying what breaks in Note when the model loads or tags are read.",
+            "actionable": false
+          },
+          "R03": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "`color` is a jsonb store accessor, **not** a database attribute; non-attribute `alias_attribute` is removed in 7.2. ... Alias/delegate **both** `highlight_color` and `highlight_color=`",
+            "reasons": "Impact: the plan names the removed alias behavior but not the concrete failure in this application.",
+            "actionable": false
+          },
+          "R04": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "target SQL attempts `notes.notebooks`. ... Use `where(notebook: @notebook)` or the actual `notebook_id` column, retaining the authorized notebook lookup.",
+            "reasons": "Validation: the plan names multiple owned notebooks and a foreign notebook, but asks for no unequal populations or explicit inclusion, exclusion and denial assertions.",
+            "actionable": true
+          },
+          "R05": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "`citation[:id]` ceases to mean custom primary key in 7.2. ... Use `citation.id` or `citation.doi`. ... CSV must contain the exact DOI, not blank/null.",
+            "reasons": "Validation: the plan uses a single DOI rather than distinct DOI values compared against the persisted citations.",
+            "actionable": true
+          },
+          "R06": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Without this, the target persisted an Import, first Note, Citation, and rich text from a rejected batch.",
+            "reasons": "Validation: there is no successful-batch control and no real apply request checked with fresh PostgreSQL counts.",
+            "actionable": true
+          },
+          "R07": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Join Markdown fragments with `fragments.join` ... Old target failed with String/Integer `TypeError`",
+            "reasons": "Validation: the export was exercised through the Sidekiq fake/drain path, not a real worker, and there is no failed-export control.",
+            "actionable": true
+          },
+          "R08": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "In 8.0 `stringify_keys` starts stringifying integers too; lookups still use integers. ... Remove this unnecessary conversion",
+            "reasons": "Validation: the plan checks one annotation, not unequal annotations on lines 2 and 4, and does not check that preview saves nothing.",
+            "actionable": true
+          },
+          "R10": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "the original DST preview changes from `2026-11-01T09:00:00-04:00` to `2026-11-01T08:00:00-05:00`, even with 7.0 defaults retained.",
+            "reasons": "Validation: it tests two DST boundaries but has no non-boundary control.",
+            "actionable": true
+          },
+          "R11": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "Normalize `requested_at = requested_at.utc` in the consumer **before both** date and range calculation. ... Test the UTC selection and reservation together, and a positive-offset reader near local midnight.",
+            "reasons": "",
+            "actionable": true
+          },
+          "R12": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Rails 8.1.0 reads the old JSON-round-tripped decimal string ... Rails 7.0 cannot read a new `BigDecimalSerializer` payload. ... enqueue `reading_completion.to_s('F')`",
+            "reasons": "Validation: the plan does not set out a full producer/consumer matrix in both directions with same-version controls and the exact delivered percentage.",
+            "actionable": true
+          },
+          "R13": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "target serialization calls `utc` on the integer. ... `wait_until: Time.at(reminder_epoch).utc`",
+            "reasons": "Validation: it runs the jobs but never inspects the real scheduled payload/score or the persisted schedule time.",
+            "actionable": true
+          },
+          "R14": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "`:exponentially_longer` removed in 7.2. ... On the **7.1 bridge**, rename to `:polynomially_longer` ... **New symbol is not supported on 7.0.**",
+            "reasons": "Impact: the plan doesn't say that bounded ActiveJob retry breaks and work falls into Sidekiq retries. Validation: the 503\u2192200 control is missing.",
+            "actionable": false
+          },
+          "R15": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Explicit `model: nil` removed in 8.0. [S3] | Omit `model:`; retain explicit URL, GET verb, and unscoped field names.",
+            "reasons": "Impact: the plan doesn't say that rendering raises. Validation: it submits the form but doesn't check field names, method or the resulting note membership.",
+            "actionable": false
+          },
+          "R16": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "Multiple paths in one `get` are deprecated in 8.0, removed in 8.1. ... Draw `/notes` and `/journal` separately, preserving `notes_path`",
+            "reasons": "Impact: the plan doesn't say that routes fail to draw.",
+            "actionable": false
+          },
+          "R17": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "On 7.1+, replace `false` with `:none`, preserving the suite's raise-not-render behavior. **Not a 7.0 preparatory change**",
+            "reasons": "Impact: the consequence for the exception policy is only implied. Validation: the plan omits normal test mode and CI eager-loading checks.",
+            "actionable": false
+          },
+          "R18": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "The initializer crashes at boot regardless of retained defaults. ... Do not replace it with just those two tags.",
+            "reasons": "",
+            "actionable": true
+          },
+          "R19": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "read/override `Rails.application.secrets`; removed in 7.2. ... load the existing ENV-backed YAML via `config_for(:secrets).citation_provider` into `config.x.citation_provider`",
+            "reasons": "Impact: the plan doesn't say that provider requests fail before they are sent.",
+            "actionable": false
+          },
+          "R09": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "incorrect",
+            "validation": "partial",
+            "quote": "Cache only the future-available state; render expired state uncached.",
+            "reasons": "Recommendation: this is the cache_if-style alternative that the key says broke the stale-link contract, and the plan does not clamp to zero. Validation: download expiry/ownership checks are not in the validation list.",
+            "actionable": false
+          },
+          "R20": {
+            "impact": "partial",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Explicitly keep **YAML**, e.g. `serialize :preferences, coder: YAML` on 7.1+, before adopting this default.",
+            "reasons": "Impact: the plan doesn't say that the model raises for a missing coder. Validation: it doesn't test with the gate both off and on.",
+            "actionable": false
+          },
+          "R21": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "supported",
+            "quote": "Even resubmitting the **same** slug raises. ... Same-value and tampered slugs on persisted notebook must not 500 or alter slug; name/heading still save.",
+            "reasons": "",
+            "actionable": true
+          },
+          "R23": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Normalize via `day.to_date` (String and Date both supported by Rails) ... Multiple notes at UTC 23:30 and 00:30; order/counts remain UTC, with both decoder settings.",
+            "reasons": "Validation: empty-report and ownership checks are missing.",
+            "actionable": true
+          },
+          "R25": {
+            "impact": "supported",
+            "applicability": "supported",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "A **matching ETag and stale If-Modified-Since** distinguishes modes: new strict behavior can return 304 where legacy mode requires both validators to agree and sends 200.",
+            "reasons": "Validation: there is no ETag-list test in both orders and no non-conflicting validator control.",
+            "actionable": true
+          }
+        },
+        "actionable": 13,
+        "cost_usd": 0.279064,
+        "duration_ms": 58254
+      }
+    },
+    {
+      "name": "artifact-2",
+      "source_artifact": "rails-upgrade/COMMANDS.md",
+      "sha256": "0af55fd585bdf2ddd86b3dd82b2930c40f4ef58a7040fd144f907e5fccf5a076",
+      "grade": {
+        "case": "rails",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "families": {
+          "R01": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "target-boot-fixed-test.log (enum failures) ... model-patches.sh (enum + keyword JSON/YAML)",
+            "reasons": "Impact: the plan reports only 'enum failures' and does not say that note.rb fails to load. Applicability: it never names the Note model or the keyword-style declaration. Recommendation: it does not mention positional syntax with prefix: true or preserving the helpers. Validation: it gives only suite results.",
+            "actionable": false
+          },
+          "R02": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "Tags stayed positional JSON ... Thus this was not the incompatible keyword-coder edit.",
+            "reasons": "Impact: the plan names a 'keyword JSON' patch but does not describe the removal of the positional coder in note.rb. Applicability: it implies the keyword coder is unsafe on 7.0 but never names the affected code. Recommendation: the coder: JSON repair appears only as a script label. Validation: only suite results; no reload of existing unequal tags.",
+            "actionable": false
+          },
+          "R03": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "(alias and JSON decoding failures) ... boundary-patches.sh (method aliases",
+            "reasons": "Impact: the plan mentions alias failures but does not tie them to highlight_color aliasing a store accessor. Applicability: the code is not named. Recommendation: 'method aliases' is a script label, not a stated reader/writer forward to color. Validation: only suite results.",
+            "actionable": false
+          },
+          "R04": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "compatibility-patches.sh (forms, association filter, ...)",
+            "reasons": "Impact: the plan says only 'association filter' and does not describe the invalid predicate. Applicability: NotesController is not named. Recommendation: the repair is not described. Validation: only a suite pass, with no unequal-notebook or foreign-owner checks.",
+            "actionable": false
+          },
+          "R05": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "custom PK read",
+            "reasons": "Impact: the plan does not say that receipt DOI values are lost. Applicability: the Import receipt code is not named. Recommendation: 'custom PK read' is a script label with no stated repair. Validation: only suite results.",
+            "actionable": false
+          },
+          "R06": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "target-compatibility-test.log (1 failure: actual partial import commit). bash transaction-patch.sh",
+            "reasons": "Impact: the plan states a partial import commit but does not explain the nonlocal return or the mismatch with the all-or-nothing error response. Applicability: the code is not named. Recommendation: the transaction patch is not described. Validation: only suite results, with no fresh-count scenario and no successful-batch control.",
+            "actionable": false
+          },
+          "R07": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "compatibility-patches.sh (... sum ...)",
+            "reasons": "Impact: the plan names 'sum' only and does not describe the TypeError in the export worker. Applicability: Export is not named. Recommendation: it does not specify join or leaving numeric sums alone. Validation: only suite results, with no exact Markdown bytes check.",
+            "actionable": false
+          },
+          "R08": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "compatibility-patches.sh (... annotations ...)",
+            "reasons": "Impact: the plan does not describe the stringified keys or the lost annotations. Applicability: the view and model are not named. Recommendation: the repair is not described. Validation: only suite results.",
+            "actionable": false
+          },
+          "R10": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "compatibility-patches.sh (... DST preview ...)",
+            "reasons": "Impact: the plan says only 'DST preview' and does not explain that the offset or display changes while the instant does not. Applicability: the code is not named. Recommendation: no explicit keep/adopt contract decision. Validation: no epoch, wall-clock and offset comparison across a DST boundary with a control.",
+            "actionable": false
+          },
+          "R11": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "compatibility-patches.sh (... UTC digest consumption ...) ... put the ready notes on opposite sides of UTC midnight ... Final logs all show reserved=true duplicate=false, correct UTC Oct 5 digest, only the UTC-day candidate",
+            "reasons": "Impact: the plan does not explicitly state that the queued TimeWithZone keeps its zone and makes the content day disagree with the reservation day. Applicability: the mailer, job and user files are not named. Validation: the real queue probe covers only the UTC midnight crossing, not each midnight separately.",
+            "actionable": false
+          },
+          "R12": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "Before queue prep, payloads differ (old string vs new BigDecimal serializer). After prep, both decimal arguments are strings.",
+            "reasons": "Impact: the plan does not state that an 8.1 producer feeding a 7.0 worker fails on the unknown BigDecimalSerializer. Applicability: it does not clearly limit the failure to that mixed-version direction, with same-version paths unaffected. Validation: the real queue runs are same-version only; boundary payload rereads are not a delivered producer/consumer matrix.",
+            "actionable": false
+          },
+          "R13": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "compatibility-patches.sh (... schedule Time ...)",
+            "reasons": "Impact: the plan does not say that numeric wait_until raises before enqueue. Applicability: the Note code is not named. Recommendation: Time.at is only implied by a script label. Validation: no inspection of the scheduled payload or score.",
+            "actionable": false
+          },
+          "R14": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "omitting :none exception config and the polynomial retry rename",
+            "reasons": "Impact: the plan does not explain that bounded retry breaks and failures fall into Sidekiq retries. Applicability: it correctly keeps the rename off 7.0 but does not name the job. Validation: no persistent-503 attempt count and no 503-to-200 or 401 controls.",
+            "actionable": false
+          },
+          "R15": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "compatibility-patches.sh (forms, ...)",
+            "reasons": "Impact: the plan does not say that form_with(model: nil) raises. Applicability: the view is not named. Recommendation: the repair is not described. Validation: only suite results.",
+            "actionable": false
+          },
+          "R16": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "boot-patches.sh (allowlist + split routes)",
+            "reasons": "Impact: the plan does not state that route drawing fails. Applicability: routes.rb is not described. Recommendation: it does not say that /notes, /journal and the existing helpers are preserved. Validation: only suite results.",
+            "actionable": false
+          },
+          "R17": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "supported",
+            "validation": "partial",
+            "quote": "boundary-patches.sh (method aliases + :none exceptions) ... omitting :none exception config",
+            "reasons": "Impact: the plan does not explain the effect on the exception policy. Applicability: test.rb is not named, although the setting is correctly kept off 7.0. Validation: only suite runs, with no explicit exception-policy or eager-load checks.",
+            "actionable": false
+          },
+          "R18": {
+            "impact": "supported",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "rails runner 'puts Rails.version' -> target-raw-boot.log (fails at nil allowed_tags) ... boot-patches.sh (allowlist",
+            "reasons": "Applicability: the Action Text initializer is not named. Recommendation: the plan does not require a complete safe allowlist. Validation: it shows boot and suite results only, with no sanitizer exclusion checks.",
+            "actionable": false
+          },
+          "R19": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "owned citation config/tests",
+            "reasons": "Impact: the plan does not state that the removed Rails.application.secrets access fails. Applicability: the provider and secrets files are not named. Recommendation: the config migration is not described. Validation: no fresh-process Basic header check with special-character credentials.",
+            "actionable": false
+          },
+          "R09": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "PROBE_DEFAULTS=8.1 ... target-defaults81-test.log (three errors: readonly/date/cache)",
+            "reasons": "Impact: the plan lists only a 'cache' error and does not describe the negative expiry raising. Applicability: it ties the error to 8.1 defaults but names neither the gate nor the partial. Recommendation: none is given. Validation: only the suite result under 8.1 defaults.",
+            "actionable": false
+          },
+          "R20": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "partial",
+            "validation": "partial",
+            "quote": "model-patches.sh (enum + keyword JSON/YAML)",
+            "reasons": "Impact: the missing-coder failure is not discussed. Applicability: the default_column_serializer gate is not discussed. Recommendation: an explicit YAML coder appears only as a script label. Validation: there are suite runs under both defaults but no preference reload scenario.",
+            "actionable": false
+          },
+          "R21": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "three errors: readonly/date/cache",
+            "reasons": "Impact: the plan lists only a 'readonly' error and does not explain that the slug resubmission raises. Applicability: it is tied to 8.1 defaults but names neither the gate nor the code. Recommendation: none is given. Validation: only the suite result.",
+            "actionable": false
+          },
+          "R23": {
+            "impact": "partial",
+            "applicability": "partial",
+            "recommendation": "missing",
+            "validation": "partial",
+            "quote": "three errors: readonly/date/cache",
+            "reasons": "Impact: the plan lists only a 'date' error and does not explain that Date.iso8601 raises on decoded dates. Applicability: it is tied to 8.1 defaults but names neither the gate nor daily_note_counts. Recommendation: none is given. Validation: only the suite result.",
+            "actionable": false
+          },
+          "R25": {
+            "impact": "missing",
+            "applicability": "missing",
+            "recommendation": "missing",
+            "validation": "missing",
+            "quote": "",
+            "reasons": "Not discussed: the plan never mentions strict_freshness or the export download conditional GET.",
+            "actionable": false
+          }
+        },
+        "actionable": 0,
+        "cost_usd": 0.276131,
+        "duration_ms": 76827
+      }
+    }
+  ]
+}

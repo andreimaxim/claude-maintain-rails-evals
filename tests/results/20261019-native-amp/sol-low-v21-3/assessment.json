@@ -1,0 +1,998 @@
+{
+  "id": "sol-low-v21-3",
+  "variant": "v21",
+  "grades": [
+    {
+      "name": "planner",
+      "sha256": "9344b5ee18fca9ba18df26434093634d8c9cca77c48176785db238c3653e1c15",
+      "grade": {
+        "case": "rails",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "items": {
+          "R01": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss the keyword-style enum removal; it only mentions unspecified \"mechanical API fixes\".",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R02": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss the removal of the positional serialize coder.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": true
+            },
+            "levelMatches": false
+          },
+          "R03": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss alias_attribute to a non-attribute.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R04": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss the where(notebooks: record) change.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R05": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss record[:id] reading the id column.",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R06": {
+            "found": "named",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "**High:** failed CSV imports can commit earlier rows instead of rolling back the entire batch.",
+            "reason": "It describes the change but doesn't name the affected file (app/models/import.rb).",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R07": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss string sum.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R08": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss the stringify_keys change.",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R09": {
+            "found": "named",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "**High:** DST reminder displays and expired-export cache retention change silently.",
+            "reason": "It describes the expired-export cache change but doesn't name the affected file (_export.html.erb).",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R10": {
+            "found": "named",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "**High:** DST reminder displays and expired-export cache retention change silently.",
+            "reason": "It describes the DST display change but doesn't name the affected file (app/models/note.rb).",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": true
+            },
+            "levelMatches": true
+          },
+          "R11": {
+            "found": "named",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "**High:** digest jobs preserve readers\u2019 time zones, changing the selected day while deduplication remains UTC-based.",
+            "reason": "It describes the change but doesn't name the affected job, mailer or model file.",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R12": {
+            "found": "named",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "**High:** new BigDecimal job payloads cannot safely be consumed by old Rails workers.",
+            "reason": "It describes the mixed-version failure but doesn't name the affected files.",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R13": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss Integer wait_until.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R14": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss the removal of :exponentially_longer.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R15": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss form_with(model: nil).",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R16": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss a route declaration with two paths.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R17": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss show_exceptions = false.",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R18": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't specifically discuss the nil Action Text allowed_tags; it only mentions vague \"rich-text attachment/editor risks\".",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R19": {
+            "found": "named",
+            "level": "medium",
+            "accuracy": "accurate",
+            "quote": "**Medium:** citation enrichment uses the removed `Rails.application.secrets` API.",
+            "reason": "It names the citation enrichment feature but not the affected file (citation/provider.rb or config/secrets.yml).",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R20": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss default_column_serializer.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R21": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss raise_on_assign_to_attr_readonly.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R23": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss postgresql_adapter_decode_dates.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R25": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss strict_freshness.",
+            "label": {
+              "level": "low",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          }
+        },
+        "otherGems": [],
+        "otherFindings": [
+          {
+            "level": "medium",
+            "summary": "Rails' built-in Sidekiq adapter is deprecated and will be removed in 8.2 (medium)."
+          }
+        ],
+        "located": 0,
+        "levelMatches": 6,
+        "inaccurate": 0,
+        "cost_usd": 0.0539224,
+        "duration_ms": 18371
+      }
+    },
+    {
+      "name": "final",
+      "sha256": "9344b5ee18fca9ba18df26434093634d8c9cca77c48176785db238c3653e1c15",
+      "grade": {
+        "case": "rails",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "items": {
+          "R01": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss the keyword-style enum removal; it only mentions unspecified \"mechanical API fixes\".",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R02": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss the removal of the positional serialize coder.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": true
+            },
+            "levelMatches": false
+          },
+          "R03": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss alias_attribute to a non-attribute.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R04": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss the where(notebooks: record) change.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R05": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss record[:id] reading the id column.",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R06": {
+            "found": "named",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "**High:** failed CSV imports can commit earlier rows instead of rolling back the entire batch.",
+            "reason": "It describes the change but doesn't name the affected file (app/models/import.rb).",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R07": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss string sum.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R08": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss the stringify_keys change.",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R09": {
+            "found": "named",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "**High:** DST reminder displays and expired-export cache retention change silently.",
+            "reason": "It describes the expired-export cache change but doesn't name the affected file (_export.html.erb).",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R10": {
+            "found": "named",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "**High:** DST reminder displays and expired-export cache retention change silently.",
+            "reason": "It describes the DST display change but doesn't name the affected file (app/models/note.rb).",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": true
+            },
+            "levelMatches": true
+          },
+          "R11": {
+            "found": "named",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "**High:** digest jobs preserve readers\u2019 time zones, changing the selected day while deduplication remains UTC-based.",
+            "reason": "It describes the change but doesn't name the affected job, mailer or model file.",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R12": {
+            "found": "named",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "**High:** new BigDecimal job payloads cannot safely be consumed by old Rails workers.",
+            "reason": "It describes the mixed-version failure but doesn't name the affected files.",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R13": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss Integer wait_until.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R14": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss the removal of :exponentially_longer.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R15": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss form_with(model: nil).",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R16": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss a route declaration with two paths.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R17": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss show_exceptions = false.",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R18": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't specifically discuss the nil Action Text allowed_tags; it only mentions vague \"rich-text attachment/editor risks\".",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R19": {
+            "found": "named",
+            "level": "medium",
+            "accuracy": "accurate",
+            "quote": "**Medium:** citation enrichment uses the removed `Rails.application.secrets` API.",
+            "reason": "It names the citation enrichment feature but not the affected file (citation/provider.rb or config/secrets.yml).",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R20": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss default_column_serializer.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R21": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss raise_on_assign_to_attr_readonly.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R23": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss postgresql_adapter_decode_dates.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R25": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't discuss strict_freshness.",
+            "label": {
+              "level": "low",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          }
+        },
+        "otherGems": [],
+        "otherFindings": [
+          {
+            "level": "medium",
+            "summary": "Rails' built-in Sidekiq adapter is deprecated and will be removed in 8.2 (medium)."
+          }
+        ],
+        "located": 0,
+        "levelMatches": 6,
+        "inaccurate": 0,
+        "cost_usd": 0.0539224,
+        "duration_ms": 18371
+      }
+    },
+    {
+      "name": "artifact-1",
+      "source_artifact": "rails-7.0.8.7-to-8.1.0-risk-report.md",
+      "sha256": "c5644c5d425c20faba906eb64236a03601464c2ee875e545c95389bac3d61d5d",
+      "grade": {
+        "case": "rails",
+        "model": "claude-opus-5-5",
+        "effort": "high",
+        "items": {
+          "R01": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "**Enum keyword syntax removed:** [Note:10](...) must become `enum :status, { draft: 0, ready: 1 }, prefix: true`; model loading catches this.",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R02": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "**Positional serialize coder removed:** [Note:12](...) needs `serialize :tags, coder: JSON`, retaining JSON data format; model loading catches it.",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": true
+            },
+            "levelMatches": true
+          },
+          "R03": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "**alias_attribute no longer aliases noncolumns:** [Note:13\u201314](...) aliases the store accessor `color`, not a column",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R04": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report never discusses the `where(notebooks: notebook)` change in the notes controller.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R05": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "[Import#receipt:68](...) reads `citation[:id]`; citations' primary key is DOI, with no id column ... This is mechanical but silently wrong until that path is checked.",
+            "reason": "The report rates it low even though it says the failure is silent, while the label is high.",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R06": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "[Import#apply](...) saves the import and then returns false from inside the transaction if any row fails to save.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R07": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't mention string `sum` in the export model.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R08": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't mention the `stringify_keys` integer-key change in the import preview.",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R09": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "With existing defaults, rendering an expired export writes an entry without this expiration instead of an immediately expired one. ... If newer defaults are adopted, the same request raises instead.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R10": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "Across a DST transition, the preview now follows the destination instant's zone offset rather than retaining the original offset. The epoch is still 24 elapsed hours later",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": true
+            },
+            "levelMatches": true
+          },
+          "R11": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "Newly queued digests now cover the reader's local day rather than the previous UTC day, while reservation keys remain UTC-based.",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R12": {
+            "found": "located",
+            "level": "high",
+            "accuracy": "accurate",
+            "quote": "An old worker consuming a new digest payload can fail deserialization. ... this is principally a mixed-worker/rollback hazard",
+            "reason": "",
+            "label": {
+              "level": "high",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R13": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "**Numeric scheduled_at unsupported:** [Note:61](...) passes an integer to `wait_until`",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R14": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "**Retry wait symbol removed:** [CitationEnrichmentJob:7](...) needs `:polynomially_longer`",
+            "reason": "",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R15": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't mention `form_with(model: nil)` in the notes index view.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R16": {
+            "found": "missing",
+            "level": "missing",
+            "accuracy": "missing",
+            "quote": "",
+            "reason": "The report doesn't mention the route declaration with two paths.",
+            "label": {
+              "level": "low",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R17": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "**Boolean show_exceptions support removed:** [test.rb:31](...) needs `:none` instead of false to keep exceptions visible to tests.",
+            "reason": "The report rates it low and treats it as mechanical, while the label is medium.",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R18": {
+            "found": "located",
+            "level": "low",
+            "accuracy": "accurate",
+            "quote": "**Action Text allowlist now defaults to nil:** [initializer:3](...) does `nil + [...]` and fails boot.",
+            "reason": "The report rates it low, while the label is medium because building a safe allowlist is a security decision.",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R19": {
+            "found": "located",
+            "level": "medium",
+            "accuracy": "accurate",
+            "quote": "[Citation::Provider#initialize](...) reads it; [secrets.yml](...) supplies environment-backed settings.",
+            "reason": "",
+            "label": {
+              "level": "medium",
+              "default": false,
+              "judgmentCall": false
+            },
+            "levelMatches": true
+          },
+          "R20": {
+            "found": "located",
+            "level": "not_relevant",
+            "accuracy": "accurate",
+            "quote": "**No default YAML serializer:** gated by 7.1 defaults; [Notebook#preferences](...) retains YAML. Changing defaults later requires an explicit coder",
+            "reason": "The report puts it under 'judged not applicable, or not enabled' and gives no level for adopting the default, while the label is medium.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R21": {
+            "found": "located",
+            "level": "not_relevant",
+            "accuracy": "accurate",
+            "quote": "**Readonly assignment errors:** gated by 7.1 defaults; [Notebook's readonly slug](...) and unchanged slug resubmission retain old behavior.",
+            "reason": "The report lists it as not applicable and gives no level for adopting it, while the label is medium.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R23": {
+            "found": "located",
+            "level": "not_relevant",
+            "accuracy": "accurate",
+            "quote": "**PostgreSQL automatic raw Date decoding:** gated by 7.2 defaults ... If enabling it later, `Date.iso8601(day)` receives a Date instead of a string and needs adjustment.",
+            "reason": "The report lists it as not applicable and gives no level for adopting it, while the label is medium.",
+            "label": {
+              "level": "medium",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          },
+          "R25": {
+            "found": "located",
+            "level": "not_relevant",
+            "accuracy": "accurate",
+            "quote": "**ETag-only strict freshness:** gated by 8.0 defaults; [export conditional download](...) retains the previous ETag/Last-Modified combination rules.",
+            "reason": "The report lists it as not applicable and gives no level for adopting it, while the label is low.",
+            "label": {
+              "level": "low",
+              "default": true,
+              "judgmentCall": false
+            },
+            "levelMatches": false
+          }
+        },
+        "otherGems": [
+          {
+            "gem": "net-imap",
+            "quote": "net-imap | 0.6.7 \u2192 0.6.8"
+          },
+          {
+            "gem": "action_text-trix",
+            "quote": "action_text-trix | added 2.1.19"
+          },
+          {
+            "gem": "bigdecimal, json, uri",
+            "quote": "bigdecimal / json / uri | newly locked 4.1.3 / 3.1.0 / 1.1.2"
+          },
+          {
+            "gem": "drb, securerandom",
+            "quote": "drb / securerandom | added 2.2.3 / 0.4.1"
+          },
+          {
+            "gem": "rack-session, rackup, useragent, webrick",
+            "quote": "rack-session / rackup / useragent / webrick | added 1.0.2 / 1.0.1 / 0.16.11 / 1.9.2"
+          }
+        ],
+        "otherFindings": [
+          {
+            "level": "high",
+            "summary": "Action Text now extracts embeds in before_validation, and Trix moves into the action_text-trix gem, which may not match the app's vendored Trix 1.3.5 override (high)."
+          },
+          {
+            "level": "medium",
+            "summary": "The Rails Sidekiq adapter is deprecated and will be removed in 8.2, so Sidekiq must reach 7.3.3 or later (medium)."
+          }
+        ],
+        "located": 18,
+        "levelMatches": 11,
+        "inaccurate": 0,
+        "cost_usd": 0.15549839999999998,
+        "duration_ms": 32418
+      }
+    }
+  ]
+}
