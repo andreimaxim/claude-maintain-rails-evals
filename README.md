@@ -39,12 +39,13 @@ Their explicit tool lists exclude MCP discovery and extra model delegation.
 Planner bodies are unchanged; only the skill's Claude agent reference is replaced
 with the Amp planner tool. Neither the payload nor the app orb receives answer keys.
 
-The project-local `eval-matrix` plugin launches all 60 independent app orbs from
-one published revision. Each operator downloads only five runtime source files
-from that revision, builds the payload, and starts its single session. The
-coordinator saves each thread ID before dispatch, with an exclusive reservation
-and atomic manifest updates. An interrupted launch requires inspection, not a
-blind retry. Never call the launch tool again to recover an existing matrix.
+`scripts/prepare-amp-matrix.ts <published-revision> <parent-thread>` prints the
+60 session descriptions and bootstrap prompts. The coordinator launches them
+with native `create_thread`, each in the sample project with its own orb, and
+records returned thread IDs after each batch. Each operator downloads only the
+selected runtime inputs, builds the payload, and starts its single session.
+Plugin tools cannot create orbs, so the runtime plugin only delegates within
+its existing orb. An interrupted launch requires inspection, not a blind retry.
 
 Each orb retains `.git/amp-evals/run-1/` with the raw planner report, final answer,
 visible main and planner traces, and a receipt. The receipt records input hashes,

@@ -6,11 +6,12 @@ configuration produce 60 sessions. Each session has its own fresh application
 orb. The main and planner threads share that session's orb, not another session's
 checkout or services. The bootstrap operator is outside the scored turn.
 
-`threads.json` records the pinned runtime revision and every launched session.
-The launcher reserves that manifest before creating threads and writes each
-returned ID before dispatching its instructions. Unknown creation or dispatch
-outcomes need inspection; they must not be retried blindly. A second matrix
-launch is refused.
+`threads.json` records the pinned runtime revision and session assignments.
+Native `create_thread` launches each independent orb, and the coordinator records
+returned IDs after each batch. Unknown creation outcomes need inspection; they
+must not be retried blindly. The two rejected plugin-launch attempts created no
+worker threads and are retained separately. Amp permits the plugin's local
+main/planner delegation, but not new orbs from a plugin tool.
 
 The original prompt uses the plan grader and v21 uses the risk-report grader.
 Keep workflow failures, finding coverage, report accuracy, elapsed time, and
@@ -54,6 +55,6 @@ planner messages. Both revised receipts have no collection errors.
 The harness was then hardened to make native-export errors invalidate its result,
 bound export and dispatch waits, cancel failed children, and refuse duplicate
 planner calls. These changes affect failure handling, not the frozen prompts.
-The 26 repository tests pass, and both plugins typecheck against the installed
+The 26 repository tests pass, and the runtime typechecks against the installed
 Amp API declarations. Smokes establish operation of the harness, not Rails recall
 or equality with Claude Code's tools and system instructions.
