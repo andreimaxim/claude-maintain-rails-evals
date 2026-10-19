@@ -1,0 +1,362 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R3 — Keyword-argument `enum` syntax removed in Rails 8.0 ... Affected code: app/models/note.rb ... enum :status, { draft: 0, ready: 1 }, prefix: true",
+      "reason": "The report puts changes in phases and sections and never gives any change a high, medium or low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R02": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R15 — `serialize :tags, JSON` positional coder argument removed ... On `7.0.8.7` ... silently switching `Note#tags` from `Coders::JSON` to `Coders::YAMLColumn` and writing YAML into `notes.tags`.",
+      "reason": "It is listed as a lockstep change with no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R03": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R4 — `alias_attribute` on `store_accessor` (`:color`) removed in Rails 7.2 ... app/models/note.rb",
+      "reason": "It is listed as a required change with no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R04": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R11 — `@notes.where(notebooks: @notebook)` ... fails with `ActiveRecord::StatementInvalid: PG::UndefinedColumn` ... app/controllers/notes_controller.rb",
+      "reason": "It is listed as a required change with no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`citation[:id]` returns `nil` for `Citation` (`primary_key = \"doi\"`), producing blank DOIs in exported receipt CSVs",
+      "reason": "It is listed among the required changes with no risk level, where the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R06": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "In Rails 7.1+/8.1, non-local returns inside `transaction` **commit** the transaction instead of rolling it back, persisting the `Import` and any preceding valid rows",
+      "reason": "No risk level is given, where the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R8 — `Enumerable#sum` without an initial value on `Array<String>` raises `TypeError` ... app/models/export.rb",
+      "reason": "It is listed as a required change with no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R7 — `HashWithIndifferentAccess#stringify_keys` now stringifies `Integer` keys ... silently drops all annotations from the preview page",
+      "reason": "No risk level is given, where the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "D2 — `config.active_support.raise_on_invalid_cache_expiration_time = true` ... app/views/exports/_export.html.erb ... raising `ActionView::Template::Error: Cache expiration time is invalid, cannot be negative`",
+      "reason": "It appears only as an optional default with no level, and the report does not describe what happens under the current defaults, where the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R13 — `ActiveSupport::TimeWithZone#to_time` attaches `time_zone` instead of fixed `utc_offset` across DST in `Note#next_day_reminder_at`",
+      "reason": "No risk level is given, where the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R10 — `ActiveJob::Serializers::TimeWithZoneSerializer` preserves the reader's time zone ... evaluate to the local date (`2026-10-04`) instead of the UTC date",
+      "reason": "No risk level is given, where the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R12": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "M3 — Queued `DigestJob` `BigDecimal` argument serialization ... A Rails `7.0.8.7` worker fails to deserialize this payload",
+      "reason": "It is listed in the mixed-version section with no risk level, where the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R13": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R9 — `ActiveJob::Core#set(wait_until:)` requires a `Time`/`DateTime` object instead of an `Integer` epoch ... app/models/note.rb",
+      "reason": "It is listed as a required change with no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R17 — `retry_on ..., wait: :exponentially_longer` removed in Rails 7.2 ... app/jobs/citation_enrichment_job.rb",
+      "reason": "It is listed as a lockstep change with no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R6 — `form_with(model: nil, ...)` raises `ArgumentError` in Rails 8.1 ... app/views/notes/index.html.erb",
+      "reason": "It is listed as a required change with no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R5 — Multiple paths in `get \"/notes\", \"/journal\"` removed in Rails 8.1 ... config/routes.rb",
+      "reason": "It is listed as a required change with no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R16 — `config.action_dispatch.show_exceptions = false` treated as `:all` instead of `:none` ... config/environments/test.rb",
+      "reason": "No risk level is given, where the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R2 — `ActionText::ContentHelper.allowed_tags` is `nil` ... raises `NoMethodError: undefined method '+' for nil` on boot",
+      "reason": "No risk level is given, where the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R14 — `Rails.application.secrets` removed in Rails 7.2 ... app/models/citation/provider.rb, config/secrets.yml",
+      "reason": "No risk level is given, where the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R20": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "D1 — `config.active_record.default_column_serializer = nil` (Rails 7.1 default) ... app/models/notebook.rb ... Raises `ArgumentError: missing keyword: :coder`",
+      "reason": "It is listed as an optional default with no level, where the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "D4 — `config.active_record.raise_on_assign_to_attr_readonly = true` ... Raises `ActiveRecord::ReadonlyAttributeError: slug` on `NotebooksController#update`",
+      "reason": "It is listed as an optional default with no level, where the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "D3 — `config.active_record.postgresql_adapter_decode_dates = true` ... causing `Date.iso8601(day)` to raise `TypeError`",
+      "reason": "It is listed as an optional default with no level, where the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never discusses `strict_freshness` or the export download's conditional GET behavior.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "json (pinned ~> 2.7, resolves 2.21.2; 3.1.0 if unconstrained)",
+      "quote": "`json (2.21.2)` (with `~> 2.7`; `3.1.0` if unconstrained)"
+    },
+    {
+      "gem": "action_text-trix 2.1.19",
+      "quote": "New transitive gems added by Rails `8.1.0`: `action_text-trix (2.1.19)`"
+    },
+    {
+      "gem": "bigdecimal 4.1.3",
+      "quote": "`bigdecimal (4.1.3)`"
+    },
+    {
+      "gem": "drb 2.2.3",
+      "quote": "`drb (2.2.3)`"
+    },
+    {
+      "gem": "rack-session 1.0.2",
+      "quote": "`rack-session (1.0.2)`"
+    },
+    {
+      "gem": "rackup 1.0.1",
+      "quote": "`rackup (1.0.1)`"
+    },
+    {
+      "gem": "securerandom 0.4.1",
+      "quote": "`securerandom (0.4.1)`"
+    },
+    {
+      "gem": "uri 1.1.2",
+      "quote": "`uri (1.1.2)`"
+    },
+    {
+      "gem": "useragent 0.16.11",
+      "quote": "`useragent (0.16.11)`"
+    },
+    {
+      "gem": "webrick 1.9.2",
+      "quote": "`webrick (1.9.2)`"
+    },
+    {
+      "gem": "net-imap 0.6.7 -> 0.6.8",
+      "quote": "Updated transitive gem: `net-imap` `0.6.7` → `0.6.8`"
+    },
+    {
+      "gem": "method_source removed",
+      "quote": "Removed transitive gem: `method_source (1.1.0)`"
+    }
+  ],
+  "otherFindings": [],
+  "located": 22,
+  "levelMatches": 0,
+  "inaccurate": 0,
+  "cost_usd": 0.2761864,
+  "duration_ms": 39944
+}

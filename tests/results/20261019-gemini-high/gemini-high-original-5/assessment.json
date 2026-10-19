@@ -1,0 +1,318 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Keyword-argument `enum status: {...}, _prefix: true` removed (Rails 8.0) - Affected code: app/models/note.rb",
+      "reason": "The report gives no risk levels; this entry sits in the 'Required Changes' section without a high/medium/low rating, while the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R02": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "inaccurate",
+      "quote": "On Rails 7.0.8.7, `serialize` forwards `**options` to `attribute(:tags, **options)`, raising `ArgumentError: Unknown key: :coder`.",
+      "reason": "The report says `coder:` raises on 7.0, but the key says 7.0 accepts it silently and writes YAML; the report also gives no risk level (label low).",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R03": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`alias_attribute` on `store_accessor` raises `ArgumentError` (Rails 7.2) - Affected code: app/models/note.rb",
+      "reason": "The report gives no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R04": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`@notes.where(notebooks: @notebook)` plural association key raises `PG::UndefinedColumn` (Rails 8.0+) - Affected code: app/controllers/notes_controller.rb",
+      "reason": "The report gives no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`citation[:id]` in `Import#receipt` returns `nil` for custom primary key `doi` ... exported receipt CSVs omit all DOIs.",
+      "reason": "The report gives no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R06": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Non-local `return false` inside `Import#apply` `transaction` block now COMMITS partial imports instead of rolling back",
+      "reason": "The report gives no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`Array#sum` without an initial value (`fragments.sum`) on `String` elements raises `TypeError` (Rails 8.0+) - Affected code: app/models/export.rb",
+      "reason": "The report gives no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`HashWithIndifferentAccess#stringify_keys` now stringifies `Integer` keys, dropping import preview annotations",
+      "reason": "The report gives no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "With `load_defaults 7.0`, Rails 8.1 logs `ArgumentError: Cache expiration time is invalid, cannot be negative`; with `load_defaults 7.1+`, it raises `ActionView::Template::Error`",
+      "reason": "The report lists this under optional framework defaults without a risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`ActiveSupport::TimeWithZone#to_time` preserves timezone object instead of fixed `utc_offset` across DST in `Note#next_day_reminder_at` ... the same instant",
+      "reason": "The report gives no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`ActiveJob` `TimeWithZoneSerializer` preserves the reader's time zone, shifting `DigestMailer` off the UTC day (Rails 7.1+)",
+      "reason": "The report gives no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R12": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "a **7.0.8.7 Sidekiq worker cannot deserialize a `DigestJob` enqueued by 8.1**",
+      "reason": "The report lists this under rollout/rollback risks without a risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R13": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`NoteReminderJob.set(wait_until: reminder_epoch)` with an `Integer` epoch raises `NoMethodError` (Rails 7.1+) - Affected code: app/models/note.rb",
+      "reason": "The report gives no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`retry_on ..., wait: :exponentially_longer` removed in `CitationEnrichmentJob` (Rails 7.2+)",
+      "reason": "The report gives no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`form_with(model: nil, ...)` raises `ArgumentError` (Rails 8.0+) - Affected code: app/views/notes/index.html.erb",
+      "reason": "The report gives no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Multiple paths in a single route helper (`get \"/notes\", \"/journal\", ...`) removed (Rails 8.1) - Affected code: config/routes.rb",
+      "reason": "The report gives no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config.action_dispatch.show_exceptions = false` in `test.rb` silently behaves as `:all`",
+      "reason": "The report gives no risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`ActionText::ContentHelper.allowed_tags` defaults to `nil` at boot (Rails 7.1+) - Affected code: config/initializers/action_text.rb",
+      "reason": "The report gives no risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Removal of `Rails.application.secrets` (Rails 7.2) - Affected code: config/secrets.yml, app/models/citation/provider.rb",
+      "reason": "The report gives no risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R20": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config.active_record.default_column_serializer = nil` (7.1 default): Affected code: app/models/notebook.rb ... Raises `ArgumentError: missing keyword: :coder`",
+      "reason": "The report lists this under optional framework defaults without a risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "With `raise_on_assign_to_attr_readonly = true`, `@notebook.update(notebook_params)` raises `ActiveRecord::ReadonlyAttributeError: slug`",
+      "reason": "The report lists this under optional framework defaults without a risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config.active_record.postgresql_adapter_decode_dates = true` (7.2 default): Affected code: app/models/notebook.rb ... `Date.iso8601(day)` to raise `TypeError`",
+      "reason": "The report lists this under optional framework defaults without a risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config.action_dispatch.strict_freshness = true` (8.0): In ExportDownloadsController#show, `stale?(etag: blob.checksum, last_modified: blob.created_at)` now prioritizes `If-None-Match` over `If-Modified-Since`",
+      "reason": "The report lists this among other defaults described as having benign or observable changes, without a risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "json",
+      "quote": "Pin `gem \"json\", \"~> 2.7\"` in Gemfile ... Pinning `gem \"json\", \"~> 2.7\"` resolved `json 2.21.2` (unpinned it resolves `json 3.1.0`)"
+    }
+  ],
+  "otherFindings": [],
+  "located": 23,
+  "levelMatches": 0,
+  "inaccurate": 1,
+  "cost_usd": 0.2623664,
+  "duration_ms": 37968
+}

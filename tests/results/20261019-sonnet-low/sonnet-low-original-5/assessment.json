@@ -1,0 +1,330 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:10`, `enum status: {...}, _prefix: true` | The keyword form of `enum` was removed. | `enum :status, {...}, prefix: true`",
+      "reason": "The report puts this in an unrated 'Required changes' table and never uses high, medium or low, so it is unrated instead of low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R02": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:12`, `serialize :tags, JSON` | The positional coder was removed. | `serialize :tags, coder: JSON` | **No.** Make this change in the upgrade commit.",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R03": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:14`, `alias_attribute :highlight_color, :color` | `color` comes from `store_accessor`, not a column, so 8.1 raises.",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R04": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`NotesController#index`, `@notes.where(notebooks: @notebook)` | 8.1 generates `notes.notebooks`, a column that doesn't exist. | `where(notebook: @notebook)`",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`Import#receipt`, `citation[:id]` | `[:id]` returns nil for a table whose primary key is `doi`, so the receipt CSV has blank DOIs.",
+      "reason": "The report lists this without a risk level, so it is unrated instead of high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R06": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`Import#apply`, `return false` inside `transaction do` | 8.1 commits on a non-local `return`, where 7.0 rolled back.",
+      "reason": "The report calls this a silent behavior change but never gives it a high, medium or low level, so it is unrated instead of high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/export.rb:42`, `fragments.sum` over strings | ... 8.1 uses Ruby's version and raises TypeError. | `fragments.join`",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`Import#annotations` and `app/views/imports/preview.html.erb:22` | `stringify_keys` now turns the Integer line keys into strings, so the preview silently drops every annotation.",
+      "reason": "The report lists this without a risk level, so it is unrated instead of high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never discusses the negative cache expiry or `raise_on_invalid_cache_expiration_time`.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "named",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Before: `reminder_at.to_time + 86_400` kept the fixed UTC offset ... The epoch, and so the scheduled job, is identical.",
+      "reason": "The report doesn't tie this change to `app/models/note.rb` and gives it no risk level.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Rails 8.1 serializes the time zone name, so both follow the reader's local day. ... add `requested_at = requested_at.utc` in `DigestMailer`.",
+      "reason": "The report calls this a silent change but gives it no risk level, so it is unrated instead of high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R12": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`DigestJob` enqueued by 8.1 carries a `BigDecimalSerializer` marker. A 7.0 worker raises `DeserializationError` ... pass `reading_completion.to_s(\"F\")` from `User#request_digest`.",
+      "reason": "The report gives this rollback hazard no high, medium or low level, so it is unrated instead of high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R13": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb`, `NoteReminderJob.set(wait_until: reminder_epoch)` (an Integer) | 8.1 calls `.utc` on it, which raises NoMethodError.",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/jobs/citation_enrichment_job.rb`, `wait: :exponentially_longer` | The name was removed. | `:polynomially_longer`",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/views/notes/index.html.erb:12`, `form_with(model: nil, ...)` | Raises \"Passed nil to the :model argument\".",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config/routes.rb:18`, `get \"/notes\", \"/journal\", to: ...` | Multiple paths in one `get` raise ArgumentError.",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config/environments/test.rb`, `show_exceptions = false` | 8.1 no longer reads `false`, so tests expecting `RecordNotFound` fail. | `:none`",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config/initializers/action_text.rb` | `ActionText::ContentHelper.allowed_tags` is nil by default, so `+=` raises at boot.",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config/secrets.yml` and `Citation::Provider#initialize` | `Rails.application.secrets` no longer exists.",
+      "reason": "The report gives the required-changes table no risk level, so this is unrated instead of medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R20": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never mentions `default_column_serializer`.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "named",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "**`raise_on_assign_to_attr_readonly` (7.1 defaults).** Interacts with `attr_readonly :slug` on `Notebook`.",
+      "reason": "The report names the flag and the Notebook slug but doesn't describe the update failure or the controller and form path that resubmits the slug, and gives it no level.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never mentions `postgresql_adapter_decode_dates` or `daily_note_counts`.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never mentions `strict_freshness` or the export download conditional GET.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "json",
+      "quote": "json 2.21.2 (pinned) ... `bundle update rails` resolves json 3.1.0, so every `serialize` read fails. | Add `gem \"json\", \"< 3\"`."
+    },
+    {
+      "gem": "bigdecimal",
+      "quote": "The resolved set it reports: rails and the other Rails gems 8.1.0, json 2.21.2 (pinned), bigdecimal 4.1.3"
+    },
+    {
+      "gem": "minitest",
+      "quote": "minitest 5.27.0"
+    },
+    {
+      "gem": "concurrent-ruby",
+      "quote": "concurrent-ruby 1.3.4"
+    }
+  ],
+  "otherFindings": [],
+  "located": 17,
+  "levelMatches": 0,
+  "inaccurate": 0,
+  "cost_usd": 0.14405039999999997,
+  "duration_ms": 39945
+}

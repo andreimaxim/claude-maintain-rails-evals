@@ -1,0 +1,334 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:10` `enum status: {...}, _prefix: true` | The keyword form of `enum` is removed in 8.0; the model fails to load.",
+      "reason": "The report gives no risk level; it lists this as a required change.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R02": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:12`: change `serialize :tags, JSON` to `serialize :tags, coder: JSON`. The old form is removed in 7.2 ... Don't make this change on 7.0.",
+      "reason": "The report gives no risk level; it lists this as a required 7.1+ change.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R03": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:14` `alias_attribute :highlight_color, :color` | `color` is a `store_accessor`, not a real attribute. Deprecated in 7.1; from 7.2 it raises when the model loads.",
+      "reason": "The report gives no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R04": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/controllers/notes_controller.rb:12` `where(notebooks: @notebook)` | ... on 8.1 it produces invalid SQL (`column notes.notebooks does not exist`).",
+      "reason": "The report gives no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/import.rb:68` `citation[:id]` | Citations use `doi` as their primary key. ... on 8.x the receipt CSV's DOI column comes out blank.",
+      "reason": "The report gives no risk level, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R06": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/import.rb:53-58` `return false` inside `transaction` | Today a `return` rolls the transaction back. 7.1 defaults, and every version from 7.2, **commit** it instead.",
+      "reason": "The report gives no risk level, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/export.rb:42` `fragments.sum` | Summing strings is deprecated on 7.0 and fails from 7.1 (`TypeError`).",
+      "reason": "The report gives no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/views/imports/preview.html.erb:22` `.stringify_keys` | In 8.0, `HashWithIndifferentAccess#stringify_keys` also turns Integer keys into strings, so annotations silently disappear",
+      "reason": "The report gives no risk level, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/views/exports/_export.html.erb:26` ... For an expired export this is negative. With 7.1+ defaults that's an `ArgumentError`, so the exports page fails in production",
+      "reason": "The report gives no risk level, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:44` `reminder_at.to_time + 86_400` | ... shows an hour-shifted local time across a daylight-saving change (the scheduled epoch doesn't change).",
+      "reason": "The report gives no risk level and treats it as a product decision, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/jobs/digest_job.rb:7`, `app/mailers/digest_mailer.rb:8-9` | From 7.1, a queued time keeps the reader's time zone ... The digest would cover the reader's local day, not the UTC day",
+      "reason": "The report gives no risk level, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R12": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/user.rb:41` passes a `BigDecimal` to `DigestJob` | ... in a form 7.0 workers can't read. Rolled-back workers fail those jobs with `DeserializationError`.",
+      "reason": "The report gives no risk level, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R13": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:61` `set(wait_until: reminder_epoch)` (an Integer) | ... On 8.x the reminder can't be scheduled",
+      "reason": "The report gives no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/jobs/citation_enrichment_job.rb:7`: change `:exponentially_longer` to `:polynomially_longer` (same timing formula).",
+      "reason": "The report gives no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/views/notes/index.html.erb:12` `form_with(model: nil, ...)` | Deprecated in 7.2; raises in 8.0 on every notes page.",
+      "reason": "The report gives no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config/routes.rb:18` `get \"/notes\", \"/journal\", to:` | Deprecated in 8.0; in 8.1 the routes file fails to load (`ArgumentError`).",
+      "reason": "The report gives no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config/environments/test.rb:31`: change `show_exceptions = false` to `:none`. ... On 7.2+, `false` is treated as \"show error pages\", so the 21 `assert_raises(RecordNotFound)` checks would quietly change meaning.",
+      "reason": "The report gives no risk level, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config/initializers/action_text.rb:3` | From 7.1, `ActionText::ContentHelper.allowed_tags` starts out `nil`, so `+=` crashes at boot.",
+      "reason": "The report gives no risk level, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/citation/provider.rb:13`, `config/secrets.yml` ... | `Rails.application.secrets` is deprecated in 7.1 and removed in 7.2.",
+      "reason": "The report gives no risk level, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R20": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/notebook.rb:7`: change `serialize :preferences` to `serialize :preferences, coder: YAML`. This is needed once 7.1 defaults are on, where nothing is serialized by default (`missing keyword: :coder`).",
+      "reason": "The report gives no risk level, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/controllers/notebooks_controller.rb:40` permits `:slug` | 7.1 defaults raise when a read-only attribute is assigned; notebook settings updates fail.",
+      "reason": "The report gives no risk level, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/notebook.rb:40` `Date.iso8601(day)` | 7.2 defaults (`postgresql_adapter_decode_dates`) return a `Date` instead of text, and the activity report raises `TypeError`.",
+      "reason": "The report gives no risk level, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "named",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "**8.0 `strict_freshness`:** the download caching test passes.",
+      "reason": "The report mentions the default only to say a test passes. It doesn't describe the 304 change, doesn't tie it to export_downloads_controller.rb, and gives no level.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "bigdecimal 4.1.3 (new dependency)",
+      "quote": "New gems come in: bigdecimal 4.1.3, rackup, rack-session 1.0.2 and (8.1) action_text-trix 2.1.19 and json."
+    },
+    {
+      "gem": "rackup (new dependency)",
+      "quote": "New gems come in: bigdecimal 4.1.3, rackup, rack-session 1.0.2"
+    },
+    {
+      "gem": "rack-session 1.0.2 (new dependency)",
+      "quote": "rack-session 1.0.2"
+    },
+    {
+      "gem": "action_text-trix 2.1.19 (new dependency)",
+      "quote": "(8.1) action_text-trix 2.1.19"
+    },
+    {
+      "gem": "json 3.1.0 (or 2.21.2 with a pin)",
+      "quote": "8.1.0 lets bundler pick **json 3.1.0**, and ActiveSupport 8.1.0's JSON decoding is incompatible with it."
+    }
+  ],
+  "otherFindings": [],
+  "located": 22,
+  "levelMatches": 0,
+  "inaccurate": 0,
+  "cost_usd": 0.1788024,
+  "duration_ms": 36994
+}

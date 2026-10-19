@@ -15,8 +15,10 @@ const VARIANTS = {
 };
 
 export function prepareAmpRun(output: string, model: string, effort: string, variant: string, request = "Upgrade the rails gem to 8.1.0") {
-  if (!["openai/gpt-6.1-sol", "openai/gpt-6-astra"].includes(model)) throw new Error("Unsupported model");
-  if (!["low", "medium", "high"].includes(effort)) throw new Error("Unsupported effort");
+  if (!["openai/gpt-6.1-sol", "openai/gpt-6-astra", "google-vertex/gemini-4-argon"].includes(model)) throw new Error("Unsupported model");
+  if (model === "google-vertex/gemini-4-argon" && effort !== "high") throw new Error("Unsupported effort");
+  if (!["low", "medium", "high"].includes(effort)
+    && !(model === "openai/gpt-6-astra" && effort === "xhigh")) throw new Error("Unsupported effort");
   if (variant !== "original" && variant !== "v21") throw new Error("Unsupported variant");
   const staging = mkdtempSync(join(tmpdir(), "amp-eval-"));
   const hashes: Record<string, string> = {};

@@ -1,0 +1,318 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "app/models/note.rb (`enum status: { draft: 0, ready: 1 }, _prefix: true`) ... Change to: enum :status, { draft: 0, ready: 1 }, prefix: true",
+      "reason": "The report gives no risk levels anywhere; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R02": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "inaccurate",
+      "quote": "Works on current version (`7.0.8.7`)?: **No** (`serialize` in `7.0.8.7` forwards `**options` to `attribute`, raising `ArgumentError: unknown keyword: :coder`).",
+      "reason": "The report says `coder:` raises on 7.0, but the key says 7.0 silently ignores it and writes YAML into the JSON column. It also gives no level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R03": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "app/models/note.rb (`store_accessor :settings, :color` followed by `alias_attribute :highlight_color, :color`) ... alias_method :highlight_color, :color",
+      "reason": "The report gives no risk levels; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R04": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "app/controllers/notes_controller.rb (`@notes = @notes.where(notebooks: @notebook)`) ... raising `PG::UndefinedColumn: ERROR: column notes.notebooks does not exist`",
+      "reason": "The report gives no risk levels; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`citation[:id]` now returns `nil`, producing blank DOIs in the downloaded CSV receipt.",
+      "reason": "The report gives no risk levels; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R06": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "a non-local `return` out of `transaction` **commits** the transaction. In `Import#apply`, `save!` and earlier valid `row.note.save` calls are committed",
+      "reason": "The report gives no risk levels; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "app/models/export.rb (`finish(fragments.sum)`) ... raising `TypeError: String can't be coerced into Integer`.",
+      "reason": "The report gives no risk levels; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`annotations[row.line]` (`annotations[2]`) returns `nil` and annotations disappear from the preview page.",
+      "reason": "The report gives no risk levels; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Under `load_defaults 7.0` ... deletes negative `:expires_in`, reports `ArgumentError` ... and logs an error ... Under `load_defaults 7.1`–`8.1` ... raises `ActionView::Template::Error`",
+      "reason": "The report gives no risk levels; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`TimeWithZone#to_time` unconditionally calls `getlocal(time_zone)` ... so `+ 86_400` transitions across DST to `2026-11-01T08:00:00-05:00`",
+      "reason": "The report gives no risk levels; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "it queries and dates the digest by the reader's local date (`2026-10-04`) instead of the UTC date (`2026-10-05`) that `User#request_digest` reserved",
+      "reason": "The report gives no risk levels; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R12": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "**Breaks on `7.0` worker**: `8.1` serializes `BigDecimal` with `ActiveJob::Serializers::BigDecimalSerializer`; `7.0.8.7` raises `ActiveJob::DeserializationError`",
+      "reason": "The report gives no risk levels; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R13": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "app/models/note.rb (`job = NoteReminderJob.set(wait_until: reminder_epoch).perform_later(self)`) ... raising `NoMethodError: undefined method 'utc' for an instance of Integer`",
+      "reason": "The report gives no risk levels; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "app/jobs/citation_enrichment_job.rb (`retry_on Citation::Provider::Unavailable, wait: :exponentially_longer, attempts: 3`)",
+      "reason": "The report gives no risk levels; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "app/views/notes/index.html.erb ... Passing `model: nil` explicitly to `form_with` raises `ActionView::Template::Error`",
+      "reason": "The report gives no risk levels; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "config/routes.rb (`get \"/notes\", \"/journal\", to: \"notes#index\"`) ... raising `ArgumentError`",
+      "reason": "The report gives no risk levels; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`case config when :none then false when :rescuable then rescue_response? else true end` treats `false` as `:all`",
+      "reason": "The report gives no risk levels; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`ActionText::ContentHelper.allowed_tags += %w[ details summary ]` raises `NoMethodError: undefined method '+' for nil` at boot.",
+      "reason": "The report gives no risk levels; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "app/models/citation/provider.rb: `def initialize(settings = Rails.application.secrets.citation_provider.to_h)`",
+      "reason": "The report gives no risk levels; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R20": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`Notebook` works under `load_defaults 7.0` ... but fails under `load_defaults 7.1+` (`ArgumentError: missing keyword: :coder`).",
+      "reason": "The report gives no risk levels; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "assigning to `slug` on a persisted `Notebook`—even when resubmitting the unchanged `slug` from the settings form's hidden field—raises `ActiveRecord::ReadonlyAttributeError: slug`.",
+      "reason": "The report gives no risk levels; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`Date.iso8601(day)` raises `TypeError: no implicit conversion of Date into String`.",
+      "reason": "The report gives no risk levels; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never discusses `strict_freshness` or the export download conditional GET.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "json (resolves to 3.1.0 unpinned; the report recommends pinning ~> 2.7, which resolves to 2.21.2)",
+      "quote": "`activesupport 8.1.0` adds `json (>= 0)` as a runtime dependency, which resolves `json 3.1.0` and breaks `ActiveSupport::JSON.decode`"
+    }
+  ],
+  "otherFindings": [],
+  "located": 22,
+  "levelMatches": 0,
+  "inaccurate": 1,
+  "cost_usd": 0.2837784,
+  "duration_ms": 35080
+}

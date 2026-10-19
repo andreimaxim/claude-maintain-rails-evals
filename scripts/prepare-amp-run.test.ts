@@ -9,11 +9,13 @@ import { prepareAmpRun } from "./prepare-amp-run.ts";
 test("Amp payload contains one session's frozen inputs without the answer key", () => {
   const root = mkdtempSync(join(tmpdir(), "amp-payload-test-"));
   try {
-    for (const [variant, source] of [
-      ["original", "tests/planner-inputs/maintain-rails"],
-      ["v21", "tests/planner-variants/v21-resolve-deps/maintain-rails"],
+    for (const [variant, source, model, effort] of [
+      ["original", "tests/planner-inputs/maintain-rails", "openai/gpt-6.1-sol", "medium"],
+      ["v21", "tests/planner-variants/v21-resolve-deps/maintain-rails", "openai/gpt-6.1-sol", "medium"],
+      ["original", "tests/planner-inputs/maintain-rails", "openai/gpt-6-astra", "xhigh"],
+      ["original", "tests/planner-inputs/maintain-rails", "google-vertex/gemini-4-argon", "high"],
     ] as const) {
-      const result = prepareAmpRun(join(root, `${variant}.tar.gz`), "openai/gpt-6.1-sol", "medium", variant);
+      const result = prepareAmpRun(join(root, `${variant}.tar.gz`), model, effort, variant);
       const files = execFileSync("tar", ["-tzf", result.payload], { encoding: "utf8" })
         .split("\n").filter((name) => name && !name.endsWith("/"));
       assert.deepEqual(files.sort(), ["maintain-rails/index.ts", "maintain-rails/config.json",
@@ -27,11 +29,13 @@ test("Amp payload contains one session's frozen inputs without the answer key", 
       assert.deepEqual(config, result.config);
       assert.equal(result.config.variant, variant);
       assert.equal(result.config.request, "Upgrade the rails gem to 8.1.0");
-      assert.equal(result.config.model, "openai/gpt-6.1-sol");
-      assert.equal(result.config.effort, "medium");
+      assert.equal(result.config.model, model);
+      assert.equal(result.config.effort, effort);
     }
     assert.throws(() => prepareAmpRun(join(root, "bad.tar.gz"), "unknown", "medium", "original"), /model/);
+    assert.throws(() => prepareAmpRun(join(root, "bad.tar.gz"), "openai/gpt-6.1-sol", "xhigh", "original"), /effort/);
     assert.throws(() => prepareAmpRun(join(root, "bad.tar.gz"), "openai/gpt-6-astra", "max", "original"), /effort/);
+    assert.throws(() => prepareAmpRun(join(root, "bad.tar.gz"), "google-vertex/gemini-4-argon", "medium", "original"), /effort/);
     assert.throws(() => prepareAmpRun(join(root, "bad.tar.gz"), "openai/gpt-6-astra", "high", "v20"), /variant/);
   } finally {
     rmSync(root, { recursive: true, force: true });

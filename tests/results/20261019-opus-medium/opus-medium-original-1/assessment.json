@@ -1,0 +1,322 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R4. Keyword-style `enum` removed (8.0) — Where: `/home/user/workspace/repo/app/models/note.rb:10`. Fix: `enum :status, { draft: 0, ready: 1 }, prefix: true`.",
+      "reason": "The report has no high, medium or low ratings; it lists this as a required change without a level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R02": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "V1 (7.1+): `app/models/note.rb:12`, change to `serialize :tags, coder: JSON`... Do not do this on 7.0. On 7.0 the `coder:` keyword is silently ignored and tags are written as YAML",
+      "reason": "The report gives this per-version edit no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R03": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R5. `alias_attribute` pointing at a store accessor (breaks from 7.2) — `app/models/note.rb:14`. The target is `color`, a `store_accessor` on `settings`",
+      "reason": "The report has no high, medium or low ratings.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R04": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/controllers/notes_controller.rb:12`, `where(notebooks: @notebook)`. Fix: `where(notebook: @notebook)` (7.1 deprecates using the plural name).",
+      "reason": "The report lists this as a smaller clean-up without a risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R7. Import receipt loses its DOI column (7.2, silent) — `app/models/import.rb:68`, `citation[:id]`... From 7.2 it reads a column named `id`, so the receipt's DOI column would come out empty.",
+      "reason": "The report calls it silent but gives no high, medium or low rating.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R06": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R6. A failed import can commit partly (7.2, silent) — `app/models/import.rb:53-58`... From 7.2 it **commits**",
+      "reason": "The report calls it silent but gives no high, medium or low rating.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R3. `Enumerable#sum` on strings removed (7.1) — `app/models/export.rb:42`, `finish(fragments.sum)`... Fix: `fragments.join`.",
+      "reason": "The report has no high, medium or low ratings.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R12. Import preview loses annotations (8.0) — `app/views/imports/preview.html.erb:22`, `@import.annotations.stringify_keys`... turns the integer line-number keys into strings",
+      "reason": "The report has no high, medium or low ratings.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`Cache expiration time is invalid, cannot be negative` from `app/views/exports/_export.html.erb:26` (`raise_on_invalid_cache_expiration_time`)... This already affects 7.1+ under `load_defaults 7.0`. A negative `expires_in` is logged as an error and the entry is stored with no expiry",
+      "reason": "The report discusses it under optional defaults without a risk level.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R11. `to_time` keeps the full time zone (8.1, silent display change) — `app/models/note.rb:44`... The stored epoch is the same either way.",
+      "reason": "The report has no high, medium or low ratings.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/user.rb:41` and `app/mailers/digest_mailer.rb:7-9`... from 7.1, Active Job keeps the time zone of a time argument. The mailer would then use the reader's local day instead of the UTC day",
+      "reason": "The report has no high, medium or low ratings.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R12": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "BigDecimal arguments break older workers... Fix: enqueue `reading_completion.to_s`. The mailer already calls `BigDecimal(params[:completion])`... A 7.0 reader fails on an 8.1-enqueued BigDecimal argument",
+      "reason": "The report calls it a mixed-version risk but gives no high, medium or low rating.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R13": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/note.rb:61`, `set(wait_until: reminder_epoch)`. Fix: `Time.at(reminder_epoch)` (7.1 deprecates passing a number).",
+      "reason": "The report lists this as a smaller clean-up without a risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "V3 (7.1+): `app/jobs/citation_enrichment_job.rb:7`, change `:exponentially_longer` to `:polynomially_longer`. Removed in 7.2",
+      "reason": "The report gives this per-version edit no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R9. `form_with(model: nil)` (deprecated 7.2, error in 8.0) — `app/views/notes/index.html.erb:12`. Fix: remove `model: nil`.",
+      "reason": "The report has no high, medium or low ratings.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R8. Multiple paths in one route (deprecated 8.0, error in 8.1) — `config/routes.rb:18`, `get \"/notes\", \"/journal\", to: \"notes#index\"`.",
+      "reason": "The report has no high, medium or low ratings.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "V2 (7.1+): `config/environments/test.rb:31`, change to `show_exceptions = :none`. From 7.2, `false` means \"show exceptions\"",
+      "reason": "The report gives this per-version edit no risk level.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R1. Action Text allowed tags crashes at boot (breaks from 7.1) — `config/initializers/action_text.rb:3`... from 7.1, `allowed_tags` starts as `nil`",
+      "reason": "The report has no high, medium or low ratings.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "R2. `Rails.application.secrets` removed (7.2) — `app/models/citation/provider.rb:13`... `config/secrets.yml`",
+      "reason": "The report has no high, medium or low ratings.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R20": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "With all fixes applied, every test errors: `serialize :preferences` (`app/models/notebook.rb:7`) raises \"missing keyword: :coder\".",
+      "reason": "The report discusses it under optional defaults without a risk level.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`ActiveRecord::ReadonlyAttributeError: slug`. The settings form posts `slug` back (`app/controllers/notebooks_controller.rb:40`...), and `raise_on_assign_to_attr_readonly` raises even when the value is unchanged.",
+      "reason": "The report discusses it under optional defaults without a risk level.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "inaccurate",
+      "quote": "`app/models/notebook.rb:40`. Fix: `Date.iso8601(day.to_s)`. This guards against the 7.1 date-decoding default",
+      "reason": "The report gives no level, and it calls this the 7.1 date-decoding default, but `postgresql_adapter_decode_dates` is a 7.2 default.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "missing",
+      "level": "missing",
+      "accuracy": "missing",
+      "quote": "",
+      "reason": "The report never mentions `strict_freshness` or the export download conditional GET behavior.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "json (resolves to 3.1.0 unpinned; the report recommends pinning ~> 2.7, which resolves to 2.21.2)",
+      "quote": "8.1.0 added `action_text-trix 2.1.19` and `json 3.1.0`; the second run pinned json to `~> 2.7`, which resolved to 2.21.2."
+    },
+    {
+      "gem": "action_text-trix 2.1.19 (new dependency)",
+      "quote": "8.1.0 added `action_text-trix 2.1.19` and `json 3.1.0`"
+    }
+  ],
+  "otherFindings": [],
+  "located": 22,
+  "levelMatches": 0,
+  "inaccurate": 1,
+  "cost_usd": 0.2121304,
+  "duration_ms": 45306
+}

@@ -1,0 +1,334 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Rails 7.2 deprecated and Rails 8.0 removed `enum status: {...}, _prefix: true` ... [app/models/note.rb](...#L10)",
+      "reason": "The report puts this under 'Required Changes' but never gives it a high, medium or low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R02": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`serialize(attr_name, coder: nil, ...)` removed the second positional argument in Rails 7.2+ ... **No** ... Must land with the Rails gem upgrade",
+      "reason": "The report gives no high, medium or low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R03": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`:color` is defined by `store_accessor :settings, :color`, not as a schema/ActiveModel attribute. Rails 7.2 deprecated and Rails 8.0+ raises `ArgumentError`",
+      "reason": "The report gives no high, medium or low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R04": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Replace `.where(notebooks: @notebook)` with `.where(notebook: @notebook)` ... raising `ActiveRecord::StatementInvalid: PG::UndefinedColumn`",
+      "reason": "The report gives no high, medium or low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`citation[:id]` on custom primary key `Citation` (`primary_key = \"doi\"`) now returns `nil` in `Import#receipt`",
+      "reason": "The report describes it as silent data corruption but gives no level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R06": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Non-local `return false` inside `Import#apply` `transaction` block now commits partial imports",
+      "reason": "The report describes it as silent data corruption but gives no level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Replace `fragments.sum` with `fragments.join` in `Export#generate` ... raises `TypeError: String can't be coerced into Integer`",
+      "reason": "The report gives no high, medium or low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`HashWithIndifferentAccess#stringify_keys` now stringifies `Integer` line-number keys in `imports/preview.html.erb`",
+      "reason": "The report says annotations are silently omitted but gives no level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Under `load_defaults 7.0` on Rails 8.1.0, ... logs `ArgumentError: Cache expiration time is invalid` ... under `load_defaults 7.1+`/`8.1`, it raises ... (even on a cache hit)",
+      "reason": "The report places this under optional default adoption but gives no level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`ActiveSupport::TimeWithZone#to_time` now attaches the `TimeZone` object instead of a fixed numeric `utc_offset`",
+      "reason": "The report gives no level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`TimeWithZoneSerializer` now preserves `time_zone`, changing `DigestMailer#daily_digest` from UTC day to local day",
+      "reason": "The report gives no level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R12": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`7.0.8.7` producer → `8.1.0` worker: **Succeeds** ... `8.1.0` producer → `7.0.8.7` worker: **Fails**",
+      "reason": "The report puts this in the mixed-version section but gives no level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R13": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Pass a `Time` (`reminder_at`), not an `Integer` (`reminder_epoch`), to `NoteReminderJob.set(wait_until:)`",
+      "reason": "The report gives no high, medium or low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Replace `wait: :exponentially_longer` with `wait: :polynomially_longer` in `CitationEnrichmentJob`",
+      "reason": "The report gives no high, medium or low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Remove `model: nil` from unbound `form_with` in `app/views/notes/index.html.erb`",
+      "reason": "The report gives no high, medium or low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Split multi-path `get \"/notes\", \"/journal\", to: \"notes#index\"` in `config/routes.rb`",
+      "reason": "The report gives no high, medium or low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "treats `false` as the `else` branch (`true` / `:all`), catching all exceptions and rendering 404/500 pages instead of raising",
+      "reason": "The report gives no level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`ActionText::ContentHelper.allowed_tags` defaults to `nil` ... so `... += %w[ details summary ]` raises `NoMethodError` at boot",
+      "reason": "The report gives no level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`Rails.application.secrets` was deprecated in Rails 7.1 and removed in Rails 7.2",
+      "reason": "The report gives no level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R20": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "for `Notebook` when `config.active_record.default_column_serializer = nil` is enabled by `load_defaults 7.1+` (raising `ArgumentError: missing keyword: :coder`)",
+      "reason": "The report gives no level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Because the notebook settings form resubmits `<%= form.hidden_field :slug %>` ... enabling this default breaks `NotebooksController#update`.",
+      "reason": "The report gives no level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "decodes PostgreSQL `DATE(notes.created_at)` ... into a Ruby `Date` object ... causing `Date.iso8601(day)` to raise",
+      "reason": "The report gives no level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "located",
+      "level": "not_relevant",
+      "accuracy": "accurate",
+      "quote": "`action_dispatch.strict_freshness = true` (8.0): Compatible with `stale?(etag: blob.checksum, last_modified: blob.created_at)` in [ExportDownloadsController#show]",
+      "reason": "The report calls this default compatible and doesn't mention the cases where some conditional GETs change from 200 to 304; the label is low.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "json",
+      "quote": "`json` | *(stdlib `2.7.2`)* | `3.1.0` → **must pin `< 3` (`2.21.2`)**"
+    },
+    {
+      "gem": "action_text-trix",
+      "quote": "`action_text-trix` | *(bundled in `actiontext`)* | `2.1.19`"
+    },
+    {
+      "gem": "bigdecimal, drb, securerandom, uri",
+      "quote": "`bigdecimal`, `drb`, `securerandom`, `uri` | *(stdlib)* | `4.1.3`, `2.2.3`, `0.4.1`, `1.1.2`"
+    },
+    {
+      "gem": "rack-session, rackup, webrick",
+      "quote": "`rack` / `rack-session` / `rackup` / `webrick` | `2.2.24` | `2.2.24` / `1.0.2` / `1.0.1` / `1.9.2`"
+    },
+    {
+      "gem": "useragent, net-imap",
+      "quote": "`useragent`, `net-imap` | *(none)*, `0.6.7` | `0.16.11`, `0.6.8`"
+    }
+  ],
+  "otherFindings": [],
+  "located": 23,
+  "levelMatches": 0,
+  "inaccurate": 0,
+  "cost_usd": 0.2774144,
+  "duration_ms": 40584
+}

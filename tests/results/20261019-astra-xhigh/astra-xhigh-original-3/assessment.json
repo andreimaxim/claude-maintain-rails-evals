@@ -1,0 +1,330 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[Note declarations](.../app/models/note.rb#L8-L14) | Keyword-style enum removed in 8.0 ... Use `enum :status, { draft: 0, ready: 1 }, prefix: true`",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R02": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "positional serializer coder removed in 7.2 ... Switch tags to `serialize :tags, coder: JSON` **at the 7.1 stage**, not in a 7.0 prep release.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R03": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "aliasing a non-column removed in 7.2. `color` is a JSONB store accessor, not a column.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R04": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Plural spelling for singular associations removed in 7.2. **Executed SQL references nonexistent `notes.notebooks`.**",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "**Receipt DOI silently becomes blank:** [Import#receipt](.../app/models/import.rb#L63-L69) reads `citation[:id]`, but the schema's primary key is `doi`.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R06": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[Import#apply](.../app/models/import.rb#L50-L60) uses `return false` inside `transaction`. Rails 7.0 rolls back this non-local return; ... 7.2+ commits",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[Export#generate](.../app/models/export.rb#L32-L43) calls `fragments.sum` on strings. The Active Support override was removed in 7.1; native Ruby sum starts at zero and raises.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "**Annotations disappear:** ... [preview](.../app/views/imports/preview.html.erb#L22-L44) calls `stringify_keys` then looks up integers. Rails 8.0 now stringifies *all* keys",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Expired exports pass a negative `expires_in`. With the new default this raises; with old defaults on the new framework the invalid TTL is discarded/reported instead and can cache `Expired` without a deadline.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[Note#next_day_reminder_at](.../app/models/note.rb#L40-L45) ... In 8.1 it preserves the **zone**, unconditionally. ... This is not an epoch shift",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Rails 7.2 preserves the serialized named zone; 7.0/7.1 deserialized into the worker's zone. ... the executed target mail subject became **October 04** instead of **October 05**",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R12": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "**Executed cross-version:** 8.1 reads 7.0's string, but 7.0 raises `ActiveJob::DeserializationError` for 8.1's `ActiveJob::Serializers::BigDecimalSerializer` envelope.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R13": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[Note#schedule_reminder](.../app/models/note.rb#L51-L69) passes integer `reminder_epoch` to `wait_until`. ... Pass `Time.at(reminder_epoch).utc`",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[CitationEnrichmentJob](.../app/jobs/citation_enrichment_job.rb#L4-L9) uses `:exponentially_longer`, deprecated in 7.1 and removed in 7.2. Change to `:polynomially_longer` at the **7.1** stage",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[Search form](.../app/views/notes/index.html.erb#L12) | `form_with(model: nil)` removed in 8.0. **Executed template failure.**",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[Notes routes](.../config/routes.rb#L17-L19) | Multiple paths in one route deprecated in 8.0, removed in 8.1.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[Test exception configuration](.../config/environments/test.rb#L30-L31) | Boolean `show_exceptions` deprecated in 7.1, removed in 7.2. On 8.1, false falls through to rendering exceptions.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[Action Text initializer](.../config/initializers/action_text.rb#L1-L3) | Since 7.1, `allowed_tags` is nil unless explicitly overridden ... **Executed boot failure.**",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "[Citation::Provider](.../app/models/citation/provider.rb#L1-L15), `config/secrets.yml` ... use `Rails.application.secrets`, removed in 7.2.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R20": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`active_record.default_column_serializer = nil` (7.1 defaults); [Notebook preferences](.../app/models/notebook.rb#L7-L19) | Bare `serialize :preferences` still gets YAML with old defaults, but errors under the new default.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`raise_on_assign_to_attr_readonly = true` (7.1); [notebook settings](.../app/controllers/notebooks_controller.rb#L38-L40) ... The edit form resubmits readonly `slug` and the controller permits it.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`postgresql_adapter_decode_dates = true` (7.2); [daily_note_counts](.../app/models/notebook.rb#L33-L40) | Raw `select_rows` starts returning Date objects, but code calls `Date.iso8601`.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`action_dispatch.strict_freshness = true` (8.0); [download action](.../app/controllers/export_downloads_controller.rb#L4-L16) | ETag takes precedence over Last-Modified when both request conditions are present.",
+      "reason": "The report describes the change correctly but gives it no risk level; the label is low.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "json (resolver picked 3.1.0; the report recommends pinning it below 3, to 2.21.2)",
+      "quote": "its unconstrained JSON dependency resolved JSON 3.1.0. ... Add a tested JSON < 3 constraint for this exact target and lock the result (the lab resolved **2.21.2**)."
+    },
+    {
+      "gem": "net-imap 0.6.7 → 0.6.8",
+      "quote": "The conservative resolution also changed net-imap 0.6.7→0.6.8"
+    },
+    {
+      "gem": "action_text-trix 2.1.19 (new)",
+      "quote": "introduced Rails' new transitive dependencies, including `action_text-trix 2.1.19`"
+    },
+    {
+      "gem": "rackup 1.0.1 and rack-session 1.0.2",
+      "quote": "Rackup 1.0.1 and rack-session 1.0.2 were selected."
+    }
+  ],
+  "otherFindings": [],
+  "located": 23,
+  "levelMatches": 0,
+  "inaccurate": 0,
+  "cost_usd": 0.22702239999999999,
+  "duration_ms": 37534
+}

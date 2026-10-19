@@ -1,0 +1,335 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A3. Keyword-style enum is an ArgumentError at class load on 8.0 (deprecated in 7.2) ... `/home/user/workspace/repo/app/models/note.rb:10`",
+      "reason": "The report lists it among the required section A changes and never gives it a risk level, while the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R02": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`/home/user/workspace/repo/app/models/note.rb:12` → `serialize :tags, coder: JSON` ... Do not ship this on 7.0 [EXEC]: 7.0 accepts `coder: JSON` but silently ignores it and writes YAML",
+      "reason": "The report places it in section B (must land with the 7.1 bump) without a risk level, while the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R03": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A4. `alias_attribute :highlight_color, :color` raises on 7.2 (deprecated in 7.1) ... `color` comes from `store_accessor`, so it is not an attribute.",
+      "reason": "The report lists it in section A without a risk level, while the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R04": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A15. Referring to a singular association by its plural name is deprecated in 7.1 ... `/home/user/workspace/repo/app/controllers/notes_controller.rb:12` ... `where(notebook: @notebook)`",
+      "reason": "The report lists it in section A without a risk level, while the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A8. `citation[:id]` is nil on 7.2 and later (silent data change in the receipt CSV) ... `/home/user/workspace/repo/app/models/import.rb:67-68`",
+      "reason": "The report calls it a silent data change but gives no risk level, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R06": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "A7: from Rails 7.2, a failed import keeps its partial notes instead of rolling back.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R07": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A9. `Array#sum` of strings raises TypeError on 7.1 ... `/home/user/workspace/repo/app/models/export.rb:42`",
+      "reason": "The report lists it in section A without a risk level, while the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A12. `HashWithIndifferentAccess#stringify_keys` stringifies Integer keys on 8.0 ... `app/views/imports/preview.html.erb:22` ... preview annotations disappear.",
+      "reason": "The report lists it in section A without a risk level, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`raise_on_invalid_cache_expiration_time` | 7.1 | needs A18 first",
+      "reason": "The report puts adopting this default in its 'Smaller flags, low risk' table, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "D1. `to_time` always keeps the zone on 8.1, whatever the config ... The scheduled time (epoch) does not change.",
+      "reason": "The report treats it as a product decision without a risk level, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A10. TimeWithZone job arguments keep their zone on 7.1 and later (digest date changes) ... `app/mailers/digest_mailer.rb:7-10`",
+      "reason": "The report lists it in section A without a risk level, while the label is high.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R12": {
+      "found": "located",
+      "level": "high",
+      "accuracy": "accurate",
+      "quote": "A DigestJob enqueued by 8.1, even with 7.0 defaults, fails on a 7.0 worker with `DeserializationError: Serializer ActiveJob::Serializers::BigDecimalSerializer is not known`.",
+      "reason": "",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    },
+    "R13": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A5. Integer `wait_until:` crashes on 7.2 (deprecated in 7.1) ... `app/models/note.rb:61` ... `set(wait_until: Time.at(reminder_epoch))`",
+      "reason": "The report lists it in section A without a risk level, while the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A6. `retry_on wait: :exponentially_longer` is removed in 7.2 ... `app/jobs/citation_enrichment_job.rb:7`",
+      "reason": "The report lists it in section A without a risk level, while the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A13. `form_with(model: nil)` raises on 8.0 (deprecated in 7.2) ... `app/views/notes/index.html.erb:12`",
+      "reason": "The report lists it in section A without a risk level, while the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A14. A route with multiple paths is removed in 8.1 (deprecated in 8.0) ... `config/routes.rb:18`",
+      "reason": "The report lists it in section A without a risk level, while the label is low.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config/environments/test.rb:31` → `show_exceptions = :none` ... On 7.2, `false` falls through to \"show\"",
+      "reason": "The report places it in section B without a risk level, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A1. Action Text allowlist crashes boot on 7.1 and later ... `config/initializers/action_text.rb:3`",
+      "reason": "The report lists it in section A without a risk level, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "A2. `Rails.application.secrets` is removed in 7.2 (deprecated in 7.1) ... `app/models/citation/provider.rb:13`",
+      "reason": "The report lists it in section A without a risk level, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R20": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`app/models/notebook.rb:7` → `serialize :preferences, coder: YAML` ... A bare `serialize` raises once `default_column_serializer = nil`, a 7.1 default.",
+      "reason": "The report places it in section B and never rates adopting this default, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`raise_on_assign_to_attr_readonly` | 7.1 | needs A16 first",
+      "reason": "The report puts adopting this default in its 'Smaller flags, low risk' table, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`postgresql_adapter_decode_dates` | 7.2 | needs A17 first",
+      "reason": "The report puts adopting this default in its 'Smaller flags, low risk' table, while the label is medium.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "named",
+      "level": "low",
+      "accuracy": "accurate",
+      "quote": "`strict_freshness` | 8.0 | export download ETag precedence",
+      "reason": "The report names the export download feature but no file, such as export_downloads_controller.rb.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": true
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "json 3.1.0 (the report proposes pinning below 3, which resolves json 2.21.2)",
+      "quote": "8.1 | 8.1.0 | 2.2.24 | 6.5.12 | 4.8.1 | adds action_text-trix 2.1.19 and json 3.1.0"
+    },
+    {
+      "gem": "action_text-trix 2.1.19",
+      "quote": "adds action_text-trix 2.1.19 and json 3.1.0"
+    }
+  ],
+  "otherFindings": [
+    {
+      "level": "high",
+      "summary": "Rails 8.1 resolves json 3.1.0, which breaks Active Support's JSON decoding of session cookies, so every signed-in request fails; the report proposes pinning json below 3 (high)."
+    },
+    {
+      "level": "high",
+      "summary": "Adopting the 7.1 message_serializer and use_message_serializer_for_metadata defaults makes Action Text attachment sgids unreadable after a rollback to 7.0 (high)."
+    },
+    {
+      "level": "high",
+      "summary": "Adopting cache_format_version 7.1 makes 7.0 raise TypeError when it reads cache entries after a rollback (high)."
+    }
+  ],
+  "located": 22,
+  "levelMatches": 3,
+  "inaccurate": 0,
+  "cost_usd": 0.1977224,
+  "duration_ms": 37546
+}

@@ -1,0 +1,326 @@
+{
+  "case": "rails",
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "items": {
+    "R01": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`enum status: { draft: 0, ready: 1 }, _prefix: true` ... raising `ArgumentError: wrong number of arguments (given 0, expected 1..2)` when loading `Note`.",
+      "reason": "The report groups changes by section and never gives this one a high/medium/low level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R02": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "inaccurate",
+      "quote": "In Rails 7.0.8.7, `serialize` forwards `**options` to `attribute`, which rejects `:coder` with `ArgumentError: Unknown key: :coder.",
+      "reason": "The report says `coder:` raises on 7.0, but the answer key says 7.0 silently selects YAML; the report also gives no risk level.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R03": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "raises `ArgumentError: Note model aliases color, but color is not an attribute. Use alias_method",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R04": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`where(notebooks: @notebook)` ... raising `ActiveRecord::StatementInvalid: PG::UndefinedColumn: ERROR: column notes.notebooks does not exist`",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R05": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`record[:id]` now reads only a literal `\"id\"` column, returning `nil` on `Citation` and producing blank DOIs in downloaded receipt CSVs.",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R06": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`return false` commits the `Import` record and row 1's `Note` and `Citation` to PostgreSQL while returning `false`",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R07": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`finish(fragments.sum)` ... raising `TypeError: String can't be coerced into Integer`.",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R08": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "looking up `annotations[row.line]` with an `Integer` returns `nil`, silently dropping all annotations from the import preview page.",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R09": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Under `load_defaults 7.1`+, `ActiveSupport::Cache::Store` raises `ArgumentError: Cache expiration time is invalid, cannot be negative`",
+      "reason": "The report only covers the default-adoption case, in its defaults section, and gives no risk level.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R10": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`next_day_reminder_at.to_i` is identical (`1793538000`) in both versions, so scheduled epoch persistence is unaffected; only the displayed preview string/offset changes.",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": true
+      },
+      "levelMatches": false
+    },
+    "R11": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "in Rails 8.1 `DigestMailer#daily_digest` receives `requested_at` in `EDT`, so `requested_at.to_date` is `2026-10-04`",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R12": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "if a Rails 8.1.0 web node enqueues `DigestJob` and a Rails 7.0.8.7 Sidekiq worker pops it ... fails with `ActiveJob::DeserializationError`",
+      "reason": "The report puts this in its mixed-version section without a risk level.",
+      "label": {
+        "level": "high",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R13": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`Job#serialize` calls `scheduled_at.utc.iso8601(9)`, raising `NoMethodError: undefined method 'utc' for an instance of Integer`.",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R14": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "raising `RuntimeError: Couldn't determine a delay based on :exponentially_longer` on first retry.",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R15": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "passing `model: nil` explicitly raises `ArgumentError: Passed nil to the :model argument, expect an object or false`",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R16": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`get \"/notes\", \"/journal\", to: \"notes#index\"` ... raising `ArgumentError: Wrong number of arguments (expect 1, got 2)`.",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "low",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R17": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`false` falls into the `else` branch and evaluates to `true` (`:all`), swallowing all exceptions into 404/500 responses instead of raising them.",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R18": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Calling `+=` on `nil` during initializer load aborts boot with `NoMethodError: undefined method '+' for nil`.",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R19": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`Rails.application.secrets` was deprecated in Rails 7.1 and removed in Rails 7.2, raising `NoMethodError: undefined method 'secrets'`",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "medium",
+        "default": false,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R20": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Under `load_defaults 7.1`+, `default_column_serializer` is `nil`, so `serialize :preferences` without `coder:` raises `ArgumentError: missing keyword: :coder",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R21": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Because the notebook settings form includes `<%= form.hidden_field :slug %>` and `NotebooksController#notebook_params` permits `:slug`, every `PATCH /notebooks/:id` request raises",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R23": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "Calling `Date.iso8601(day)` with a `Date` raises `TypeError: no implicit conversion of Date into String`",
+      "reason": "No risk level is given.",
+      "label": {
+        "level": "medium",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    },
+    "R25": {
+      "found": "located",
+      "level": "unrated",
+      "accuracy": "accurate",
+      "quote": "`config.action_dispatch.strict_freshness = true` (8.0 default): Affects app/controllers/export_downloads_controller.rb ... `If-None-Match` takes precedence and `If-Modified-Since` is ignored.",
+      "reason": "The report lists this under other default behavior changes without a risk level.",
+      "label": {
+        "level": "low",
+        "default": true,
+        "judgmentCall": false
+      },
+      "levelMatches": false
+    }
+  },
+  "otherGems": [
+    {
+      "gem": "json 3.1.0 (pinned back to json 2.19.4 via ~> 2.0)",
+      "quote": "Resolving `rails 8.1.0` today pulls in `json 3.1.0` ... passed after pinning `gem \"json\", \"~> 2.0\"` (`json 2.19.4`)."
+    },
+    {
+      "gem": "action_text-trix 2.1.19",
+      "quote": "`actiontext 8.1.0` depends on `action_text-trix (~> 2.1.15)` (resolved to `2.1.19`)."
+    },
+    {
+      "gem": "rack 2.2.24",
+      "quote": "resolved `rails 8.1.0`, `action_text-trix 2.1.19`, `json 3.1.0`, `rack 2.2.24`"
+    }
+  ],
+  "otherFindings": [],
+  "located": 23,
+  "levelMatches": 0,
+  "inaccurate": 1,
+  "cost_usd": 0.2935784,
+  "duration_ms": 35484
+}
